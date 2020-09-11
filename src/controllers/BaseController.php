@@ -67,7 +67,8 @@ class BaseController
      * @var \PHPPgAdmin\ViewManager
      */
     public $view;
- /**
+
+    /**
      * @var \PHPPgAdmin\Misc
      */
     public $misc;
@@ -77,7 +78,10 @@ class BaseController
     public $phpMinVer;
 
     protected $script;
-    /** @var \Slim\Container */
+
+    /**
+     * @var \Slim\Container
+     */
     protected $container;
 
     protected $data;
@@ -437,36 +441,34 @@ class BaseController
     }
 
     /**
-     * 
      * @param string      $key
      * @param null|string $default
      */
     public function getRequestParam(string $key, ?string $default = null)
     {
-        return $this->container->requestobj->getParam($key, $default);
+        return \requestInstance()->getParam($key, $default);
     }
 
     /**
-     * 
-     * @param string            $key
-     * @param  bool|null|array|string|int|float $default
-     * 
+     * @param string                           $key
+     * @param null|array|bool|float|int|string $default
+     *
      * @return bool| null|array|string|int|float
      */
     public function getPostParam(string $key, $default = null)
     {
-        return $this->container->requestobj->getParsedBodyParam($key, $default);
+        return \requestInstance()->getParsedBodyParam($key, $default);
     }
- /**
+
+    /**
+     * @param string $key
+     * @param null|array|float|int|string $default
      *
-     * @param string            $key
-     *  @param null|array|string|int|float $default
-     * 
-     * @return  null|array|string|int|float
+     * @return null|array|float|int|string
      */
-    public function getQueryParamstring ($key, $default = null)
+    public function getQueryParamstring($key, $default = null)
     {
-        return $this->container->requestobj->getQueryParam($key, $default);
+        return \requestInstance()->getQueryParam($key, $default);
     }
 
     /**

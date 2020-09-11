@@ -44,7 +44,7 @@ class Decorator
      */
     public static function get_sanitized_value(&$var, array &$fields, ?string $esc = null)
     {
-        if (\is_a($var, 'PHPPgAdmin\Decorators\Decorator')) {
+        if ($var instanceof self) {
             $val = $var->value($fields);
         } else {
             $val = &$var;
@@ -71,12 +71,12 @@ class Decorator
     }
 
     /**
-     * @param \Closure|\Closure|\Closure $callback
-     * @param (mixed|string)[]|null      $params
+     * @param \Closure              $callback
+     * @param (mixed|string)[]|null $params
      */
-    public static function callback($callback, ?array $params = null)
+    public static function callback(\Closure $callback, ?array $params = null)
     {
-        return new \PHPPgAdmin\Decorators\CallbackDecorator($callback, $params);
+        return new  CallbackDecorator($callback, $params);
     }
 
     /**

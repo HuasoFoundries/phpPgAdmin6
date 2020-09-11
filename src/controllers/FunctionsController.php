@@ -32,7 +32,7 @@ class FunctionsController extends BaseController
 
         switch ($this->action) {
             case 'save_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreate();
@@ -45,7 +45,7 @@ class FunctionsController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDefault();
@@ -57,7 +57,7 @@ class FunctionsController extends BaseController
 
                 break;
             case 'save_edit':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveEdit();
@@ -469,7 +469,7 @@ class FunctionsController extends BaseController
         echo '<input type="hidden" name="function_oid" value="', \htmlspecialchars($_REQUEST['function_oid']), '" />' . \PHP_EOL;
         echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-        echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 
@@ -966,7 +966,7 @@ class FunctionsController extends BaseController
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
         echo $szJS;
     }

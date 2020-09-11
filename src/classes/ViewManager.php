@@ -93,32 +93,46 @@ class ViewManager extends \Slim\Views\Twig
      * @var \PHPPgAdmin\Misc
      */
     public $misc;
- /**
+
+    /**
      * @var \Slim\Container
      */
     protected $container;
 
     private $_connection;
-/** @var bool */
+
+    /**
+     * @var bool
+     */
     private $_no_db_connection = false;
-/** @var bool */
+
+    /**
+     * @var bool
+     */
     private $_reload_browser = false;
 
     private $_data;
 
     private $_database;
-/** @var string */
+
+    /**
+     * @var string
+     */
     private $_server_id;
 
     private $_server_info;
-    /** @var string */
-    private $_error_msg = '';
+
     /**
-     * Undocumented variable
+     * @var string
+     */
+    private $_error_msg = '';
+
+    /**
+     * Undocumented variable.
      *
      * @var self
      */
-    private static $instance ;
+    private static $instance;
 
     /**
      * @param \Slim\Container $container The container
@@ -161,7 +175,7 @@ class ViewManager extends \Slim\Views\Twig
         }
     }
 
-    public function maybeRenderIframes(ResponseInterface $response, string $subject,string $query_string):ResponseInterface
+    public function maybeRenderIframes(ResponseInterface $response, string $subject, string $query_string): ResponseInterface
     {
         $c = $this->getContainer();
 
@@ -352,8 +366,8 @@ class ViewManager extends \Slim\Views\Twig
      *
      * @return class-string
      */
-    private static function getControllerClassName(string $subject):string
-    {   
+    private static function getControllerClassName(string $subject): string
+    {
         return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     }
 

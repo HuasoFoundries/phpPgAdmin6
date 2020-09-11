@@ -206,7 +206,7 @@ class Misc
     }
 
     /**
-     * @return string|null
+     * @return null|string
      */
     public function serverToSha()
     {

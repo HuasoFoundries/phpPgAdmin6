@@ -32,7 +32,7 @@ class RulesController extends BaseController
 
                 break;
             case 'save_create_rule':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->createRule(false);
@@ -204,7 +204,7 @@ class RulesController extends BaseController
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_POST['name'])) {

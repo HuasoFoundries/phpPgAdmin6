@@ -15,7 +15,15 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres11 extends Postgres10
 {
+    /**
+     * @var float
+     */
     public $major_version = 11;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc11::class;
 
     /**
      * Returns a list of all functions in the database.

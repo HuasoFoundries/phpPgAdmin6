@@ -133,7 +133,7 @@ class DataexportController extends BaseController
 
         if (isset($_REQUEST['table'])) {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
-            echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
         } else {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
         }

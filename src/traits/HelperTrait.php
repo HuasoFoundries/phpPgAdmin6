@@ -50,10 +50,10 @@ trait HelperTrait
      */
     public function halt($msg = 'An error has happened'): void
     {
-        $body = $this->container->responseobj->getBody();
+        $body = \responseInstance()->getBody();
         $body->write($msg);
 
-        throw new \Slim\Exception\SlimException($this->container->requestobj, $this->container->responseobj);
+        throw new \Slim\Exception\SlimException(\requestInstance(), \responseInstance());
     }
 
     public static function getBackTrace($offset = 0)

@@ -13,7 +13,8 @@ $app->get('/status', function (
     /* @scrutinizer ignore-unused */
     array $args
 ) {
-    phpinfo();
+    \phpinfo();
+
     return;
     //dump($this->get('settings')->all());
     return $response
@@ -131,13 +132,11 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
     \Slim\Http\Response $response,
     /* @scrutinizer ignore-unused */
     array $args
-    
 ) {
-    $subject=$args['subject']??'intro';
-    $server_id=$args['server_id']??$request->getQueryParam('server');
-     //ddd($subject, $server_id);
+    $subject = $args['subject'] ?? 'intro';
+    $server_id = $args['server_id'] ?? $request->getQueryParam('server');
+    //ddd($subject, $server_id);
     $_server_info = $this->misc->getServerInfo();
- 
 
     //$this->utils->prtrace($_server_info);
 

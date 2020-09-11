@@ -42,7 +42,7 @@ class ColpropertiesController extends BaseController
         } else {
             switch ($this->action) {
                 case 'properties':
-                    if (isset($_POST['cancel'])) {
+                    if (null !== $this->getPostParam('cancel')) {
                         $this->doDefault();
                     } else {
                         $this->doAlter();
@@ -337,7 +337,7 @@ class ColpropertiesController extends BaseController
                 echo '<p><input type="hidden" name="action" value="properties" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
                 echo $this->view->form;
-                echo sprintf('<input type="hidden" name="table" value="%s"  />%s',\htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
 
@@ -353,7 +353,7 @@ class ColpropertiesController extends BaseController
                     echo '<input type="hidden" name="array" value="', \htmlspecialchars($_REQUEST['array']), '" />' . \PHP_EOL;
                 }
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . \implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>" . \PHP_EOL;
 

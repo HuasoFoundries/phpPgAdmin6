@@ -20,7 +20,15 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres10 extends Postgres96
 {
+    /**
+     * @var float
+     */
     public $major_version = 10;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc10::class;
 
     /**
      * Return all tables in current database (and schema).

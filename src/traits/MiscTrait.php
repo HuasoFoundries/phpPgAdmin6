@@ -287,7 +287,7 @@ trait MiscTrait
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = \nl2br(\htmlspecialchars(self::br2ln($str)));
 
                 break;
             case 'yesno':
@@ -319,7 +319,7 @@ trait MiscTrait
 
                 break;
             case 'nbsp':
-                $out = \nl2br(\str_replace(' ', '&nbsp;', \PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = \nl2br(\str_replace(' ', '&nbsp;', self::br2ln($str)));
 
                 break;
             case 'verbatim':
@@ -331,7 +331,7 @@ trait MiscTrait
 
                 break;
             case 'prettysize':
-                $out = \PHPPgAdmin\Traits\HelperTrait::formatSizeUnits($str, $lang);
+                $out = self::formatSizeUnits($str, $lang);
 
                 break;
 
@@ -345,7 +345,7 @@ trait MiscTrait
                     $out = \htmlspecialchars($str);
                 } else {
                     //$tag = 'span';
-                    $out = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                    $out = \nl2br(\htmlspecialchars(self::br2ln($str)));
                 }
         }
 

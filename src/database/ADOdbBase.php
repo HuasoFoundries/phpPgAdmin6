@@ -6,8 +6,6 @@
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADONewConnection;
-
 /**
  * @file
  * Parent class of all ADODB objects.
@@ -18,24 +16,45 @@ class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Database\Traits\HasTrait;
-/** @var array */
+
+    /**
+     * @var array
+     */
     public $lang;
-/** @var array */
+
+    /**
+     * @var array
+     */
     public $conf;
-/** @var \Slim\Container */
+
+    /**
+     * @var \ADODB_postgres9
+     */
+    public $conn;
+
+    /**
+     * @var \Slim\Container
+     */
     protected $container;
-/** @var array */
+
+    /**
+     * @var array
+     */
     protected $server_info;
-    /** @var string */
+
+    /**
+     * @var string
+     */
     protected $lastExecutedSql;
+
     /**
      * Base constructor.
      *
-     * @param \ADODB_postgres9|\ADODB_pdo  $conn        The connection object
+     * @param \ADODB_postgres9 $conn        The connection object
      * @param mixed            $container
      * @param mixed            $server_info
      */
-    public function __construct(  &$conn, $container, $server_info)
+    public function __construct(&$conn, $container, $server_info)
     {
         $this->container = $container;
         $this->server_info = $server_info;
@@ -44,9 +63,9 @@ class ADOdbBase
         $this->conf = $container->get('conf');
 
         $this->prtrace('instanced connection class');
-        $this->lastExecutedSql='';
+        $this->lastExecutedSql = '';
         $this->conn = $conn;
-     }
+    }
 
     /**
      * Sets the comment for an object in the database.
@@ -120,14 +139,19 @@ class ADOdbBase
         } else {
             $sql .= 'NULL;';
         }
-$this->lastExecutedSql=$sql;
+        $this->lastExecutedSql = $sql;
+
         return $this->execute($sql);
     }
-public function getLastExecutedSQL():string {
-    $lastExecutedSql=$this->lastExecutedSql;
-    $this->lastExecutedSql='';
-    return $lastExecutedSql;
-}
+
+    public function getLastExecutedSQL(): string
+    {
+        $lastExecutedSql = $this->lastExecutedSql;
+        $this->lastExecutedSql = '';
+
+        return $lastExecutedSql;
+    }
+
     /**
      * Turns on or off query debugging.
      *
@@ -190,7 +214,7 @@ public function getLastExecutedSQL():string {
         try {
             $rs = $this->conn->Execute($sql);
 
-            return $this->conn->ErrorNo();
+            return $this->ErrorNo();
         } catch (\Exception $e) {
             return $e->getCode();
         }
@@ -222,6 +246,16 @@ public function getLastExecutedSQL():string {
         }
     }
 
+    public function ErrorNo(): int
+    {
+        return $this->conn->ErrorNo();
+    }
+
+    public function ErrorMsg(): string
+    {
+        return $this->conn->ErrorMsg();
+    }
+
     /**
      * Retrieves a single value from a query.
      *
@@ -239,7 +273,7 @@ public function getLastExecutedSQL():string {
 
         // If failure, or no rows returned, return error value
         if (!$rs) {
-            return $this->conn->ErrorNo();
+            return $this->ErrorNo();
         }
 
         if (0 === $rs->recordCount()) {
@@ -286,7 +320,7 @@ public function getLastExecutedSQL():string {
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for referential integrity failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -1;
             }
         }
@@ -296,7 +330,7 @@ public function getLastExecutedSQL():string {
             return -2;
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
@@ -385,16 +419,16 @@ public function getLastExecutedSQL():string {
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for unique constraint failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
@@ -456,11 +490,11 @@ public function getLastExecutedSQL():string {
         // Check for failures
         if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
@@ -470,7 +504,7 @@ public function getLastExecutedSQL():string {
             return -3;
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
@@ -480,7 +514,7 @@ public function getLastExecutedSQL():string {
      */
     public function beginTransaction()
     {
-        return intval(!$this->conn->BeginTrans());
+        return (int) (!$this->conn->BeginTrans());
     }
 
     /**
@@ -490,7 +524,7 @@ public function getLastExecutedSQL():string {
      */
     public function endTransaction()
     {
-        return intval(!$this->conn->CommitTrans());
+        return (int) (!$this->conn->CommitTrans());
     }
 
     /**
@@ -500,7 +534,7 @@ public function getLastExecutedSQL():string {
      */
     public function rollbackTransaction()
     {
-        return intval( !$this->conn->RollbackTrans());
+        return (int) (!$this->conn->RollbackTrans());
     }
 
     /**

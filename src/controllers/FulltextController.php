@@ -31,7 +31,7 @@ class FulltextController extends BaseController
         $this->printHeader();
         $this->printBody();
 
-        if (isset($_POST['cancel'])) {
+        if (null !== $this->getPostParam('cancel')) {
             if (isset($_POST['prev_action'])) {
                 $this->action = $_POST['prev_action'];
             } else {
@@ -41,7 +41,7 @@ class FulltextController extends BaseController
 
         switch ($this->action) {
             case 'createconfig':
-                if (isset($_POST['create'])) {
+                if (null !== $this->getPostParam('create')) {
                     $this->doSaveCreateConfig();
                 } else {
                     $this->doCreateConfig();
@@ -49,7 +49,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'alterconfig':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlterConfig();
                 } else {
                     $this->doAlterConfig();
@@ -57,7 +57,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'dropconfig':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDropConfig(false);
                 } else {
                     $this->doDropConfig(true);
@@ -77,7 +77,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'createdict':
-                if (isset($_POST['create'])) {
+                if (null !== $this->getPostParam('create')) {
                     $this->doSaveCreateDict();
                 } else {
                     $this->doCreateDict();
@@ -85,7 +85,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'alterdict':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlterDict();
                 } else {
                     $this->doAlterDict();
@@ -93,7 +93,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'dropdict':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDropDict(false);
                 } else {
                     $this->doDropDict(true);
@@ -101,7 +101,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'dropmapping':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDropMapping(false);
                 } else {
                     $this->doDropMapping(true);
@@ -109,7 +109,7 @@ class FulltextController extends BaseController
 
                 break;
             case 'altermapping':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlterMapping();
                 } else {
                     $this->doAlterMapping();
@@ -315,7 +315,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_REQUEST['ftscfg']), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropFtsConfiguration($_POST['ftscfg'], isset($_POST['cascade']));
@@ -348,7 +348,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropFtsDictionary($_POST['ftsdict'], isset($_POST['cascade']));
@@ -552,7 +552,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="ftscfg" value="', \htmlspecialchars($_POST['ftscfg']), '" />' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -988,7 +988,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="prev_action" value="viewdicts" /></p>' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -1151,7 +1151,7 @@ class FulltextController extends BaseController
 
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strftsnodictionaries']}</p>" . \PHP_EOL;
@@ -1238,7 +1238,7 @@ class FulltextController extends BaseController
             echo '<input type="hidden" name="prev_action" value="viewconfig" /></p>' . \PHP_EOL;
             echo $this->view->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
-            echo sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s',$this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strftsnodictionaries']}</p>" . \PHP_EOL;
