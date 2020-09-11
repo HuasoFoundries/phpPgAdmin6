@@ -1,0 +1,88 @@
+# https://help.github.com/en/categories/automating-your-workflow-with-github-actions
+
+name: 'Static_Analysis'
+
+on:
+  pull_request:
+    branches:
+      - master
+      - develop
+
+env:
+  MIN_COVERED_MSI: 100
+  MIN_MSI: 100
+  PHP_EXTENSIONS: 'mbstring, pgsql'
+  key: cache-v1 # can be any string, change to clear the extension cache.
+jobs:
+  Static_Analysis:
+    name: 'Static_Analysis'
+
+    runs-on: 'ubuntu-latest'
+
+    strategy:
+      matrix:
+        php_version:
+          - '7.3'
+
+        dependencies:
+          - 'locked'
+
+    steps:
+      - name: 'Checkout'
+        uses: 'actions/checkout@v2.3.1'
+
+      - name: Setup cache environment
+        id: extcache
+        uses: shivammathur/cache-extensions@v1
+        with:
+          php-version: ${{ matrix.php_version }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          key: ${{ env.key }}
+
+      - name: Cache extensions
+        uses: actions/cache@v2
+        with:
+          path: ${{ steps.extcache.outputs.dir }}
+          key: ${{ steps.extcache.outputs.key }}
+          restore-keys: ${{ steps.extcache.outputs.key }}
+
+      - name: 'Install PHP with extensions'
+        uses: 'shivammathur/setup-php@v2'
+        with:
+          coverage: 'none'
+          extensions: '${{ env.PHP_EXTENSIONS }}'
+          php-version: '${{ matrix.php_version }}'
+          tools: composer
+
+
+      - name: 'Install locked dependencies from composer.lock'
+        run: 'composer install --no-interaction --no-progress --no-suggest'
+
+      - name: 'Run php-parallel-lint'
+        run: 'vendor/bin/parallel-lint      --ignore-fails        --exclude vendor --exclude .build .'
+
+      - name: 'Create cache directory for phpstan/phpstan'
+        run: 'mkdir -p .build/phpstan'
+
+      - name: 'Cache cache directory for phpstan/phpstan'
+        uses: 'actions/cache@v2'
+        with:
+          path: '.build/phpstan'
+          key: 'php-7.3-phpstan-${{ github.sha }}'
+          restore-keys: 'php-7.3-phpstan-'
+
+      - name: 'Run phpstan/phpstan'
+        run: 'vendor/bin/phpstan analyse --configuration=phpstan.neon --error-format=github'
+
+      - name: 'Create cache directory for vimeo/psalm'
+        run: 'mkdir -p .build/psalm'
+
+      - name: 'Cache cache directory for vimeo/psalm'
+        uses: 'actions/cache@v2'
+        with:
+          path: '.build/psalm'
+          key: 'php-7.3-psalm-${{ github.sha }}'
+          restore-keys: 'php-7.3-psalm-'
+
+      - name: 'Run vimeo/psalm'
+        run: 'vendor/bin/psalm --config=psalm.xml  --show-info=false --stats --diff --diff-methods  --threads=4'
