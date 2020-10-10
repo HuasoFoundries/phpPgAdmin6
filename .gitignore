@@ -36,7 +36,7 @@ vendor
 
 ###> Config files other tan examples
 config.yml
-.configs/
+.configs
 sftp-config*
 config.*.php*
 !config.inc.php-dist
@@ -47,3 +47,7 @@ config.*.php*
 .build
 .php_cs.cache
 .phpunit.result.cache
+
+tools/reviewdog
+tools/composer-require-checker
+.vscode/*

@@ -42,7 +42,7 @@ class TreeController extends BaseController
     protected $container;
 
     // Constructor
-    public function __construct(\Slim\Container $container, $controller_name = null)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container, $controller_name = null)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');

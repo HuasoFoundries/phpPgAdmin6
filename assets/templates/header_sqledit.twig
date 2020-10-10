@@ -1,19 +1,11 @@
-<!DOCTYPE html>
-<html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}" dir="{{dir}}">
+<head data-headertemplate="{{ headertemplate }}">
+  {% include 'components/common_head.twig' %}
+  <link href="{{ subfolder }}/assets/vendor/codemirror/lib/codemirror.css" type="text/css" rel="stylesheet" />
+  <script src="{{ subfolder }}/assets/vendor/codemirror/lib/codemirror.js"></script>
+  <script src="{{ subfolder }}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>
+  <script src="{{ subfolder }}/assets/vendor/codemirror/mode/meta.js"></script>
 
-    <head data-headertemplate="{{headertemplate}}">
-
-        
-                
-        {% include 'components/common_head.twig' %}
-        <link href="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.css" type="text/css" rel="stylesheet" />
-        <script src="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>
-        <script src="{{subfolder}}/assets/vendor/codemirror/mode/meta.js"></script>
-        
-
-
-        {#
+  {#
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/fold/foldgutter.css" type="text/css" rel="stylesheet" />
         <link href="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.css" type="text/css" rel="stylesheet" />
         <script src="{{subfolder}}/assets/vendor/codemirror/addon/hint/show-hint.js"></script>
@@ -44,8 +36,4 @@
         
         
         #}
-
-    </head>
-
-
-   
+</head>

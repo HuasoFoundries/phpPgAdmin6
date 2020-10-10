@@ -1,18 +1,28 @@
-{% include 'header.twig' %}
+<!DOCTYPE html>
+<html xml:lang="{{ lang.applocale }}" lang="{{ lang.applocale }}" dir="{{ lang.applangdir }}">
+  {% include 'header.twig' %}
 
-<body class="flexbox_body {{lang.applangdir}}">
+  <body class="flexbox_body {{ lang.applangdir }}">
     <div class="flexbox_wrapper">
-        <div id="masking_overlay"></div>
-        <div id="browser_container">
-
-            <iframe src="{{subfolder}}/src/views/browser" name="browser" id="browser" class="browser_container" frameborder="0" />
-            <p>Your browser does not support iframes.</p>
-            </iframe>
-        </div>
-
-        <iframe src="{{subfolder}}{{url}}" name="detail" id="detail" class="detail_container" frameborder="0" />
-        <p>Your browser does not support iframes.</p>
+      <div id="masking_overlay"></div>
+      <div id="browser_container">
+        <iframe src="{{ subfolder }}/src/views/browser"
+          name="browser"
+          id="browser"
+          class="browser_container"
+          frameborder="0">
+          <p>
+            Your browser does not support iframes.
+          </p>
         </iframe>
+      </div>
 
+      <iframe src="{{ subfolder }}{{ url }}" name="detail" id="detail" class="detail_container" frameborder="0">
+        <p>
+          Your browser does not support iframes.
+        </p>
+      </iframe>
     </div>
     {% include 'footer_iframe.twig' %}
+  </body>
+</html>

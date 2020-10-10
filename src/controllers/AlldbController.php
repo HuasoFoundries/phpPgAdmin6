@@ -106,7 +106,7 @@ class AlldbController extends BaseController
         $this->misc->setReloadBrowser(true);
 
         $href = $this->misc->getHREF();
-        $redirecturl = $this->container->utils->getDestinationWithLastTab('database');
+        $redirecturl = $this->container->getDestinationWithLastTab('database');
 
         $columns = [
             'database' => [

@@ -42,9 +42,7 @@ class HTMLHeaderController extends HTMLController
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
-        if (\function_exists('newrelic_disable_autorum')) {
-            newrelic_disable_autorum();
-        }
+
 
         $lang = $this->lang;
 

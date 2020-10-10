@@ -100,7 +100,7 @@ class SchemasController extends BaseController
 
         // Check that the DB actually supports schemas
         $schemas = $data->getSchemas();
-        $destination = $this->container->utils->getDestinationWithLastTab('schema');
+        $destination = $this->container->getDestinationWithLastTab('schema');
 
         $columns = [
             'schema' => [

@@ -1,71 +1,38 @@
 <!DOCTYPE html>
-<html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}" dir="{{lang.applangdir}}">
+<html xml:lang="{{ lang.applocale }}" lang="{{ lang.applocale }}" dir="{{ lang.applangdir }}">
+  <head data-headertemplate="{{ headertemplate }}">
+    <link rel="stylesheet" href="{{ subfolder }}/assets/vendor/jstree/themes/phppgadmin/style.css" /> {% include 'components/common_head.twig' %}
 
-    <head data-headertemplate="{{headertemplate}}">
-        <link rel="stylesheet" href="{{subfolder}}/assets/vendor/jstree/themes/phppgadmin/style.css" /> {% include 'components/common_head.twig' %}
+    <script src="{{ subfolder }}/assets/vendor/jstree/jstree.min.js"></script>
+    <style type="text/css">
+      .refreshTree { position: absolute; right: 0; z-index: 1000; }
+    </style>
+  </head>
 
-        <script src="{{subfolder}}/assets/vendor/jstree/jstree.min.js"></script>
-        <style type="text/css">
-        .refreshTree {
-            position: absolute;
-            right: 0;
-            z-index: 1000;
-        }
-        </style>
-    </head>
+  <body class="browser">
+    <div dir="{{ lang.applangdir }}">
+      <div class="logo">
+        <a href="{{ subfolder }}/" target="_parent">{{ appName }}</a>
+      </div>
+      <div class="refreshTree">
+        <a href="{{ subfolder }}/src/views/browser" target="browser">
+          <img src="{{ icon.Refresh }}" alt="{{ lang.strrefresh }}" title="{{ lang.strrefresh }}" />
+        </a>
+      </div>
 
-    <body class="browser">
+      <div id="lazy" class="demo"></div>
+    </div>
 
-        <div dir="{{lang.applangdir}}">
+    <script>
+      window.jsTree = $('#lazy').jstree({ "state": { "key": "jstree" }, "plugins": ["state"], 'core': { 'data': { "url":
+      function (node) { if (node.id === '#') { return '{{ subfolder }}/src/views/browser?action=tree'; } else { return
+      node.original.url; } } } } }); if(parent.frames && parent.frames.detail) {
+      parent.frames.detail.jsTree=window.jsTree; }
 
-            <div class="logo">
-                <a href="{{subfolder}}/" target="_parent">{{appName}}</a>
-            </div>
-            <div class="refreshTree">
-                <a href="{{subfolder}}/src/views/browser" target="browser">
-                        <img src="{{icon.Refresh}}" alt="{{lang.strrefresh}}" title="{{lang.strrefresh}}" />
-                    </a>
-            </div>
-
-            <div id="lazy" class="demo"></div>
-
-        </div>
-
-        <script>
-        window.jsTree = $('#lazy').jstree({
-            "state": {
-                "key": "jstree"
-            },
-            "plugins": ["state"],
-            'core': {
-                'data': {
-                    "url": function (node) {
-                        if (node.id === '#') {
-                            return '{{subfolder}}/src/views/browser?action=tree';
-                        } else {
-                            return node.original.url;
-                        }
-                    }
-                }
-            }
-        });
-        if(parent.frames && parent.frames.detail) {
-             parent.frames.detail.jsTree=window.jsTree;
-        }
-
-        $('#lazy').on("activate_node.jstree", function (e, data) {
-            if (window.parent.frames.detail) {
-                window.parent.frames.detail.location.replace(data.node.a_attr.href);
-            }
-        });
-        $('#lazy').on("loaded.jstree", function (e, data) {
-            $('#lazy').data('jstree').show_dots();
-        });
-        $('#lazy').on('click','.jstree-anchor',function(){
-            console.log(this);
-        });
-        </script>
-
-    </body>
-
+      $('#lazy').on("activate_node.jstree", function (e, data) { if (window.parent.frames.detail) {
+      window.parent.frames.detail.location.replace(data.node.a_attr.href); } }); $('#lazy').on("loaded.jstree", function
+      (e, data) { $('#lazy').data('jstree').show_dots(); }); $('#lazy').on('click','.jstree-anchor',function(){
+      console.log(this); });
+    </script>
+  </body>
 </html>

@@ -33,9 +33,9 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       ...parentHandle.contentDocument.querySelectorAll(
         '.toplink a.toplink_popup'
       ),
-    ].forEach(element => {
+    ].forEach((element) => {
       let href = element.href;
-      element.addEventListener('click', e => {
+      element.addEventListener('click', (e) => {
         e.preventDefault();
         window
           .open(
@@ -50,7 +50,7 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       element.href = 'javascript:void(this.click())'; // eslint-disable-line
     });
   toplink_logout &&
-    toplink_logout.addEventListener('click', e => {
+    toplink_logout.addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm(stateObj.strconfdropcred)) {
         window.location.href = e.target.href;
@@ -103,7 +103,7 @@ $.ready
   })
   .then(() => {
     if (window.location.href.indexOf('servers?action=logout') !== -1) {
-      window.setTimeout(function() {
+      window.setTimeout(function () {
         window.parent.location.replace(`${stateObj.subfolder}/servers`);
       }, 3000);
     } else if (
@@ -130,12 +130,12 @@ $.ready
       }
     }
     if (typeof hljs !== 'undefined') {
-      $('pre code.hljs').each(function(i, block) {
+      $('pre code.hljs').each(function (i, block) {
         hljs.highlightBlock(block);
       });
     }
     return;
   })
-  .catch(err => {
+  .catch((err) => {
     console.error(err);
   });

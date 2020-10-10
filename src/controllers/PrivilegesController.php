@@ -79,7 +79,7 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         if (!isset($data->privlist[$subject])) {
-            $this->container->utils->halt('No privileges defined for subject ' . $subject);
+            $this->halt('No privileges defined for subject ' . $subject);
 
             return;
         }

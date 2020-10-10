@@ -642,7 +642,7 @@ class DatabaseController extends BaseController
 
         switch ($curr) {
             case 'SCHEMA':
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<li><a href="' . self::SUBFOLDER . "{$destination}";
                 echo $this->misc->printVal($rs->fields['name']), '">';
                 echo $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']);
@@ -652,7 +652,7 @@ class DatabaseController extends BaseController
             case 'TABLE':
                 echo '<li>';
                 echo "<a href=\"tables?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('table');
+                $destination = $this->container->getDestinationWithLastTab('table');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
@@ -660,7 +660,7 @@ class DatabaseController extends BaseController
             case 'VIEW':
                 echo '<li>';
                 echo "<a href=\"views?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('view');
+                $destination = $this->container->getDestinationWithLastTab('view');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;view=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
@@ -674,7 +674,7 @@ class DatabaseController extends BaseController
                 break;
             case 'COLUMNTABLE':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 echo "<a href=\"tblproperties?subject=table&{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"colproperties?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
@@ -684,7 +684,7 @@ class DatabaseController extends BaseController
                 break;
             case 'COLUMNVIEW':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 echo "<a href=\"viewproperties?subject=view&{$this->misc->href}&view=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"colproperties?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;view=',
@@ -694,18 +694,18 @@ class DatabaseController extends BaseController
                 break;
             case 'INDEX':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('table');
+                $destination = $this->container->getDestinationWithLastTab('table');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"indexes?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'CONSTRAINTTABLE':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('table');
+                $destination = $this->container->getDestinationWithLastTab('table');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"constraints?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
@@ -720,9 +720,9 @@ class DatabaseController extends BaseController
                 break;
             case 'TRIGGER':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('table');
+                $destination = $this->container->getDestinationWithLastTab('table');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"triggers?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
@@ -730,9 +730,9 @@ class DatabaseController extends BaseController
                 break;
             case 'RULETABLE':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('table');
+                $destination = $this->container->getDestinationWithLastTab('table');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"rules?subject=table&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
@@ -740,9 +740,9 @@ class DatabaseController extends BaseController
                 break;
             case 'RULEVIEW':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                $destination = $this->container->utils->getDestinationWithLastTab('view');
+                $destination = $this->container->getDestinationWithLastTab('view');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&view=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
                 echo "<a href=\"rules?subject=view&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
@@ -797,7 +797,7 @@ class DatabaseController extends BaseController
                 break;
             case 'OPCLASS':
                 echo '<li>';
-                $destination = $this->container->utils->getDestinationWithLastTab('schema');
+                $destination = $this->container->getDestinationWithLastTab('schema');
                 echo '<a href="' . self::SUBFOLDER . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 echo "<a href=\"opclasses?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;

@@ -1,9 +1,8 @@
-<!DOCTYPE html>
-<html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}"  dir="{{lang.applangdir}}">
+<head data-headertemplate="{{ headertemplate }}">
+  {% include 'components/common_head.twig' %}
 
-    <head data-headertemplate="{{headertemplate}}">
-        {% include 'components/common_head.twig' %}
-
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" type="text/css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-    </head>
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"
+    type="text/css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+</head>

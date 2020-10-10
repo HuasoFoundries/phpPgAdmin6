@@ -210,7 +210,7 @@ class Misc
      */
     public function serverToSha()
     {
-        $request_server = $this->container->requestobj->getParam('server');
+        $request_server = \requestInstance()->getParam('server');
 
         if (null === $request_server) {
             return null;
@@ -563,7 +563,7 @@ class Misc
     public function setServerInfo($key, $value, $server_id = null): void
     {
         if (null === $server_id) {
-            $server_id = $this->container->requestobj->getParam('server');
+            $server_id = requestInstance()->getParam('server');
         }
 
         if (null === $key) {

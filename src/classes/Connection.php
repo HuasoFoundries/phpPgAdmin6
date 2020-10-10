@@ -89,9 +89,9 @@ class Connection
         $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
         try {
-            $connectionResult = 'pdo' === $this->adodb_driver ?
-            $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
-            $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
+            $this->_connection_result = 'pdo' === $this->adodb_driver ?
+                $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
+                $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
 
             //$this->prtrace($this->conn);
         } catch (\Exception $e) {
@@ -171,8 +171,7 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_postgres9
-    {
+    ): \ADODB_postgres9 {
         $this->conn = ADONewConnection('postgres9');
         $this->conn->setFetchMode($fetchMode);
         // Ignore host if null
@@ -206,8 +205,7 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_pdo
-    {
+    ): \ADODB_pdo {
         $this->conn = ADONewConnection('pdo');
         $this->conn->setFetchMode($fetchMode);
         $dsnString = \sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6', $host, $port, $database, $sslmode);

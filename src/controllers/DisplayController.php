@@ -213,6 +213,7 @@ class DisplayController extends BaseController
             'search_path' => $_REQUEST['search_path'] ?? null,
             'table' => $_REQUEST['table'] ?? null,
             'nohistory' => $_REQUEST['nohistory'] ?? null,
+            'subject'=>$subject 
         ];
 
         $this->coalesceArr($_REQUEST, 'query');

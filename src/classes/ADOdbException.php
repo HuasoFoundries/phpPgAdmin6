@@ -44,7 +44,7 @@ class ADOdbException extends \Exception
      *
      * @param string $dbms           the RDBMS you are connecting to
      * @param string $fn             the name of the calling function (in uppercase)
-     * @param number $errno          the native error number from the database
+     * @param int  $errno          the native error number from the database
      * @param string $errmsg         the native error msg from the database
      * @param string $p1             $fn specific parameter - see below
      * @param string $p2             parameter 2
@@ -95,7 +95,7 @@ class ADOdbException extends \Exception
      *
      * @param string $dbms           the RDBMS you are connecting to
      * @param string $fn             the name of the calling function (in uppercase)
-     * @param number $errno          the native error number from the database
+     * @param int  $errno          the native error number from the database
      * @param string $errmsg         the native error msg from the database
      * @param string $p1             $fn specific parameter - see below
      * @param string $p2             parameter 2

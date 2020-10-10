@@ -80,7 +80,7 @@ class BaseController
     protected $script;
 
     /**
-     * @var \Slim\Container
+     * @var \PHPPgAdmin\ContainerUtils
      */
     protected $container;
 
@@ -127,10 +127,10 @@ class BaseController
     /**
      * Constructs the base controller (common for almost all controllers).
      *
-     * @param \Slim\Container $container        the $app container
+     * @param \PHPPgAdmin\ContainerUtils $container        the $app container
      * @param bool            $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
      */
-    public function __construct(\Slim\Container $container)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');
@@ -160,25 +160,27 @@ class BaseController
         if (true === $this->no_db_connection) {
             $this->misc->setNoDBConnection(true);
         }
+$this->renderInitialPageIfNotLogged();
+        
+    }
+private function renderInitialPageIfNotLogged() {
+    if (false === $this->misc->getNoDBConnection()) {
+        if (null === $this->misc->getServerId()) {
+            $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
 
-        if (false === $this->misc->getNoDBConnection()) {
-            if (null === $this->misc->getServerId()) {
-                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
+            return $servers_controller->render();
+        }
+        $_server_info = $this->misc->getServerInfo();
+        // Redirect to the login form if not logged in
+        if (!isset($_server_info['username'])) {
+            $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']??'');
 
-                return $servers_controller->render();
-            }
-            $_server_info = $this->misc->getServerInfo();
-            // Redirect to the login form if not logged in
-            if (!isset($_server_info['username'])) {
-                $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
+            $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
 
-                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
-
-                return $servers_controller->render();
-            }
+            return $servers_controller->render();
         }
     }
-
+}
     /**
      * Default method to render the controller according to the action parameter. It should return with a PSR
      * responseObject but it prints texts whatsoeever.

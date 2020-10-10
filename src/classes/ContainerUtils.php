@@ -8,6 +8,7 @@ namespace PHPPgAdmin;
 
 use Slim\App;
 use Slim\Container;
+use requestInstance;
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__, 2));
 \defined('THEME_PATH') || \define('THEME_PATH', BASE_PATH . '/assets/themes');
@@ -178,10 +179,10 @@ class ContainerUtils
      */
     public function getRedirectUrl()
     {
-        $query_string = $this->container->requestobj->getUri()->getQuery();
+        $query_string = requestInstance()->getUri()->getQuery();
 
         // if server_id isn't set, then you will be redirected to intro
-        if (null === $this->container->requestobj->getQueryParam('server')) {
+        if (null === requestInstance()->getQueryParam('server')) {
             $destinationurl = self::SUBFOLDER . '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
