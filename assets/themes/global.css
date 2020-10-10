@@ -1,0 +1,446 @@
+/**
+ * This is hte mandatory CSS file to include on top of every CSS theme file 
+**/
+html {
+  height: 100%;
+  margin: 0;
+}
+html body {
+  /** Browser Tree using XLoadTree 2 **/
+  /** auto-complete on insert **/
+  /** bottom link back to top **/
+  /** FK browsing **/
+  /** Syntax highlighting **/
+}
+html body.sql_edit #sqlform #queryedition {
+  min-height: 80px;
+}
+html body.sql_edit #sqlform #queryedition > .CodeMirror {
+  min-height: 70px;
+}
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-sizer {
+  margin-left: 40px !important;
+}
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-sizer .cm-m-sql.cm-keyword {
+  text-transform: uppercase;
+}
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-gutters .CodeMirror-linenumbers {
+  min-width: 30px !important;
+}
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-gutters .CodeMirror-foldgutter {
+  width: 0.7em !important;
+}
+html body.sql_edit #sqlform #queryedition #query {
+  min-height: 70px;
+}
+html body.detailbody {
+  padding-top: 90px;
+  margin-left: 10px !important;
+  padding-bottom: 20px;
+}
+html body.detailbody table.tabs {
+  position: fixed;
+  top: 58px;
+  margin-left: -10px;
+  z-index: 50;
+}
+html body.detailbody table.tabs tbody tr td {
+  white-space: nowrap;
+}
+html body.detailbody table#data td {
+  white-space: nowrap;
+}
+html body.detailbody table#data td.opbutton1,
+html body.detailbody table#data td.opbutton2,
+html body.detailbody table#data td.opbutton3 {
+  border: 0 none;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+html body.detailbody table#data td.opbutton1 a,
+html body.detailbody table#data td.opbutton2 a,
+html body.detailbody table#data td.opbutton3 a {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+html body.detailbody table.will_be_datatable td {
+  white-space: nowrap;
+}
+html body.detailbody table.will_be_datatable td.opbutton1,
+html body.detailbody table.will_be_datatable td.opbutton2,
+html body.detailbody table.will_be_datatable td.opbutton3 {
+  border: 0 none;
+  padding-left: 1px;
+  padding-right: 1px;
+}
+html body.detailbody table.will_be_datatable td.opbutton1 a,
+html body.detailbody table.will_be_datatable td.opbutton2 a,
+html body.detailbody table.will_be_datatable td.opbutton3 a {
+  margin-left: 2px;
+  margin-right: 2px;
+}
+html body.detailbody table.will_be_datatable td.comment {
+  white-space: normal;
+}
+html body.detailbody table tr.data1 td.opbutton1 a,
+html body.detailbody table tr.data2 td.opbutton2 a,
+html body.detailbody table tr.data3 td.opbutton3 a {
+  -webkit-background-clip: border-box;
+  -webkit-background-origin: padding-box;
+  -webkit-background-size: auto;
+  -webkit-user-select: none;
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #428bca;
+  background-image: none;
+  background-origin: padding-box;
+  background-size: auto;
+  border: 1px solid #999;
+  border-radius: 1.5px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 11px;
+  font-weight: normal;
+  height: 15px;
+  line-height: 15px;
+  margin-bottom: 0px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 1px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: #fff !important;
+}
+html body .navlink li a {
+  -webkit-background-clip: border-box;
+  -webkit-background-origin: padding-box;
+  -webkit-background-size: auto;
+  -webkit-user-select: none;
+  background-attachment: scroll;
+  background-clip: border-box;
+  background-color: #428bca;
+  background-image: none;
+  background-origin: padding-box;
+  background-size: auto;
+  border: 1px solid #999;
+  border-radius: 1.5px;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 12px;
+  font-weight: normal;
+  height: 15px;
+  line-height: 15px;
+  margin-bottom: 0px;
+  padding-bottom: 1px;
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 1px;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: middle;
+  white-space: nowrap;
+  color: #fff !important;
+}
+html body.sql_edit #flexbox_wrapper {
+  height: 100%;
+  margin-top: 25px;
+}
+html body.sql_edit table.tabs {
+  top: 0;
+}
+html body.flexbox_body {
+  height: 100%;
+  margin: 0;
+}
+html body.flexbox_body .flexbox_wrapper {
+  display: flex;
+  height: 100%;
+  margin: 0;
+}
+html body.flexbox_body .flexbox_wrapper .ui-resizable-helper {
+  border: 2px dotted #00f;
+}
+html body.flexbox_body .flexbox_wrapper #masking_overlay {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  bottom: 0;
+  z-index: 80;
+  display: none;
+}
+html body.flexbox_body .flexbox_wrapper > .detail_container {
+  height: 100%;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+  float: left;
+  flex: 1 1;
+}
+html body.flexbox_body .flexbox_wrapper > #browser_container {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+  float: left;
+  flex: 0 0 300px;
+}
+html body.flexbox_body .flexbox_wrapper > #browser_container > .browser_container {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+  float: left;
+  width: 100%;
+}
+html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable {
+  width: 300px;
+  flex: unset;
+  border-right: 8px solid #cfd8dc;
+}
+html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
+  width: 8px;
+  right: -8px;
+  background: #84a0ad;
+  top: 45%;
+  height: 50px;
+}
+html body.flexbox_body.rtl .flexbox_wrapper > .detail_container {
+  float: right;
+  flex-grow: 1;
+}
+html body.flexbox_body.rtl .flexbox_wrapper > #browser_container {
+  float: right;
+  flex: 0 0 300px;
+}
+html body.flexbox_body.rtl .flexbox_wrapper > #browser_container.ui-resizable {
+  flex: unset;
+  border-right: 0 none;
+  border-left: 8px solid #cfd8dc;
+}
+html body.flexbox_body.rtl .flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-w {
+  width: 8px;
+  left: -8px;
+  background: #84a0ad;
+  top: 45%;
+  height: 50px;
+}
+html body.browser {
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  text-align: left;
+}
+html body.browser .refreshTree {
+  float: right;
+  text-align: right;
+  padding: 0 3px;
+}
+html body.browser .webfx-tree-row {
+  white-space: nowrap;
+}
+html body.browser .webfx-tree-children {
+  background-repeat: repeat-y;
+  background-position-y: 1px !important;
+  /* IE only */
+}
+html body.browser .webfx-tree-row img {
+  vertical-align: middle;
+}
+html body.browser .webfx-tree-item-label {
+  margin-left: 0.5ex;
+}
+html body.browser .webfx-tree-icon {
+  margin-left: 1px;
+}
+html body.browser .webfx-tree-hide-root {
+  display: none;
+}
+html body img {
+  border: none;
+}
+html body p.message {
+  color: blue;
+}
+html body p.comment {
+  font-style: italic;
+}
+html body .left {
+  text-align: left;
+}
+html body .pre {
+  white-space: pre;
+}
+html body .arg_icon {
+  padding-right: 5pt;
+  padding-left: 5pt;
+}
+html body .topbar {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  top: 0;
+  margin-left: -10px !important;
+}
+html body .trail {
+  position: fixed;
+  z-index: 100;
+  width: 100%;
+  top: 27px;
+  margin-left: -10px !important;
+}
+html body #fkbg {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+}
+html body #fklist {
+  display: none;
+  position: absolute;
+  background: #fff;
+  border: 1px solid #000;
+  overflow: auto;
+  z-index: 15;
+}
+html body #fklist table {
+  border-collapse: collapse;
+  border: 1px solid #aaa;
+}
+html body #fklist th {
+  border: 1px solid #aaa;
+}
+html body #fklist td,
+html body #fklist th {
+  padding: 3px 10px;
+  border-right: 1px solid #aaa;
+  font-size: 12px;
+}
+html body #fklist td a {
+  display: block;
+  color: #000;
+}
+html body #fklist td a.fkval,
+html body p.errmsg {
+  color: red;
+}
+html body .ac_values {
+  width: 100%;
+}
+html body .bottom_link {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  margin: 0;
+  padding: 4px;
+  background: #eee;
+  border-top: 1px dotted #999;
+  border-left: 1px dotted #999;
+  font-size: smaller;
+}
+html body div#root {
+  position: absolute;
+}
+html body div.fk {
+  margin-left: 20px;
+}
+html body div#fkcontainer {
+  margin: 0;
+  position: relative;
+  width: 100%;
+  background: none;
+  border: 0px;
+}
+html body div.fk_value {
+  display: inline-block;
+}
+html body .highlight {
+  background-color: #ffff00;
+}
+html body .comment {
+  color: #008080;
+}
+html body .keyword {
+  color: #ff8000;
+}
+html body .literal {
+  color: #808080;
+}
+html body .bold {
+  font-weight: bold;
+}
+html body .select2-container {
+  min-width: 250px;
+}
+html body form.sqlform {
+  float: left;
+  width: 100%;
+}
+html body form.sqlform .sqledit_bottom_inputs {
+  padding: 1%;
+  width: 98%;
+  float: left;
+}
+html body form.sqlform .sqledit_bottom_inputs p label {
+  float: left;
+}
+html body form.sqlform .sqledit_bottom_inputs p label #paginate {
+  position: relative;
+  top: 2px;
+}
+html body .searchpath {
+  padding: 5px;
+  clear: both;
+}
+html body .CodeMirror {
+  border: 1px solid #aaa;
+  padding: 3px;
+  font-size: 1.1em;
+  line-height: 1.5em;
+}
+@media print {
+  @page {
+    size: 215.9mm 279.4mm;
+    margin: 5mm 5mm 5mm 5mm;
+    orphans: 100;
+    widows: 0;
+  }
+  html,
+  body {
+    height: 100%;
+    width: 100%;
+  }
+  #browser_container {
+    display: none;
+  }
+  body {
+    margin: 0;
+    background: white;
+    background-color: #ffffff;
+  }
+  body .flexbox_wrapper > .detail_container {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+    text-align: left;
+    float: left;
+    flex: 1 1;
+    border: 4px red;
+  }
+  body .topbar {
+    display: none;
+  }
+  body .trail {
+    display: none;
+  }
+  body h2 {
+    display: none;
+  }
+}

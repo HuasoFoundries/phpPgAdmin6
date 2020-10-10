@@ -1,0 +1,43 @@
+
+module.exports = {
+  
+  singleQuote: true,
+  semi: true,
+  tabWidth: 2,
+  useTabs: false,
+  trailingComma: 'es5',
+  overrides: [
+    {
+      files: '*.json',
+      options: {
+        useTabs: false,
+        parser: 'json',
+      },
+    },
+    {
+      files: '*.scss',
+      options: {
+        useTabs: false,
+        parser: 'scss',
+      },
+    },
+    {
+      files: '*.less',
+      options: {
+        useTabs: false,
+        parser: 'less',
+      },
+    }
+  ],
+  "twigPrintWidth": 120,
+
+  "twigMultiTags": [
+    "if,endif",
+    "nav,endnav",
+    "switch,case,default,endswitch",
+    "ifchildren,endifchildren",
+    "cache,endcache",
+    "js,endjs"
+  ],
+  "plugins": ["./node_modules/prettier-plugin-twig-melody"]
+};

@@ -1,0 +1,13 @@
+runner:
+  phpstan:
+    cmd: vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon --error-format=raw
+    level: info
+
+  eslint:
+    cmd: node_modules/.bin/eslint --ext js --ignore-path .eslintignore assets
+    level: info
+
+  psalm:
+    cmd: vendor/bin/psalm --config=psalm.xml  --ignore-baseline --output-format=checkstyle
+    level: info
+    name: checkstyle
