@@ -178,7 +178,7 @@ class ViewTest extends \Codeception\Test\Unit
     {
         $Helper = $this->getModule('\Helper\Unit');
         $this->container = $Helper::getContainer();
-        self::$BASE_PATH = $Helper::BASE_PATH;
+        self::$BASE_PATH = self::$BASE_PATH = $this->container->BASE_PATH;;
         $this->container->get('misc')->setNoDBConnection(true);
         // Helper
         //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
