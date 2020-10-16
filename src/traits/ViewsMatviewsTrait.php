@@ -64,7 +64,7 @@ trait ViewsMatviewsTrait
 
             $attrs = $data->getTableAttributes($_REQUEST[$this->keystring]);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo \PHP_EOL;
 
             if (0 < $attrs->recordCount()) {
@@ -118,12 +118,13 @@ trait ViewsMatviewsTrait
                         '>', \htmlspecialchars($v), '</option>' . \PHP_EOL;
                     }
                     echo '</select></td>' . \PHP_EOL;
-                    echo '<td style="white-space:nowrap;">', $data->printField(
+                    echo '<td style="white-space:nowrap;">';
+                    echo $data->printField(
                         "values[{$attrs->fields['attname']}]",
                         $_REQUEST['values'][$attrs->fields['attname']],
                         $attrs->fields['type']
-                    ), '</td>';
-                    echo '</tr>' . \PHP_EOL;
+                    );
+                    echo '</td></tr>' . \PHP_EOL;
                     ++$i;
                     $attrs->moveNext();
                 }
@@ -184,7 +185,7 @@ trait ViewsMatviewsTrait
 
         $tables = $data->getAllTables();
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -375,7 +376,7 @@ trait ViewsMatviewsTrait
         }
         \asort($arrFields);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviews" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -409,6 +410,7 @@ trait ViewsMatviewsTrait
 
         for ($i = 0; $i < $linkCount; ++$i) {
             // Initialise variables
+            $formLink[$i]=$formLink[$i]??[];
             $this->coalesceArr($formLink[$i], 'operator', 'INNER JOIN');
 
             echo "<tr>\n<td class=\"{$rowClass}\">" . \PHP_EOL;

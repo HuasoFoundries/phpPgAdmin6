@@ -161,11 +161,11 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = self::SUBFOLDER . '/redirect';
+            $vars['url'] = \containerInstance()->subFolder . '/redirect';
         }
 
-        if (self::SUBFOLDER . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
-            $vars['url'] = self::SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if (containerInstance()->subFolder . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
+            $vars['url'] = \containerInstance()->subFolder . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -1038,14 +1038,14 @@ trait MiscTrait
         return [
             'sql' => [
                 'title' => $lang['strsql'],
-                'url' => self::SUBFOLDER . '/src/views/sqledit',
+                'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help' => 'pg.sql',
                 'icon' => 'SqlEditor',
             ],
             'find' => [
                 'title' => $lang['strfind'],
-                'url' => self::SUBFOLDER . '/src/views/sqledit',
+                'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon' => 'Search',
             ],
