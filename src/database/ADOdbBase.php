@@ -33,7 +33,7 @@ class ADOdbBase
     public $conn;
 
     /**
-     * @var \Slim\Container
+     * @var \PHPPgAdmin\ContainerUtils
      */
     protected $container;
 

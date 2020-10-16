@@ -101,8 +101,9 @@ class Postgres extends ADOdbBase
      * Gets the help pages.
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
+     * @return array<array-key, string>|null|string
      */
-    public function getHelpPages(): array
+    public function getHelpPages()
     {
         return $this->help_class->getHelpTopics();
     }
