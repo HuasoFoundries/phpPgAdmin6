@@ -602,7 +602,7 @@ trait TableTrait
                     $qual = \mb_substr($type[$i], 9);
                     $sql .= "\"{$field[$i]}\" timestamp";
 
-                    if ('' !== $length[$i]) {
+                    if ('' !== $length[$i] ?? '') {
                         $sql .= "({$length[$i]})";
                     }
 
@@ -623,9 +623,10 @@ trait TableTrait
                     break;
 
                 default:
+                $length[$i] = $length[$i] ?? null;
                     $sql .= "\"{$field[$i]}\" {$type[$i]}";
 
-                    if ('' !== $length[$i]) {
+                    if ('' !== $length[$i] && null !== $length[$i]) {
                         $sql .= "({$length[$i]})";
                     }
             }

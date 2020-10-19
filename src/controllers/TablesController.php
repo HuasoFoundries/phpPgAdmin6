@@ -171,14 +171,34 @@ class TablesController extends BaseController
         ];
         $navlinks = [
             'create' => [
-                'attr' => $attr,
+                'attr' => [
+                    'href' => [
+                        'url' => 'tables',
+                        'urlvars' => [
+                            'action' => 'create',
+                            'server' => $this->getRequestParam('server'),
+                            'database' => $this->getRequestParam('database'),
+                            'schema' => $this->getRequestParam('schema'),
+                        ],
+                    ],
+                ],
                 'content' => $this->lang['strcreatetable'],
             ],
         ];
 
         if ((0 < $tables->recordCount()) && $data->hasCreateTableLike()) {
             $navlinks['createlike'] = [
-                'attr' => $attr,
+                'attr' => [
+                    'href' => [
+                        'url' => 'tables',
+                        'urlvars' => [
+                            'action' => 'createlike',
+                            'server' => $this->getRequestParam('server'),
+                            'database' => $this->getRequestParam('database'),
+                            'schema' => $this->getRequestParam('schema'),
+                        ],
+                    ],
+                ],
                 'content' => $this->lang['strcreatetablelike'],
             ];
         }
@@ -343,7 +363,7 @@ class TablesController extends BaseController
                 break;
             case 2:
                 // Check inputs
-                $fields = \trim($_REQUEST['fields']);
+                $fields = (int) (\trim($_REQUEST['fields']));
 
                 if ('' === \trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
@@ -489,7 +509,7 @@ class TablesController extends BaseController
                 $this->coalesceArr($_REQUEST, 'spcname', null);
 
                 // Check inputs
-                $fields = \trim($_REQUEST['fields']);
+                $fields = (int) (\trim($_REQUEST['fields']));
 
                 if ('' === \trim($_REQUEST['name'])) {
                     $_REQUEST['stage'] = 1;
@@ -971,7 +991,7 @@ class TablesController extends BaseController
 
         $_POST['fields'] = \unserialize(\htmlspecialchars_decode($_POST['fields'], \ENT_QUOTES));
 
-        if ($_SESSION['counter']++ === $_POST['protection_counter']) {
+        if ($_SESSION['counter']++ === (int) ($_POST['protection_counter'])) {
             $status = $data->insertRow($_POST['table'], $_POST['fields'], $_POST['values'], $_POST['nulls'], $_POST['format'], $_POST['types']);
 
             if (0 === $status) {
