@@ -21,7 +21,7 @@
     "ext-xml": "*",
     "adodb/adodb-php": "^5.20",
     "slim/flash": "^0.4.0",
-    "slim/slim": "^3.6",
+    "slim/slim": "^4.5",
     "slim/twig-view": "~2.5.1",
     "symfony/yaml": "^5.1",
     "twig/twig": "~3"
