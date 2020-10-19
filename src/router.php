@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.0
+ * PHPPgAdmin 6.1.2
  */
 
 require_once __DIR__ . '/lib.inc.php';
