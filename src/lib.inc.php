@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.0
+ * PHPPgAdmin 6.1.2
  */
 
 use Slim\App;
