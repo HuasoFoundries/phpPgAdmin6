@@ -7,11 +7,6 @@
 namespace PHPPgAdmin;
 
 /**
- * @file
- * Extends ADORecordSet to let correct inference on PHPDoc params
- */
-
-/**
  * Extends ADORecordSet to let correct inference on PHPDoc params.
  */
 class ADORecordSet extends \ADORecordSet implements \Countable
@@ -22,6 +17,16 @@ class ADORecordSet extends \ADORecordSet implements \Countable
     public function count(): int
     {
         return $this->NumRows();
+    }
+
+    /**
+     * synonyms RecordCount and RowCount.
+     *
+     * @return int number of rows or -1 if this is not supported
+     */
+    public function recordCount()
+    {
+        return $this->count();
     }
 
     /**

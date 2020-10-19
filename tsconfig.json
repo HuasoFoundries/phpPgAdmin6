@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "keyofStringsOnly": true,
+    "allowJs": true,
+    "checkJs": true,
+    "declarationDir": "types",
+    "declaration": false,
+    //"emitDeclarationOnly": true,
+    "noEmit": true,
+    "outDir": "build",
+
+
+
+  },
+  "exclude": ["node_modules"],
+  "outDir":"build"
+
+}

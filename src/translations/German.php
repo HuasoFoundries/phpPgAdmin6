@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for German language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class German extends English
+class German extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Deutsch';

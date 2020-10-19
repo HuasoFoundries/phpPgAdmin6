@@ -34,7 +34,7 @@ class AggregatesController extends BaseController
 
                 break;
             case 'save_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreate();
@@ -46,7 +46,7 @@ class AggregatesController extends BaseController
 
                 break;
             case 'save_alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlter();
                 } else {
                     $this->doProperties();
@@ -54,7 +54,7 @@ class AggregatesController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDefault();
@@ -240,7 +240,7 @@ class AggregatesController extends BaseController
         );
 
         if (0 === $status) {
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
             $this->doDefault($this->lang['straggrcreated']);
         } else {
             $this->doCreate($this->lang['straggrcreatedbad']);
@@ -276,7 +276,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/aggregates" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
@@ -305,9 +305,9 @@ class AggregatesController extends BaseController
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 
@@ -359,7 +359,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/aggregates" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
         $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
         if (0 < $aggrdata->recordCount()) {
@@ -378,14 +378,14 @@ class AggregatesController extends BaseController
             \htmlspecialchars($aggrdata->fields['aggrcomment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_alter" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<input type="hidden" name="aggrname" value="', \htmlspecialchars($_REQUEST['aggrname']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrtype" value="', \htmlspecialchars($_REQUEST['aggrtype']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrowner" value="', \htmlspecialchars($aggrdata->fields['usename']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrschema" value="', \htmlspecialchars($_REQUEST['schema']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrcomment" value="', \htmlspecialchars($aggrdata->fields['aggrcomment']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strback']}\" /></p>" . \PHP_EOL;
@@ -408,20 +408,20 @@ class AggregatesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropaggregate'], \htmlspecialchars($_REQUEST['aggrname'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/aggregates" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrname" value="', \htmlspecialchars($_REQUEST['aggrname']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrtype" value="', \htmlspecialchars($_REQUEST['aggrtype']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $this->data->dropAggregate($_POST['aggrname'], $_POST['aggrtype'], isset($_POST['cascade']));
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['straggregatedropped']);
             } else {
                 $this->doDefault($this->lang['straggregatedroppedbad']);

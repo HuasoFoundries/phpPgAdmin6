@@ -6,28 +6,14 @@
 
 namespace PHPPgAdmin\Controller;
 
-use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\XHtml;
 
-\ini_set('display_errors', ContainerUtils::DEBUGMODE);
 /**
  * Base controller class.
  */
 class BaseController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $appLangFiles = [];
 
@@ -63,19 +49,26 @@ class BaseController
 
     public $msg = '';
 
+    /**
+     * @var \PHPPgAdmin\ViewManager
+     */
     public $view;
 
+    /**
+     * @var \PHPPgAdmin\Misc
+     */
     public $misc;
 
     public $conf;
 
     public $phpMinVer;
 
-    protected $script;
-
+    /**
+     * @var \PHPPgAdmin\ContainerUtils
+     */
     protected $container;
 
-    protected $app;
+    protected $script;
 
     protected $data;
 
@@ -85,26 +78,31 @@ class BaseController
 
     /**
      * @var XHtml\HTMLTableController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_table_controller;
 
     /**
      * @var XHtml\HTMLFooterController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_footer_controller;
 
     /**
      * @var XHtml\HTMLHeaderController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_header_controller;
 
     /**
      * @var XHtml\HTMLNavbarController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_trail_controller;
 
     /**
      * @var TreeController
+     * @psalm-suppress PropertyNotSetInConstructor
      */
     protected $_tree_controller;
 
@@ -115,10 +113,10 @@ class BaseController
     /**
      * Constructs the base controller (common for almost all controllers).
      *
-     * @param \Slim\Container $container        the $app container
-     * @param bool            $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
+     * @param \PHPPgAdmin\ContainerUtils $container        the $app container
+     * @param bool                       $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
      */
-    public function __construct(\Slim\Container $container)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');
@@ -153,16 +151,17 @@ class BaseController
             if (null === $this->misc->getServerId()) {
                 $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
 
-                return $servers_controller->render();
-            }
-            $_server_info = $this->misc->getServerInfo();
-            // Redirect to the login form if not logged in
-            if (!isset($_server_info['username'])) {
-                $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
+                $servers_controller->render();
+            } else {
+                $_server_info = $this->misc->getServerInfo();
+                // Redirect to the login form if not logged in
+                if (!isset($_server_info['username'])) {
+                    $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
-                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
+                    $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
 
-                return $servers_controller->render();
+                    $servers_controller->render();
+                }
             }
         }
     }
@@ -245,7 +244,7 @@ class BaseController
      *
      * @param array $tabs The tabs
      *
-     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     * @return \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
      */
     public function adjustTabsForTree(&$tabs)
     {
@@ -257,10 +256,10 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
-     * @param array                      $attrs     Attributes for tree items
-     * @param string                     $section   The section where the branch is linked in the tree
-     * @param bool                       $print     either to return or echo the result
+     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param array                                               $attrs     Attributes for tree items
+     * @param string                                              $section   The section where the branch is linked in the tree
+     * @param bool                                                $print     either to return or echo the result
      *
      * @return \Slim\Http\Response|string the json rendered tree
      */
@@ -429,26 +428,45 @@ class BaseController
     }
 
     /**
-     * @param null|string $default
      * @param string      $key
+     * @param null|string $default
      */
     public function getRequestParam(string $key, ?string $default = null)
     {
-        return $this->container->requestobj->getParam($key, $default);
+        return \requestInstance()->getParam($key, $default);
     }
 
     /**
-     * @param null|array|string $default
-     * @param string            $key
+     * @param string                           $key
+     * @param null|array|bool|float|int|string $default
+     *
+     * @return bool| null|array|string|int|float
      */
     public function getPostParam(string $key, $default = null)
     {
-        return $this->container->requestobj->getParsedBodyParam($key, $default);
+        return \requestInstance()->getParsedBodyParam($key, $default);
     }
 
-    public function getQueryParam($key, $default = null)
+    /**
+     * @param string                      $key
+     * @param null|array|float|int|string $default
+     *
+     * @return null|array|float|int|string
+     */
+    public function getQueryStrinParam($key, $default = null)
     {
-        return $this->container->requestobj->getQueryParam($key, $default);
+        return \requestInstance()->getQueryParam($key, $default);
+    }
+
+    /**
+     * @return array
+     */
+    public function getAllParams(): array
+    {
+        return \array_merge(
+            \requestInstance()->getQueryParams() ?? [],
+            \requestInstance()->getParsedBody() ?? []
+        );
     }
 
     /**
@@ -462,7 +480,7 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg = \htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($msg));
+        $msg = \htmlspecialchars(\PHPPgAdmin\ContainerUtils::br2ln($msg));
 
         if ('' !== $msg) {
             $html .= '<p class="message">' . \nl2br($msg) . '</p>' . \PHP_EOL;

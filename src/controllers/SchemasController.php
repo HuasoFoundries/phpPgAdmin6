@@ -30,7 +30,7 @@ class SchemasController extends BaseController
             return $this->doSubTree();
         }
 
-        if (isset($_POST['cancel'])) {
+        if (null !== $this->getPostParam('cancel')) {
             $this->action = '';
         }
 
@@ -40,7 +40,7 @@ class SchemasController extends BaseController
 
         switch ($this->action) {
             case 'create':
-                if (isset($_POST['create'])) {
+                if (null !== $this->getPostParam('create')) {
                     $this->doSaveCreate();
                 } else {
                     $this->doCreate();
@@ -48,7 +48,7 @@ class SchemasController extends BaseController
 
                 break;
             case 'alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlter();
                 } else {
                     $this->doAlter();
@@ -56,7 +56,7 @@ class SchemasController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDrop(true);
@@ -100,13 +100,13 @@ class SchemasController extends BaseController
 
         // Check that the DB actually supports schemas
         $schemas = $data->getSchemas();
-        $destination = $this->container->utils->getDestinationWithLastTab('schema');
+        $destination = $this->container->getDestinationWithLastTab('schema');
 
         $columns = [
             'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url' => self::SUBFOLDER . "{$destination}&amp;",
+                'url' => \containerInstance()->subFolder . "{$destination}&amp;",
                 'vars' => ['schema' => 'nspname'],
             ],
             'owner' => [
@@ -280,7 +280,7 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/schemas" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -304,7 +304,7 @@ class SchemasController extends BaseController
         echo '<p>' . \PHP_EOL;
         echo '<input type="hidden" name="action" value="create" />' . \PHP_EOL;
         echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
         echo '</p>' . \PHP_EOL;
@@ -325,7 +325,7 @@ class SchemasController extends BaseController
             $status = $data->createSchema($_POST['formName'], $_POST['formAuth'], $_POST['formComment']);
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strschemacreated']);
             } else {
                 $this->doCreate($this->lang['strschemacreatedbad']);
@@ -358,7 +358,7 @@ class SchemasController extends BaseController
 
             $this->coalesceArr($_POST, 'owner', $schema->fields['ownername']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/schemas" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -392,9 +392,9 @@ class SchemasController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
             echo '<input type="hidden" name="schema" value="', \htmlspecialchars($_POST['schema']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -413,7 +413,7 @@ class SchemasController extends BaseController
         $status = $data->updateSchema($_POST['schema'], $_POST['comment'], $_POST['name'], $_POST['owner']);
 
         if (0 === $status) {
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
             $this->doDefault($this->lang['strschemaaltered']);
         } else {
             $this->doAlter($this->lang['strschemaalteredbad']);
@@ -437,7 +437,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/schemas" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -453,9 +453,9 @@ class SchemasController extends BaseController
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['nsp'])) {
@@ -467,10 +467,19 @@ class SchemasController extends BaseController
                         $status = $data->dropSchema($s, isset($_POST['cascade']));
 
                         if (0 === $status) {
-                            $msg .= \sprintf('%s: %s<br />', \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strschemadropped']);
+                            $msg .= \sprintf(
+                                '%s: %s<br />',
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strschemadropped']
+                            );
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strschemadroppedbad']));
+                            $this->doDefault(\sprintf(
+                                '%s%s: %s<br />',
+                                $msg,
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strschemadroppedbad']
+                            ));
 
                             return;
                         }
@@ -479,7 +488,7 @@ class SchemasController extends BaseController
 
                 if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
                     $this->doDefault($this->lang['strschemadroppedbad']);
@@ -488,7 +497,7 @@ class SchemasController extends BaseController
                 $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
 
                 if (0 === $status) {
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($this->lang['strschemadropped']);
                 } else {
                     $this->doDefault($this->lang['strschemadroppedbad']);

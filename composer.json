@@ -1,67 +1,77 @@
 {
-    "name": "huasofoundries/phppgadmin6",
-    "type": "project",
-    "description": "Like phpmyadmin but for postgres",
-    "license": [
-        "MIT",
-        "GPL-2.0-OR-LATER",
-        "BSD-3-Clause"
-    ],
-    "authors": [
-        {
-            "name": "FFFlabs",
-            "email": "amenadiel@gmail.com"
-        }
-    ],
-    "require": {
-        "php": ">=7.1",
-        "ext-pgsql": "*",
-        "adodb/adodb-php": "^5.20",
-        "slim/flash": "^0.4.0",
-        "slim/slim": "^3.6",
-        "slim/twig-view": "~2.5.1",
-        "symfony/yaml": "^5.0",
-        "twig/twig": "~1.42.4"
-    },
-    "require-dev": {
-        "codeception/codeception": "*",
-        "codeception/module-asserts": "^1.1",
-        "ergebnis/composer-normalize": "^2.2",
-        "ergebnis/php-cs-fixer-config": "^2.0",
-        "filp/whoops": "^2.7",
-        "friendsofphp/php-cs-fixer": "^2.16",
-        "kint-php/kint": "~3.3",
-        "ocramius/package-versions": "~1.4.0",
-        "php-parallel-lint/php-parallel-lint": "^1.2",
-        "phpstan/phpstan": "^0.12.14",
-        "simpletest/simpletest": "^1.1",
-        "vimeo/psalm": "~3.9.3"
-    },
-    "extra": {
-        "version": "6.0.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "PHPPgAdmin\\": "src/classes",
-            "PHPPgAdmin\\Controller\\": "src/controllers",
-            "PHPPgAdmin\\Middleware\\": "src/middleware",
-            "PHPPgAdmin\\Database\\": "src/database",
-            "PHPPgAdmin\\XHtml\\": "src/xhtml",
-            "PHPPgAdmin\\Decorators\\": "src/decorators",
-            "PHPPgAdmin\\Traits\\": "src/traits",
-            "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
-            "PHPPgAdmin\\Help\\": "src/help",
-            "PHPPgAdmin\\Translations\\": "src/translations"
-        }
-    },
-    "scripts": {
-        "post-install-cmd": "@clear_twig_cache",
-        "post-create-project-cmd": "@clear_twig_cache",
-        "clear_twig_cache": [
-            "make fix_permissions",
-            "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
-            "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
-        ],
-        "phpstan": "phpstan analyse src   "
+  "name": "huasofoundries/phppgadmin6",
+  "type": "project",
+  "description": "Like phpmyadmin but for postgres",
+  "license": [
+    "MIT",
+    "GPL-2.0-OR-LATER",
+    "BSD-3-Clause"
+  ],
+  "authors": [
+    {
+      "name": "FFFlabs",
+      "email": "amenadiel@gmail.com"
     }
+  ],
+  "require": {
+    "php": ">=7.2",
+    "ext-json": "*",
+    "ext-mbstring": "*",
+    "ext-pgsql": "*",
+    "ext-xml": "*",
+    "adodb/adodb-php": "^5.20",
+    "slim/flash": "^0.4.0",
+    "slim/slim": "^3.6",
+    "slim/twig-view": "~2.5.1",
+    "symfony/yaml": "^5.1",
+    "twig/twig": "~3"
+  },
+  "require-dev": {
+    "codeception/codeception": "*",
+    "codeception/module-asserts": "^1.1",
+    "ergebnis/composer-normalize": "^2.2",
+    "ergebnis/php-cs-fixer-config": "^2.0",
+    "filp/whoops": "^2.7",
+    "friendsofphp/php-cs-fixer": "^2.16",
+    "kint-php/kint": "~3.3",
+    "ocramius/package-versions": "~1.4.0",
+    "php-parallel-lint/php-parallel-lint": "^1.2",
+    "phpstan/phpstan": "^0.12.14",
+    "rector/rector-prefixed": "^0.8.29",
+    "staabm/annotate-pull-request-from-checkstyle": "^1.4",
+    "vimeo/psalm": "~3.9.3"
+  },
+  "extra": {
+    "version": "6.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "PHPPgAdmin\\": "src/classes",
+      "PHPPgAdmin\\Controller\\": "src/controllers",
+      "PHPPgAdmin\\Middleware\\": "src/middleware",
+      "PHPPgAdmin\\Database\\": "src/database",
+      "PHPPgAdmin\\XHtml\\": "src/xhtml",
+      "PHPPgAdmin\\Decorators\\": "src/decorators",
+      "PHPPgAdmin\\Traits\\": "src/traits",
+      "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
+      "PHPPgAdmin\\Help\\": "src/help",
+      "PHPPgAdmin\\Translations\\": "src/translations"
+    },
+    "files": [
+      "vendor/adodb/adodb-php/drivers/adodb-postgres9.inc.php",
+      "vendor/adodb/adodb-php/drivers/adodb-pdo.inc.php",
+      "vendor/adodb/adodb-php/drivers/adodb-pdo_pgsql.inc.php"
+    ]
+  },
+  "scripts": {
+    "post-install-cmd": "@clear_twig_cache",
+    "post-autoload-dump": "@composer normalize",
+    "post-create-project-cmd": "@clear_twig_cache",
+    "clear_twig_cache": [
+      "make fix_permissions",
+      "php -r \"array_map( 'unlink', array_filter((array) glob('temp/twigcache/**/*.php', GLOB_BRACE)));\"",
+      "php -r \"array_map( 'rmdir', array_filter((array) glob('temp/twigcache/*', GLOB_BRACE)));\""
+    ],
+    "phpstan": "phpstan analyse src   "
+  }
 }

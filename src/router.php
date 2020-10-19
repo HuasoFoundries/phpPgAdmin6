@@ -5,35 +5,41 @@
  */
 
 require_once __DIR__ . '/lib.inc.php';
+$app = getAppInstance();
+$container = containerInstance();
+
+// Set the requestobj and responseobj properties of the container
+// as the value of $request and $response, which already contain the route
+$app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
+
+if (!isset($msg)) {
+    $msg = '';
+}
+$container['msg'] = $msg;
+//ddd($container->misc);
+
 $app->get('/status', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
-    //dump($this->get('settings')->all());
     return $response
         ->withHeader('Content-type', 'application/json')
         ->withJson(
-            DEBUGMODE ? $this->get('settings')->all() : ['version' => $this->version]
+            $this->get('settings')['debug'] ? $this->get('settings')->all() : ['version' => $this->version]
         );
 });
 
 $app->post('/redirect/server', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
     $body = $response->getBody();
     $misc = $this->misc;
 
-    $loginShared   = $request->getParsedBodyParam('loginShared');
-    $loginServer   = $request->getParsedBodyParam('loginServer');
+    $loginShared = $request->getParsedBodyParam('loginShared');
+    $loginServer = $request->getParsedBodyParam('loginServer');
     $loginUsername = $request->getParsedBodyParam('loginUsername');
     $loginPassword = $request->getParsedBodyParam('loginPassword_' . \md5($loginServer));
 
@@ -49,6 +55,7 @@ $app->post('/redirect/server', function (
         $data = $misc->getDatabaseAccessor();
 
         if (null === $data) {
+            //ddd($misc->getErrorMsg());
             $login_controller = new \PHPPgAdmin\Controller\LoginController($this, true);
             $body->write($login_controller->doLoginForm($misc->getErrorMsg()));
 
@@ -60,41 +67,36 @@ $app->post('/redirect/server', function (
             $_SESSION['sharedPassword'] = $loginPassword;
         }
 
-        $misc->setReloadBrowser(true);
+        $this->view->setReloadBrowser(true);
+        $this->addFlash(true, 'reload_browser');
 
-        $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
+        $destinationurl = $this->getDestinationWithLastTab('alldb');
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
     $_server_info = $this->misc->getServerInfo();
 
     if (!isset($_server_info['username'])) {
-        $destinationurl = $this->utils->getDestinationWithLastTab('server');
+        $destinationurl = $this->getDestinationWithLastTab('server');
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 });
 
 $app->get('/redirect[/{subject}]', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
-    $subject        = (isset($args['subject'])) ? $args['subject'] : 'root';
-    $destinationurl = $this->utils->getDestinationWithLastTab($subject);
+    $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
+    $destinationurl = $this->getDestinationWithLastTab($subject);
 
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
 
 $app->map(['GET', 'POST'], '/src/views/{subject}', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
     $subject = $args['subject'];
@@ -107,35 +109,30 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     $safe_subjects = ('servers' === $subject || 'intro' === $subject || 'browser' === $subject);
 
     if (null === $this->misc->getServerId() && !$safe_subjects) {
-        return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
+        return $response->withStatus(302)->withHeader('Location', $this->subFolder . '/src/views/servers');
     }
 
     if (!isset($_server_info['username']) && 'login' !== $subject && !$safe_subjects) {
-        $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
+        $destinationurl = $this->subFolder . '/src/views/login?server=' . $this->misc->getServerId();
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
 
-    $className  = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
 
     return $controller->render();
 });
 
 $app->get('/{subject:\w+}[/{server_id}]', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
-    $subject,
-    $server_id = null
+    array $args
 ) {
-    $subject = (isset($args['subject'])) ? $args['subject'] : 'intro';
+    $subject = $args['subject'] ?? 'intro';
+    $server_id = $args['server_id'] ?? $request->getQueryParam('server');
     //ddd($subject, $server_id);
     $_server_info = $this->misc->getServerInfo();
-
-    $server_id = $request->getQueryParam('server');
 
     //$this->utils->prtrace($_server_info);
 
@@ -152,11 +149,8 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
 });
 
 $app->get('/', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
     $subject = 'intro';
@@ -167,19 +161,17 @@ $app->get('/', function (
 });
 
 $app->get('[/{path:.*}]', function (
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
-    /* @scrutinizer ignore-unused */
     \Slim\Http\Response $response,
-    /* @scrutinizer ignore-unused */
     array $args
 ) {
-    $filepath     = \dirname(__DIR__) . '/' . $args['path'];
+    $filepath = \dirname(__DIR__) . '/' . $args['path'];
     $query_string = $request->getUri()->getQuery();
 
     //d($this->subfolder, $args, $query_string, $filepath);
 
-    //$this->utils->prtrace($request->getAttribute('route'));
+    $this->prtrace($request->getAttribute('route'));
+
     return $response->write($args['path'] ? $args['path'] : 'index');
 });
 

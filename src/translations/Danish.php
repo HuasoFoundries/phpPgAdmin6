@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Danish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Danish extends English
+class Danish extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Danish';

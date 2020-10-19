@@ -11,10 +11,16 @@ namespace PHPPgAdmin;
  */
 class Translations
 {
+    /**
+     * @var array
+     */
     public $lang;
 
     // List of language files, and encoded language name.
 
+    /**
+     * @var array
+     */
     public $appLangFiles = [
         'afrikaans' => 'Afrikaans',
         'arabic' => '&#1593;&#1585;&#1576;&#1610;',
@@ -50,6 +56,9 @@ class Translations
         'ukrainian' => '&#1059;&#1082;&#1088;&#1072;&#9558;&#1085;&#1089;&#1100;&#1082;&#1072;',
     ];
 
+    /**
+     * @var array
+     */
     public $appClasses = [
         'afrikaans' => 'Afrikaans',
         'arabic' => 'Arabic',
@@ -91,7 +100,8 @@ class Translations
      * If it's available 'language-country', but not general
      * 'language' translation (eg. 'portuguese-br', but not 'portuguese')
      * specify both 'la' => 'language-country' and 'la-co' => 'language-country'.
-     */
+     *
+     *  @var array */
     public $availableLanguages = [
         'af' => 'afrikaans',
         'ar' => 'arabic',
@@ -126,6 +136,9 @@ class Translations
         'uk' => 'ukrainian',
     ];
 
+    /**
+     * @var array
+     */
     public $languages_iso_code = [
         'afrikaans' => 'af',
         'arabic' => 'ar',

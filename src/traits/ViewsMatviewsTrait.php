@@ -64,7 +64,7 @@ trait ViewsMatviewsTrait
 
             $attrs = $data->getTableAttributes($_REQUEST[$this->keystring]);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/' . $this->script . '" method="post" id="selectform">';
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo \PHP_EOL;
 
             if (0 < $attrs->recordCount()) {
@@ -118,12 +118,13 @@ trait ViewsMatviewsTrait
                         '>', \htmlspecialchars($v), '</option>' . \PHP_EOL;
                     }
                     echo '</select></td>' . \PHP_EOL;
-                    echo '<td style="white-space:nowrap;">', $data->printField(
+                    echo '<td style="white-space:nowrap;">';
+                    echo $data->printField(
                         "values[{$attrs->fields['attname']}]",
                         $_REQUEST['values'][$attrs->fields['attname']],
                         $attrs->fields['type']
-                    ), '</td>';
-                    echo '</tr>' . \PHP_EOL;
+                    );
+                    echo '</td></tr>' . \PHP_EOL;
                     ++$i;
                     $attrs->moveNext();
                 }
@@ -137,9 +138,9 @@ trait ViewsMatviewsTrait
             echo '<p><input type="hidden" name="action" value="selectrows" />' . \PHP_EOL;
             echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST[$this->keystring]), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="view" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"select\" accesskey=\"r\" value=\"{$this->lang['strselect']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
 
             return;
@@ -184,7 +185,7 @@ trait ViewsMatviewsTrait
 
         $tables = $data->getAllTables();
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->script}\" method=\"post\">" . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strtables']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -204,9 +205,9 @@ trait ViewsMatviewsTrait
         echo "</td>\n</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="set_params_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 
@@ -322,7 +323,7 @@ trait ViewsMatviewsTrait
             $status = $data->createView($_POST['formView'], $viewQuery, false, $_POST['formComment'], $is_materialized);
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
 
                 return $this->doDefault($this->lang['strviewcreated']);
             }
@@ -375,7 +376,7 @@ trait ViewsMatviewsTrait
         }
         \asort($arrFields);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviews" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strviewname']}</th></tr>";
         echo "<tr>\n<td class=\"data1\">" . \PHP_EOL;
@@ -409,6 +410,7 @@ trait ViewsMatviewsTrait
 
         for ($i = 0; $i < $linkCount; ++$i) {
             // Initialise variables
+            $formLink[$i] = $formLink[$i] ?? [];
             $this->coalesceArr($formLink[$i], 'operator', 'INNER JOIN');
 
             echo "<tr>\n<td class=\"{$rowClass}\">" . \PHP_EOL;
@@ -460,9 +462,9 @@ trait ViewsMatviewsTrait
             echo '<input type="hidden" name="formTables[]" value="' . \htmlspecialchars(\serialize($curTable)) . '" />' . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

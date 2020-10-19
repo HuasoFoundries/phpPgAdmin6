@@ -188,8 +188,8 @@ class TablespacesController extends BaseController
 
             $this->coalesceArr($_POST, 'comment', ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+            echo $this->view->form;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -216,7 +216,7 @@ class TablespacesController extends BaseController
             echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -264,8 +264,8 @@ class TablespacesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+            echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
@@ -308,8 +308,8 @@ class TablespacesController extends BaseController
         $this->printTitle($this->lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/tablespaces" method="post">' . \PHP_EOL;
-        echo $this->misc->form;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+        echo $this->view->form;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>" . \PHP_EOL;
@@ -334,7 +334,7 @@ class TablespacesController extends BaseController
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

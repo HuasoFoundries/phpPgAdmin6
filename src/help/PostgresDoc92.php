@@ -10,6 +10,8 @@ namespace PHPPgAdmin\Help;
  * Help links for PostgreSQL 9.2 documentation.
  *
  * Release: PostgresDoc84.php,v 1.3 2008/11/18 21:35:48 ioguix Exp $
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class PostgresDoc92 extends PostgresDoc91
 {
@@ -17,6 +19,6 @@ class PostgresDoc92 extends PostgresDoc91
     {
         parent::__construct($conf, $major_version);
 
-        $this->help_page['pg.rule.view'] = 'rules-views.html';
+        $this->help_topics['pg.rule.view'] = 'rules-views.html';
     }
 }

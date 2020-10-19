@@ -20,7 +20,6 @@ class ContainerTest extends \Codeception\Test\Unit
 
     public function testContainerValidity(): void
     {
-        $utils = $this->container['utils'];
         self::assertTrue(
             $this->container instanceof \Psr\Container\ContainerInterface,
             '$container must be an instance of \Psr\Container\ContainerInterface'
@@ -29,9 +28,8 @@ class ContainerTest extends \Codeception\Test\Unit
 
     public function testContainerUtils(): void
     {
-        $utils = $this->container['utils'];
         self::assertTrue(
-            $this->container->utils instanceof \PHPPgAdmin\ContainerUtils,
+            $this->container instanceof \PHPPgAdmin\ContainerUtils,
             '$container->utils must be an instance of PHPPgAdmin\ContainerUtils'
         );
     }
@@ -56,7 +54,7 @@ class ContainerTest extends \Codeception\Test\Unit
     {
         $Helper = $this->getModule('\Helper\Unit');
         $this->container = $Helper::getContainer();
-        self::$BASE_PATH = $Helper::BASE_PATH;
+        self::$BASE_PATH = $this->container->BASE_PATH;
         $this->container->misc->setNoDBConnection(true);
     }
 

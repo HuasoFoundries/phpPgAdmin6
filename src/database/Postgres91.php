@@ -16,7 +16,15 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres91 extends Postgres92
 {
+    /**
+     * @var float
+     */
     public $major_version = 9.1;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc91::class;
 
     // Administration functions
 

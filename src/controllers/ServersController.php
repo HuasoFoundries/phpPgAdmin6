@@ -64,13 +64,13 @@ class ServersController extends BaseController
 
         $server_html .= $this->printFooter(false);
 
-        if (null === $this->container->requestobj->getAttribute('route')) {
+        if (null === \requestInstance()->getAttribute('route')) {
             echo $server_html;
         } else {
-            $body = $this->container->responseobj->getBody();
+            $body = \responseInstance()->getBody();
             $body->write($server_html);
 
-            return $this->container->responseobj;
+            return \responseInstance();
         }
     }
 
@@ -105,7 +105,7 @@ class ServersController extends BaseController
             'server' => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url' => self::SUBFOLDER . '/redirect/server?',
+                'url' => \containerInstance()->subFolder . '/redirect/server?',
                 'vars' => ['server' => 'sha'],
             ],
             'host' => [
@@ -133,13 +133,13 @@ class ServersController extends BaseController
                         'url' => 'servers',
                         'urlvars' => [
                             'action' => 'logout',
-                            'logoutServer' => Decorator::field('id'),
+                            'logoutServer' => Decorator::field('sha'),
                         ],
                     ],
                 ],
             ],
         ];
-
+        //\sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}")
         $svPre = static function (&$rowdata) use ($actions) {
             $actions['logout']['disable'] = empty($rowdata->fields['username']);
 
@@ -200,7 +200,7 @@ class ServersController extends BaseController
 
         unset($_SESSION['sharedUsername'], $_SESSION['sharedPassword']);
 
-        $this->misc->setReloadBrowser(true);
+        $this->view->setReloadBrowser(true);
 
         echo \sprintf($this->lang['strlogoutmsg'], $server_info['desc']);
     }

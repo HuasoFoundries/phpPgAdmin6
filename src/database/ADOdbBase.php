@@ -6,8 +6,6 @@
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADONewConnection;
-
 /**
  * @file
  * Parent class of all ADODB objects.
@@ -18,19 +16,42 @@ class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Database\Traits\HasTrait;
+    use \PHPPgAdmin\Database\Traits\DatabaseTrait;
 
+    /**
+     * @var array
+     */
     public $lang;
 
+    /**
+     * @var array
+     */
     public $conf;
 
+    /**
+     * @var \ADODB_postgres9
+     */
+    public $conn;
+
+    /**
+     * @var \PHPPgAdmin\ContainerUtils
+     */
     protected $container;
 
+    /**
+     * @var array
+     */
     protected $server_info;
+
+    /**
+     * @var string
+     */
+    protected $lastExecutedSql;
 
     /**
      * Base constructor.
      *
-     * @param ADONewConnection $conn        The connection object
+     * @param \ADODB_postgres9 $conn        The connection object
      * @param mixed            $container
      * @param mixed            $server_info
      */
@@ -43,7 +64,55 @@ class ADOdbBase
         $this->conf = $container->get('conf');
 
         $this->prtrace('instanced connection class');
+        $this->lastExecutedSql = '';
         $this->conn = $conn;
+    }
+
+    /**
+     * Given an array of attnums and a relation, returns an array mapping
+     * attribute number to attribute name.
+     *
+     * @param string $table The table to get attributes for
+     * @param array  $atts  An array of attribute numbers
+     *
+     * @return array|int An array mapping attnum to attname or error code
+     *                   - -1 $atts must be an array
+     *                   - -2 wrong number of attributes found
+     */
+    public function getAttributeNames($table, $atts)
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($table);
+        $this->arrayClean($atts);
+
+        if (!\is_array($atts)) {
+            return -1;
+        }
+
+        if (0 === \count($atts)) {
+            return [];
+        }
+
+        $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
+			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
+			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
+			AND attnum IN ('" . \implode("','", $atts) . "')";
+
+        $rs = $this->selectSet($sql);
+
+        if ($rs->recordCount() !== \count($atts)) {
+            return -2;
+        }
+
+        $temp = [];
+
+        while (!$rs->EOF) {
+            $temp[$rs->fields['attnum']] = $rs->fields['attname'];
+            $rs->moveNext();
+        }
+
+        return $temp;
     }
 
     /**
@@ -118,8 +187,17 @@ class ADOdbBase
         } else {
             $sql .= 'NULL;';
         }
+        $this->lastExecutedSql = $sql;
 
         return $this->execute($sql);
+    }
+
+    public function getLastExecutedSQL(): string
+    {
+        $lastExecutedSql = $this->lastExecutedSql;
+        $this->lastExecutedSql = '';
+
+        return $lastExecutedSql;
     }
 
     /**
@@ -184,7 +262,7 @@ class ADOdbBase
         try {
             $rs = $this->conn->Execute($sql);
 
-            return $this->conn->ErrorNo();
+            return $this->ErrorNo();
         } catch (\Exception $e) {
             return $e->getCode();
         }
@@ -216,6 +294,16 @@ class ADOdbBase
         }
     }
 
+    public function ErrorNo(): int
+    {
+        return $this->conn->ErrorNo();
+    }
+
+    public function ErrorMsg(): string
+    {
+        return $this->conn->ErrorMsg();
+    }
+
     /**
      * Retrieves a single value from a query.
      *
@@ -233,7 +321,7 @@ class ADOdbBase
 
         // If failure, or no rows returned, return error value
         if (!$rs) {
-            return $this->conn->ErrorNo();
+            return $this->ErrorNo();
         }
 
         if (0 === $rs->recordCount()) {
@@ -280,7 +368,7 @@ class ADOdbBase
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for referential integrity failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -1;
             }
         }
@@ -290,7 +378,7 @@ class ADOdbBase
             return -2;
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
@@ -379,16 +467,16 @@ class ADOdbBase
         // Check for failures
         if (!$this->conn->Execute($sql)) {
             // Check for unique constraint failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
@@ -450,11 +538,11 @@ class ADOdbBase
         // Check for failures
         if (!$this->conn->Execute($setClause . $whereClause)) {
             // Check for unique constraint failure
-            if (\mb_stristr($this->conn->ErrorMsg(), 'unique')) {
+            if (\mb_stristr($this->ErrorMsg(), 'unique')) {
                 return -1;
             }
 
-            if (\mb_stristr($this->conn->ErrorMsg(), 'referential')) {
+            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
                 return -2;
             } // Check for referential integrity failure
         }
@@ -464,37 +552,37 @@ class ADOdbBase
             return -3;
         }
 
-        return $this->conn->ErrorNo();
+        return $this->ErrorNo();
     }
 
     /**
      * Begin a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function beginTransaction()
     {
-        return !$this->conn->BeginTrans();
+        return (int) (!$this->conn->BeginTrans());
     }
 
     /**
      * End a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function endTransaction()
     {
-        return !$this->conn->CommitTrans();
+        return (int) (!$this->conn->CommitTrans());
     }
 
     /**
      * Roll back a transaction.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function rollbackTransaction()
     {
-        return !$this->conn->RollbackTrans();
+        return (int) (!$this->conn->RollbackTrans());
     }
 
     /**

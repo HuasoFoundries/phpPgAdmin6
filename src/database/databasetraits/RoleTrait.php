@@ -132,7 +132,7 @@ trait RoleTrait
      * @param bool   $createrole          Boolean whether or not the role can create other roles
      * @param bool   $inherits            Boolean whether or not the role inherits the privileges from parent roles
      * @param bool   $login               Boolean whether or not the role will be allowed to login
-     * @param number $connlimit           Number of concurrent connections the role can make
+     * @param int    $connlimit           Number of concurrent connections the role can make
      * @param string $expiry              String Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $new_roles_to_add    (array) Roles to which the new role will be immediately added as a new member
      * @param array  $new_members_of_role (array) Roles which are automatically added as members of the new role
@@ -225,7 +225,7 @@ trait RoleTrait
      * @param bool   $createrole            Boolean whether or not the role can create other roles
      * @param bool   $inherits              Boolean whether or not the role inherits the privileges from parent roles
      * @param bool   $login                 Boolean whether or not the role will be allowed to login
-     * @param number $connlimit             Number of concurrent connections the role can make
+     * @param int    $connlimit             Number of concurrent connections the role can make
      * @param string $expiry                string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $new_roles_to_add      (array) Roles to which the role will be immediately added as a new member
      * @param array  $new_members_of_role   (array) Roles which are automatically added as members of the role
@@ -327,7 +327,7 @@ trait RoleTrait
      * @param bool   $createrole            Boolean whether or not the role can create other roles
      * @param bool   $inherits              Boolean whether or not the role inherits the privileges from parent roles
      * @param bool   $login                 Boolean whether or not the role will be allowed to login
-     * @param number $connlimit             Number of concurrent connections the role can make
+     * @param int    $connlimit             Number of concurrent connections the role can make
      * @param string $expiry                string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $new_roles_to_add      (array) Roles to which the role will be immediately added as a new member
      * @param array  $new_members_of_role   (array) Roles which are automatically added as members of the role

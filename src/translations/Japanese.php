@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Japanese language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Japanese extends English
+class Japanese extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = '日本語(EUC-JP)';

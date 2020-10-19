@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Slovak language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Slovak extends English
+class Slovak extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Slovensky';

@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Arabic language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Arabic extends English
+class Arabic extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'عربي';

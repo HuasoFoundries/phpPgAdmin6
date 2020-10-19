@@ -16,5 +16,13 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres13 extends Postgres12
 {
+    /**
+     * @var float
+     */
     public $major_version = 13;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc12::class;
 }

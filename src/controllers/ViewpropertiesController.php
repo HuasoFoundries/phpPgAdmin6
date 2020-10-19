@@ -35,7 +35,7 @@ class ViewpropertiesController extends BaseController
 
         switch ($this->action) {
             case 'save_edit':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefinition();
                 } else {
                     $this->doSaveEdit();
@@ -57,7 +57,7 @@ class ViewpropertiesController extends BaseController
 
                 break;
             case 'properties':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doProperties();
@@ -65,7 +65,7 @@ class ViewpropertiesController extends BaseController
 
                 break;
             case 'alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doAlter(false);
                 } else {
                     $this->doDefault();
@@ -77,7 +77,7 @@ class ViewpropertiesController extends BaseController
 
                 break;
             /*case 'drop':
-            if (isset($_POST['drop'])) {
+            if($this->getPostParam('drop')!==null){
             $this->doDrop(false);
             } else {
             $this->doDefault();
@@ -141,7 +141,7 @@ class ViewpropertiesController extends BaseController
             }
 
             $variables = (object) [
-                'subfolder' => self::SUBFOLDER . '/src/views/viewproperties',
+                'subfolder' => \containerInstance()->subFolder . '/src/views/viewproperties',
 
                 'formDefinition' => \htmlspecialchars($_POST['formDefinition']),
 
@@ -172,7 +172,7 @@ class ViewpropertiesController extends BaseController
   <p>
     <input type="hidden" name="action" value="save_edit" />
     <input type="hidden" name="view" value="{$variables->subject}" />
-    {$this->misc->form}
+    {$this->view->form}
     <input type="submit" value="{$this->lang['stralter']}" />
     <input type="submit" name="cancel" value="{$this->lang['strcancel']}" />
   </p>
@@ -201,7 +201,7 @@ EOT;
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
 
                 // Output view header
                 echo '<table>' . \PHP_EOL;
@@ -228,12 +228,12 @@ EOT;
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="properties" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -299,7 +299,7 @@ EOT;
 
                 $this->coalesceArr($_POST, 'comment', $view->fields['relcomment']);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo '<td class="data1">';
@@ -343,9 +343,9 @@ EOT;
                 echo '</table>' . \PHP_EOL;
                 echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
                 echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
             } else {
                 echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -365,13 +365,13 @@ EOT;
                     // Jump them to the new view name
                     $_REQUEST[$this->subject] = $_POST['name'];
                     // Force a browser reload
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                 }
                 // If schema has changed, need to change to the new schema and reload the browser
                 if (!empty($_POST['newschema']) && ($_POST['newschema'] !== $data->_schema)) {
                     // Jump them to the new sequence schema
                     $this->misc->setCurrentSchema($_POST['newschema']);
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                 }
                 $this->doDefault($this->lang['strviewaltered']);
             } else {

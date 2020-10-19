@@ -257,7 +257,7 @@ class UsersController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>" . \PHP_EOL;
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
@@ -266,7 +266,7 @@ class UsersController extends BaseController
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="changepassword" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"ok\" value=\"{$this->lang['strok']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo '</p></form>' . \PHP_EOL;
@@ -330,7 +330,7 @@ class UsersController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strusername']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . \htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>" . \PHP_EOL;
@@ -349,9 +349,9 @@ class UsersController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
             echo '<input type="hidden" name="username" value="', \htmlspecialchars($_REQUEST['username']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -400,12 +400,12 @@ class UsersController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropuser'], $this->misc->printVal($_REQUEST['username'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="username" value="', \htmlspecialchars($_REQUEST['username']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropUser($_REQUEST['username']);
@@ -439,7 +439,7 @@ class UsersController extends BaseController
         $this->printTitle($this->lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/users" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strusername']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formUsername\" value=\"", \htmlspecialchars($_POST['formUsername']), "\" /></td>\n\t</tr>" . \PHP_EOL;
@@ -457,9 +457,9 @@ class UsersController extends BaseController
         echo "\t\t<td class=\"data1\"><input size=\"30\" name=\"formExpires\" value=\"", \htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

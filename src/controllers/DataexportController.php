@@ -109,7 +109,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/dataexport" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataexport" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">" . \PHP_EOL;
         // COPY and SQL require a table
@@ -133,7 +133,7 @@ class DataexportController extends BaseController
 
         if (isset($_REQUEST['table'])) {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
-            echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
         } else {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
         }
@@ -144,7 +144,7 @@ class DataexportController extends BaseController
         if (isset($_REQUEST['search_path'])) {
             echo '<input type="hidden" name="search_path" value="', \htmlspecialchars($_REQUEST['search_path']), '" />' . \PHP_EOL;
         }
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 
@@ -243,7 +243,7 @@ class DataexportController extends BaseController
     {
         $response = $this
             ->container
-            ->responseobj;
+            ->response;
 
         // Make it do a download, if necessary
         if ('download' !== $_REQUEST['output']) {

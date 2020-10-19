@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Help;
 
 /**
  * Help links for PostgreSQL 11.x documentation.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class PostgresDoc11 extends PostgresDoc10
 {

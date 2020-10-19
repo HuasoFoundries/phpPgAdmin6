@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Ukrainian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Ukrainian extends English
+class Ukrainian extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Укра╖нська';

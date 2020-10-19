@@ -12,7 +12,15 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres93 extends Postgres94
 {
+    /**
+     * @var float
+     */
     public $major_version = 9.3;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc93::class;
 
     /**
      * Returns a list of all functions in the database.

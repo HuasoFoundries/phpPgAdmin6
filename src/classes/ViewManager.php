@@ -23,75 +23,110 @@ class ViewManager extends \Slim\Views\Twig
     use \PHPPgAdmin\Traits\HelperTrait;
 
     /**
-     * @var string
+     * @var array
      */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-
-    /**
-     * @var string
-     */
-    const THEME_PATH = ContainerUtils::THEME_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
-
     public $appLangFiles = [];
 
+    /**
+     * @var string
+     */
     public $appName = '';
 
+    /**
+     * @var string
+     */
     public $appVersion = '';
 
+    /**
+     * @var string
+     */
     public $form = '';
 
+    /**
+     * @var string
+     */
     public $href = '';
 
+    /**
+     * @var array
+     */
     public $lang = [];
 
+    /**
+     * @var array
+     */
     public $conf;
 
+    /**
+     * @var string
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     public $phpMinVer;
 
+    /**
+     * @var string
+     * @psalm-suppress PropertyNotSetInConstructor
+     */
     public $postgresqlMinVer;
-
-    public $view;
 
     /**
      * @var \PHPPgAdmin\Misc
      */
     public $misc;
 
+    /**
+     * @var \PHPPgAdmin\ContainerUtils
+     */
     protected $container;
+
+    /**
+     * Undocumented variable.
+     *
+     * @var array
+     */
+    private static $themeFolders = [];
 
     private $_connection;
 
+    /**
+     * @var bool
+     */
     private $_no_db_connection = false;
 
+    /**
+     * @var bool
+     */
     private $_reload_browser = false;
 
     private $_data;
 
     private $_database;
 
+    /**
+     * @var string
+     */
     private $_server_id;
 
     private $_server_info;
 
+    /**
+     * @var string
+     */
     private $_error_msg = '';
 
-    private static $instance = null;
+    /**
+     * Undocumented variable.
+     *
+     * @var self
+     */
+    private static $instance;
 
     /**
-     * @param \Slim\Container $container The container
-     * @param mixed           $path
-     * @param mixed           $settings
-     * @param \Slim\Container $c
+     * @param mixed                      $path
+     * @param mixed                      $settings
+     * @param \PHPPgAdmin\ContainerUtils $c
      */
-    public function __construct($path, $settings, \Slim\Container $c)
+    public function __construct($path, $settings, \PHPPgAdmin\ContainerUtils $c)
     {
         $this->lang = $c->get('lang');
         $this->conf = $c->get('conf');
@@ -106,7 +141,7 @@ class ViewManager extends \Slim\Views\Twig
 
         $this->addExtension(new \Slim\Views\TwigExtension($c['router'], $basePath));
 
-        $this->offsetSet('subfolder', self::SUBFOLDER);
+        $this->offsetSet('subfolder', \containerInstance()->subFolder);
         $this->offsetSet('theme', $this->misc->getConf('theme'));
         $this->offsetSet('Favicon', $this->icon('Favicon'));
         $this->offsetSet('Introduction', $this->icon('Introduction'));
@@ -118,22 +153,53 @@ class ViewManager extends \Slim\Views\Twig
 
         $_theme = $this->getTheme($this->conf, $this->misc->getServerInfo());
 
-        if (null !== $_theme && isset($_SESSION)) {
+        // If a theme comes in the request, overwrite whatever theme was set to cookie and settion store
+        if ($_request_theme = $this->getRequestTheme()) {
+            $this->setCookieTheme($_request_theme);
+            $this->setSessionTheme($_request_theme);
+            $_theme = $_request_theme;
+        }
+
+        if (!$this->getSessionTheme() || !$this->getCookieTheme()) {
+            // If there's no session theme, or cookie theme,
+            // store the latest one we determined from request, session,cookie, conf or default
             /* save the selected theme in cookie for a year */
             \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
             $_SESSION['ppaTheme'] = $_theme;
-            $this->misc->setConf('theme', $_theme);
         }
+        $this->misc->setConf('theme', $_theme);
     }
 
-    public function maybeRenderIframes($response, $subject, $query_string)
+    /**
+     * Internally sets the reload browser property.
+     *
+     * @param bool $flag sets internal $_reload_browser var which will be passed to the footer methods
+     *
+     * @return \PHPPgAdmin\ViewManager this class instance
+     */
+    public function setReloadBrowser($flag): self
+    {
+        $this->_reload_browser = (bool) $flag;
+
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function getReloadBrowser(): bool
+    {
+        return $this->_reload_browser;
+    }
+
+    public function maybeRenderIframes(\Slim\Http\Response $response, string $subject, string $query_string): \Slim\Http\Response
     {
         $c = $this->getContainer();
 
         $in_test = $this->offsetGet('in_test');
 
         if ('1' === $in_test) {
-            $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+            $className = self::getControllerClassName($subject);
             $controller = new $className($c);
 
             return $controller->render();
@@ -160,36 +226,39 @@ class ViewManager extends \Slim\Views\Twig
      */
     public function getTheme(array $conf, $_server_info = null)
     {
-        $_theme = null;
+        $_theme = 'default';
         // List of themes
         $themefolders = $this->getThemeFolders();
+
         // Check if theme is in $_REQUEST, $_SESSION or $_COOKIE
         // 1.- First priority: $_REQUEST, this happens when you use the selector
         if (\array_key_exists('theme', $_REQUEST) &&
-            \array_key_exists($_REQUEST['theme'], $themefolders)) {
+            \array_key_exists($_REQUEST['theme'], $themefolders)
+        ) {
             $_theme = $_REQUEST['theme'];
         } elseif ( // otherwise, see if there's a theme associated with this particular server
             null !== $_server_info &&
             \array_key_exists('theme', $_server_info) &&
             \is_string($_server_info['theme']) &&
-            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
+        ) {
             $_theme = $_server_info['theme'];
         } elseif (isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
-            \array_key_exists($_SESSION['ppaTheme'], $themefolders)) {
+            \array_key_exists($_SESSION['ppaTheme'], $themefolders)
+        ) {
             // otherwise check $_SESSION
             $_theme = $_SESSION['ppaTheme'];
         } elseif (\array_key_exists('ppaTheme', $_COOKIE) &&
-            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)) {
+            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
+        ) {
             // oterwise check $_COOKIE
             $_theme = $_COOKIE['ppaTheme'];
         } elseif ( // see if there's a valid theme set in config file
             \array_key_exists('theme', $conf) &&
             \is_string($conf['theme']) &&
-            \array_key_exists($conf['theme'], $themefolders)) {
+            \array_key_exists($conf['theme'], $themefolders)
+        ) {
             $_theme = $conf['theme'];
-        } else {
-            // okay then, use default theme
-            $_theme = 'default';
         }
 
         return $_theme;
@@ -198,7 +267,7 @@ class ViewManager extends \Slim\Views\Twig
     /**
      * Sets the form tracking variable.
      */
-    public function setForm()
+    public function setForm(): string
     {
         $form = [];
 
@@ -236,6 +305,8 @@ class ViewManager extends \Slim\Views\Twig
      * @param string $str      the string that the context help is related to (already escaped)
      * @param string $help     help section identifier
      * @param bool   $do_print true to echo, false to return
+     *
+     * @return string|void
      */
     public function printHelp($str, $help = null, $do_print = true)
     {
@@ -262,51 +333,108 @@ class ViewManager extends \Slim\Views\Twig
     public function getHelpLink($help)
     {
         return \htmlspecialchars(
-            $this->getSubfolder('help?help=') .
-            \urlencode($help) .
-            '&server=' .
-            \urlencode($this->misc->getServerId())
+            $this->container->getSubfolder('help?help=') .
+                \urlencode($help) .
+                '&server=' .
+                \urlencode($this->misc->getServerId())
         );
     }
 
-    public function icon($icon)
+    /**
+     * @param string $icon
+     *
+     * @return string
+     */
+    public function icon($icon = ''): string
     {
-        if (!\is_string($icon)) {
-            return '';
-        }
+        $icon = (string) ($icon ?? '');
 
         $theme = $this->conf['theme'];
         $path = 'assets/images/themes';
-        $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', self::SUBFOLDER, $path);
+        $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', \containerInstance()->subFolder, $path);
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.png', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.png', self::SUBFOLDER, $path, $theme, $icon);
+        if (\is_readable(\sprintf('%s/%s/%s/%s.png', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.png', \containerInstance()->subFolder, $path, $theme, $icon);
         }
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.gif', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.gif', self::SUBFOLDER, $path, $theme, $icon);
+        if (\is_readable(\sprintf('%s/%s/%s/%s.gif', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.gif', \containerInstance()->subFolder, $path, $theme, $icon);
         }
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.ico', self::BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.ico', self::SUBFOLDER, $path, $theme, $icon);
+        if (\is_readable(\sprintf('%s/%s/%s/%s.ico', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
+            return \sprintf('%s/%s/%s/%s.ico', \containerInstance()->subFolder, $path, $theme, $icon);
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.png', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.png', self::SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.png', \containerInstance()->BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.png', \containerInstance()->subFolder, $path, $icon);
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.gif', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.gif', self::SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.gif', \containerInstance()->BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.gif', \containerInstance()->subFolder, $path, $icon);
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.ico', self::BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.ico', self::SUBFOLDER, $path, $icon);
+        if (\is_readable(\sprintf('%s/%s/default/%s.ico', \containerInstance()->BASE_PATH, $path, $icon))) {
+            return \sprintf('%s/%s/default/%s.ico', \containerInstance()->subFolder, $path, $icon);
         }
 
         return $default_icon;
     }
 
-    private function getContainer()
+    private function getCookieTheme(): ?string
+    {
+        $cookie_theme = $_COOKIE['ppaTheme'] ?? null;
+
+        return $this->isThemeAvailable($cookie_theme) ? $cookie_theme : null;
+    }
+
+    private function getSessionTheme(): ?string
+    {
+        $session_theme = $_SESSION['ppaTheme'] ?? null;
+
+        return $this->isThemeAvailable($session_theme) ? $session_theme : null;
+    }
+
+    private function getRequestTheme(): ?string
+    {
+        $request_theme = $_REQUEST['theme'] ?? null;
+
+        return $this->isThemeAvailable($request_theme) ? $request_theme : null;
+    }
+
+    private function isThemeAvailable(?string $_theme = null): bool
+    {
+        return \array_key_exists($_theme, $this->getThemeFolders());
+    }
+
+    private function setCookieTheme(string $_theme): void
+    {
+        if ($this->isThemeAvailable($_theme)) {
+            \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
+        }
+    }
+
+    private function setSessionTheme(string $_theme): void
+    {
+        if ($this->isThemeAvailable($_theme)) {
+            $_SESSION['ppaTheme'] = $_theme;
+        }
+    }
+
+    /**
+     * Undocumented function.
+     *
+     * @param string $subject
+     * @psalm-suppress LessSpecificReturnStatement
+     * @psalm-suppress MoreSpecificReturnType
+     *
+     * @return class-string
+     */
+    private static function getControllerClassName(string $subject): string
+    {
+        return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    }
+
+    private function getContainer(): \PHPPgAdmin\ContainerUtils
     {
         return $this->container;
     }
@@ -317,10 +445,13 @@ class ViewManager extends \Slim\Views\Twig
      *
      * @return array the theme folders
      */
-    private function getThemeFolders()
+    private function getThemeFolders(): array
     {
+        if (!empty(self::$themeFolders)) {
+            return self::$themeFolders;
+        }
         // no THEME_PATH (how?) then return empty array
-        if (!$gestor = \opendir(self::THEME_PATH)) {
+        if (!$gestor = \opendir(containerInstance()->THEME_PATH)) {
             \closedir($gestor);
 
             return [];
@@ -333,16 +464,18 @@ class ViewManager extends \Slim\Views\Twig
                 continue;
             }
 
-            $folderpath = \sprintf('%s%s%s', self::THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
+            $folderpath = \sprintf('%s%s%s', \containerInstance()->THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
             $stylesheet = \sprintf('%s%s%s', $folderpath, \DIRECTORY_SEPARATOR, 'global.css');
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
             if (\is_dir($folderpath) &&
-                \is_file($stylesheet)) {
+                \is_file($stylesheet)
+            ) {
                 $themefolders[$foldername] = $folderpath;
             }
         }
 
         \closedir($gestor);
+        self::$themeFolders = $themefolders;
 
         return $themefolders;
     }

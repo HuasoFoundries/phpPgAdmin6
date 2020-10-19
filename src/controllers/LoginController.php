@@ -46,13 +46,13 @@ class LoginController extends BaseController
      */
     public function render()
     {
-        if (null === $this->container->requestobj->getAttribute('route')) {
+        if (null === \requestInstance()->getAttribute('route')) {
             echo $this->doLoginForm();
         } else {
-            $body = $this->container->responseobj->getBody();
+            $body = \responseInstance()->getBody();
             $body->write($this->doLoginForm());
 
-            return $this->container->responseobj;
+            return \responseInstance();
         }
     }
 
@@ -60,7 +60,7 @@ class LoginController extends BaseController
     {
         $this->misc->setNoDBConnection(true);
 
-        $server_id = $this->container->requestobj->getQueryParam('server');
+        $server_id = \requestInstance()->getQueryParam('server');
 
         if (null === $server_id) {
             $this->prtrace('invalid server param');
@@ -96,7 +96,7 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"    method="post" name="login_form" action="' . self::SUBFOLDER . '/redirect/server?server=' . \htmlspecialchars($server_id) . '">';
+        $login_html .= '<form id="login_form"    method="post" name="login_form" action="' . \containerInstance()->subFolder . '/redirect/server?server=' . \htmlspecialchars($server_id) . '">';
 
         $md5_server = \md5($server_id);
         // Pass request vars through form (is this a security risk???)

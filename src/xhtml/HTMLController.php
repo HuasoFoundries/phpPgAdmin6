@@ -6,7 +6,6 @@
 
 namespace PHPPgAdmin\XHtml;
 
-use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -15,18 +14,6 @@ use PHPPgAdmin\Decorators\Decorator;
 class HTMLController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
 
     public $form = '';
 
@@ -40,7 +27,15 @@ class HTMLController
 
     public $controller_title = 'html';
 
+    /**
+     * @var \PHPPgAdmin\ViewManager
+     */
     public $view;
+
+    /**
+     * @var \PHPPgAdmin\Misc
+     */
+    public $misc;
 
     public $appName;
 
@@ -48,16 +43,17 @@ class HTMLController
 
     public $appLangFiles;
 
-    public $misc;
-
     public $conf;
 
     public $appThemes;
 
+    /**
+     * @var \PHPPgAdmin\ContainerUtils
+     */
     protected $container;
 
     // Constructor
-    public function __construct(\Slim\Container $container, $controller_name = null)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container, $controller_name = null)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');

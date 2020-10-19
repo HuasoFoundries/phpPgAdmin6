@@ -38,7 +38,7 @@ class AlldbController extends BaseController
 
                 break;
             case 'save_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreate();
@@ -103,16 +103,16 @@ class AlldbController extends BaseController
 
         $databases = $data->getDatabases();
 
-        $this->misc->setReloadBrowser(true);
+        $this->view->setReloadBrowser(true);
 
         $href = $this->misc->getHREF();
-        $redirecturl = $this->container->utils->getDestinationWithLastTab('database');
+        $redirecturl = $this->container->getDestinationWithLastTab('database');
 
         $columns = [
             'database' => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url' => self::SUBFOLDER . $redirecturl . '&amp;',
+                'url' => \containerInstance()->subFolder . $redirecturl . '&amp;',
                 'vars' => ['database' => 'datname'],
             ],
             'owner' => [
@@ -267,7 +267,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -303,7 +303,7 @@ class AlldbController extends BaseController
             }
             echo '</table>' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo '<input type="hidden" name="oldname" value="',
             \htmlspecialchars($_REQUEST['alterdatabase']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
@@ -315,7 +315,7 @@ class AlldbController extends BaseController
             $this->coalesceArr($_POST, 'dbcomment', '');
 
             if (0 === $data->alterDatabase($_POST['oldname'], $_POST['newname'], $_POST['owner'], $_POST['dbcomment'])) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strdatabasealtered']);
             } else {
                 $this->doDefault($this->lang['strdatabasealteredbad']);
@@ -340,7 +340,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -355,7 +355,8 @@ class AlldbController extends BaseController
             }
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo $this->misc->form;
+
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
             echo "</form>\n"; //  END confirm
@@ -368,9 +369,18 @@ class AlldbController extends BaseController
                     $status = $data->dropDatabase($d);
 
                     if (0 === $status) {
-                        $msg .= \sprintf('%s: %s<br />', \htmlentities($d, \ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedropped']);
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($d, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strdatabasedropped']
+                        );
                     } else {
-                        $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($d, \ENT_QUOTES, 'UTF-8'), $this->lang['strdatabasedroppedbad']));
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($d, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strdatabasedroppedbad']
+                        ));
 
                         return;
                     }
@@ -426,7 +436,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/alldb" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -495,7 +505,7 @@ class AlldbController extends BaseController
             ('' === $_POST['formSpc']) ? ' selected="selected"' : '', '></option>' . \PHP_EOL;
             // Display all other tablespaces
             while (!$tablespaces->EOF) {
-                $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
+                $spcname = \htmlspecialchars($tablespaces->fields['spcname'] ?? '');
                 echo "\t\t\t\t<option value=\"{$spcname}\"",
                 ($spcname === $_POST['formSpc']) ? ' selected="selected"' : '', ">{$spcname}</option>" . \PHP_EOL;
                 $tablespaces->moveNext();
@@ -512,9 +522,9 @@ class AlldbController extends BaseController
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 
@@ -552,7 +562,7 @@ class AlldbController extends BaseController
             );
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strdatabasecreated']);
             } else {
                 $this->doCreate($this->lang['strdatabasecreatedbad']);

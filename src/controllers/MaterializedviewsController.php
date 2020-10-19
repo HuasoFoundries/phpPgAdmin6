@@ -64,7 +64,7 @@ class MaterializedviewsController extends BaseController
 
                 break;
             case 'set_params_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSetParamsCreate();
@@ -84,7 +84,7 @@ class MaterializedviewsController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDefault();
@@ -124,7 +124,7 @@ class MaterializedviewsController extends BaseController
             $this->keystring => [
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/matview?{$this->misc->href}&amp;",
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -281,7 +281,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($this->lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviews" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -297,7 +297,7 @@ class MaterializedviewsController extends BaseController
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
 
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -312,10 +312,19 @@ class MaterializedviewsController extends BaseController
                         $status = $data->dropView($s, isset($_POST['cascade']));
 
                         if (0 === $status) {
-                            $msg .= \sprintf('%s: %s<br />', \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strviewdropped']);
+                            $msg .= \sprintf(
+                                '%s: %s<br />',
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strviewdropped']
+                            );
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strviewdroppedbad']));
+                            $this->doDefault(\sprintf(
+                                '%s%s: %s<br />',
+                                $msg,
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strviewdroppedbad']
+                            ));
 
                             return;
                         }
@@ -324,7 +333,7 @@ class MaterializedviewsController extends BaseController
 
                 if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
                     $this->doDefault($this->lang['strviewdroppedbad']);
@@ -333,7 +342,7 @@ class MaterializedviewsController extends BaseController
                 $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
 
                 if (0 === $status) {
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($this->lang['strviewdropped']);
                 } else {
                     $this->doDefault($this->lang['strviewdroppedbad']);
@@ -403,7 +412,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -416,9 +425,9 @@ class MaterializedviewsController extends BaseController
         \htmlspecialchars($_REQUEST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 
@@ -438,7 +447,7 @@ class MaterializedviewsController extends BaseController
             $status = $data->createView($_POST['formView'], $_POST['formDefinition'], false, $_POST['formComment'], true);
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strviewcreated']);
             } else {
                 $this->doCreate($this->lang['strviewcreatedbad']);

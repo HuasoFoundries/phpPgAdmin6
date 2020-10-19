@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Swedish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Swedish extends English
+class Swedish extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Swedish';

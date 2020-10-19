@@ -42,7 +42,7 @@ class TreeController extends BaseController
     protected $container;
 
     // Constructor
-    public function __construct(\Slim\Container $container, $controller_name = null)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container, $controller_name = null)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');
@@ -145,10 +145,10 @@ class TreeController extends BaseController
             $parent = [
                 'id' => 'root',
                 'children' => true,
-                'icon' => self::SUBFOLDER . '/assets/images/themes/default/Servers.png',
+                'icon' => \containerInstance()->subFolder . '/assets/images/themes/default/Servers.png',
                 'state' => ['opened' => true],
-                'a_attr' => ['href' => \str_replace('//', '/', self::SUBFOLDER . '/src/views/servers')],
-                'url' => \str_replace('//', '/', self::SUBFOLDER . '/src/views/servers?action=tree'),
+                'a_attr' => ['href' => \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/servers')],
+                'url' => \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/servers?action=tree'),
                 'text' => 'Servers',
             ];
         } elseif (0 < \count($treedata)) {
@@ -172,7 +172,7 @@ class TreeController extends BaseController
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
 
                 if ($url && false === \mb_strpos($url, '/src/views')) {
-                    $url = \str_replace('//', '/', self::SUBFOLDER . '/src/views/' . $url);
+                    $url = \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/' . $url);
                 }
 
                 if ($url) {
@@ -196,7 +196,7 @@ class TreeController extends BaseController
 
             return $this
                 ->container
-                ->responseobj
+                ->response
                 ->withStatus(200)
                 ->withJson($parent);
         }

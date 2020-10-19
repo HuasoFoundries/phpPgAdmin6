@@ -32,7 +32,7 @@ class RulesController extends BaseController
 
                 break;
             case 'save_create_rule':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->createRule(false);
@@ -170,7 +170,7 @@ class RulesController extends BaseController
             $this->printTitle($this->lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/rules" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/rules" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -202,9 +202,9 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="subject" value="', \htmlspecialchars($_REQUEST['subject']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['subject']),
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_POST['name'])) {
@@ -248,13 +248,13 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/rules" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/rules" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="', \htmlspecialchars($_REQUEST['reltype']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['reltype']),
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="rule" value="', \htmlspecialchars($_REQUEST['rule']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;

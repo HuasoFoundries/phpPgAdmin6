@@ -29,7 +29,7 @@ class OperatorsController extends BaseController
 
         switch ($this->action) {
             /*case 'save_create':
-            if (isset($_POST['cancel'])) {
+            if($this->getPostParam('cancel')!==null){
             $this->doDefault();
             } else {
             $this->doSaveCreate();
@@ -41,7 +41,7 @@ class OperatorsController extends BaseController
 
             break;*/
             case 'drop':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doDrop(false);
@@ -256,14 +256,14 @@ class OperatorsController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropoperator'], $this->misc->printVal($_REQUEST['operator'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/operators" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/operators" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="operator" value="', \htmlspecialchars($_REQUEST['operator']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="operator_oid" value="', \htmlspecialchars($_REQUEST['operator_oid']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropOperator($_POST['operator_oid'], isset($_POST['cascade']));

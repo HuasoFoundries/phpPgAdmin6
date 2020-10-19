@@ -79,7 +79,7 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         if (!isset($data->privlist[$subject])) {
-            $this->container->utils->halt('No privileges defined for subject ' . $subject);
+            $this->container->halt('No privileges defined for subject ' . $subject);
 
             return;
         }
@@ -316,7 +316,7 @@ class PrivilegesController extends BaseController
 
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/privileges" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/privileges" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>" . \PHP_EOL;
         echo '<td class="data1"><select name="username[]" multiple="multiple" size="', \min(6, $users->recordCount()), '">' . \PHP_EOL;
@@ -388,7 +388,7 @@ class PrivilegesController extends BaseController
             \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
         echo \sprintf('<input type="submit" name="%s" value="%s" />%s', $mode, $this->lang['str' . $mode], \PHP_EOL);
 
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";

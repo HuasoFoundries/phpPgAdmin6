@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Traits;
 
+use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -161,11 +162,11 @@ trait MiscTrait
         }
 
         if (!isset($vars['url'])) {
-            $vars['url'] = self::SUBFOLDER . '/redirect';
+            $vars['url'] = \containerInstance()->subFolder . '/redirect';
         }
 
-        if (self::SUBFOLDER . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
-            $vars['url'] = self::SUBFOLDER . '/redirect/' . $vars['params']['subject'];
+        if (containerInstance()->subFolder . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
+            $vars['url'] = \containerInstance()->subFolder . '/redirect/' . $vars['params']['subject'];
             unset($vars['params']['subject']);
         }
 
@@ -287,7 +288,7 @@ trait MiscTrait
             case 'cid':
             case 'tid':
                 $align = 'right';
-                $out = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = \nl2br(\htmlspecialchars(ContainerUtils::br2ln($str)));
 
                 break;
             case 'yesno':
@@ -319,7 +320,7 @@ trait MiscTrait
 
                 break;
             case 'nbsp':
-                $out = \nl2br(\str_replace(' ', '&nbsp;', \PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                $out = \nl2br(\str_replace(' ', '&nbsp;', ContainerUtils::br2ln($str)));
 
                 break;
             case 'verbatim':
@@ -331,7 +332,7 @@ trait MiscTrait
 
                 break;
             case 'prettysize':
-                $out = \PHPPgAdmin\Traits\HelperTrait::formatSizeUnits($str, $lang);
+                $out = self::formatSizeUnits($str, $lang);
 
                 break;
 
@@ -345,7 +346,7 @@ trait MiscTrait
                     $out = \htmlspecialchars($str);
                 } else {
                     //$tag = 'span';
-                    $out = \nl2br(\htmlspecialchars(\PHPPgAdmin\Traits\HelperTrait::br2ln($str)));
+                    $out = \nl2br(\htmlspecialchars(ContainerUtils::br2ln($str)));
                 }
         }
 
@@ -1038,14 +1039,14 @@ trait MiscTrait
         return [
             'sql' => [
                 'title' => $lang['strsql'],
-                'url' => self::SUBFOLDER . '/src/views/sqledit',
+                'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                 'urlvars' => ['action' => 'sql', 'subject' => 'schema'],
                 'help' => 'pg.sql',
                 'icon' => 'SqlEditor',
             ],
             'find' => [
                 'title' => $lang['strfind'],
-                'url' => self::SUBFOLDER . '/src/views/sqledit',
+                'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                 'urlvars' => ['action' => 'find', 'subject' => 'schema'],
                 'icon' => 'Search',
             ],
@@ -1143,43 +1144,56 @@ trait MiscTrait
         $tabs = [];
 
         switch ($section) {
-            case 'root':$tabs = $this->getTabsRoot($data);
+            case 'root':
+                $tabs = $this->getTabsRoot($data);
 
                 break;
-            case 'server':$tabs = $this->getTabsServer($data);
+            case 'server':
+                $tabs = $this->getTabsServer($data);
 
                 break;
-            case 'database':$tabs = $this->getTabsDatabase($data);
+            case 'database':
+                $tabs = $this->getTabsDatabase($data);
 
                 break;
-            case 'schema':$tabs = $this->getTabsSchema($data);
+            case 'schema':
+                $tabs = $this->getTabsSchema($data);
 
                 break;
-            case 'table':$tabs = $this->getTabsTable($data);
+            case 'table':
+                $tabs = $this->getTabsTable($data);
 
                 break;
-            case 'view':$tabs = $this->getTabsView($data);
+            case 'view':
+                $tabs = $this->getTabsView($data);
 
                 break;
-            case 'matview':$tabs = $this->getTabsMatview($data);
+            case 'matview':
+                $tabs = $this->getTabsMatview($data);
 
                 break;
-            case 'function':$tabs = $this->getTabsFunction($data);
+            case 'function':
+                $tabs = $this->getTabsFunction($data);
 
                 break;
-            case 'aggregate':$tabs = $this->getTabsAggregate($data);
+            case 'aggregate':
+                $tabs = $this->getTabsAggregate($data);
 
                 break;
-            case 'role':$tabs = $this->getTabsRole($data);
+            case 'role':
+                $tabs = $this->getTabsRole($data);
 
                 break;
-            case 'popup':$tabs = $this->getTabsPopup($data);
+            case 'popup':
+                $tabs = $this->getTabsPopup($data);
 
                 break;
-            case 'column':$tabs = $this->getTabsColumn($data);
+            case 'column':
+                $tabs = $this->getTabsColumn($data);
 
                 break;
-            case 'fulltext':$tabs = $this->getTabsFulltext($data);
+            case 'fulltext':
+                $tabs = $this->getTabsFulltext($data);
 
                 break;
         }

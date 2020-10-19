@@ -66,7 +66,7 @@ trait SequenceTrait
      * Execute setval on a given sequence.
      *
      * @param string $sequence  Sequence name
-     * @param number $nextvalue The next value
+     * @param int    $nextvalue The next value
      *
      * @return \ADORecordSet|int
      */
@@ -163,11 +163,11 @@ trait SequenceTrait
      * Creates a new sequence.
      *
      * @param string $sequence    Sequence name
-     * @param number $increment   The increment
-     * @param number $minvalue    The min value
-     * @param number $maxvalue    The max value
-     * @param number $startvalue  The starting value
-     * @param number $cachevalue  The cache value
+     * @param int    $increment   The increment
+     * @param int    $minvalue    The min value
+     * @param int    $maxvalue    The max value
+     * @param int    $startvalue  The starting value
+     * @param int    $cachevalue  The cache value
      * @param bool   $cycledvalue True if cycled, false otherwise
      *
      * @return \ADORecordSet|int
@@ -228,12 +228,12 @@ trait SequenceTrait
      * @param string    $owner        The new owner for the sequence
      * @param string    $schema       The new schema for the sequence
      * @param string    $increment    The increment
-     * @param number    $minvalue     The min value
-     * @param number    $maxvalue     The max value
-     * @param number    $restartvalue The starting value
-     * @param number    $cachevalue   The cache value
+     * @param int       $minvalue     The min value
+     * @param int       $maxvalue     The max value
+     * @param int       $restartvalue The starting value
+     * @param int       $cachevalue   The cache value
      * @param null|bool $cycledvalue  True if cycled, false otherwise
-     * @param number    $startvalue   The sequence start value when issueing a restart
+     * @param int       $startvalue   The sequence start value when issueing a restart
      *
      * @return bool|int 0 success
      */
@@ -324,13 +324,13 @@ trait SequenceTrait
      * Alter a sequence's properties.
      *
      * @param \ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
-     * @param number        $increment    The sequence incremental value
-     * @param number        $minvalue     The sequence minimum value
-     * @param number        $maxvalue     The sequence maximum value
-     * @param number        $restartvalue The sequence current value
-     * @param number        $cachevalue   The sequence cache value
+     * @param int           $increment    The sequence incremental value
+     * @param int           $minvalue     The sequence minimum value
+     * @param int           $maxvalue     The sequence maximum value
+     * @param int           $restartvalue The sequence current value
+     * @param int           $cachevalue   The sequence cache value
      * @param null|bool     $cycledvalue  Sequence can cycle ?
-     * @param number        $startvalue   The sequence start value when issueing a restart
+     * @param int           $startvalue   The sequence start value when issueing a restart
      *
      * @return \ADORecordSet|int
      */

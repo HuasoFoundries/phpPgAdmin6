@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Hebrew language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class Hebrew extends English
+class Hebrew extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Hebrew';

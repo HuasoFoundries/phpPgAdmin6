@@ -8,11 +8,11 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Ukrainian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class English
+class English extends AbstractLang
 {
-    protected $lang = [];
-
     public function __construct()
     {
         $lang = $this->lang; //  Language and character set
@@ -874,10 +874,5 @@ class English
         $lang['strhooknotfound'] = 'Error: hook \'%s\' is not avaliable.';
 
         $this->lang = $lang;
-    }
-
-    public function getLang()
-    {
-        return $this->lang;
     }
 }

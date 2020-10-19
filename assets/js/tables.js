@@ -7,12 +7,15 @@ function checkLengths(sValue, idx) {
       return item.toString().toUpperCase();
     });
     // If the type has a predefined length on PostgreSQL, disable the length input field
-    if (uppercase_predefined_lengths.indexOf(sValue.toString().toUpperCase()) !== -1) {
-      document.getElementById("lengths" + idx).value = '';
-      document.getElementById("lengths" + idx).disabled = 'on';
+    if (
+      uppercase_predefined_lengths.indexOf(sValue.toString().toUpperCase()) !==
+      -1
+    ) {
+      document.getElementById('lengths' + idx).value = '';
+      document.getElementById('lengths' + idx).disabled = 'on';
       return;
     }
 
-    document.getElementById("lengths" + idx).disabled = '';
+    document.getElementById('lengths' + idx).disabled = '';
   }
 }

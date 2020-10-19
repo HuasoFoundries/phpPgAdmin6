@@ -29,7 +29,7 @@ class TypesController extends BaseController
 
         switch ($this->action) {
             case 'create_comp':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doCreateComposite();
@@ -37,7 +37,7 @@ class TypesController extends BaseController
 
                 break;
             case 'create_enum':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doCreateEnum();
@@ -45,7 +45,7 @@ class TypesController extends BaseController
 
                 break;
             case 'save_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreate();
@@ -57,7 +57,7 @@ class TypesController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doDrop(false);
@@ -198,9 +198,7 @@ class TypesController extends BaseController
             ],
         ];
 
-        if (!$data->hasEnumTypes()) {
-            unset($navlinks['enum']);
-        }
+        //if (!$data->hasEnumTypes()) {            unset($navlinks['enum']);        }
 
         $this->printNavLinks($navlinks, 'types-types', \get_defined_vars());
     }
@@ -344,13 +342,13 @@ class TypesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdroptype'], $this->misc->printVal($_REQUEST['type'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="type" value="', \htmlspecialchars($_REQUEST['type']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropType($_POST['type'], isset($_POST['cascade']));
@@ -386,7 +384,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -402,9 +400,9 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_comp" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -432,7 +430,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -481,12 +479,12 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_comp" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="3" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="fields" value="', \htmlspecialchars($_REQUEST['fields']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="typcomment" value="', \htmlspecialchars($_REQUEST['typcomment']), '" />' . \PHP_EOL;
                 echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -563,7 +561,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -579,9 +577,9 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_enum" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo "<input type=\"submit\" value=\"{$this->lang['strnext']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -607,7 +605,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -625,12 +623,12 @@ class TypesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create_enum" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="3" />' . \PHP_EOL;
-                echo $this->misc->form;
+                echo $this->view->form;
                 echo '<input type="hidden" name="name" value="', \htmlspecialchars($_REQUEST['name']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="values" value="', \htmlspecialchars($_REQUEST['values']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="typcomment" value="', \htmlspecialchars($_REQUEST['typcomment']), '" />' . \PHP_EOL;
                 echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -710,7 +708,7 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/types" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<td class=\"data1\"><input name=\"typname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -777,9 +775,9 @@ class TypesController extends BaseController
         echo '</select></td></tr>' . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

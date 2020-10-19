@@ -6,8 +6,10 @@ PHP Based administration tool for PostgreSQL. Blazing fast routing with [Slim Fr
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/289a56c1c7d94216b3d089c220689e9e)](https://www.codacy.com/app/amenadiel/phpPgAdmin6?utm_source=github.com&utm_medium=referral&utm_content=HuasoFoundries/phpPgAdmin6&utm_campaign=Badge_Grade)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/?branch=develop)
 [![Build Status](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/HuasoFoundries/phpPgAdmin6/build-status/develop)
+[![License](https://img.shields.io/badge/license-MIT-428f7e.svg?logo=open%20source%20initiative&logoColor=white&labelColor=555555)](LICENSE.md)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FHuasoFoundries%2FphpPgAdmin6?ref=badge_shield)
-
+![Packagist PHP Version Support](https://img.shields.io/packagist/php-v/huasofoundries/phppgadmin6?logo=php&labelColor=efefef)
+____________
 This project is inspired in [phppgadmin](https://github.com/phppgadmin/phppgadmin). Said project stalled a few years ago so we took it, refactored almost entirely and added:
 
 -   Composer Installation and dependency management

@@ -33,7 +33,7 @@ class DomainsController extends BaseController
 
                 break;
             case 'save_add_check':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doProperties();
                 } else {
                     $this->addCheck(false);
@@ -41,7 +41,7 @@ class DomainsController extends BaseController
 
                 break;
             case 'drop_con':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDropConstraint(false);
                 } else {
                     $this->doProperties();
@@ -53,7 +53,7 @@ class DomainsController extends BaseController
 
                 break;
             case 'save_create':
-                if (isset($_POST['cancel'])) {
+                if (null !== $this->getPostParam('cancel')) {
                     $this->doDefault();
                 } else {
                     $this->doSaveCreate();
@@ -65,7 +65,7 @@ class DomainsController extends BaseController
 
                 break;
             case 'drop':
-                if (isset($_POST['drop'])) {
+                if (null !== $this->getPostParam('drop')) {
                     $this->doDrop(false);
                 } else {
                     $this->doDefault();
@@ -77,7 +77,7 @@ class DomainsController extends BaseController
 
                 break;
             case 'save_alter':
-                if (isset($_POST['alter'])) {
+                if (null !== $this->getPostParam('alter')) {
                     $this->doSaveAlter();
                 } else {
                     $this->doProperties();
@@ -284,7 +284,7 @@ class DomainsController extends BaseController
             }
 
             // Display domain info
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), '</td></tr>' . \PHP_EOL;
@@ -308,9 +308,9 @@ class DomainsController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_alter" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
@@ -336,7 +336,7 @@ class DomainsController extends BaseController
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
@@ -350,9 +350,9 @@ class DomainsController extends BaseController
 
             echo '<p><input type="hidden" name="action" value="save_add_check" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_POST['definition'])) {
@@ -393,11 +393,11 @@ class DomainsController extends BaseController
                 $this->misc->printVal($_REQUEST['constraint']),
                 $this->misc->printVal($_REQUEST['domain'])
             ), '</p>' . \PHP_EOL;
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop_con" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="constraint" value="', \htmlspecialchars($_REQUEST['constraint']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -560,13 +560,13 @@ class DomainsController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.domain.drop');
 
             echo '<p>', \sprintf($this->lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), '</p>' . \PHP_EOL;
-            echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropDomain($_POST['domain'], isset($_POST['cascade']));
@@ -606,7 +606,7 @@ class DomainsController extends BaseController
         $this->printTitle($this->lang['strcreatedomain'], 'pg.domain.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/domains" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -647,9 +647,9 @@ class DomainsController extends BaseController
         }
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

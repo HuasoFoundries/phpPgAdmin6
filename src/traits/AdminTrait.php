@@ -34,7 +34,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -45,7 +45,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strclusterindex'], 'pg.index.cluster');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -57,7 +57,7 @@ trait AdminTrait
         }
         echo '<input type="hidden" name="action" value="cluster" />' . \PHP_EOL;
 
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"cluster\" value=\"{$this->lang['strcluster']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -86,7 +86,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -97,7 +97,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strreindex'], 'pg.reindex');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -113,7 +113,7 @@ trait AdminTrait
             echo "<p><input type=\"checkbox\" id=\"reindex_force\" name=\"reindex_force\" /><label for=\"reindex_force\">{$this->lang['strforce']}</label></p>" . \PHP_EOL;
         }
 
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"reindex\" value=\"{$this->lang['strreindex']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -141,11 +141,10 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                //\Kint::dump($a);
                 echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table[]" value="', \htmlspecialchars($a['table']), '" />' . \PHP_EOL;
             } //  END if multi analyze
@@ -153,7 +152,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['stranalyze'], 'pg.analyze');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -164,7 +163,7 @@ trait AdminTrait
             }
         }
         echo '<input type="hidden" name="action" value="analyze" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
 
         echo "<input type=\"submit\" name=\"analyze\" value=\"{$this->lang['stranalyze']}\" />\n"; //TODO
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -190,7 +189,7 @@ trait AdminTrait
             $this->printTrail('schema');
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -202,7 +201,7 @@ trait AdminTrait
             $this->printTrail($type);
             $this->printTitle($this->lang['strvacuum'], 'pg.vacuum');
 
-            echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
                 echo '<p>', \sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
@@ -213,7 +212,7 @@ trait AdminTrait
             }
         }
         echo '<input type="hidden" name="action" value="vacuum" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo "<p><input type=\"checkbox\" id=\"vacuum_full\" name=\"vacuum_full\" /> <label for=\"vacuum_full\">{$this->lang['strfull']}</label></p>" . \PHP_EOL;
         echo "<p><input type=\"checkbox\" id=\"vacuum_analyze\" name=\"vacuum_analyze\" /> <label for=\"vacuum_analyze\">{$this->lang['stranalyze']}</label></p>" . \PHP_EOL;
         echo "<p><input type=\"checkbox\" id=\"vacuum_freeze\" name=\"vacuum_freeze\" /> <label for=\"vacuum_freeze\">{$this->lang['strfreeze']}</label></p>" . \PHP_EOL;
@@ -286,10 +285,10 @@ trait AdminTrait
             $old_val['autovacuum_vacuum_cost_limit'] = '';
         }
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
-        echo $this->misc->form;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo $this->view->form;
         echo '<input type="hidden" name="action" value="editautovac" />' . \PHP_EOL;
-        echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+        echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
 
         echo "<br />\n<br />\n<table>" . \PHP_EOL;
         echo "\t<tr><td>&nbsp;</td>" . \PHP_EOL;
@@ -321,7 +320,7 @@ trait AdminTrait
         echo '<br />';
         echo '<br />';
         echo "<input type=\"submit\" name=\"save\" value=\"{$this->lang['strsave']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
 
         echo '</form>' . \PHP_EOL;
     }
@@ -351,8 +350,8 @@ trait AdminTrait
 
         echo "<form style=\"float: left\" action=\"{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<input type="hidden" name="action" value="delautovac" />' . \PHP_EOL;
-        echo $this->misc->form;
-        echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+        echo $this->view->form;
+        echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
         echo '<input type="hidden" name="rel" value="', \htmlspecialchars(\serialize([$_REQUEST['schema'], $_REQUEST['table']])), '" />' . \PHP_EOL;
         echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
         echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
@@ -384,9 +383,19 @@ trait AdminTrait
                     $msg .= \sprintf('%s<br />', $sql);
 
                     if (0 === $status) {
-                        $msg .= \sprintf('%s: %s<br />', \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['strclusteredgood']);
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strclusteredgood']
+                        );
                     } else {
-                        $this->doDefault(\sprintf('%s %s%s: %s<br />', $type, $msg, \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['strclusteredbad']));
+                        $this->doDefault(\sprintf(
+                            '%s %s%s: %s<br />',
+                            $type,
+                            $msg,
+                            \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strclusteredbad']
+                        ));
 
                         return;
                     }
@@ -440,21 +449,31 @@ trait AdminTrait
                 $status = $data->reindex(\mb_strtoupper($type), $o, isset($_REQUEST['reindex_force']));
 
                 if (0 === $status) {
-                    $msg .= \sprintf('%s: %s<br />', \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['strreindexgood']);
+                    $msg .= \sprintf(
+                        '%s: %s<br />',
+                        \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['strreindexgood']
+                    );
                 } else {
-                    $this->doDefault(\sprintf('%s %s%s: %s<br />', $type, $msg, \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['strreindexbad']));
+                    $this->doDefault(\sprintf(
+                        '%s %s%s: %s<br />',
+                        $type,
+                        $msg,
+                        \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['strreindexbad']
+                    ));
 
                     return;
                 }
             }
             // Everything went fine, back to the Default page....
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
             $this->doDefault($msg);
         } else {
             $status = $data->reindex(\mb_strtoupper($type), $_REQUEST['object'], isset($_REQUEST['reindex_force']));
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doAdmin($type, $this->lang['strreindexgood']);
             } else {
                 $this->doAdmin($type, $this->lang['strreindexbad']);
@@ -485,22 +504,32 @@ trait AdminTrait
                 $status = $data->analyzeDB($o);
 
                 if (0 === $status) {
-                    $msg .= \sprintf('%s: %s<br />', \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['stranalyzegood']);
+                    $msg .= \sprintf(
+                        '%s: %s<br />',
+                        \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['stranalyzegood']
+                    );
                 } else {
-                    $this->doDefault(\sprintf('%s %s%s: %s<br />', $type, $msg, \htmlentities($o, \ENT_QUOTES, 'UTF-8'), $this->lang['stranalyzebad']));
+                    $this->doDefault(\sprintf(
+                        '%s %s%s: %s<br />',
+                        $type,
+                        $msg,
+                        \htmlentities($o, \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['stranalyzebad']
+                    ));
 
                     return;
                 }
             }
             // Everything went fine, back to the Default page....
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
             $this->doDefault($msg);
         } else {
             //we must pass table here. When empty, analyze the whole db
             $status = $data->analyzeDB($_REQUEST['table']);
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doAdmin($type, $this->lang['stranalyzegood']);
             } else {
                 $this->doAdmin($type, $this->lang['stranalyzebad']);
@@ -531,12 +560,24 @@ trait AdminTrait
                 [$status, $sql] = $data->vacuumDB($t, isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
 
                 if (0 !== $status) {
-                    return $this->doDefault(\sprintf('%s %s%s: %s<br />', $type, $msg, \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumbad']));
+                    return $this->doDefault(\sprintf(
+                        '%s %s%s: %s<br />',
+                        $type,
+                        $msg,
+                        \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['strvacuumbad']
+                    ));
                 }
-                $msg .= \sprintf('%s%s %s: %s<br />', $sql, \PHP_EOL, \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strvacuumgood']);
+                $msg .= \sprintf(
+                    '%s%s %s: %s<br />',
+                    $sql,
+                    \PHP_EOL,
+                    \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                    $this->lang['strvacuumgood']
+                );
             }
             // Everything went fine, back to the Default page....
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
 
             return $this->doDefault($msg);
         }
@@ -544,7 +585,7 @@ trait AdminTrait
         [$status, $sql] = $data->vacuumDB($_REQUEST['table'], isset($_REQUEST['vacuum_analyze']), isset($_REQUEST['vacuum_full']), isset($_REQUEST['vacuum_freeze']));
 
         if (0 === $status) {
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
 
             return $this->doAdmin($type, \sprintf('%s%s%s', $sql, \PHP_EOL, $this->lang['strvacuumgood']));
         }
@@ -647,7 +688,12 @@ trait AdminTrait
         echo '</th>';
 
         $table_hidden_inputs = ('table' === $type) ?
-        \sprintf('<input type="hidden" name="table" value="%s" />%s<input type="hidden" name="subject" value="table" />', \htmlspecialchars($_REQUEST['object']), \PHP_EOL, \PHP_EOL) : '';
+        \sprintf(
+            '<input type="hidden" name="table" value="%s" />%s<input type="hidden" name="subject" value="table" />%s',
+            \htmlspecialchars($_REQUEST['object']),
+            \PHP_EOL,
+            \PHP_EOL
+        ) : '';
 
         [$recluster_help, $reclusterconf] = $this->_getReclusterConf($data, $type, $table_hidden_inputs);
 
@@ -661,10 +707,10 @@ trait AdminTrait
         // Vacuum
         echo '<tr class="row1">' . \PHP_EOL;
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
         echo '<p><input type="hidden" name="action" value="confirm_vacuum" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['strvacuum']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -672,9 +718,9 @@ trait AdminTrait
 
         // Analyze
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_analyze" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['stranalyze']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -685,9 +731,9 @@ trait AdminTrait
 
         // Reindex
         echo '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="confirm_reindex" />' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo $table_hidden_inputs;
         echo "<input type=\"submit\" value=\"{$this->lang['strreindex']}\" /></p>" . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -803,12 +849,15 @@ trait AdminTrait
             return ['', ''];
         }
         $script = $this->script;
-        $recluster_help = \sprintf('<th class="data">%s</th>', $this->view->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false));
+        $recluster_help = \sprintf(
+            '<th class="data">%s</th>',
+            $this->view->printHelp($this->lang['strclusterindex'], 'pg.index.cluster', false)
+        );
 
         $disabled = '';
         $reclusterconf = '<td style="text-align: center; vertical-align: bottom">' . \PHP_EOL;
-        $reclusterconf .= '<form action="' . self::SUBFOLDER . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
-        $reclusterconf .= $this->misc->form;
+        $reclusterconf .= '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
+        $reclusterconf .= $this->view->form;
         $reclusterconf .= $table_hidden_inputs;
 
         if ('table' === $type && !$data->alreadyClustered($_REQUEST['object'])) {
@@ -854,48 +903,55 @@ trait AdminTrait
             'namespace' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url' => self::SUBFOLDER . "/redirect/schema?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/schema?{$this->misc->href}&amp;",
                 'vars' => ['schema' => 'nspname'],
             ],
             'relname' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/table?{$this->misc->href}&amp;",
                 'vars' => ['table' => 'relname', 'schema' => 'nspname'],
             ],
             'autovacuum_enabled' => [
                 'title' => $this->lang['strenabled'],
-                'field' => Decorator::callback($enlight, ['autovacuum_enabled', $defaults['autovacuum']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_enabled',
+                    $defaults['autovacuum'], ]),
                 'type' => 'verbatim',
             ],
             'autovacuum_vacuum_threshold' => [
                 'title' => $this->lang['strvacuumbasethreshold'],
-                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold', $defaults['autovacuum_vacuum_threshold']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_threshold',
+                    $defaults['autovacuum_vacuum_threshold'], ]),
                 'type' => 'verbatim',
             ],
             'autovacuum_vacuum_scale_factor' => [
                 'title' => $this->lang['strvacuumscalefactor'],
-                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor', $defaults['autovacuum_vacuum_scale_factor']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_scale_factor',
+                    $defaults['autovacuum_vacuum_scale_factor'], ]),
                 'type' => 'verbatim',
             ],
             'autovacuum_analyze_threshold' => [
                 'title' => $this->lang['stranalybasethreshold'],
-                'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold', $defaults['autovacuum_analyze_threshold']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_analyze_threshold',
+                    $defaults['autovacuum_analyze_threshold'], ]),
                 'type' => 'verbatim',
             ],
             'autovacuum_analyze_scale_factor' => [
                 'title' => $this->lang['stranalyzescalefactor'],
-                'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor', $defaults['autovacuum_analyze_scale_factor']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_analyze_scale_factor',
+                    $defaults['autovacuum_analyze_scale_factor'], ]),
                 'type' => 'verbatim',
             ],
             'autovacuum_vacuum_cost_delay' => [
                 'title' => $this->lang['strvacuumcostdelay'],
-                'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay', $defaults['autovacuum_vacuum_cost_delay']]), 'ms'),
+                'field' => Decorator::concat(Decorator::callback($enlight, ['autovacuum_vacuum_cost_delay',
+                    $defaults['autovacuum_vacuum_cost_delay'], ]), 'ms'),
                 'type' => 'verbatim',
             ],
             'autovacuum_vacuum_cost_limit' => [
                 'title' => $this->lang['strvacuumcostlimit'],
-                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit', $defaults['autovacuum_vacuum_cost_limit']]),
+                'field' => Decorator::callback($enlight, ['autovacuum_vacuum_cost_limit',
+                    $defaults['autovacuum_vacuum_cost_limit'], ]),
                 'type' => 'verbatim',
             ],
         ];
@@ -935,7 +991,8 @@ trait AdminTrait
         ];
 
         if ('table' === $type) {
-            unset($actions['edit']['vars']['schema'],
+            unset(
+                $actions['edit']['vars']['schema'],
                 $actions['delete']['vars']['schema'],
                 $columns['namespace'],
                 $columns['relname']
@@ -947,7 +1004,7 @@ trait AdminTrait
         if (('table' === $type) && (0 === $autovac->recordCount())) {
             echo '<br />';
 
-            echo '<a href="' . self::SUBFOLDER . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
+            echo '<a href="' . \containerInstance()->subFolder . "/src/views/tables?action=confeditautovac&amp;{$this->misc->href}&amp;table=";
             echo \htmlspecialchars($_REQUEST['table']);
             echo "\">{$this->lang['straddvacuumtable']}</a>";
         }

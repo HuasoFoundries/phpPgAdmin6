@@ -8,10 +8,12 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for PortugueseBr language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
-class PortugueseBr extends English
+class PortugueseBr extends AbstractLang
 {
-    public function getLang()
+    public function getLang(): array
     {
         $lang = $this->lang; //  Language and character set
         $lang['applang'] = 'Português-Brasileiro';

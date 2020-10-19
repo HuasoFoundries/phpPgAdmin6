@@ -180,8 +180,8 @@ class GroupsController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropmember'], $this->misc->printVal($_REQUEST['user']), $this->misc->printVal($_REQUEST['group'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
+            echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop_member" />' . \PHP_EOL;
             echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="user" value="', \htmlspecialchars($_REQUEST['user']), '" />' . \PHP_EOL;
@@ -248,7 +248,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
         echo '<select name="user">';
 
         while (!$users->EOF) {
@@ -259,7 +259,7 @@ class GroupsController extends BaseController
         }
         echo '</select>' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['straddmember']}\" />" . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="action" value="add_member" />' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
@@ -292,8 +292,8 @@ class GroupsController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropgroup'], $this->misc->printVal($_REQUEST['group'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/groups" method="post">' . \PHP_EOL;
-            echo $this->misc->form;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
+            echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
             echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
@@ -330,7 +330,7 @@ class GroupsController extends BaseController
         $this->printMsg($msg);
 
         echo '<form action="" method="post">' . \PHP_EOL;
-        echo $this->misc->form;
+        echo $this->view->form;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data\"><input size=\"32\" maxlength=\"{$data->_maxNameLen}\" name=\"name\" value=\"", \htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
@@ -353,7 +353,7 @@ class GroupsController extends BaseController
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
         echo '</form>' . \PHP_EOL;
     }
 

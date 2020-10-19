@@ -1,0 +1,34 @@
+{
+  "symbol-whitelist": [
+    "array",
+    "bool",
+    "callable",
+    "false",
+    "float",
+    "int",
+    "iterable",
+    "null",
+    "object",
+    "parent",
+    "self",
+    "static",
+    "string",
+    "true",
+    "void",
+     "ADODB_postgres8",
+ "ADORecordSet_assoc_postgres8",
+ "ADORecordSet_postgres8",
+ "dump",
+ "PDO",
+ "PHP_SESSION_ACTIVE",
+ "session_id",
+ "session_name",
+ "session_set_cookie_params",
+ "session_start",
+ "session_status",
+ "Psr\\Container\\ContainerInterface"
+
+  ],
+  "scan-files" : ["src/lib.inc.php", "router.php"]
+
+}

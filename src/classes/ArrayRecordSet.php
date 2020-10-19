@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin;
 
+use Countable;
+
 /**
  * @file
  * Really simple RecordSet to allow printTable of arrays.
@@ -19,15 +21,13 @@ namespace PHPPgAdmin;
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
  */
-class ArrayRecordSet
+class ArrayRecordSet implements Countable
 {
     public $EOF = false;
 
     public $fields;
 
     private $_array;
-
-    private $_count;
 
     /**
      * Constructor.
@@ -37,12 +37,19 @@ class ArrayRecordSet
     public function __construct($data)
     {
         $this->_array = $data;
-        $this->_count = \count($this->_array);
         $this->fields = \reset($this->_array);
 
         if (false === $this->fields) {
             $this->EOF = true;
         }
+    }
+
+    /**
+     * Returns the recordCount.
+     */
+    public function count(): int
+    {
+        return \count($this->_array);
     }
 
     /**
@@ -52,7 +59,7 @@ class ArrayRecordSet
      */
     public function recordCount()
     {
-        return $this->_count;
+        return $this->count();
     }
 
     /**

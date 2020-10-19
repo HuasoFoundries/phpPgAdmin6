@@ -1,3 +1,5 @@
+include mk_linters.mk
+
 VERSION = $(shell cat composer.json | sed -n 's/.*"version": "\([^"]*\)"/\1/p')
 
 SHELL = /usr/bin/env bash
@@ -7,6 +9,7 @@ XDSWI := $(shell command -v xd_swi 2> /dev/null)
 HAS_PHPMD := $(shell command -v phpmd 2> /dev/null)
 HAS_CSFIXER:= $(shell command -v php-cs-fixer 2> /dev/null)
 XDSWI_STATUS:=$(shell command xd_swi stat 2> /dev/null)
+HAS_PHIVE:=$(shell command phive --version 2> /dev/null)
 CURRENT_BRANCH:=$(shell command git rev-parse --abbrev-ref HEAD 2> /dev/null)
 DATENOW:=`date +'%Y-%m-%d'`
 YELLOW=\033[0;33m
@@ -35,8 +38,9 @@ install:
 fix_permissions:
 	@sudo chmod 777 temp -R ;\
 	sudo chown -R $$USER:www-data temp/sessions ;\
+	sudo rm -R --force temp/twigcache ;\
+	git checkout HEAD temp/twigcache ;\
 	sudo chown -R $$USER:www-data temp/twigcache ;\
-	sudo rm -R --force temp/twigcache/*
 
 composer_update:
 	@echo -e "updating composer with params ${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
@@ -73,7 +77,12 @@ tag_and_push:
 
 
 
-tag: test update_version csfixer lint tag_and_push	
+tag: test update_version csfixer fixers	
+tag:
+	@yarn prettier --write ;\
+	yarn build ;\
+	${MAKE}	 tag_and_push --no-print-directory
+	
 
 test:
 ifeq ("$(wildcard config.inc.php)","")
@@ -82,40 +91,6 @@ endif
 	./vendor/bin/codecept run unit --debug
 	
 
-
-csfixer:
-	@if [ -f "vendor/bin/php-cs-fixer" ]; then \
-		echo "XDEBUG was: "$(XDSWI_STATUS) ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		mkdir -p .build/php-cs-fixer ;\
-        vendor/bin/php-cs-fixer fix --config=.php_cs --verbose ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-    else \
-        echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-        echo -e "Install it with $(GREEN)composer install --dev friendsofphp/php-cs-fixer$(WHITE)" ;\
-    fi ;\
-	sudo rm -rf temp/route.cache.php
-
-
-
-disable_xdebug:
-	@if [[ "$(XDSWI)" != "" ]]; then \
-    	xd_swi off ;\
-    fi 
-
-enable_xdebug:
-	@if [[ "$(XDSWI)" != "" ]]; then \
-    	xd_swi $(new_status) ;\
-    fi 
-
-phpmd:
-	@if [ "$(HAS_PHPMD)" == "" ]; then \
-        echo -e "$(GREEN)phpmd$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-        echo -e "Install it with $(GREEN)phive install phpmd$(WHITE)" ;\
-    else \
-	    phpmd src text .phpmd.xml |  sed "s/.*\///" ;\
-    fi ;\
-    echo ""
 
 var_dumper:
 	@if [ -f "vendor/bin/var-dump-server" ]; then \
@@ -126,57 +101,6 @@ var_dumper:
 	fi;
 	@echo ""
 
-folder ?= src
-psalm: FOLDER_BASENAME:=`basename $(folder)|sed 's/src//'`
-psalm:
-	@if [ -f "vendor/bin/psalm" ]; then \
-		mkdir -p .build/psalm ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/psalm --show-info=true \
-			  --config=psalm.xml \
-			  --set-baseline=.build/psalm/psalm-baseline$(FOLDER_BASENAME).xml \
-			  --shepherd $(folder) ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-	else \
-	 	echo -e "$(GREEN)vimeo/psalm$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
-	fi
-	@echo ""
-
-
-phpstan:
-	@${MAKE} disable_xdebug  --no-print-directory 
-	@if [ ! -f "vendor/bin/phpstan" ]; then \
-		echo -e "$(GREEN)phpstan$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev phpstan/phpstan$(WHITE)" ;\
-		exit 0 ;\
-	fi
-	
-	@mkdir -p .build/phpstan ;\
-	./vendor/bin/phpstan analyse --memory-limit=2G   ${error_format}  
-	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
-	echo ""
-
-
-lint:
-	@if [ -f "vendor/bin/parallel-lint" ]; then \
-		mkdir -p .build/parallel ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/parallel-lint \
-			--ignore-fails \
-			  --exclude vendor \
-			   $(folder) ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-	else \
-		echo -e "$(GREEN)parallel-lint$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev jakub-onderka/php-parallel-lint$(WHITE)" ;\
-	fi
-	@find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
-	@echo ""
-
-
-
-fixers: phpmd psalm phpstan
 
 create_testdb:
 	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
@@ -187,3 +111,4 @@ destroy_testdb:
 run_local:
 	${MAKE} fix_permissions
 	php -S localhost:8000 index.php	
+

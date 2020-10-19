@@ -75,7 +75,7 @@ class HistoryController extends BaseController
         // Bring to the front always
         echo '<body onload="window.focus();">' . \PHP_EOL;
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/history" method="post">' . \PHP_EOL;
         $this->printConnection('history');
         echo '</form><br />';
 
@@ -88,7 +88,6 @@ class HistoryController extends BaseController
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
             $history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
-            //Kint::dump($history);
             $columns = [
                 'query' => [
                     'title' => $this->lang['strsql'],
@@ -200,10 +199,10 @@ class HistoryController extends BaseController
             echo "<p>{$this->lang['strconfdelhistory']}</p>" . \PHP_EOL;
 
             echo '<pre>', \htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], \ENT_QUOTES, 'UTF-8'), '</pre>';
-            echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="delhistory" />' . \PHP_EOL;
             echo "<input type=\"hidden\" name=\"queryid\" value=\"{$qid}\" />" . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
@@ -223,9 +222,9 @@ class HistoryController extends BaseController
             echo "<h3>{$this->lang['strclearhistory']}</h3>" . \PHP_EOL;
             echo "<p>{$this->lang['strconfclearhistory']}</p>" . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/history" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="clearhistory" />' . \PHP_EOL;
-            echo $this->misc->form;
+            echo $this->view->form;
             echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
             echo '</form>' . \PHP_EOL;

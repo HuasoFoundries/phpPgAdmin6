@@ -42,7 +42,7 @@ class ColpropertiesController extends BaseController
         } else {
             switch ($this->action) {
                 case 'properties':
-                    if (isset($_POST['cancel'])) {
+                    if (null !== $this->getPostParam('cancel')) {
                         $this->doDefault();
                     } else {
                         $this->doAlter();
@@ -89,7 +89,6 @@ class ColpropertiesController extends BaseController
         if (!empty($_REQUEST['column'])) {
             // Get table
             $tdata = $data->getTable($this->tableName);
-            //\Kint::dump($tdata);
             // Get columns
             $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
 
@@ -238,8 +237,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/colproperties" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/colproperties" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -293,6 +292,7 @@ class ColpropertiesController extends BaseController
 
                 // Column type
                 $escaped_predef_types = []; // the JS escaped array elements
+
                 if ($data->hasAlterColumnType()) {
                     // Fetch all available types
                     $types = $data->getTypes(true, false, true);
@@ -336,8 +336,8 @@ class ColpropertiesController extends BaseController
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="properties" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
-                echo $this->misc->form;
-                echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['table']), '" />' . \PHP_EOL;
+                echo $this->view->form;
+                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
 
@@ -353,7 +353,7 @@ class ColpropertiesController extends BaseController
                     echo '<input type="hidden" name="array" value="', \htmlspecialchars($_REQUEST['array']), '" />' . \PHP_EOL;
                 }
                 echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>" . \PHP_EOL;
+                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
                 echo '</form>' . \PHP_EOL;
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . \implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>" . \PHP_EOL;
 
@@ -386,7 +386,7 @@ class ColpropertiesController extends BaseController
                 if (0 === $status) {
                     if ($_REQUEST['column'] !== $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];
-                        $this->misc->setReloadBrowser(true);
+                        $this->view->setReloadBrowser(true);
                     }
                     $this->doDefault($sql . "<br/>{$this->lang['strcolumnaltered']}");
                 } else {

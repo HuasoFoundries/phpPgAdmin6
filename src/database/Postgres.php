@@ -36,6 +36,21 @@ class Postgres extends ADOdbBase
 
     public $conf;
 
+    /**
+     * @var float
+     */
+    public $major_version = 9.6;
+
+    /**
+     * @var class-string
+     */
+    public $help_classname = \PHPPgAdmin\Help\PostgresDoc::class;
+
+    /**
+     * @var \PHPPgAdmin\Help\PostgresDoc
+     */
+    public $help_class;
+
     protected $container;
 
     protected $server_info;
@@ -49,6 +64,8 @@ class Postgres extends ADOdbBase
         $this->lang = $container->get('lang');
         $this->conf = $container->get('conf');
         $this->server_info = $server_info;
+        $this->help_class = new $this->help_classname($this->conf, $this->major_version);
+        $this->lastExecutedSql = '';
     }
 
     /**
@@ -60,39 +77,36 @@ class Postgres extends ADOdbBase
      */
     public function getHelp($help)
     {
-        $this->getHelpPages();
+        $this->help_page = $this->help_class->getHelpTopics();
+        $this->help_base = $this->help_class->getHelpBase();
 
-        if (isset($this->help_page[$help])) {
-            if (\is_array($this->help_page[$help])) {
-                $urls = [];
-
-                foreach ($this->help_page[$help] as $link) {
-                    $urls[] = $this->help_base . $link;
-                }
-
-                return $urls;
-            }
-
-            return $this->help_base . $this->help_page[$help];
+        if (!$topicResult = $this->help_class->getHelpTopic($help)) {
+            return null;
         }
 
-        return null;
+        if (\is_array($topicResult)) {
+            $urls = [];
+
+            foreach ($topicResult as $link) {
+                $urls[] = $this->help_base . $link;
+            }
+
+            return $urls;
+        }
+
+        return $this->help_base . $topicResult;
     }
 
     /**
      * Gets the help pages.
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
+     *
+     * @return array<array-key, string>|null|string
      */
-    public function getHelpPages(): void
+    public function getHelpPages()
     {
-        if (null === $this->help_page || null === $this->help_base) {
-            $help_classname = '\PHPPgAdmin\Help\PostgresDoc' . \str_replace('.', '', $this->major_version);
-
-            $help_class = new $help_classname($this->conf, $this->major_version);
-            $this->help_page = $help_class->getHelpPage();
-            $this->help_base = $help_class->getHelpBase();
-        }
+        return $this->help_class->getHelpTopics();
     }
 
     // Formatting functions
@@ -144,7 +158,7 @@ class Postgres extends ADOdbBase
                 if (null !== $value) {
                     $value = $this->escapeBytea($value);
                 }
-            // no break
+                // no break
             case 'text':
             case 'text[]':
             case 'json':
@@ -280,8 +294,6 @@ class Postgres extends ADOdbBase
 				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
 		";
 
-        //\Kint::dump($sql);
-
         // Add advanced objects if show_advanced is set
         if ($conf['show_advanced']) {
             $sql .= "
@@ -329,53 +341,6 @@ class Postgres extends ADOdbBase
         $sql .= 'ORDER BY type, schemaname, relname, name';
 
         return $this->selectSet($sql);
-    }
-
-    /**
-     * Given an array of attnums and a relation, returns an array mapping
-     * attribute number to attribute name.
-     *
-     * @param string $table The table to get attributes for
-     * @param array  $atts  An array of attribute numbers
-     *
-     * @return array|int An array mapping attnum to attname or error code
-     *                   - -1 $atts must be an array
-     *                   - -2 wrong number of attributes found
-     */
-    public function getAttributeNames($table, $atts)
-    {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $this->clean($table);
-        $this->arrayClean($atts);
-
-        if (!\is_array($atts)) {
-            return -1;
-        }
-
-        if (0 === \count($atts)) {
-            return [];
-        }
-
-        $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
-			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
-			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . \implode("','", $atts) . "')";
-
-        $rs = $this->selectSet($sql);
-
-        if ($rs->recordCount() !== \count($atts)) {
-            return -2;
-        }
-
-        $temp = [];
-
-        while (!$rs->EOF) {
-            $temp[$rs->fields['attnum']] = $rs->fields['attname'];
-            $rs->moveNext();
-        }
-
-        return $temp;
     }
 
     /**
@@ -519,6 +484,7 @@ class Postgres extends ADOdbBase
 
                         if (false === $finishpos) {
                             $line = \mb_substr($line, 0, $i); /* remove comment */
+
                             break;
                         }
                         $pre = \mb_substr($line, 0, $i);
@@ -567,6 +533,7 @@ class Postgres extends ADOdbBase
                 } else {
                     if ('--' === \mb_substr($line, $i, 2)) {
                         $line = \mb_substr($line, 0, $i); /* remove comment */
+
                         break;
                     } /* count nested parentheses */
 
@@ -846,7 +813,7 @@ class Postgres extends ADOdbBase
 
             $sql .= \implode('","', $show) . '" FROM ';
         }
-
+        $this->prtrace(['id' => $this->id]);
         $this->fieldClean($table);
 
         if (isset($_REQUEST['schema'])) {
