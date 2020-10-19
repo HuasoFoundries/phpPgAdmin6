@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.0
+ * PHPPgAdmin 6.1.0
  */
 
 namespace PHPPgAdmin\Database;

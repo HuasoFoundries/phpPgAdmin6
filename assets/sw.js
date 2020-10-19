@@ -19,7 +19,6 @@ if (typeof workbox === 'undefined') {
 }
 self.__precacheManifest = [].concat(self.__precacheManifest || []);
 if (typeof workbox !== 'undefined' && workbox) {
-
   workbox.core.skipWaiting();
 
   workbox.core.clientsClaim();
@@ -619,7 +618,7 @@ if (typeof workbox !== 'undefined' && workbox) {
   },
   {
     "url": "sw.dev.js",
-    "revision": "5dea6508fde6f65581a3f467e457d123"
+    "revision": "febc92b3cdfdc35035a05df733c1dd98"
   },
   {
     "url": "themes/bootstrap/global.css",
@@ -1313,8 +1312,8 @@ if (typeof workbox !== 'undefined' && workbox) {
       cacheName: 'image-files',
       plugins: [
         new workbox.cacheableResponse.CacheableResponse({ statuses: [0, 200] }),
-
-      })
+      ],
+    })
   );
 
   // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
