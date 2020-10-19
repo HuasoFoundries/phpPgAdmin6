@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.2
+ * PHPPgAdmin 6.1.3
  */
 
 namespace PHPPgAdmin\Traits;
