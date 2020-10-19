@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.0
+ * PHPPgAdmin 6.1.2
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -623,7 +623,7 @@ trait TableTrait
                     break;
 
                 default:
-                $length[$i] = $length[$i] ?? null;
+                    $length[$i] = $length[$i] ?? null;
                     $sql .= "\"{$field[$i]}\" {$type[$i]}";
 
                     if ('' !== $length[$i] && null !== $length[$i]) {

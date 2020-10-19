@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin 6.1.0
+ * PHPPgAdmin 6.1.2
  */
 
 // This section is made to be able to parse requests coming from PHP Builtin webserver
