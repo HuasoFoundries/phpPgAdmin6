@@ -51,3 +51,6 @@ config.*.php*
 tools/php*
 tools/composer*
 
+
+reviewdog*
+
