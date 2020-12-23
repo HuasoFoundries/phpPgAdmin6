@@ -1,18 +1,68 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<files psalm-version="3.9.3@2e4154d76e24d1b4e59e6cc2bebef7790cb9e550">
-  <file src="src/classes/ADONewConnection.php">
-    <UndefinedClass occurrences="1">
-      <code>\ADONewConnection</code>
+<files psalm-version="3.9.5@0cfe565d0afbcd31eadcc281b9017b5692911661">
+  <file src=".configs/debug.var_dumper.php">
+    <UndefinedClass occurrences="4">
+      <code>VarCloner</code>
+      <code>CliDumper</code>
+      <code>HtmlDumper</code>
+      <code>ServerDumper</code>
     </UndefinedClass>
   </file>
-  <file src="src/classes/ADOdbException.php">
-    <UndefinedDocblockClass occurrences="2">
-      <code>number</code>
-      <code>number</code>
+  <file src="src/classes/ADORecordSet.php">
+    <InvalidReturnStatement occurrences="1">
+      <code>parent::fetchField()</code>
+    </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>\ADOFieldObject</code>
+    </InvalidReturnType>
+    <UndefinedDocblockClass occurrences="1">
+      <code>parent::fetchField()</code>
     </UndefinedDocblockClass>
   </file>
+  <file src="src/classes/ADOdbException.php">
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;msg</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/classes/Connection.php">
+    <NullableReturnStatement occurrences="2">
+      <code>null</code>
+      <code>null</code>
+    </NullableReturnStatement>
+    <UndefinedDocblockClass occurrences="2">
+      <code>$this-&gt;conn</code>
+      <code>$this-&gt;conn</code>
+    </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="1">
+      <code>dump($serverInfo)</code>
+    </UndefinedFunction>
+  </file>
   <file src="src/classes/ContainerUtils.php">
-    <UndefinedInterfaceMethod occurrences="8">
+    <UndefinedConstant occurrences="2">
+      <code>BASE_PATH</code>
+      <code>BASE_PATH</code>
+    </UndefinedConstant>
+    <UndefinedMagicPropertyFetch occurrences="1">
+      <code>$container-&gt;misc</code>
+    </UndefinedMagicPropertyFetch>
+    <UndefinedPropertyAssignment occurrences="6">
+      <code>$container-&gt;BASE_PATH</code>
+      <code>$container-&gt;SUBFOLDER</code>
+      <code>$container-&gt;DEBUGMODE</code>
+      <code>$container-&gt;THEME_PATH</code>
+      <code>$container-&gt;IN_TEST</code>
+      <code>$container-&gt;subfolder</code>
+    </UndefinedPropertyAssignment>
+    <UndefinedThisPropertyAssignment occurrences="1">
+      <code>$this-&gt;container</code>
+    </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/classes/ContainerUtilsOld.php">
+    <UndefinedConstant occurrences="2">
+      <code>BASE_PATH</code>
+      <code>BASE_PATH</code>
+    </UndefinedConstant>
+    <UndefinedInterfaceMethod occurrences="7">
       <code>$container</code>
       <code>$container</code>
       <code>$container</code>
@@ -20,22 +70,58 @@
       <code>$container</code>
       <code>$container</code>
       <code>$container</code>
-      <code>offsetSet</code>
     </UndefinedInterfaceMethod>
+    <UndefinedPropertyAssignment occurrences="6">
+      <code>$container-&gt;BASE_PATH</code>
+      <code>$container-&gt;SUBFOLDER</code>
+      <code>$container-&gt;DEBUGMODE</code>
+      <code>$container-&gt;THEME_PATH</code>
+      <code>$container-&gt;IN_TEST</code>
+      <code>$container-&gt;subfolder</code>
+    </UndefinedPropertyAssignment>
   </file>
   <file src="src/classes/Misc.php">
-    <NullableReturnStatement occurrences="2">
-      <code>$this-&gt;_server_info</code>
-      <code>$this-&gt;halt($this-&gt;lang['strinvalidserverparam'])</code>
+    <InvalidNullableReturnType occurrences="1">
+      <code>string</code>
+    </InvalidNullableReturnType>
+    <NullableReturnStatement occurrences="1">
+      <code>$this-&gt;_server_id</code>
     </NullableReturnStatement>
-    <UndefinedMethod occurrences="1">
-      <code>setSchema</code>
+    <UndefinedMethod occurrences="3">
+      <code>addError</code>
+      <code>addError</code>
+      <code>addError</code>
     </UndefinedMethod>
+  </file>
+  <file src="src/classes/ViewManager.php">
+    <UndefinedFunction occurrences="16">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/AggregatesController.php">
     <NullReference occurrences="1">
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/AlldbController.php">
     <NullReference occurrences="3">
@@ -43,11 +129,30 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+    <UndefinedMethod occurrences="1">
+      <code>getDestinationWithLastTab</code>
+    </UndefinedMethod>
   </file>
   <file src="src/controllers/BaseController.php">
+    <UndefinedFunction occurrences="3">
+      <code>\requestInstance()</code>
+      <code>\requestInstance()</code>
+      <code>\requestInstance()</code>
+    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="1">
       <code>$this-&gt;postgresqlMinVer</code>
     </UndefinedThisPropertyAssignment>
+  </file>
+  <file src="src/controllers/CastsController.php">
+    <InvalidArgument occurrences="1">
+      <code>$casts</code>
+    </InvalidArgument>
   </file>
   <file src="src/controllers/ColpropertiesController.php">
     <NullArgument occurrences="1">
@@ -56,6 +161,10 @@
     <NullReference occurrences="1">
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="2">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/ConstraintsController.php">
     <NullReference occurrences="5">
@@ -65,6 +174,10 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="2">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedMethod occurrences="1">
       <code>doTree</code>
     </UndefinedMethod>
@@ -73,6 +186,50 @@
     <NullReference occurrences="1">
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="19">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+    <UndefinedMethod occurrences="16">
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+      <code>getDestinationWithLastTab</code>
+    </UndefinedMethod>
+  </file>
+  <file src="src/controllers/DataexportController.php">
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/DbexportController.php">
     <EmptyArrayAccess occurrences="1">
@@ -86,15 +243,8 @@
     <InvalidArgument occurrences="1">
       <code>$resultset-&gt;recordCount()</code>
     </InvalidArgument>
-    <InvalidArrayOffset occurrences="9">
-      <code>$_gets['schema']</code>
+    <InvalidArrayOffset occurrences="2">
       <code>$_gets['subject']</code>
-      <code>$_gets['query']</code>
-      <code>$_gets['count']</code>
-      <code>$_gets['return']</code>
-      <code>$_gets['search_path']</code>
-      <code>$_gets['table']</code>
-      <code>$_gets['nohistory']</code>
       <code>$fields['schema']</code>
     </InvalidArrayOffset>
     <NullReference occurrences="5">
@@ -119,6 +269,12 @@
       <code>$resultset-&gt;fetchField($j++)</code>
       <code>$finfo-&gt;type</code>
     </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/DomainsController.php">
     <NullReference occurrences="3">
@@ -126,8 +282,18 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/FulltextController.php">
+    <InvalidArgument occurrences="1">
+      <code>$items</code>
+    </InvalidArgument>
     <NullReference occurrences="6">
       <code>$_POST</code>
       <code>$_POST</code>
@@ -136,8 +302,40 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedDocblockClass occurrences="4">
+      <code>$ftscfg-&gt;recordCount()</code>
+      <code>$ftsdict-&gt;recordCount()</code>
+      <code>$ftsdicts-&gt;recordCount()</code>
+      <code>$ftsdicts-&gt;recordCount()</code>
+    </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="9">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/FunctionsController.php">
+    <InvalidArgument occurrences="13">
+      <code>$_POST['formFunction']</code>
+      <code>$_POST['formObjectFile']</code>
+      <code>$_POST['formLinkSymbol']</code>
+      <code>$_POST['formLinkSymbol']</code>
+      <code>$_POST['formDefinition']</code>
+      <code>$_POST['formComment']</code>
+      <code>$_POST['formObjectFile']</code>
+      <code>$_POST['formLinkSymbol']</code>
+      <code>$_POST['formLinkSymbol']</code>
+      <code>$_POST['formDefinition']</code>
+      <code>$_POST['formComment']</code>
+      <code>$_POST['formCost']</code>
+      <code>$_POST['formRows']</code>
+    </InvalidArgument>
     <InvalidNullableReturnType occurrences="1">
       <code>string</code>
     </InvalidNullableReturnType>
@@ -148,6 +346,20 @@
     <TooFewArguments occurrences="1">
       <code>showDefinition</code>
     </TooFewArguments>
+    <UndefinedFunction occurrences="12">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedVariable occurrences="1">
       <code>$f</code>
     </UndefinedVariable>
@@ -158,14 +370,44 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/controllers/HistoryController.php">
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/IndexesController.php">
+    <InvalidArgument occurrences="10">
+      <code>$formIndexName</code>
+      <code>$formWhere</code>
+      <code>$this-&gt;getPostParam('formIndexName', '')</code>
+      <code>$this-&gt;getPostParam('formIndexType')</code>
+      <code>$this-&gt;getPostParam('formUnique')</code>
+      <code>$formWhere</code>
+      <code>$formSpc</code>
+      <code>$this-&gt;getPostParam('formConcur')</code>
+      <code>$this-&gt;getPostParam('index')</code>
+      <code>$this-&gt;getPostParam('cascade')</code>
+    </InvalidArgument>
     <NullReference occurrences="4">
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/InfoController.php">
     <UndefinedThisPropertyAssignment occurrences="1">
@@ -178,23 +420,58 @@
       <code>$this-&gt;shownull</code>
     </UndefinedThisPropertyFetch>
   </file>
+  <file src="src/controllers/IntroController.php">
+    <UndefinedFunction occurrences="4">
+      <code>\requestInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\requestInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/controllers/LoginController.php">
+    <UndefinedFunction occurrences="5">
+      <code>\requestInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\requestInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
   <file src="src/controllers/MaterializedviewpropertiesController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/MaterializedviewsController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/controllers/OperatorsController.php">
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/PrivilegesController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/RolesController.php">
     <NullReference occurrences="4">
@@ -203,30 +480,81 @@
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/RulesController.php">
     <NullReference occurrences="1">
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="2">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/SchemasController.php">
     <NullReference occurrences="2">
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+    <UndefinedMethod occurrences="1">
+      <code>getDestinationWithLastTab</code>
+    </UndefinedMethod>
   </file>
   <file src="src/controllers/SequencesController.php">
+    <InvalidArgument occurrences="1">
+      <code>$sequences</code>
+    </InvalidArgument>
     <NullReference occurrences="3">
       <code>$_POST</code>
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedDocblockClass occurrences="3">
+      <code>$sequence-&gt;recordCount()</code>
+      <code>$sequence-&gt;recordCount()</code>
+      <code>$sequence-&gt;recordCount()</code>
+    </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/controllers/ServersController.php">
+    <UndefinedFunction occurrences="4">
+      <code>\requestInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\responseInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/controllers/SqlController.php">
+    <UndefinedDocblockClass occurrences="2">
+      <code>$data-&gt;conn-&gt;Execute($this-&gt;query)</code>
+      <code>$rs</code>
+    </UndefinedDocblockClass>
   </file>
   <file src="src/controllers/SqleditController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TablesController.php">
     <NullReference occurrences="3">
@@ -237,12 +565,31 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$tables-&gt;recordCount()</code>
     </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="12">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TablespacesController.php">
     <NullReference occurrences="2">
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TblpropertiesController.php">
     <NullReference occurrences="4">
@@ -251,18 +598,48 @@
       <code>$_REQUEST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TreeController.php">
     <InvalidReturnStatement occurrences="1">
-      <code>$parent</code>
+      <code>$this-&gt;printTreeJSON($treedata, $attrs, $print)</code>
     </InvalidReturnStatement>
+    <InvalidReturnType occurrences="1">
+      <code>\Slim\Http\Response|string</code>
+    </InvalidReturnType>
+    <MoreSpecificImplementedParamType occurrences="1">
+      <code>$_treedata</code>
+    </MoreSpecificImplementedParamType>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TriggersController.php">
     <NullReference occurrences="1">
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/TypesController.php">
+    <InvalidArgument occurrences="2">
+      <code>$types</code>
+      <code>$vals</code>
+    </InvalidArgument>
     <InvalidArrayOffset occurrences="1">
       <code>$navlinks['enum']</code>
     </InvalidArrayOffset>
@@ -271,119 +648,88 @@
       <code>$_REQUEST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedDocblockClass occurrences="4">
+      <code>$typedata-&gt;recordCount()</code>
+      <code>$vals-&gt;getArray()</code>
+      <code>$vals</code>
+      <code>$vals</code>
+    </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="6">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/UsersController.php">
     <NullReference occurrences="2">
       <code>$_POST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="4">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/ViewpropertiesController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/controllers/ViewsController.php">
     <NullReference occurrences="2">
       <code>$_REQUEST</code>
       <code>$_REQUEST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/database/ADOdbBase.php">
-    <InvalidReturnStatement occurrences="2">
+    <InvalidReturnStatement occurrences="5">
       <code>$e-&gt;getCode()</code>
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
       <code>$e-&gt;getCode()</code>
+      <code>$this-&gt;conn-&gt;ErrorNo()</code>
+      <code>$this-&gt;conn-&gt;ErrorMsg()</code>
     </InvalidReturnStatement>
-    <MissingDependency occurrences="1">
-      <code>\PHPPgAdmin\ADONewConnection</code>
-    </MissingDependency>
-  </file>
-  <file src="src/database/Connection.php">
-    <InvalidReturnStatement occurrences="1">
-      <code>-3</code>
-    </InvalidReturnStatement>
-    <NullableReturnStatement occurrences="1">
-      <code>null</code>
-    </NullableReturnStatement>
-    <UndefinedDocblockClass occurrences="1">
-      <code>$this-&gt;conn</code>
+    <InvalidReturnType occurrences="4">
+      <code>int|\PHPPgAdmin\ADORecordSet</code>
+      <code>int|\PHPPgAdmin\ADORecordSet</code>
+      <code>int</code>
+      <code>string</code>
+    </InvalidReturnType>
+    <UndefinedDocblockClass occurrences="9">
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
+      <code>$this-&gt;conn-&gt;ErrorNo()</code>
+      <code>$this-&gt;conn-&gt;ErrorMsg()</code>
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
+      <code>$rs</code>
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
+      <code>$this-&gt;conn-&gt;Execute($sql)</code>
+      <code>$this-&gt;conn-&gt;Execute($setClause . $whereClause)</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/database/Postgres.php">
     <LoopInvalidation occurrences="1">
       <code>$i</code>
     </LoopInvalidation>
-    <UndefinedDocblockClass occurrences="1">
-      <code>$rs-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/database/Postgres74.php">
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$default</code>
-    </MoreSpecificImplementedParamType>
-  </file>
-  <file src="src/database/Postgres80.php">
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$cycledvalue</code>
-    </MoreSpecificImplementedParamType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
-  </file>
-  <file src="src/database/Postgres81.php">
-    <InvalidArgument occurrences="1">
-      <code>$toid</code>
-    </InvalidArgument>
-    <InvalidCast occurrences="2">
-      <code>$toid</code>
-      <code>$toid</code>
-    </InvalidCast>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$rs-&gt;fields('oid')</code>
-      <code>$rs-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/database/Postgres82.php">
-    <ConflictingReferenceConstraint occurrences="1">
-      <code>else {</code>
-    </ConflictingReferenceConstraint>
-    <LessSpecificImplementedReturnType occurrences="1">
-      <code>array</code>
-    </LessSpecificImplementedReturnType>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$operator_oid</code>
-    </MoreSpecificImplementedParamType>
-    <NullArgument occurrences="1">
-      <code>null</code>
-    </NullArgument>
-  </file>
-  <file src="src/database/Postgres83.php">
-    <InvalidArgument occurrences="1">
-      <code>$toid</code>
-    </InvalidArgument>
-    <InvalidCast occurrences="2">
-      <code>$toid</code>
-      <code>$toid</code>
-    </InvalidCast>
-    <MoreSpecificImplementedParamType occurrences="1">
-      <code>$cycledvalue</code>
-    </MoreSpecificImplementedParamType>
-    <UndefinedDocblockClass occurrences="2">
-      <code>$rs-&gt;fields('oid')</code>
-      <code>$rs-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
   </file>
   <file src="src/database/databasetraits/FtsTrait.php">
-    <InvalidArrayOffset occurrences="12">
-      <code>$parser['schema']</code>
-      <code>$parser['parser']</code>
-      <code>$parser['schema']</code>
-      <code>$parser['parser']</code>
-      <code>$template['schema']</code>
-      <code>$template['name']</code>
-      <code>$template['schema']</code>
-      <code>$template['name']</code>
+    <InvalidArrayOffset occurrences="4">
       <code>$template['schema']</code>
       <code>$template['name']</code>
       <code>$template['schema']</code>
@@ -394,79 +740,42 @@
     <ConflictingReferenceConstraint occurrences="1">
       <code>else {</code>
     </ConflictingReferenceConstraint>
+    <InvalidReturnType occurrences="1">
+      <code>\PHPPgAdmin\ADORecordSet</code>
+    </InvalidReturnType>
     <NullArgument occurrences="1">
       <code>null</code>
     </NullArgument>
   </file>
-  <file src="src/database/databasetraits/IndexTrait.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>$v-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/database/databasetraits/RoleTrait.php">
-    <UndefinedDocblockClass occurrences="3">
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-    </UndefinedDocblockClass>
-  </file>
-  <file src="src/database/databasetraits/RowTrait.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>$rs-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
+  <file src="src/database/databasetraits/SchemaTrait.php">
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
   </file>
   <file src="src/database/databasetraits/SequenceTrait.php">
-    <InvalidArgument occurrences="6">
-      <code>$increment</code>
-      <code>$minvalue</code>
-      <code>$maxvalue</code>
-      <code>$restartvalue</code>
-      <code>$cachevalue</code>
-      <code>$startvalue</code>
-    </InvalidArgument>
-    <UndefinedDocblockClass occurrences="18">
-      <code>number</code>
+    <UndefinedDocblockClass occurrences="2">
       <code>$seq-&gt;recordCount()</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
-      <code>number</code>
+      <code>$data-&gt;recordCount()</code>
     </UndefinedDocblockClass>
   </file>
   <file src="src/database/databasetraits/TableTrait.php">
-    <InvalidArgument occurrences="2">
-      <code>$privs</code>
+    <InvalidArgument occurrences="1">
       <code>$privs</code>
     </InvalidArgument>
-    <UndefinedDocblockClass occurrences="8">
-      <code>$t-&gt;recordCount()</code>
-      <code>$atts-&gt;recordCount()</code>
-      <code>$cons-&gt;recordCount()</code>
-      <code>$rs-&gt;recordCount()</code>
-      <code>$indexes-&gt;recordCount()</code>
-      <code>$triggers-&gt;recordCount()</code>
-      <code>$rules-&gt;recordCount()</code>
-      <code>$data-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
+    <InvalidReturnType occurrences="2">
+      <code>\PHPPgAdmin\ADORecordSet</code>
+      <code>bool</code>
+    </InvalidReturnType>
   </file>
-  <file src="src/database/databasetraits/ViewTrait.php">
-    <UndefinedDocblockClass occurrences="1">
-      <code>$data-&gt;recordCount()</code>
-    </UndefinedDocblockClass>
+  <file src="src/database/databasetraits/TriggerTrait.php">
+    <InvalidReturnType occurrences="1">
+      <code>int</code>
+    </InvalidReturnType>
   </file>
   <file src="src/decorators/ActionUrlDecorator.php">
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="4">
       <code>$this-&gt;base</code>
       <code>$this-&gt;queryVars</code>
@@ -486,6 +795,11 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/decorators/BranchUrlDecorator.php">
+    <UndefinedFunction occurrences="3">
+      <code>containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="4">
       <code>$this-&gt;base</code>
       <code>$this-&gt;queryVars</code>
@@ -547,6 +861,11 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/decorators/RedirectUrlDecorator.php">
+    <UndefinedFunction occurrences="3">
+      <code>containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="4">
       <code>$this-&gt;base</code>
       <code>$this-&gt;queryVars</code>
@@ -568,6 +887,11 @@
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/decorators/UrlDecorator.php">
+    <UndefinedFunction occurrences="3">
+      <code>containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedThisPropertyAssignment occurrences="4">
       <code>$this-&gt;base</code>
       <code>$this-&gt;queryVars</code>
@@ -578,23 +902,10 @@
       <code>$this-&gt;base</code>
     </UndefinedThisPropertyFetch>
   </file>
-  <file src="src/lib.inc.php">
-    <EmptyArrayAccess occurrences="2">
-      <code>$conf['debugmode']</code>
-      <code>$conf['register_debuggers']</code>
-    </EmptyArrayAccess>
-  </file>
-  <file src="src/middleware/PopulateRequestResponse.php">
-    <UndefinedConstant occurrences="2">
-      <code>SUBFOLDER</code>
-      <code>SUBFOLDER</code>
-    </UndefinedConstant>
-    <UndefinedInterfaceMethod occurrences="4">
-      <code>getParam</code>
-      <code>getParam</code>
-      <code>getParam</code>
-      <code>getParams</code>
-    </UndefinedInterfaceMethod>
+  <file src="src/help/PostgresDoc.php">
+    <MismatchingDocblockReturnType occurrences="1">
+      <code>null|string|string[]</code>
+    </MismatchingDocblockReturnType>
   </file>
   <file src="src/router.php">
     <InvalidScope occurrences="6">
@@ -617,23 +928,57 @@
     <UndefinedDocblockClass occurrences="1">
       <code>$autovac-&gt;recordCount()</code>
     </UndefinedDocblockClass>
+    <UndefinedFunction occurrences="16">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
+  </file>
+  <file src="src/traits/ExportTrait.php">
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/traits/HelperTrait.php">
     <UndefinedDocblockClass occurrences="1">
       <code>$set-&gt;recordCount()</code>
     </UndefinedDocblockClass>
-    <UndefinedThisPropertyFetch occurrences="2">
-      <code>$this-&gt;container</code>
+    <UndefinedFunction occurrences="3">
+      <code>\responseInstance()</code>
+      <code>\requestInstance()</code>
+      <code>\responseInstance()</code>
+    </UndefinedFunction>
+    <UndefinedThisPropertyFetch occurrences="1">
       <code>$this-&gt;container</code>
     </UndefinedThisPropertyFetch>
   </file>
   <file src="src/traits/InsertEditRowTrait.php">
-    <UndefinedConstant occurrences="2">
-      <code>SUBFOLDER</code>
-      <code>SUBFOLDER</code>
-    </UndefinedConstant>
+    <UndefinedFunction occurrences="2">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/traits/MiscTrait.php">
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
     <UndefinedMethod occurrences="1">
       <code>isSuperUser</code>
     </UndefinedMethod>
@@ -645,6 +990,11 @@
     <NullReference occurrences="1">
       <code>$_POST</code>
     </NullReference>
+    <UndefinedFunction occurrences="3">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/xhtml/HTMLController.php">
     <ConflictingReferenceConstraint occurrences="1">
@@ -655,13 +1005,17 @@
     <InvalidArgument occurrences="1">
       <code>$alltabs</code>
     </InvalidArgument>
-    <InvalidReturnType occurrences="1">
-      <code>? string</code>
-    </InvalidReturnType>
+    <UndefinedFunction occurrences="5">
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
   <file src="src/xhtml/HTMLTableController.php">
-    <UndefinedConstant occurrences="1">
-      <code>SUBFOLDER</code>
-    </UndefinedConstant>
+    <UndefinedFunction occurrences="1">
+      <code>\containerInstance()</code>
+    </UndefinedFunction>
   </file>
 </files>

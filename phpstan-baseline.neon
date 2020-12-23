@@ -1,33 +1,757 @@
 parameters:
 	ignoreErrors:
-
-#		-	
-#			message: "#^Offset '[a-zA-Z0-9_]+' does not exist on array[.*].$#"
-#			path: src/*
 		-
-			message: "#^PHPDoc tag @param references unknown parameter\\: \\$[a-zA-Z0-9_]+$#"
-			path: src/*
-		-
-			message: "#^Access to an undefined property Psr\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
-			path: src/*
+			message: "#^Method PHPPgAdmin\\\\Connection\\:\\:getDriver\\(\\) should return string but returns null\\.$#"
+			count: 2
+			path: src/classes/Connection.php
 
 		-
-			message: "#^Access to an undefined property PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
-			path: src/*
-		-
-			message: "#^Result of method PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:[a-zA-Z0-9_]+\\(\\) \\(void\\) is used\\.$#"
-			path: src/*
-
-		- 
-			message: "#^Call to static method br2ln\\(\\) on trait PHPPgAdmin\\Traits\\HelperTrait\\.#"
-			path: src/*
+			message: "#^Property PHPPgAdmin\\\\Connection\\:\\:\\$driver \\(string\\) does not accept null\\.$#"
+			count: 1
+			path: src/classes/Connection.php
 
 		-
-			message: "#^Constructor of class [a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+ has an unused parameter \\$[a-zA-Z0-9_]+\\.$#"
-			path: src/*
-		#- '#Property [^\s] has no typehint specified#'
-		#- '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
-		#- '#Access to an undefined property PHPPgAdmin::\$[a-zA-Z0-9_]+#'
-		#- '#Call to an undefined method PHPUnit_Framework_MockObject_MockObject::[a-zA-Z0-9_]+\(\)#'
+			message: "#^Call to method setFetchMode\\(\\) on an unknown class the\\.$#"
+			count: 2
+			path: src/classes/Connection.php
 
+		-
+			message: "#^Call to method connect\\(\\) on an unknown class the\\.$#"
+			count: 2
+			path: src/classes/Connection.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Connection\\:\\:getPG9Connection\\(\\) should return ADODB_postgres9 but returns the\\.$#"
+			count: 1
+			path: src/classes/Connection.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Connection\\:\\:getPDOConnection\\(\\) should return ADODB_pdo but returns the\\.$#"
+			count: 1
+			path: src/classes/Connection.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\ContainerUtils\\:\\:\\$container\\.$#"
+			count: 2
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Unsafe usage of new static\\(\\)\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\ContainerUtils\\:\\:\\$misc\\.$#"
+			count: 2
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\ContainerUtils\\:\\:getRedirectUrl\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\ContainerUtils\\:\\:\\$THEME_PATH\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\ContainerUtils\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$misc\\.$#"
+			count: 1
+			path: src/classes/ContainerUtils.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$settings\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Property PHPPgAdmin\\\\ContainerUtilsOld\\:\\:\\$container \\(Slim\\\\Container\\) does not accept Psr\\\\Container\\\\ContainerInterface\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$requestobj\\.$#"
+			count: 2
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$flash\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$misc\\.$#"
+			count: 3
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\ContainerUtilsOld\\:\\:getRedirectUrl\\(\\) invoked with 1 parameter, 0 required\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$BASE_PATH\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$DEBUGMODE\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$THEME_PATH\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$IN_TEST\\.$#"
+			count: 1
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 2
+			path: src/classes/ContainerUtilsOld.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$requestobj\\.$#"
+			count: 2
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Call to an undefined method Slim\\\\Container\\:\\:addError\\(\\)\\.$#"
+			count: 3
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$server\\.$#"
+			count: 2
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$database\\.$#"
+			count: 2
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$schema\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Misc\\:\\:escapeShellArg\\(\\) should return string\\|null but returns void\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Result of method PHPPgAdmin\\\\Misc\\:\\:halt\\(\\) \\(void\\) is used\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Call to an undefined method PHPPgAdmin\\\\Database\\\\ADOdbBase\\:\\:isSuperUser\\(\\)\\.$#"
+			count: 1
+			path: src/classes/Misc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 8
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\ViewManager\\:\\:maybeRenderIframes\\(\\) should return Slim\\\\Http\\\\Response but returns Psr\\\\Http\\\\Message\\\\ResponseInterface\\.$#"
+			count: 1
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$server\\.$#"
+			count: 1
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$database\\.$#"
+			count: 1
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$schema\\.$#"
+			count: 1
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$BASE_PATH\\.$#"
+			count: 6
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$THEME_PATH\\.$#"
+			count: 2
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/classes/ViewManager.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/controllers/AggregatesController.php
+
+		-
+			message: "#^Call to an undefined method Slim\\\\Container\\:\\:getDestinationWithLastTab\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/AlldbController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/controllers/AlldbController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\BaseController\\:\\:__construct\\(\\) with return type void returns string\\|void but should not return anything\\.$#"
+			count: 2
+			path: src/controllers/BaseController.php
+
+		-
+			message: "#^Call to static method br2ln\\(\\) on trait PHPPgAdmin\\\\Traits\\\\HelperTrait\\.$#"
+			count: 1
+			path: src/controllers/BaseController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/controllers/BaseController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 2
+			path: src/controllers/ColpropertiesController.php
+
+		-
+			message: "#^Call to an undefined method PHPPgAdmin\\\\Controller\\\\ConstraintsController\\:\\:doTree\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 2
+			path: src/controllers/ConstraintsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 36
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Call to an undefined method Slim\\\\Container\\:\\:getDestinationWithLastTab\\(\\)\\.$#"
+			count: 16
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Call to sprintf contains 2 placeholders, 3 values given\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Offset 'vars' does not exist on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Offset 'vars' does not exist on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/DatabaseController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/DataexportController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$responseobj\\.$#"
+			count: 1
+			path: src/controllers/DataexportController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$responseobj\\.$#"
+			count: 1
+			path: src/controllers/DbexportController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 6
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Offset 'subject' does not exist on array\\('server' \\=\\> mixed, 'database' \\=\\> mixed, 'schema' \\=\\> mixed, 'query' \\=\\> mixed, 'count' \\=\\> mixed, 'return' \\=\\> mixed, 'search_path' \\=\\> mixed, 'table' \\=\\> mixed, \\.\\.\\.\\)\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Offset 'schema' does not exist on array\\('server' \\=\\> mixed, 'database' \\=\\> mixed\\)\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Offset 'search_path' does not exist on array\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Variable \\$subject in isset\\(\\) always exists and is not nullable\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Access to property \\$name on an unknown class the\\.$#"
+			count: 2
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Access to property \\$type on an unknown class the\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\DisplayController\\:\\:_printPages\\(\\) should return string\\|null but empty return statement found\\.$#"
+			count: 1
+			path: src/controllers/DisplayController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/controllers/DomainsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 9
+			path: src/controllers/FulltextController.php
+
+		-
+			message: "#^Variable \\$mapping might not be defined\\.$#"
+			count: 1
+			path: src/controllers/FulltextController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\FunctionsController\\:\\:showDefinition\\(\\) invoked with 0 parameters, 2 required\\.$#"
+			count: 1
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 12
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Undefined variable\\: \\$f$#"
+			count: 1
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\FunctionsController\\:\\:showDefinition\\(\\) should return string but returns void\\.$#"
+			count: 2
+			path: src/controllers/FunctionsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/controllers/GroupsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/controllers/HistoryController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/IndexesController.php
+
+		-
+			message: "#^Comparison operation \"\\<\" between 0 and \\(array\\|float\\|int\\) results in an error\\.$#"
+			count: 5
+			path: src/controllers/InfoController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/LoginController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/MaterializedviewpropertiesController.php
+
+		-
+			message: "#^Call to an undefined method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:alterMatView\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewpropertiesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 6
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Parameter \\#2 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Offset int does not exist on array\\(\\)\\.$#"
+			count: 2
+			path: src/controllers/MaterializedviewsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/OperatorsController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$utils\\.$#"
+			count: 1
+			path: src/controllers/PrivilegesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/PrivilegesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/controllers/RolesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 2
+			path: src/controllers/RulesController.php
+
+		-
+			message: "#^Call to an undefined method Slim\\\\Container\\:\\:getDestinationWithLastTab\\(\\)\\.$#"
+			count: 1
+			path: src/controllers/SchemasController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/controllers/SchemasController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/SequencesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/ServersController.php
+
+		-
+			message: "#^Call to method recordCount\\(\\) on an unknown class RecordSet\\.$#"
+			count: 2
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Access to property \\$fields on an unknown class RecordSet\\.$#"
+			count: 2
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Call to method fetchField\\(\\) on an unknown class RecordSet\\.$#"
+			count: 2
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Access to property \\$EOF on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Call to method moveNext\\(\\) on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/controllers/SqlController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/controllers/SqleditController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$responseobj\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 28
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Iterating over an object of an unknown class an\\.$#"
+			count: 2
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Parameter \\#2 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Parameter \\#1 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 2
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Call to sprintf contains 2 placeholders, 3 values given\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Offset 'vars' does not exist on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confeditautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Cannot unset offset 'vars' on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Offset 'vars' does not exist on array\\('content' \\=\\> mixed, 'attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> mixed, 'urlvars' \\=\\> array\\('subject' \\=\\> mixed, 'action' \\=\\> 'confdelautovac', 'schema' \\=\\> mixed, 'table' \\=\\> mixed\\)\\)\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TablesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/controllers/TablespacesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 6
+			path: src/controllers/TblpropertiesController.php
+
+		-
+			message: "#^Variable \\$icon might not be defined\\.$#"
+			count: 1
+			path: src/controllers/TblpropertiesController.php
+
+		-
+			message: "#^Variable \\$type might not be defined\\.$#"
+			count: 1
+			path: src/controllers/TblpropertiesController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Controller\\\\TreeController\\:\\:printTree\\(\\) should return Slim\\\\Http\\\\Response\\|string but returns array\\<int\\|string, array\\<string, mixed\\>\\|bool\\|string\\>\\.$#"
+			count: 1
+			path: src/controllers/TreeController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/TreeController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$responseobj\\.$#"
+			count: 1
+			path: src/controllers/TreeController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/controllers/TreeController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/controllers/TriggersController.php
+
+		-
+			message: "#^Cannot unset offset 'enum' on array\\('create' \\=\\> array\\('attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> 'types', 'urlvars' \\=\\> array\\('action' \\=\\> 'create', 'server' \\=\\> mixed, 'database' \\=\\> mixed, 'schema' \\=\\> mixed\\)\\)\\), 'content' \\=\\> mixed\\), 'createcomp' \\=\\> array\\('attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> 'types', 'urlvars' \\=\\> array\\('action' \\=\\> 'create_comp', 'server' \\=\\> mixed, 'database' \\=\\> mixed, 'schema' \\=\\> mixed\\)\\)\\), 'content' \\=\\> mixed\\), 'createenum' \\=\\> array\\('attr' \\=\\> array\\('href' \\=\\> array\\('url' \\=\\> 'types', 'urlvars' \\=\\> array\\('action' \\=\\> 'create_enum', 'server' \\=\\> mixed, 'database' \\=\\> mixed, 'schema' \\=\\> mixed\\)\\)\\), 'content' \\=\\> mixed\\)\\)\\.$#"
+			count: 1
+			path: src/controllers/TypesController.php
+
+		-
+			message: "#^Access to offset 0 on an unknown class an\\.$#"
+			count: 1
+			path: src/controllers/TypesController.php
+
+		-
+			message: "#^Access to offset int on an unknown class an\\.$#"
+			count: 1
+			path: src/controllers/TypesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/TypesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/UsersController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 4
+			path: src/controllers/ViewpropertiesController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 6
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Parameter \\#2 \\(void\\) of echo cannot be converted to string\\.$#"
+			count: 1
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Offset int does not exist on array\\(\\)\\.$#"
+			count: 2
+			path: src/controllers/ViewsController.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\ADOdbBase\\:\\:selectSet\\(\\) should return int\\|PHPPgAdmin\\\\ADORecordSet but returns RecordSet\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\ADOdbBase\\:\\:ErrorNo\\(\\) should return int but returns the\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\ADOdbBase\\:\\:ErrorMsg\\(\\) should return string but returns the\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Call to method recordCount\\(\\) on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Access to property \\$fields on an unknown class RecordSet\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Access to an undefined property ADODB_postgres9\\:\\:\\$platform\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/database/ADOdbBase.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:_alterTable\\(\\) invoked with 8 parameters, 6\\-7 required\\.$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^Method PHPPgAdmin\\\\Database\\\\Postgres\\:\\:endDump\\(\\) should return bool but returns int\\.$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$subfolder\\.$#"
+			count: 1
+			path: src/database/Postgres.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/decorators/ActionUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/decorators/BranchUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/decorators/RedirectUrlDecorator.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 3
+			path: src/decorators/UrlDecorator.php
+
+		-
+			message: "#^PHPDoc tag @return with type array\\<string\\>\\|string\\|null is not subtype of native type array\\.$#"
+			count: 1
+			path: src/help/PostgresDoc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$request\\.$#"
+			count: 1
+			path: src/lib.inc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$response\\.$#"
+			count: 1
+			path: src/lib.inc.php
+
+		-
+			message: "#^Anonymous function has an unused use \\$c\\.$#"
+			count: 1
+			path: src/lib.inc.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 5
+			path: src/xhtml/HTMLNavbarController.php
+
+		-
+			message: "#^Access to an undefined property Slim\\\\Container\\:\\:\\$SUBFOLDER\\.$#"
+			count: 1
+			path: src/xhtml/HTMLTableController.php
 

@@ -15,15 +15,14 @@
   ],
   "require": {
     "php": ">=7.1",
-    "ext-mbstring": "*",
-    "ext-xml": "*",
     "ext-json": "*",
+    "ext-mbstring": "*",
     "ext-pgsql": "*",
+    "ext-xml": "*",
     "adodb/adodb-php": "^5.20",
     "slim/flash": "^0.4.0",
     "slim/slim": "^3.6",
     "slim/twig-view": "~2.5.1",
-    
     "symfony/yaml": "^5.0",
     "twig/twig": "~1.42.4"
   },
@@ -38,7 +37,6 @@
     "ocramius/package-versions": "~1.4.0",
     "php-parallel-lint/php-parallel-lint": "^1.2",
     "phpstan/phpstan": "^0.12.14",
-    "simpletest/simpletest": "^1.1",
     "vimeo/psalm": "~3.9.3"
   },
   "extra": {

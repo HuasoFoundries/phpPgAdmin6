@@ -9,25 +9,14 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\XHtml;
 
-\ini_set('display_errors', ContainerUtils::DEBUGMODE);
+
 /**
  * Base controller class.
  */
 class BaseController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+ 
 
     public $appLangFiles = [];
 
@@ -160,27 +149,25 @@ class BaseController
         if (true === $this->no_db_connection) {
             $this->misc->setNoDBConnection(true);
         }
-$this->renderInitialPageIfNotLogged();
-        
-    }
-private function renderInitialPageIfNotLogged() {
-    if (false === $this->misc->getNoDBConnection()) {
-        if (null === $this->misc->getServerId()) {
-            $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
 
-            return $servers_controller->render();
-        }
-        $_server_info = $this->misc->getServerInfo();
-        // Redirect to the login form if not logged in
-        if (!isset($_server_info['username'])) {
-            $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']??'');
+        if (false === $this->misc->getNoDBConnection()) {
+            if (null === $this->misc->getServerId()) {
+                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
 
-            $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
+                return $servers_controller->render();
+            }
+            $_server_info = $this->misc->getServerInfo();
+            // Redirect to the login form if not logged in
+            if (!isset($_server_info['username'])) {
+                $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
 
-            return $servers_controller->render();
+                $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
+
+                return $servers_controller->render();
+            }
         }
     }
-}
+
     /**
      * Default method to render the controller according to the action parameter. It should return with a PSR
      * responseObject but it prints texts whatsoeever.
@@ -259,7 +246,7 @@ private function renderInitialPageIfNotLogged() {
      *
      * @param array $tabs The tabs
      *
-     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     * @return \PHPPgAdmin\ArrayRecordSet|\PHPPgAdmin\ADORecordSet filtered tabs in the form of an ArrayRecordSet
      */
     public function adjustTabsForTree(&$tabs)
     {
@@ -271,7 +258,7 @@ private function renderInitialPageIfNotLogged() {
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param \PHPPgAdmin\ArrayRecordSet|\PHPPgAdmin\ADORecordSet $_treedata a set of records to populate the tree
      * @param array                      $attrs     Attributes for tree items
      * @param string                     $section   The section where the branch is linked in the tree
      * @param bool                       $print     either to return or echo the result

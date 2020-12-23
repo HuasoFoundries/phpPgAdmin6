@@ -15,14 +15,19 @@
     "string",
     "true",
     "void",
-    "ADODB_postgres8",
-    "ADORecordSet_assoc_postgres8",
-    "ADORecordSet_postgres8",
-    "dump",
-    "PDO",
-    "PHPPGA_SUBFOLDER",
-    "Psr\\Http\\Message\\ResponseInterface",
-    "requestInstance",
-    "responseInstance"
-  ]
+     "ADODB_postgres8",
+ "ADORecordSet_assoc_postgres8",
+ "ADORecordSet_postgres8",
+ "dump",
+ "PDO",
+ "PHP_SESSION_ACTIVE",
+ "session_id",
+ "session_name",
+ "session_set_cookie_params",
+ "session_start",
+ "session_status"
+
+  ],
+  "scan-files" : ["src/lib.inc.php", "router.php"]
+
 }

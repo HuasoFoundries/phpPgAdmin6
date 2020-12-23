@@ -26,7 +26,7 @@ class DisplayController extends BaseController
 
         \set_time_limit(0);
 
-        $scripts = '<script src="' . self::SUBFOLDER . '/assets/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="' . \containerInstance()->subFolder . '/assets/js/display.js" type="text/javascript"></script>';
 
         $scripts .= '<script type="text/javascript">' . \PHP_EOL;
         $scripts .= "var Display = {\n";
@@ -213,7 +213,6 @@ class DisplayController extends BaseController
             'search_path' => $_REQUEST['search_path'] ?? null,
             'table' => $_REQUEST['table'] ?? null,
             'nohistory' => $_REQUEST['nohistory'] ?? null,
-            'subject'=>$subject 
         ];
 
         $this->coalesceArr($_REQUEST, 'query');
@@ -623,7 +622,7 @@ class DisplayController extends BaseController
 
         $fksprops = $this->_getFKProps();
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
 
         $elements = 0;
         $error = true;
@@ -747,7 +746,7 @@ class DisplayController extends BaseController
 
         echo '</p>' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
-        echo '<script src="' . self::SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
     /**
@@ -798,7 +797,7 @@ class DisplayController extends BaseController
 
             $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post">' . \PHP_EOL;
             echo $this->view->form;
 
             if (1 === $resultset->recordCount()) {

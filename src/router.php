@@ -20,7 +20,7 @@ $app->get('/status', function (
     return $response
         ->withHeader('Content-type', 'application/json')
         ->withJson(
-            DEBUGMODE ? $this->get('settings')->all() : ['version' => $this->version]
+            $this->DEBUGMODE ? $this->get('settings')->all() : ['version' => $this->version]
         );
 });
 
@@ -65,14 +65,14 @@ $app->post('/redirect/server', function (
 
         $misc->setReloadBrowser(true);
 
-        $destinationurl = $this->utils->getDestinationWithLastTab('alldb');
+        $destinationurl = $this->getDestinationWithLastTab('alldb');
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
     $_server_info = $this->misc->getServerInfo();
 
     if (!isset($_server_info['username'])) {
-        $destinationurl = $this->utils->getDestinationWithLastTab('server');
+        $destinationurl = $this->getDestinationWithLastTab('server');
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
@@ -87,7 +87,7 @@ $app->get('/redirect[/{subject}]', function (
     array $args
 ) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
-    $destinationurl = $this->utils->getDestinationWithLastTab($subject);
+    $destinationurl = $this->getDestinationWithLastTab($subject);
 
     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
@@ -110,11 +110,11 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     $safe_subjects = ('servers' === $subject || 'intro' === $subject || 'browser' === $subject);
 
     if (null === $this->misc->getServerId() && !$safe_subjects) {
-        return $response->withStatus(302)->withHeader('Location', SUBFOLDER . '/src/views/servers');
+        return $response->withStatus(302)->withHeader('Location',  $this->subFolder . '/src/views/servers');
     }
 
     if (!isset($_server_info['username']) && 'login' !== $subject && !$safe_subjects) {
-        $destinationurl = SUBFOLDER . '/src/views/login?server=' . $this->misc->getServerId();
+        $destinationurl = $this->subFolder . '/src/views/login?server=' . $this->misc->getServerId();
 
         return $response->withStatus(302)->withHeader('Location', $destinationurl);
     }
@@ -180,7 +180,7 @@ $app->get('[/{path:.*}]', function (
 
     //d($this->subfolder, $args, $query_string, $filepath);
 
-    $this->utils->prtrace($request->getAttribute('route'));
+    $this->prtrace($request->getAttribute('route'));
 
     return $response->write($args['path'] ? $args['path'] : 'index');
 });

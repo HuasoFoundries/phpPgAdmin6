@@ -79,7 +79,7 @@ class PrivilegesController extends BaseController
         $this->printMsg($msg);
 
         if (!isset($data->privlist[$subject])) {
-            $this->halt('No privileges defined for subject ' . $subject);
+            $this->container->halt('No privileges defined for subject ' . $subject);
 
             return;
         }
@@ -316,7 +316,7 @@ class PrivilegesController extends BaseController
 
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/privileges" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/privileges" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>" . \PHP_EOL;
         echo '<td class="data1"><select name="username[]" multiple="multiple" size="', \min(6, $users->recordCount()), '">' . \PHP_EOL;

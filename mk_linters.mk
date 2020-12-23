@@ -21,7 +21,7 @@ csfixer:
 		echo "XDEBUG was: "$(XDSWI_STATUS) ;\
 		${MAKE} disable_xdebug  --no-print-directory ;\
 		mkdir -p .build/php-cs-fixer ;\
-        vendor/bin/php-cs-fixer fix --config=.php_cs.php --diff --diff-format=udiff --dry-run --verbose ;\
+        vendor/bin/php-cs-fixer fix --config=.php_cs.php --verbose ;\
 		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
     else \
         echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
@@ -55,43 +55,36 @@ phpmd:
 
 
 psalm:
-	@${MAKE} disable_xdebug  --no-print-directory 
-	@if [ ! -f "vendor/bin/psalm" ]; then \
-		echo -e "$(GREEN)psalm$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev vimeo/psalm$(WHITE)" ;\
-		exit 0 ;\
-	fi
-	
+	@${MAKE} abort_suggesting_composer executable=vendor/bin/psalm package_name=vimeo/psalm --no-print-directory
 	@mkdir -p .build/psalm ;\
-	vendor/bin/psalm --show-info=false --long-progress --threads=2 --config=psalm.xml | tee temp/psalm.output.txt
-	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
+	echo -e "Running:"
+	echo -e "$(GREEN)vendor/bin/psalm$(GREEN) --show-info=false --long-progress --threads=2 --config=psalm.xml "
+
+	@vendor/bin/psalm --show-info=false --long-progress --threads=2 --config=psalm.xml 
 	echo ""
 
-phpstan:
-	@${MAKE} disable_xdebug  --no-print-directory 
-	@if [ ! -f "vendor/bin/phpstan" ]; then \
-		echo -e "$(GREEN)phpstan$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev phpstan/phpstan$(WHITE)" ;\
-		exit 0 ;\
+abort_suggesting_composer:
+	@if [ "0" != "$(XDSWI_STATUS)" ]; then \
+		 $(YELLOW)Warn: $(GREEN)xdebug$(WHITE) is enabled. Just saying... ;\
 	fi
-	
+	@if [ ! -f "$(executable)" ]; then \
+		echo -e "$(GREEN)$(package_name)$(WHITE) $(RED)NOT FOUND$(WHITE) on $(CYAN)$(executable)$(WHITE). " ;\
+		echo -e "Install it with $(GREEN)composer require --dev$(package_name)$(WHITE)" ;\
+		exit 1 ;\
+	fi
+
+phpstan:
+	@${MAKE} abort_suggesting_composer executable=vendor/bin/phpstan package_name=phpstan/phpstan --no-print-directory 
 	@mkdir -p .build/phpstan ;\
-	./vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon  | tee temp/phpstan.output.txt
-	@${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory ;\
+	echo -e "Running:" ;\
+	echo -e "$(GREEN)vendor/bin/phpstan$(GREEN) analyse --memory-limit=2G   --configuration phpstan.neon "
+	./vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon 
 	echo ""
 
 lint:
-	@if [ -f "vendor/bin/parallel-lint" ]; then \
-		mkdir -p .build/parallel ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		vendor/bin/parallel-lint --ignore-fails --exclude vendor  src ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-	else \
-		echo -e "$(GREEN)parallel-lint$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-		echo -e "Install it with $(GREEN)composer require --dev php-parallel-lint/php-parallel-lint$(WHITE)" ;\
-	fi
-	@find ./src -name \*.php -print0 | xargs -0 -n 1 php -l
-	@echo ""
+	@${MAKE} abort_suggesting_composer executable=vendor/bin/parallel-lint package_name=php-parallel-lint/php-parallel-lint --no-print-directory
+	mkdir -p .build/parallel ;\
+	vendor/bin/parallel-lint --ignore-fails --exclude vendor  src 
 
 update_baselines:
 	@${MAKE} disable_xdebug  --no-print-directory ;\
@@ -102,7 +95,7 @@ update_baselines:
 	${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory
 
 
-fixers: lint csfixer dependency-analysis phpmd psalm phpstan
+fixers: phpmd psalm phpstan
 
 
 

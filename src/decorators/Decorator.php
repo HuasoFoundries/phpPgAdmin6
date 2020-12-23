@@ -12,18 +12,9 @@ class Decorator
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+
+
+
 
     public $container;
 

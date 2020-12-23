@@ -117,7 +117,7 @@ class FunctionsController extends BaseController
             'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => self::SUBFOLDER . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
                 'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
@@ -331,7 +331,7 @@ class FunctionsController extends BaseController
             $args = $fndata->fields['proarguments'];
         }
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/functions" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
         echo '<table style="width: 95%">' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo "<th class=\"data required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
@@ -643,7 +643,7 @@ class FunctionsController extends BaseController
             $this->printTabs('function', 'definition');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/functions" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -856,12 +856,12 @@ class FunctionsController extends BaseController
         $szArgReturns .= '<option value=""></option>';
         $szArgReturns .= '<option value="[]">[]</option>';
         $szArgReturns .= '</select>';
-        $subfolder = self::SUBFOLDER;
+        $subfolder = \containerInstance()->subFolder;
 
         if (!empty($this->conf['theme'])) {
-            $szImgPath = self::SUBFOLDER . "/assets/images/themes/{$this->conf['theme']}";
+            $szImgPath = \containerInstance()->subFolder . "/assets/images/themes/{$this->conf['theme']}";
         } else {
-            $szImgPath = self::SUBFOLDER . '/assets/images/themes/default';
+            $szImgPath = \containerInstance()->subFolder . '/assets/images/themes/default';
         }
 
         if (empty($msg)) {
@@ -874,7 +874,7 @@ class FunctionsController extends BaseController
         $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
         $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>" . \PHP_EOL;
 
-        echo '<script src="' . self::SUBFOLDER . "/assets/js/functions.js\" type=\"text/javascript\"></script>
+        echo '<script src="' . \containerInstance()->subFolder . "/assets/js/functions.js\" type=\"text/javascript\"></script>
 		<script type=\"text/javascript\">
 			//<![CDATA[
 			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
@@ -891,7 +891,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . self::SUBFOLDER . '/src/views/functions" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
         echo '<table><tbody id="args_table">' . \PHP_EOL;
         echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>" . \PHP_EOL;
@@ -990,14 +990,14 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . self::SUBFOLDER . '/assets/js/functions.js" type="text/javascript"></script>';
+        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/functions.js" type="text/javascript"></script>';
         echo '<script type="text/javascript">' . $this->_buildJSData() . '</script>';
 
         if (!empty($_POST['formArgName'])) {
             $szJS = $this->_buildJSRows($this->_buildFunctionArguments($_POST));
         } else {
-            $subfolder = self::SUBFOLDER;
-            $szJS = '<script type="text/javascript" src="' . self::SUBFOLDER . '/assets/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
+            $subfolder = \containerInstance()->subFolder;
+            $szJS = '<script type="text/javascript" src="' . \containerInstance()->subFolder . '/assets/js/functions.js">noArgsRebuild(addArg("' . $subfolder . '"));</script>';
         }
 
         $cost = (isset($_POST['formCost'])) ? $_POST['formCost'] : null;
@@ -1250,7 +1250,7 @@ class FunctionsController extends BaseController
                 $bArgIsArray = 'true';
             }
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
-            $subfolder = self::SUBFOLDER;
+            $subfolder = \containerInstance()->subFolder;
             $szReturn .= '<script type="text/javascript">';
             $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
             $szReturn .= '</script>;';

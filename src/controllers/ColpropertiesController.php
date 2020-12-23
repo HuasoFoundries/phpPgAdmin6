@@ -238,8 +238,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/colproperties" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/colproperties" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;

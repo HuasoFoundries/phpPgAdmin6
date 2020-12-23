@@ -122,9 +122,9 @@ class ADOdbException extends \Exception
             'line' => $backtrace[0]['line'],
         ];
 
-        $errmsg = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), \ENT_NOQUOTES);
-        $p1 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), \ENT_NOQUOTES);
-        $p2 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), \ENT_NOQUOTES);
+        $errmsg = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($errmsg), \ENT_NOQUOTES);
+        $p1 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p1), \ENT_NOQUOTES);
+        $p2 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p2), \ENT_NOQUOTES);
 
         switch ($fn) {
             case 'EXECUTE':

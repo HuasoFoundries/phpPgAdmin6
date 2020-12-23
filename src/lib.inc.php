@@ -15,41 +15,16 @@ if (!\is_writable(\dirname(__DIR__) . '/temp')) {
 }
 
 require_once \dirname(__DIR__) . '/vendor/autoload.php';
-$subfolder = '';
-// Check to see if the configuration file exists, if not, explain
-if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
-    die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
-}
-    $conf = [];
 
-    include \dirname(__DIR__) . '/config.inc.php';
-
-    if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
-        $subfolder = $conf['subfolder'];
-    } elseif (\PHP_SAPI === 'cli-server') {
-        $subfolder = '/index.php';
-    } elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
-        $subfolder = \str_replace(
-            $_SERVER['DOCUMENT_ROOT'],
-            '',
-            \dirname(__DIR__)
-        );
-    }
-
-\defined('PHPPGA_SUBFOLDER') || \define('PHPPGA_SUBFOLDER', $subfolder);
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
-&& !\headers_sent()
-&& !\ini_get('session.auto_start');
+    && !\headers_sent()
+    && !\ini_get('session.auto_start');
 
 if ($shouldSetSession && \PHP_SAPI !== 'cli') {
     \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
     \session_name('PPA_ID');
     \session_start();
 }
-
-$debugmode = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
-\defined('DEBUGMODE') || \define('DEBUGMODE', $debugmode);
-
 if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
     \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
 }
@@ -57,8 +32,36 @@ if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!\defined('ADODB_ERROR_HANDLER')) {
     \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
+function getAppInstance() {
+    $subfolder = '';
+    // Check to see if the configuration file exists, if not, explain
+    if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
+        die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+    }
+$conf = [];
 
-if (DEBUGMODE) {
+include_once \dirname(__DIR__) . '/config.inc.php';
+
+if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
+    $subfolder = $conf['subfolder'];
+} elseif (\PHP_SAPI === 'cli-server') {
+    $subfolder = '/index.php';
+} elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
+    $subfolder = \str_replace(
+        $_SERVER['DOCUMENT_ROOT'],
+        '',
+        \dirname(__DIR__)
+    );
+}
+
+$conf['subfolder'] = $subfolder;
+
+
+$conf['debugmode'] = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
+
+
+
+if ($conf['debugmode']) {
     \ini_set('display_errors', 'On');
 
     \ini_set('display_startup_errors', 'On');
@@ -69,35 +72,48 @@ if (DEBUGMODE) {
         $conf['register_debuggers']();
     }
 }
-\define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
-// Fetch App and DI Container
-$app = \PHPPgAdmin\ContainerUtils::createApp($conf);
-$container = $app->getContainer();
 
-if (!$container instanceof \Slim\Container) {
-    \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
-}
-function containerInstance(): \Slim\Container
+
+$conf['BASE_PATH'] = BASE_PATH;
+$conf['theme_path'] = BASE_PATH . '/assets/themes';
+\defined('IN_TEST') || \define('IN_TEST', false);
+$conf['IN_TEST'] = IN_TEST;
+\ini_set('display_errors', strval($conf['debugmode']));
+\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
+
+// Fetch App and DI Container
+$app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
+return $app;
+};
+
+function containerInstance(): \PHPPgAdmin\ContainerUtils
 {
-    return \PHPPgAdmin\ContainerUtils::getContainerInstance();
+    $app=getAppInstance();
+    $container = $app->getContainer();
+                if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
+                    \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
+                }
+    return  $container;
 }
 
 function requestInstance(): \Slim\Http\Request
 {
-    return  containerInstance()->request;
+    return  \containerInstance()->request;
 }
 
-    function responseInstance(): \Slim\Http\Response
-    {
-        return containerInstance()->response;
-    }
+function responseInstance(): \Slim\Http\Response
+{
+    return \containerInstance()->response;
+}
+$app=getAppInstance();
+$container=$app->getContainer();
 
 // This should be deprecated once we're sure no php scripts are required directly
 $container->offsetSet('server', $_REQUEST['server'] ?? null);
 $container->offsetSet('database', $_REQUEST['database'] ?? null);
 $container->offsetSet('schema', $_REQUEST['schema'] ?? null);
 
-$container['haltHandler'] = static function (\Slim\Container $c) {
+$container['haltHandler'] = static function (\PHPPgAdmin\ContainerUtils $c) {
     return static function ($request, $response, $exits, $status = 500) use ($c) {
         $title = 'PHPPgAdmin Error';
 
@@ -105,11 +121,11 @@ $container['haltHandler'] = static function (\Slim\Container $c) {
 
         $output = \sprintf(
             "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-            '<title>%s</title><style>' .
-            'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
-            'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}' .
-            'span{display:inline-block;font-size:16px;}' .
-            '</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>',
+                '<title>%s</title><style>' .
+                'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
+                'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}' .
+                'span{display:inline-block;font-size:16px;}' .
+                '</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>',
             $title,
             $title,
             $html,

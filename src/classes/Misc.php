@@ -25,18 +25,9 @@ class Misc
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Traits\MiscTrait;
 
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+
+
+
 
     /**
      * @var array
@@ -86,7 +77,7 @@ class Misc
     public $view;
 
     /**
-     * @var \Slim\Container
+     * @var \PHPPgAdmin\ContainerUtils
      */
     protected $container;
 
@@ -131,9 +122,9 @@ class Misc
     private $_error_msg = '';
 
     /**
-     * @param \Slim\Container $container The container
+     * @param \PHPPgAdmin\ContainerUtils $container The container
      */
-    public function __construct(\Slim\Container $container)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container)
     {
         $this->container = $container;
 
@@ -210,7 +201,7 @@ class Misc
      */
     public function serverToSha()
     {
-        $request_server = \requestInstance()->getParam('server');
+        $request_server = $this->container->request->getParam('server');
 
         if (null === $request_server) {
             return null;
@@ -372,7 +363,7 @@ class Misc
             }
 
             if (!$_connection) {
-                $this->container->utils->addError($lang['strloginfailed']);
+                $this->container->addError($lang['strloginfailed']);
                 $this->setErrorMsg($lang['strloginfailed']);
 
                 return null;
@@ -384,7 +375,7 @@ class Misc
 
             if (null === $_type) {
                 $errormsg = \sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
-                $this->container->utils->addError($errormsg);
+                $this->container->addError($errormsg);
                 $this->setErrorMsg($errormsg);
 
                 return null;
@@ -418,7 +409,7 @@ class Misc
             $status = $this->_data->setSchema($_REQUEST['schema']);
 
             if (0 !== $status) {
-                $this->container->utils->addError($this->lang['strbadschema']);
+                $this->container->addError($this->lang['strbadschema']);
                 $this->setErrorMsg($this->lang['strbadschema']);
 
                 return null;
@@ -563,7 +554,7 @@ class Misc
     public function setServerInfo($key, $value, $server_id = null): void
     {
         if (null === $server_id) {
-            $server_id = requestInstance()->getParam('server');
+            $server_id = $this->container->request->getParam('server');
         }
 
         if (null === $key) {

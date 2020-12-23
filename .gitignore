@@ -27,7 +27,7 @@ playground
 *.log
 tests/_output
 temp/*.output.txt
-*baseline.*
+
 
 ###> Vendor files
 node_modules
@@ -48,6 +48,6 @@ config.*.php*
 .php_cs.cache
 .phpunit.result.cache
 
-tools/reviewdog
-tools/composer-require-checker
-.vscode/*
+tools/php*
+tools/composer*
+

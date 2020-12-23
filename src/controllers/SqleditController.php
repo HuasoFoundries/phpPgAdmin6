@@ -68,7 +68,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs('popup', 'sql', false);
 
-        $default_html .= '<form action="' . self::SUBFOLDER . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+        $default_html .= '<form action="' . \containerInstance()->subFolder . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= \PHP_EOL;
         $default_html .= $this->printConnection('sql', false);
 

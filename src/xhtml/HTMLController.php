@@ -15,18 +15,9 @@ use PHPPgAdmin\Decorators\Decorator;
 class HTMLController
 {
     use \PHPPgAdmin\Traits\HelperTrait;
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
+
+
+
 
     public $form = '';
 
@@ -57,7 +48,7 @@ class HTMLController
     protected $container;
 
     // Constructor
-    public function __construct(\Slim\Container $container, $controller_name = null)
+    public function __construct(\PHPPgAdmin\ContainerUtils $container, $controller_name = null)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');

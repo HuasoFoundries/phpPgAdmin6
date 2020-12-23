@@ -7,7 +7,9 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\ContainerUtils;
 
+use \containerInstance;
 /**
  * Base controller class.
  */
@@ -15,7 +17,7 @@ class IndexesController extends BaseController
 {
     public $controller_title = 'strindexes';
 
-    public $scripts = '<script src="' . self::SUBFOLDER . '/assets/js/indexes.js" type="text/javascript"></script>';
+    public $scripts = '<script src="/assets/js/indexes.js" type="text/javascript"></script>';
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -25,7 +27,7 @@ class IndexesController extends BaseController
         if ('tree' === $this->action) {
             return $this->doTree();
         }
-
+        $this->scripts = '<script src="' . \containerInstance()->subFolder . '/assets/js/indexes.js" type="text/javascript"></script>';
         $this->printHeader($this->headerTitle(), $this->scripts);
 
         $onloadInit = false;
@@ -144,7 +146,7 @@ class IndexesController extends BaseController
             ],
         ];
 
-        $url = self::SUBFOLDER . '/src/views/indexes';
+        $url = \containerInstance()->subFolder . '/src/views/indexes';
 
         $actions = [
             'cluster' => [
@@ -268,7 +270,7 @@ class IndexesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfcluster'], $this->misc->printVal($_REQUEST['index'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/indexes" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/indexes" method="post">' . \PHP_EOL;
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
             echo "<label for=\"analyze\">{$this->lang['stranalyze']}</label></p>" . \PHP_EOL;
             echo '<input type="hidden" name="action" value="cluster_index" />' . \PHP_EOL;
@@ -503,7 +505,7 @@ class IndexesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.index.drop');
 
             echo '<p>', \sprintf($this->lang['strconfdropindex'], $this->misc->printVal($this->getRequestParam('index'))), '</p>' . \PHP_EOL;
-            echo '<form action="' . self::SUBFOLDER . '/src/views/indexes" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/indexes" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop_index" />' . \PHP_EOL;
             echo '<input type="hidden" name="table" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="index" value="', \htmlspecialchars($this->getRequestParam('index')), '" />' . \PHP_EOL;

@@ -197,7 +197,7 @@ class TablesController extends BaseController
 
         return $this
             ->container
-            ->responseobj
+            ->response
             ->withStatus(200)
             ->withJson($all_tables);
     }
@@ -296,7 +296,7 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post">';
                 echo \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
@@ -368,8 +368,8 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -588,7 +588,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strcreatetablelikeparent']}</th>" . \PHP_EOL;
@@ -689,7 +689,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
 
             if (0 < $attrs->recordCount()) {
                 // JavaScript for select all feature
@@ -827,7 +827,7 @@ class TablesController extends BaseController
         $this->coalesceArr($_REQUEST, 'nulls', []);
         $this->coalesceArr($_REQUEST, 'format', []);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
 
         if (0 < $attrs->recordCount()) {
             echo '<table>' . \PHP_EOL;
@@ -953,7 +953,7 @@ class TablesController extends BaseController
         }
         echo $this->view->form;
         echo '</form>' . \PHP_EOL;
-        echo '<script src="' . self::SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
     /**
@@ -1006,7 +1006,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1021,7 +1021,7 @@ class TablesController extends BaseController
 
                 echo '<p>', \sprintf($this->lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END not mutli empty
@@ -1085,7 +1085,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1098,7 +1098,7 @@ class TablesController extends BaseController
 
                 echo '<p>', \sprintf($this->lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
                 echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END if multi drop
             }
@@ -1157,7 +1157,7 @@ class TablesController extends BaseController
             'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/table?{$this->misc->href}&amp;",
                 'vars' => ['table' => 'relname'],
             ],
             'owner' => [

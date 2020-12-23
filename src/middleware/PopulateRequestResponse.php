@@ -20,7 +20,7 @@ class PopulateRequestResponse extends Middleware
         $next
     ) {
         $container = $this->container;
-        $subfolder = $this->getSubfolder();
+        $subfolder = $this->container->getSubfolder();
         $container['requestobj'] = $request;
         $container['responseobj'] = $response;
         $route = $request->getAttribute('route');
@@ -71,7 +71,7 @@ class PopulateRequestResponse extends Middleware
         $view->offsetSet('in_test', $in_test);
 
         if (0 < \count($container['errors'])) {
-            return ($container->haltHandler)($container->requestobj, $container->responseobj, $container['errors'], 412);
+            return ($container->haltHandler)($container->request, $container->response, $container['errors'], 412);
         }
 
         // First execute anything else

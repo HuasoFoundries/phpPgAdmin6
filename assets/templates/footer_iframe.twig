@@ -1,13 +1,27 @@
 <script type="text/javascript">
-  var dir = '{{ lang.applangdir }}';
+var dir = '{{lang.applangdir}}';
 
-  jQuery('#browser_container').resizable({ handles: (dir === 'ltr') ? "e" : "w", start: function () {
-  jQuery('#masking_overlay').css('display', 'block'); }, stop: function () { jQuery('#masking_overlay').css('display',
-  'none'); }
+jQuery('#browser_container').resizable({
+	handles: (dir === 'ltr') ? "e" : "w",
+	start: function () {
+		jQuery('#masking_overlay').css('display', 'block');
+	},
+	stop: function () {
+		jQuery('#masking_overlay').css('display', 'none');
+	}
 
-  });
+});
 
-  window.onpopstate = function (event) { console.log('onpopstate', { state: event.state }); if (event.state &&
-  event.state.realurl) { var ifr = document.getElementById('detail')
-  ifr.contentWindow.location.replace(event.state.realurl); } };
+window.onpopstate = function (event) {
+	console.log('onpopstate', {
+		state: event.state
+	});
+	if (event.state && event.state.realurl) {
+		var ifr = document.getElementById('detail')
+		ifr.contentWindow.location.replace(event.state.realurl);
+	}
+};
 </script>
+</body>
+
+</html>

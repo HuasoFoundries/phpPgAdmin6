@@ -124,7 +124,7 @@ class MaterializedviewsController extends BaseController
             $this->keystring => [
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/matview?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/matview?{$this->misc->href}&amp;",
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -281,7 +281,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($this->lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviews" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -403,7 +403,7 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",

@@ -1,4 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phive xmlns="https://phar.io/phive">
   <phar name="composer-require-checker" version="^2.1.0" installed="2.1.0" location="./tools/composer-require-checker" copy="false"/>
+  <phar name="phpmd" version="^2.7.0" installed="2.7.0" location="./tools/phpmd" copy="false"/>
+  <phar name="phpcpd" version="^4.1.0" installed="4.1.0" location="./tools/phpcpd" copy="false"/>
+  <phar name="phpcs" version="^3.5.3" installed="3.5.3" location="./tools/phpcs" copy="false"/>
 </phive>

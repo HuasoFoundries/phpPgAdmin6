@@ -210,7 +210,7 @@ class HTMLTableController extends HTMLController
         $lang = $this->lang;
 
         if ($this->has_ma) {
-            $matop_html .= '<script src="' . self::SUBFOLDER . '/assets/js/multiactionform.js" type="text/javascript"></script>' . \PHP_EOL;
+            $matop_html .= '<script src="' . \containerInstance()->subFolder . '/assets/js/multiactionform.js" type="text/javascript"></script>' . \PHP_EOL;
             $matop_html .= \sprintf('<form id="multi_form" action="%s" method="post" enctype="multipart/form-data">%s', $this->ma['url'], \PHP_EOL);
             $this->coalesceArr($this->ma, 'vars', []);
 

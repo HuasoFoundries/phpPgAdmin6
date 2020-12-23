@@ -1,5 +1,4 @@
-includes:
-    - phpstan-baseline.neon
+
 parameters:
 
 	
@@ -10,8 +9,8 @@ parameters:
 
 	# The level 8 is the highest level
 	level: 3
-
-	autoload_files:
+	
+	scanFiles:
 		- vendor/adodb/adodb-php/adodb.inc.php
 		- .configs/debug.kint.php
 		- src/lib.inc.php
@@ -32,3 +31,30 @@ parameters:
 	
 
 
+	ignoreErrors:
+
+		-
+			message: "#^PHPDoc tag @param references unknown parameter\\: \\$[a-zA-Z0-9_]+$#"
+			path: src/*
+		-
+			message: "#^Access to an undefined property Psr\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
+
+		-
+			message: "#^Access to an undefined property PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:\\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
+		-
+			message: "#^Result of method PHPPgAdmin\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\:\\:[a-zA-Z0-9_]+\\(\\) \\(void\\) is used\\.$#"
+			path: src/*
+
+		- 
+			message: "#^Call to static method br2ln\\(\\) on trait PHPPgAdmin\\Traits\\HelperTrait\\.#"
+			path: src/*
+
+		-
+			message: "#^Constructor of class [a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+\\\\[a-zA-Z0-9_]+ has an unused parameter \\$[a-zA-Z0-9_]+\\.$#"
+			path: src/*
+		#- '#Property [^\s] has no typehint specified#'
+		#- '#Call to an undefined method [a-zA-Z0-9\\_]+::expects\(\)#'
+		#- '#Access to an undefined property PHPPgAdmin::\$[a-zA-Z0-9_]+#'
+		#- '#Call to an undefined method PHPUnit_Framework_MockObject_MockObject::[a-zA-Z0-9_]+\(\)#'

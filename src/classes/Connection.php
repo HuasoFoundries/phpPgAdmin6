@@ -60,7 +60,7 @@ class Connection
      *
      * @param array           $server_info
      * @param string          $database    database name
-     * @param \Slim\Container $container
+     * @param \PHPPgAdmin\ContainerUtils $container
      * @param int             $fetchMode   Defaults to associative.  Override for different behaviour
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
@@ -78,7 +78,7 @@ class Connection
         // ADODB_Postgres9 Approach
         //$driver='postgres9';
         $this->conn = \ADONewConnection($this->adodb_driver);
-        $this->conn->setFetchMode($fetchMode);
+       
 
         // PDO Approach
 
@@ -89,23 +89,19 @@ class Connection
         $this->prtrace(['message' => $e->getMessage(), 'trace' => $e->getTraceAsString()]);
          */
         try {
-            $this->_connection_result = 'pdo' === $this->adodb_driver ?
+            $this->conn = 'pdo' === $this->adodb_driver ?
                 $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
                 $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
-
+                $this->conn->setFetchMode($fetchMode);
             //$this->prtrace($this->conn);
         } catch (\Exception $e) {
             //dump($dsnString, $this->adodb_driver);
             $this->prtrace($e->getMessage(), \array_slice($e->getTrace(), 0, 10));
         }
     }
+ 
 
-    public function getConnectionResult()
-    {
-        return $this->_connection_result;
-    }
-
-    public function getVersion()
+    public function getVersion():string
     {
         return $this->pgVersion;
     }
@@ -124,6 +120,7 @@ class Connection
             return null;
         }
         $serverInfo = $this->conn->ServerInfo();
+        dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
         $description = "PostgreSQL {$this->pgVersion}";
 

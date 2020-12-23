@@ -150,7 +150,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
             echo '<table style="width: 100%">' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
@@ -187,7 +187,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
 
                 // Output matview header
                 echo '<table>' . \PHP_EOL;
@@ -285,7 +285,7 @@ class MaterializedviewpropertiesController extends BaseController
 
                 $this->coalesceArr($_POST, 'comment', $matview->fields['relcomment']);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo '<td class="data1">';
