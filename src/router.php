@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.0
+ * PHPPgAdmin 6.1.3
  */
 
 require_once __DIR__ . '/lib.inc.php';
@@ -23,7 +23,6 @@ $app->get('/status', function (
     \Slim\Http\Response $response,
     array $args
 ) {
-
     return $response
         ->withHeader('Content-type', 'application/json')
         ->withJson(

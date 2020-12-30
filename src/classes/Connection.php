@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.0
+ * PHPPgAdmin 6.1.3
  */
 
 namespace PHPPgAdmin;
@@ -189,13 +189,6 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_pdo {
-        $this->conn = ADONewConnection('pdo');
-        $this->conn->setFetchMode($fetchMode);
-        $dsnString = \sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6', $host, $port, $database, $sslmode);
-        $this->conn->connect($dsnString, $user, $password);
-
-        return $this->conn;
     ): \ADODB_pdo {
         $this->conn = ADONewConnection('pdo');
         $this->conn->setFetchMode($fetchMode);

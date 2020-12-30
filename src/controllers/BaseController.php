@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.0
+ * PHPPgAdmin 6.1.3
  */
 
 namespace PHPPgAdmin\Controller;
@@ -64,8 +64,6 @@ class BaseController
     public $phpMinVer;
 
     /**
-     * @var \PHPPgAdmin\ContainerUtils
-     */
      * @var \PHPPgAdmin\ContainerUtils
      */
     protected $container;
@@ -148,28 +146,9 @@ class BaseController
         if (true === $this->no_db_connection) {
             $this->misc->setNoDBConnection(true);
         }
-$this->renderInitialPageIfNotLogged();
-        
+        $this->renderInitialPageIfNotLogged();
     }
-private function renderInitialPageIfNotLogged() {
-    if (false === $this->misc->getNoDBConnection()) {
-        if (null === $this->misc->getServerId()) {
-            $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
 
-                $servers_controller->render();
-            } else {
-                $_server_info = $this->misc->getServerInfo();
-                // Redirect to the login form if not logged in
-                if (!isset($_server_info['username'])) {
-                    $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
-
-                    $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
-
-                    $servers_controller->render();
-                }
-        }
-    }
-}
     /**
      * Default method to render the controller according to the action parameter. It should return with a PSR
      * responseObject but it prints texts whatsoeever.
@@ -497,6 +476,27 @@ private function renderInitialPageIfNotLogged() {
         }
 
         return $html;
+    }
+
+    private function renderInitialPageIfNotLogged(): void
+    {
+        if (false === $this->misc->getNoDBConnection()) {
+            if (null === $this->misc->getServerId()) {
+                $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
+
+                $servers_controller->render();
+            } else {
+                $_server_info = $this->misc->getServerInfo();
+                // Redirect to the login form if not logged in
+                if (!isset($_server_info['username'])) {
+                    $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
+
+                    $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
+
+                    $servers_controller->render();
+                }
+            }
+        }
     }
 
     private function _getTableController()

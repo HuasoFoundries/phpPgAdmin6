@@ -16,19 +16,6 @@ WHITE=\033[0m
 GREEN=\u001B[32m
 
 
-csfixer:
-	@if [ -f "vendor/bin/php-cs-fixer" ]; then \
-		echo "XDEBUG was: "$(XDSWI_STATUS) ;\
-		${MAKE} disable_xdebug  --no-print-directory ;\
-		mkdir -p .build/php-cs-fixer ;\
-        vendor/bin/php-cs-fixer fix --config=.php_cs.php --diff --diff-format=udiff --dry-run --verbose ;\
-		${MAKE} enable_xdebug new_status=$(XDSWI_STATUS)  --no-print-directory;\
-    else \
-        echo -e "$(GREEN)php-cs-fixer$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
-        echo -e "Install it with $(GREEN)composer install --dev friendsofphp/php-cs-fixer$(WHITE)" ;\
-    fi ;\
-	sudo rm -rf temp/route.cache.php
-
 
 
 disable_xdebug:
