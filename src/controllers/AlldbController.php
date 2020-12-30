@@ -536,16 +536,16 @@ class AlldbController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         // Default tablespace to null if it isn't set
-        $this->coalesceArr($_POST, 'formSpc', null);
+        $this->coalesceArr($_POST, 'formSpc', '');
 
         // Default comment to blank if it isn't set
-        $this->coalesceArr($_POST, 'formComment', null);
+        $this->coalesceArr($_POST, 'formComment', '');
 
         // Default collate to blank if it isn't set
-        $this->coalesceArr($_POST, 'formCollate', null);
+        $this->coalesceArr($_POST, 'formCollate', '');
 
         // Default ctype to blank if it isn't set
-        $this->coalesceArr($_POST, 'formCType', null);
+        $this->coalesceArr($_POST, 'formCType', '');
 
         // Check that they've given a name and a definition
         if ('' === $_POST['formName']) {

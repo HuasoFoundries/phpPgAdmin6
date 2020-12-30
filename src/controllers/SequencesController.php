@@ -214,19 +214,12 @@ class SequencesController extends BaseController
         $sequences = $data->getSequences();
         $reqvars = $this->misc->getRequestVars('sequence');
 
-        $actionURL = Decorator::actionurl(
-            'sequences',
-            $reqvars,
-            [
-                'action' => 'properties',
-                'sequence' => Decorator::field('seqname'),
-            ]
-        );
         $attrs = [
             'text' => Decorator::field('seqname'),
             'icon' => 'Sequence',
             'toolTip' => Decorator::field('seqcomment'),
-            'action' => $actionURL,
+            'iconAction' => Decorator::url('sequences', $reqvars, ['action' => 'properties', 'sequence' => Decorator::field('seqname')]),
+            'action' => Decorator::url('sequences', $reqvars, ['action' => 'properties', 'sequence' => Decorator::field('seqname')]),
         ];
 
         return $this->printTree($sequences, $attrs, 'sequences');

@@ -4,14 +4,6 @@
  * PHPPgAdmin 6.1.3
  */
 
-\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
-
-\defined('THEME_PATH') || \define('THEME_PATH', \dirname(__DIR__) . '/assets/themes');
-// Enforce PHP environment
-\ini_set('arg_separator.output', '&amp;');
-\defined('ADODB_ERROR_HANDLER_TYPE') || \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
-\defined('ADODB_ERROR_HANDLER') || \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
-
 function getAppInstance(): \Slim\App
 {
     $subfolder = '';

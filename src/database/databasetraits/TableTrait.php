@@ -593,7 +593,7 @@ trait TableTrait
             } else {
                 $first = false;
             }
-
+            $length[$i]=$length[$i] ?? '';
             switch ($type[$i]) {
                     // Have to account for weird placing of length for with/without
                     // time zone types
@@ -602,7 +602,7 @@ trait TableTrait
                     $qual = \mb_substr($type[$i], 9);
                     $sql .= "\"{$field[$i]}\" timestamp";
 
-                    if ('' !== $length[$i]) {
+                    if ('' !== $length[$i] ) {
                         $sql .= "({$length[$i]})";
                     }
 
@@ -623,9 +623,9 @@ trait TableTrait
                     break;
 
                 default:
-                    $sql .= "\"{$field[$i]}\" {$type[$i]}";
+                     $sql .= "\"{$field[$i]}\" {$type[$i]}";
 
-                    if ('' !== $length[$i]) {
+                    if ('' !== $length[$i]  ) {
                         $sql .= "({$length[$i]})";
                     }
             }
