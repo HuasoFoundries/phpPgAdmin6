@@ -6,21 +6,26 @@
 
 namespace PHPPgAdmin;
 
+use PHPPgAdmin\Traits\HelperTrait;
+use Psr\Http\Message\ResponseInterface;
+use Slim\Http\Response;
+use Slim\Views\Twig;
+use Slim\Views\TwigExtension;
+
 /**
  * @file
  * Class to hold various commonly used functions
  *
  * Id: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
  */
-
 /**
  * Class to hold various commonly used functions.
  *
  * Release: Misc.php,v 1.171 2008/03/17 21:35:48 ioguix Exp $
  */
-class ViewManager extends \Slim\Views\Twig
+class ViewManager extends Twig
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     /**
      * @var array
@@ -70,12 +75,12 @@ class ViewManager extends \Slim\Views\Twig
     public $postgresqlMinVer;
 
     /**
-     * @var \PHPPgAdmin\Misc
+     * @var Misc
      */
     public $misc;
 
     /**
-     * @var \PHPPgAdmin\ContainerUtils
+     * @var ContainerUtils
      */
     protected $container;
 
@@ -122,11 +127,11 @@ class ViewManager extends \Slim\Views\Twig
     private static $instance;
 
     /**
-     * @param mixed                      $path
-     * @param mixed                      $settings
-     * @param \PHPPgAdmin\ContainerUtils $c
+     * @param mixed          $path
+     * @param mixed          $settings
+     * @param ContainerUtils $c
      */
-    public function __construct($path, $settings, \PHPPgAdmin\ContainerUtils $c)
+    public function __construct($path, $settings, ContainerUtils $c)
     {
         $this->lang = $c->get('lang');
         $this->conf = $c->get('conf');
@@ -139,7 +144,7 @@ class ViewManager extends \Slim\Views\Twig
         // Instantiate and add Slim specific extension
         $basePath = \rtrim(\str_ireplace($base_script_trailing_str, '', $request_basepath), '/');
 
-        $this->addExtension(new \Slim\Views\TwigExtension($c['router'], $basePath));
+        $this->addExtension(new TwigExtension($c['router'], $basePath));
 
         $this->offsetSet('subfolder', \containerInstance()->subFolder);
         $this->offsetSet('theme', $this->misc->getConf('theme'));
@@ -194,7 +199,7 @@ class ViewManager extends \Slim\Views\Twig
         return $this->_reload_browser;
     }
 
-    public function maybeRenderIframes(\Slim\Http\Response $response, string $subject, string $query_string): \Psr\Http\Message\ResponseInterface
+    public function maybeRenderIframes(Response $response, string $subject, string $query_string): ResponseInterface
     {
         $c = $this->getContainer();
 
@@ -234,8 +239,7 @@ class ViewManager extends \Slim\Views\Twig
 
         // Check if theme is in $_REQUEST, $_SESSION or $_COOKIE
         // 1.- First priority: $_REQUEST, this happens when you use the selector
-        if (
-            \array_key_exists('theme', $_REQUEST) &&
+        if (\array_key_exists('theme', $_REQUEST) &&
             \array_key_exists($_REQUEST['theme'], $themefolders)
         ) {
             $_theme = $_REQUEST['theme'];
@@ -246,14 +250,12 @@ class ViewManager extends \Slim\Views\Twig
             \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             $_theme = $_server_info['theme'];
-        } elseif (
-            isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
+        } elseif (isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
             \array_key_exists($_SESSION['ppaTheme'], $themefolders)
         ) {
             // otherwise check $_SESSION
             $_theme = $_SESSION['ppaTheme'];
-        } elseif (
-            \array_key_exists('ppaTheme', $_COOKIE) &&
+        } elseif (\array_key_exists('ppaTheme', $_COOKIE) &&
             \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             // oterwise check $_COOKIE
@@ -356,30 +358,100 @@ class ViewManager extends \Slim\Views\Twig
 
         $theme = $this->conf['theme'];
         $path = 'assets/images/themes';
-        $default_icon = \sprintf('%s/%s/default/DisconnectedServer.png', \containerInstance()->subFolder, $path);
+        $default_icon = \sprintf(
+            '%s/%s/default/DisconnectedServer.png',
+            \containerInstance()->subFolder,
+            $path
+        );
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.png', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.png', \containerInstance()->subFolder, $path, $theme, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/%s/%s.png',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $theme,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/%s/%s.png',
+                \containerInstance()->subFolder,
+                $path,
+                $theme,
+                $icon
+            );
         }
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.gif', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.gif', \containerInstance()->subFolder, $path, $theme, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/%s/%s.gif',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $theme,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/%s/%s.gif',
+                \containerInstance()->subFolder,
+                $path,
+                $theme,
+                $icon
+            );
         }
 
-        if (\is_readable(\sprintf('%s/%s/%s/%s.ico', \containerInstance()->BASE_PATH, $path, $theme, $icon))) {
-            return \sprintf('%s/%s/%s/%s.ico', \containerInstance()->subFolder, $path, $theme, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/%s/%s.ico',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $theme,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/%s/%s.ico',
+                \containerInstance()->subFolder,
+                $path,
+                $theme,
+                $icon
+            );
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.png', \containerInstance()->BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.png', \containerInstance()->subFolder, $path, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/default/%s.png',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/default/%s.png',
+                \containerInstance()->subFolder,
+                $path,
+                $icon
+            );
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.gif', \containerInstance()->BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.gif', \containerInstance()->subFolder, $path, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/default/%s.gif',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/default/%s.gif',
+                \containerInstance()->subFolder,
+                $path,
+                $icon
+            );
         }
 
-        if (\is_readable(\sprintf('%s/%s/default/%s.ico', \containerInstance()->BASE_PATH, $path, $icon))) {
-            return \sprintf('%s/%s/default/%s.ico', \containerInstance()->subFolder, $path, $icon);
+        if (\is_readable(\sprintf(
+            '%s/%s/default/%s.ico',
+            \containerInstance()->BASE_PATH,
+            $path,
+            $icon
+        ))) {
+            return \sprintf(
+                '%s/%s/default/%s.ico',
+                \containerInstance()->subFolder,
+                $path,
+                $icon
+            );
         }
 
         return $default_icon;
@@ -439,7 +511,7 @@ class ViewManager extends \Slim\Views\Twig
         return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     }
 
-    private function getContainer(): \PHPPgAdmin\ContainerUtils
+    private function getContainer(): ContainerUtils
     {
         return $this->container;
     }
@@ -469,11 +541,20 @@ class ViewManager extends \Slim\Views\Twig
                 continue;
             }
 
-            $folderpath = \sprintf('%s%s%s', \containerInstance()->THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
-            $stylesheet = \sprintf('%s%s%s', $folderpath, \DIRECTORY_SEPARATOR, 'global.css');
+            $folderpath = \sprintf(
+                '%s%s%s',
+                \containerInstance()->THEME_PATH,
+                \DIRECTORY_SEPARATOR,
+                $foldername
+            );
+            $stylesheet = \sprintf(
+                '%s%s%s',
+                $folderpath,
+                \DIRECTORY_SEPARATOR,
+                'global.css'
+            );
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
-            if (
-                \is_dir($folderpath) &&
+            if (\is_dir($folderpath) &&
                 \is_file($stylesheet)
             ) {
                 $themefolders[$foldername] = $folderpath;

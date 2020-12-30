@@ -6,6 +6,9 @@
 
 namespace PHPPgAdmin\Controller;
 
+use ADORecordSet;
+use PHPPgAdmin\ADOdbException;
+
 /**
  * Base controller class.
  */
@@ -101,7 +104,7 @@ class SqlController extends BaseController
             }
 
             return $this->execute_query();
-        } catch (\PHPPgAdmin\ADOdbException $e) {
+        } catch (ADOdbException $e) {
             $message = $e->getMessage();
             $trace = $e->getTraceAsString();
             $lastError = $_connection->getLastError();
@@ -142,7 +145,10 @@ class SqlController extends BaseController
 
                         while (false !== $row) {
                             $id = (0 === ($i % 2) ? '1' : '2');
-                            echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+                            echo \sprintf(
+                                '<tr class="data%s">',
+                                $id
+                            ) . \PHP_EOL;
 
                             foreach ($row as $k => $v) {
                                 echo '<td style="white-space:nowrap;">', $misc->printVal($v, \pg_fieldtype($rs, $k), ['null' => true]), '</td>';
@@ -153,7 +159,10 @@ class SqlController extends BaseController
                         }
 
                         echo '</table><br/>' . \PHP_EOL;
-                        echo $i, " {$lang['strrows']}</p>" . \PHP_EOL;
+                        echo $i, \sprintf(
+                            ' %s</p>',
+                            $lang['strrows']
+                        ) . \PHP_EOL;
 
                         break;
                     case \PGSQL_COMMAND_OK:
@@ -162,7 +171,10 @@ class SqlController extends BaseController
                             echo \htmlspecialchars(\pg_result_status($rs, \PGSQL_STATUS_STRING)), '<br/>' . \PHP_EOL;
                         } elseif (0 < $data->conn->Affected_Rows()) {
                             // Otherwise if any rows have been affected
-                            echo $data->conn->Affected_Rows(), " {$lang['strrowsaff']}<br/>" . \PHP_EOL;
+                            echo $data->conn->Affected_Rows(), \sprintf(
+                                ' %s<br/>',
+                                $lang['strrowsaff']
+                            ) . \PHP_EOL;
                         }
                         // Otherwise output nothing...
                         break;
@@ -187,7 +199,7 @@ class SqlController extends BaseController
         \set_time_limit(25000);
 
         /**
-         * @var \ADORecordSet
+         * @var ADORecordSet
          */
         $rs = $data->conn->Execute($this->query);
 
@@ -221,7 +233,10 @@ class SqlController extends BaseController
 
                 while (!$rs->EOF) {
                     $id = (0 === ($i % 2) ? '1' : '2');
-                    echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+                    echo \sprintf(
+                        '<tr class="data%s">',
+                        $id
+                    ) . \PHP_EOL;
 
                     foreach ($rs->fields as $k => $v) {
                         $finfo = $rs->fetchField($k);
@@ -232,10 +247,16 @@ class SqlController extends BaseController
                     ++$i;
                 }
                 echo '</table>' . \PHP_EOL;
-                echo '<p>', $rs->recordCount(), " {$this->lang['strrows']}</p>" . \PHP_EOL;
+                echo '<p>', $rs->recordCount(), \sprintf(
+                    ' %s</p>',
+                    $this->lang['strrows']
+                ) . \PHP_EOL;
             } elseif (0 < $data->conn->Affected_Rows()) {
                 // Otherwise if any rows have been affected
-                echo '<p>', $data->conn->Affected_Rows(), " {$this->lang['strrowsaff']}</p>" . \PHP_EOL;
+                echo '<p>', $data->conn->Affected_Rows(), \sprintf(
+                    ' %s</p>',
+                    $this->lang['strrowsaff']
+                ) . \PHP_EOL;
             } else {
                 // Otherwise nodata to print
                 echo '<p>', $this->lang['strnodata'], '</p>' . \PHP_EOL;
@@ -267,10 +288,16 @@ class SqlController extends BaseController
 
         // Display duration if we know it
         if (null !== $this->duration) {
-            echo '<p>', \sprintf($this->lang['strruntime'], $this->duration), '</p>' . \PHP_EOL;
+            echo '<p>', \sprintf(
+                $this->lang['strruntime'],
+                $this->duration
+            ), '</p>' . \PHP_EOL;
         }
 
-        echo "<p>{$this->lang['strsqlexecuted']}</p>" . \PHP_EOL;
+        echo \sprintf(
+            '<p>%s</p>',
+            $this->lang['strsqlexecuted']
+        ) . \PHP_EOL;
 
         $navlinks = [];
         $fields = [

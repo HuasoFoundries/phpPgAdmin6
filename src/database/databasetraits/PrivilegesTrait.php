@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for privileges manipulation.
  */
@@ -33,46 +35,70 @@ trait PrivilegesTrait
         switch ($type) {
             case 'column':
                 $this->clean($table);
-                $sql = "
-                    SELECT E'{' || pg_catalog.array_to_string(attacl, E',') || E'}' as acl
+                $sql = \sprintf(
+                    '
+                    SELECT E\'{\' || pg_catalog.array_to_string(attacl, E\',\') || E\'}\' as acl
                     FROM pg_catalog.pg_attribute a
                         LEFT JOIN pg_catalog.pg_class c ON (a.attrelid = c.oid)
                         LEFT JOIN pg_catalog.pg_namespace n ON (c.relnamespace=n.oid)
-                    WHERE n.nspname='{$c_schema}'
-                        AND c.relname='{$table}'
-                        AND a.attname='{$object}'";
+                    WHERE n.nspname=\'%s\'
+                        AND c.relname=\'%s\'
+                        AND a.attname=\'%s\'',
+                    $c_schema,
+                    $table,
+                    $object
+                );
 
                 break;
             case 'table':
             case 'view':
             case 'sequence':
-                $sql = "
+                $sql = \sprintf(
+                    '
                     SELECT relacl AS acl FROM pg_catalog.pg_class
-                    WHERE relname='{$object}'
+                    WHERE relname=\'%s\'
                         AND relnamespace=(SELECT oid FROM pg_catalog.pg_namespace
-                            WHERE nspname='{$c_schema}')";
+                            WHERE nspname=\'%s\')',
+                    $object,
+                    $c_schema
+                );
 
                 break;
             case 'database':
-                $sql = "SELECT datacl AS acl FROM pg_catalog.pg_database WHERE datname='{$object}'";
+                $sql = \sprintf(
+                    'SELECT datacl AS acl FROM pg_catalog.pg_database WHERE datname=\'%s\'',
+                    $object
+                );
 
                 break;
             case 'function':
                 // Since we fetch functions by oid, they are already constrained to
                 // the current schema.
-                $sql = "SELECT proacl AS acl FROM pg_catalog.pg_proc WHERE oid='{$object}'";
+                $sql = \sprintf(
+                    'SELECT proacl AS acl FROM pg_catalog.pg_proc WHERE oid=\'%s\'',
+                    $object
+                );
 
                 break;
             case 'language':
-                $sql = "SELECT lanacl AS acl FROM pg_catalog.pg_language WHERE lanname='{$object}'";
+                $sql = \sprintf(
+                    'SELECT lanacl AS acl FROM pg_catalog.pg_language WHERE lanname=\'%s\'',
+                    $object
+                );
 
                 break;
             case 'schema':
-                $sql = "SELECT nspacl AS acl FROM pg_catalog.pg_namespace WHERE nspname='{$object}'";
+                $sql = \sprintf(
+                    'SELECT nspacl AS acl FROM pg_catalog.pg_namespace WHERE nspname=\'%s\'',
+                    $object
+                );
 
                 break;
             case 'tablespace':
-                $sql = "SELECT spcacl AS acl FROM pg_catalog.pg_tablespace WHERE spcname='{$object}'";
+                $sql = \sprintf(
+                    'SELECT spcacl AS acl FROM pg_catalog.pg_tablespace WHERE spcname=\'%s\'',
+                    $object
+                );
 
                 break;
 
@@ -108,7 +134,7 @@ trait PrivilegesTrait
      * @param bool   $cascade     True for cascade revoke, false otherwise
      * @param string $table       the column's table if type=column
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function setPrivileges(
         $mode,
@@ -153,7 +179,10 @@ trait PrivilegesTrait
         } else {
             if ('column' === $type) {
                 $this->fieldClean($object);
-                $sql .= ' ' . \implode(" (\"{$object}\"), ", $privileges);
+                $sql .= ' ' . \implode(\sprintf(
+                    ' ("%s"), ',
+                    $object
+                ), $privileges);
             } else {
                 $sql .= ' ' . \implode(', ', $privileges);
             }
@@ -161,41 +190,65 @@ trait PrivilegesTrait
 
         switch ($type) {
             case 'column':
-                $sql .= " (\"{$object}\")";
+                $sql .= \sprintf(
+                    ' ("%s")',
+                    $object
+                );
                 $object = $table;
             // no break
             case 'table':
             case 'view':
             case 'sequence':
                 $this->fieldClean($object);
-                $sql .= " ON \"{$f_schema}\".\"{$object}\"";
+                $sql .= \sprintf(
+                    ' ON "%s"."%s"',
+                    $f_schema,
+                    $object
+                );
 
                 break;
             case 'database':
                 $this->fieldClean($object);
-                $sql .= " ON DATABASE \"{$object}\"";
+                $sql .= \sprintf(
+                    ' ON DATABASE "%s"',
+                    $object
+                );
 
                 break;
             case 'function':
                 // Function comes in with $object as function OID
                 $fn = $this->getFunction($object);
                 $this->fieldClean($fn->fields['proname']);
-                $sql .= " ON FUNCTION \"{$f_schema}\".\"{$fn->fields['proname']}\"({$fn->fields['proarguments']})";
+                $sql .= \sprintf(
+                    ' ON FUNCTION "%s"."%s"(%s)',
+                    $f_schema,
+                    $fn->fields['proname'],
+                    $fn->fields['proarguments']
+                );
 
                 break;
             case 'language':
                 $this->fieldClean($object);
-                $sql .= " ON LANGUAGE \"{$object}\"";
+                $sql .= \sprintf(
+                    ' ON LANGUAGE "%s"',
+                    $object
+                );
 
                 break;
             case 'schema':
                 $this->fieldClean($object);
-                $sql .= " ON SCHEMA \"{$object}\"";
+                $sql .= \sprintf(
+                    ' ON SCHEMA "%s"',
+                    $object
+                );
 
                 break;
             case 'tablespace':
                 $this->fieldClean($object);
-                $sql .= " ON TABLESPACE \"{$object}\"";
+                $sql .= \sprintf(
+                    ' ON TABLESPACE "%s"',
+                    $object
+                );
 
                 break;
 
@@ -214,19 +267,31 @@ trait PrivilegesTrait
         // Dump users
         foreach ($usernames as $v) {
             if ($first) {
-                $sql .= "\"{$v}\"";
+                $sql .= \sprintf(
+                    '"%s"',
+                    $v
+                );
                 $first = false;
             } else {
-                $sql .= ", \"{$v}\"";
+                $sql .= \sprintf(
+                    ', "%s"',
+                    $v
+                );
             }
         }
         // Dump groups
         foreach ($groupnames as $v) {
             if ($first) {
-                $sql .= "GROUP \"{$v}\"";
+                $sql .= \sprintf(
+                    'GROUP "%s"',
+                    $v
+                );
                 $first = false;
             } else {
-                $sql .= ", GROUP \"{$v}\"";
+                $sql .= \sprintf(
+                    ', GROUP "%s"',
+                    $v
+                );
             }
         }
 

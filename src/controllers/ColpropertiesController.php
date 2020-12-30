@@ -78,7 +78,10 @@ class ColpropertiesController extends BaseController
         };
 
         if (empty($_REQUEST['column'])) {
-            $msg .= "<br/>{$this->lang['strnoobjects']}";
+            $msg .= \sprintf(
+                '<br/>%s',
+                $this->lang['strnoobjects']
+            );
         }
 
         $this->printTrail('column');
@@ -242,15 +245,34 @@ class ColpropertiesController extends BaseController
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
-                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data required">%s</th>',
+                    $this->lang['strname']
+                ) . \PHP_EOL;
 
                 if ($data->hasAlterColumnType()) {
-                    echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strtype']}</th>" . \PHP_EOL;
-                    echo "<th class=\"data\">{$this->lang['strlength']}</th>" . \PHP_EOL;
+                    echo \sprintf(
+                        '<th class="data required" colspan="2">%s</th>',
+                        $this->lang['strtype']
+                    ) . \PHP_EOL;
+                    echo \sprintf(
+                        '<th class="data">%s</th>',
+                        $this->lang['strlength']
+                    ) . \PHP_EOL;
                 } else {
-                    echo "<th class=\"data required\">{$this->lang['strtype']}</th>" . \PHP_EOL;
+                    echo \sprintf(
+                        '<th class="data required">%s</th>',
+                        $this->lang['strtype']
+                    ) . \PHP_EOL;
                 }
-                echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>\n<th class=\"data\">{$this->lang['strcomment']}</th></tr>" . \PHP_EOL;
+                echo \sprintf(
+                    '<th class="data">%s</th>
+<th class="data">%s</th>
+<th class="data">%s</th></tr>',
+                    $this->lang['strnotnull'],
+                    $this->lang['strdefault'],
+                    $this->lang['strcomment']
+                ) . \PHP_EOL;
 
                 $column = $data->getTableAttributes($_REQUEST['table'], $_REQUEST['column']);
                 $column->fields['attnotnull'] = $data->phpBool($column->fields['attnotnull']);
@@ -287,7 +309,10 @@ class ColpropertiesController extends BaseController
                 }
 
                 // Column name
-                echo "<tr><td><input name=\"field\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+                echo \sprintf(
+                    '<tr><td><input name="field" size="16" maxlength="%s" value="',
+                    $data->_maxNameLen
+                ),
                 \htmlspecialchars($_REQUEST['field']), '" /></td>' . \PHP_EOL;
 
                 // Column type
@@ -318,7 +343,10 @@ class ColpropertiesController extends BaseController
                     $predefined_size_types = \array_intersect($data->predefined_size_types, $types_for_js);
 
                     foreach ($predefined_size_types as $value) {
-                        $escaped_predef_types[] = "'{$value}'";
+                        $escaped_predef_types[] = \sprintf(
+                            '\'%s\'',
+                            $value
+                        );
                     }
 
                     echo '<td><input name="length" id="lengths" size="8" value="',
@@ -337,7 +365,11 @@ class ColpropertiesController extends BaseController
                 echo '<p><input type="hidden" name="action" value="properties" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
                 echo $this->view->form;
-                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf(
+                    '<input type="hidden" name="table" value="%s"  />%s',
+                    \htmlspecialchars($_REQUEST['table']),
+                    \PHP_EOL
+                );
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
 
@@ -352,8 +384,15 @@ class ColpropertiesController extends BaseController
                     echo '<input type="hidden" name="length" value="', \htmlspecialchars($_REQUEST['length']), '" />' . \PHP_EOL;
                     echo '<input type="hidden" name="array" value="', \htmlspecialchars($_REQUEST['array']), '" />' . \PHP_EOL;
                 }
-                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf(
+                    '<input type="submit" value="%s" />',
+                    $this->lang['stralter']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                    $this->lang['strcancel'],
+                    \PHP_EOL
+                );
                 echo '</form>' . \PHP_EOL;
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . \implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>" . \PHP_EOL;
 
@@ -388,10 +427,16 @@ class ColpropertiesController extends BaseController
                         $_REQUEST['column'] = $_REQUEST['field'];
                         $this->view->setReloadBrowser(true);
                     }
-                    $this->doDefault($sql . "<br/>{$this->lang['strcolumnaltered']}");
+                    $this->doDefault($sql . \sprintf(
+                        '<br/>%s',
+                        $this->lang['strcolumnaltered']
+                    ));
                 } else {
                     $_REQUEST['stage'] = 1;
-                    $this->doAlter($sql . "<br/>{$this->lang['strcolumnalteredbad']}");
+                    $this->doAlter($sql . \sprintf(
+                        '<br/>%s',
+                        $this->lang['strcolumnalteredbad']
+                    ));
 
                     return;
                 }
@@ -399,7 +444,10 @@ class ColpropertiesController extends BaseController
                 break;
 
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strinvalidparam']
+                ) . \PHP_EOL;
         }
     }
 }

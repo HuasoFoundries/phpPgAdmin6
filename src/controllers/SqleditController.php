@@ -6,12 +6,14 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\Traits\ServersTrait;
+
 /**
  * Base controller class.
  */
 class SqleditController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ServersTrait;
+    use ServersTrait;
 
     public $query = '';
 
@@ -144,7 +146,10 @@ class SqleditController extends BaseController
 
         $default_html .= '<form action="database" method="post" target="detail">' . \PHP_EOL;
         $default_html .= $this->printConnection('find', false);
-        $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />" . \PHP_EOL;
+        $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . \sprintf(
+            '" size="32" maxlength="%s" />',
+            $data->_maxNameLen
+        ) . \PHP_EOL;
 
         $filters = $this->_getFilters();
         $advanced_filters = $this->_getAdvancedFilters();
@@ -159,20 +164,41 @@ class SqleditController extends BaseController
 
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         $default_html .= "<select id='filter' name=\"filter\">" . \PHP_EOL;
-        $default_html .= \sprintf('%s<option value=""' . ('' === $_REQUEST['filter'] ? ' selected="selected" ' : '') . ">{$this->lang['strallobjects']}</option>" . \PHP_EOL, "\t");
+        $default_html .= \sprintf(
+            '%s<option value=""' . ('' === $_REQUEST['filter'] ? ' selected="selected" ' : '') . \sprintf(
+                '>%s</option>',
+                $this->lang['strallobjects']
+            ) . \PHP_EOL,
+            "\t"
+        );
 
         foreach ($filters as $type => $props) {
-            $default_html .= \sprintf('%s<option value="%s"  %s >%s</option>' . \PHP_EOL, "\t", $type, $props['selected'], $this->lang[$props['langkey']]);
+            $default_html .= \sprintf(
+                '%s<option value="%s"  %s >%s</option>' . \PHP_EOL,
+                "\t",
+                $type,
+                $props['selected'],
+                $this->lang[$props['langkey']]
+            );
         }
 
         if ($this->conf['show_advanced']) {
             foreach ($advanced_filters as $type => $props) {
-                $default_html .= \sprintf('%s<option value="%s"  %s >%s</option>' . \PHP_EOL, "\t", $type, $props['selected'], $this->lang[$props['langkey']]);
+                $default_html .= \sprintf(
+                    '%s<option value="%s"  %s >%s</option>' . \PHP_EOL,
+                    "\t",
+                    $type,
+                    $props['selected'],
+                    $this->lang[$props['langkey']]
+                );
             }
         }
         $default_html .= '</select>' . \PHP_EOL;
 
-        $default_html .= "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />" . \PHP_EOL;
+        $default_html .= \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strfind']
+        ) . \PHP_EOL;
         $default_html .= '<input type="hidden" name="action" value="find" /></p>' . \PHP_EOL;
         $default_html .= '</form>' . \PHP_EOL;
 

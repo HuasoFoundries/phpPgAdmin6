@@ -6,6 +6,10 @@
 
 namespace PHPPgAdmin;
 
+use ADODB_pdo;
+use ADODB_postgres9;
+use PHPPgAdmin\Traits\HelperTrait;
+
 /**
  * @file
  * Class to represent a database connection
@@ -14,7 +18,7 @@ namespace PHPPgAdmin;
  */
 class Connection
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public $conn;
 
@@ -62,10 +66,10 @@ class Connection
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
-     * @param array                      $server_info
-     * @param string                     $database    database name
-     * @param \PHPPgAdmin\ContainerUtils $container
-     * @param int                        $fetchMode   Defaults to associative.  Override for different behaviour
+     * @param array          $server_info
+     * @param string         $database    database name
+     * @param ContainerUtils $container
+     * @param int            $fetchMode   Defaults to associative.  Override for different behaviour
      */
     public function __construct($server_info, $database, $container, $fetchMode = ADODB_FETCH_ASSOC)
     {
@@ -107,7 +111,10 @@ class Connection
         $serverInfo = $this->conn->ServerInfo();
         dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
-        $description = "PostgreSQL {$this->pgVersion}";
+        $description = \sprintf(
+            'PostgreSQL %s',
+            $this->pgVersion
+        );
 
         $version_parts = \explode('.', $this->pgVersion);
 
@@ -153,7 +160,7 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_postgres9 {
+    ): ADODB_postgres9 {
         $this->conn = ADONewConnection('postgres9');
         $this->conn->setFetchMode($fetchMode);
         // Ignore host if null
@@ -164,7 +171,11 @@ class Connection
                 $pghost = '';
             }
         } else {
-            $pghost = "{$host}:{$port}";
+            $pghost = \sprintf(
+                '%s:%s',
+                $host,
+                $port
+            );
         }
 
         // Add sslmode to $pghost as needed
@@ -189,10 +200,16 @@ class Connection
         ?string $user,
         ?string $password,
         int $fetchMode = \ADODB_FETCH_ASSOC
-    ): \ADODB_pdo {
+    ): ADODB_pdo {
         $this->conn = ADONewConnection('pdo');
         $this->conn->setFetchMode($fetchMode);
-        $dsnString = \sprintf('pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6', $host, $port, $database, $sslmode);
+        $dsnString = \sprintf(
+            'pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6',
+            $host,
+            $port,
+            $database,
+            $sslmode
+        );
         $this->conn->connect($dsnString, $user, $password);
 
         return $this->conn;

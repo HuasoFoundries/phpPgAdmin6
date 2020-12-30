@@ -18,7 +18,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
 
     $parameters->set(Option::AUTO_IMPORT_NAMES, true);
 
-    $parameters->set(Option::SETS, [
+/*    $parameters->set(Option::SETS, [
         SetList::CODING_STYLE,
         SetList::ACTION_INJECTION_TO_CONSTRUCTOR_INJECTION,
         SetList::ARRAY_STR_FUNCTIONS_TO_STATIC_CALL,
@@ -31,7 +31,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::PHP_72,
          SetList::PHPUNIT_CODE_QUALITY,
         
-    ]);
+    ]);*/
 //  
 
     $parameters->set(Option::SKIP, [
@@ -54,8 +54,8 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::ENABLE_CACHE, true);
     $parameters->set(Option::CACHE_DIR, __DIR__ . '/.build/rector');
     $parameters->set(Option::PATHS, [
-        __DIR__ . '/src/classes',
-        __DIR__ . '/src/controllers',
+        __DIR__ . '/src',
+        //__DIR__ . '/src/controllers',
         //__DIR__ . '/src/database',
         //__DIR__ . '/src/decorators',
         //__DIR__ . '/src/middleware',

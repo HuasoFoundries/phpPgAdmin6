@@ -19,7 +19,10 @@ class AcinsertController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
 
         if (isset($_POST['offset'])) {
-            $offset = " OFFSET {$_POST['offset']}";
+            $offset = \sprintf(
+                ' OFFSET %s',
+                $_POST['offset']
+            );
         } else {
             $_POST['offset'] = 0;
             $offset = ' OFFSET 0';
@@ -40,10 +43,18 @@ class AcinsertController extends BaseController
         $f_attname = $fkeynames[$_POST['fattpos'][0]];
         $data->fieldClean($f_attname);
 
-        $q = "SELECT *
-		FROM \"{$f_schema}\".\"{$f_table}\"
-		WHERE \"{$f_attname}\"::text LIKE '{$_POST['fvalue']}%'
-		ORDER BY \"{$f_attname}\" LIMIT 12 {$offset};";
+        $q = \sprintf(
+            'SELECT *
+		FROM "%s"."%s"
+		WHERE "%s"::text LIKE \'%s%\'
+		ORDER BY "%s" LIMIT 12 %s;',
+            $f_schema,
+            $f_table,
+            $f_attname,
+            $_POST['fvalue'],
+            $f_attname,
+            $offset
+        );
 
         $res = $data->selectSet($q);
 
@@ -71,7 +82,10 @@ class AcinsertController extends BaseController
                     $finfo = $res->fetchField($j++);
 
                     if (\in_array($n, $fkeynames, true)) {
-                        echo "<td><a href=\"javascript:void(0)\" class=\"fkval\" name=\"{$keyspos[$n]}\">",
+                        echo \sprintf(
+                            '<td><a href="javascript:void(0)" class="fkval" name="%s">',
+                            $keyspos[$n]
+                        ),
                         $this->misc->printVal($v, $finfo->type, ['clip' => 'collapsed']),
                             '</a></td>';
                     } else {
@@ -104,7 +118,15 @@ class AcinsertController extends BaseController
 
             echo $js . '</script>';
         } else {
-            \printf("<p>{$this->lang['strnofkref']}</p>", "\"{$_POST['f_schema']}\".\"{$_POST['f_table']}\".\"{$fkeynames[$_POST['fattpos']]}\"");
+            \printf(\sprintf(
+                '<p>%s</p>',
+                $this->lang['strnofkref']
+            ), \sprintf(
+                '"%s"."%s"."%s"',
+                $_POST['f_schema'],
+                $_POST['f_table'],
+                $fkeynames[$_POST['fattpos']]
+            ));
 
             if ($_POST['offset']) {
                 echo '<a href="javascript:void(0)" class="fkprev">Prev &lt;&lt;</a>';

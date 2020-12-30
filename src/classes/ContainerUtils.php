@@ -6,18 +6,26 @@
 
 namespace PHPPgAdmin;
 
+use ArrayAccess;
+use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\HelperTrait;
 use Psr\Container\ContainerInterface;
+use Slim\App;
 use Slim\Collection;
+use Slim\Container;
 use Slim\DefaultServicesProvider;
+use Slim\Flash\Messages;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 /**
  * @property array $deploy_info
- * @property \Slim\Flash\Messages $flash
+ * @property Messages $flash
  * @property \GuzzleHttp\Client $fcIntranetClient
- * @property \PHPPgAdmin\Misc $misc
- * @property \PHPPgAdmin\ViewManager $view
- * @property \Slim\Http\Request $request
- * @property \Slim\Http\Response $response
+ * @property Misc $misc
+ * @property ViewManager $view
+ * @property Request $request
+ * @property Response $response
  * @property string $BASE_PATH
  * @property string $THEME_PATH
  * @property string $subFolder
@@ -29,9 +37,9 @@ use Slim\DefaultServicesProvider;
  *
  * @method mixed get(string)
  */
-class ContainerUtils extends \Slim\Container implements ContainerInterface
+class ContainerUtils extends Container implements ContainerInterface
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     /**
      * @var null|self
@@ -41,7 +49,7 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
     /**
      * $appInstance.
      *
-     * @var null|\Slim\App
+     * @var null|App
      */
     private static $appInstance;
 
@@ -97,14 +105,14 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
         return \implode(\DIRECTORY_SEPARATOR, [$this->subFolder, $path]);
     }
 
-    public static function getAppInstance(array $config = []): \Slim\App
+    public static function getAppInstance(array $config = []): App
     {
         $config = \array_merge(self::getDefaultConfig($config['debugmode'] ?? false), $config);
 
         $container = self::getContainerInstance($config);
 
         if (!self::$appInstance) {
-            self::$appInstance = new \Slim\App($container);
+            self::$appInstance = new App($container);
         }
 
         return self::$appInstance;
@@ -222,15 +230,18 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
 
             foreach ($url['urlvars'] as $key => $urlvar) {
                 //$this->prtrace($key, $urlvar);
-                $urlvars[$key] = \PHPPgAdmin\Decorators\Decorator::get_sanitized_value($urlvar, $_REQUEST);
+                $urlvars[$key] = Decorator::get_sanitized_value($urlvar, $_REQUEST);
             }
             $_REQUEST = \array_merge($_REQUEST, $urlvars);
             $_GET = \array_merge($_GET, $urlvars);
         }
-        $actionurl = \PHPPgAdmin\Decorators\Decorator::actionurl($url['url'], $_GET);
+        $actionurl = Decorator::actionurl($url['url'], $_GET);
         $destinationurl = $actionurl->value($_GET);
 
-        return \str_replace('views/?', "views/{$subject}?", $destinationurl);
+        return \str_replace('views/?', \sprintf(
+            'views/%s?',
+            $subject
+        ), $destinationurl);
     }
 
     /**
@@ -238,9 +249,9 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
      *
      * @param string $errormsg The error msg
      *
-     * @return\Slim\Container The app container
+     * @return Container The app container
      */
-    public function addError(string $errormsg): \Slim\Container
+    public function addError(string $errormsg): Container
     {
         $container = self::getContainerInstance();
         $errors = $container->get('errors');
@@ -291,7 +302,7 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
         $container->THEME_PATH = $conf['theme_path'];
         $container->IN_TEST = $conf['IN_TEST'];
         $container['errors'] = [];
-        $container['conf'] = static function (\Slim\Container $c) use ($conf): array {
+        $container['conf'] = static function (Container $c) use ($conf): array {
             $display_sizes = $conf['display_sizes'];
 
             if (\is_array($display_sizes)) {
@@ -352,7 +363,7 @@ class ContainerUtils extends \Slim\Container implements ContainerInterface
          *
          * @return array|ArrayAccess
          */
-        $this['settings'] = static function () use ($userSettings, $defaultSettings): \Slim\Collection {
+        $this['settings'] = static function () use ($userSettings, $defaultSettings): Collection {
             return new Collection(\array_merge($defaultSettings, $userSettings));
         };
 

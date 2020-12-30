@@ -6,7 +6,10 @@
 
 namespace PHPPgAdmin;
 
+use Exception;
 use PHPPgAdmin\Database\Postgres;
+use PHPPgAdmin\Traits\HelperTrait;
+use PHPPgAdmin\Traits\MiscTrait;
 
 /**
  * @file
@@ -22,8 +25,8 @@ use PHPPgAdmin\Database\Postgres;
  */
 class Misc
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\Traits\MiscTrait;
+    use HelperTrait;
+    use MiscTrait;
 
     /**
      * @var array
@@ -68,17 +71,17 @@ class Misc
     public $postgresqlMinVer;
 
     /**
-     * @var \PHPPgAdmin\ViewManager
+     * @var ViewManager
      */
     public $view;
 
     /**
-     * @var \PHPPgAdmin\ContainerUtils
+     * @var ContainerUtils
      */
     protected $container;
 
     /**
-     * @var null|\PHPPgAdmin\Connection
+     * @var null|Connection
      */
     private $_connection;
 
@@ -113,9 +116,9 @@ class Misc
     private $_error_msg = '';
 
     /**
-     * @param \PHPPgAdmin\ContainerUtils $container The container
+     * @param ContainerUtils $container The container
      */
-    public function __construct(\PHPPgAdmin\ContainerUtils $container)
+    public function __construct(ContainerUtils $container)
     {
         $this->container = $container;
 
@@ -145,7 +148,10 @@ class Misc
 
         // Check the version of PHP
         if (\version_compare(\PHP_VERSION, $this->phpMinVer, '<')) {
-            $container->addError(\sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
+            $container->addError(\sprintf(
+                'Version of PHP not supported. Please upgrade to version %s or later.',
+                $this->phpMinVer
+            ));
         }
         //$this->dumpAndDie($this->);
 
@@ -232,18 +238,18 @@ class Misc
     /**
      * Sets the view instance property of this class.
      *
-     * @param \PHPPgAdmin\ViewManager $view view instance
+     * @param ViewManager $view view instance
      *
      * @return \PHPPgAdmin\Misc this class instance
      */
-    public function setView(\PHPPgAdmin\ViewManager $view)
+    public function setView(ViewManager $view)
     {
         $this->view = $view;
 
         return $this;
     }
 
-    public function getContainer(): \PHPPgAdmin\ContainerUtils
+    public function getContainer(): ContainerUtils
     {
         return $this->container;
     }
@@ -304,7 +310,7 @@ class Misc
      *
      * @internal mixed $plaform placeholder that will receive the value of the platform
      *
-     * @return null|\PHPPgAdmin\Database\Postgres|void the database accessor instance
+     * @return null|Postgres|void the database accessor instance
      */
     public function getDatabaseAccessor($database = '', $server_id = null)
     {
@@ -323,7 +329,7 @@ class Misc
         if (null === $this->_data) {
             try {
                 $_connection = $this->getConnection($database, $this->_server_id);
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->setServerInfo(null, null, $this->_server_id);
                 $this->setNoDBConnection(true);
                 $this->setErrorMsg($e->getMessage());
@@ -343,14 +349,17 @@ class Misc
             $_type = $_connection->getDriver($platform);
 
             if (null === $_type ?? null) {
-                $errormsg = \sprintf($lang['strpostgresqlversionnotsupported'], $this->postgresqlMinVer);
+                $errormsg = \sprintf(
+                    $lang['strpostgresqlversionnotsupported'],
+                    $this->postgresqlMinVer
+                );
                 $this->container->addError($errormsg);
                 $this->setErrorMsg($errormsg);
 
                 return null;
             }
             /**
-             * @var \class-string<\PHPPgAdmin\Database\Postgres>
+             * @var \class-string<Postgres>
              */
             $_type = '\\PHPPgAdmin\\Database\\' . $_type;
 
@@ -373,8 +382,7 @@ class Misc
             }
         }
 
-        if (
-            false !== $this->getNoDBConnection() ||
+        if (false !== $this->getNoDBConnection() ||
             null === $this->getDatabase() ||
             !isset($_REQUEST['schema'])
         ) {
@@ -397,9 +405,9 @@ class Misc
      * @param string $database
      * @param string $server_id
      *
-     * @return null|\PHPPgAdmin\Connection
+     * @return null|Connection
      */
-    public function getConnection(string $database = '', $server_id = null): ?\PHPPgAdmin\Connection
+    public function getConnection(string $database = '', $server_id = null): ?Connection
     {
         $lang = $this->lang;
 
@@ -421,34 +429,32 @@ class Misc
                     'administrator' => 'administrator',
                 ];
 
-                if (
-                    isset($server_info['username']) &&
+                if (isset($server_info['username']) &&
                     \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
-                    throw new \Exception($msg);
+                    throw new Exception($msg);
                 }
 
-                if (
-                    !isset($server_info['password']) ||
+                if (!isset($server_info['password']) ||
                     '' === $server_info['password']
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
-                    throw new \Exception($msg);
+                    throw new Exception($msg);
                 }
             }
 
             try {
                 // Create the connection object and make the connection
-                $this->_connection = new \PHPPgAdmin\Connection(
+                $this->_connection = new Connection(
                     $server_info,
                     $database_to_use,
                     $this->container
                 );
-            } catch (\PHPPgAdmin\ADOdbException $e) {
-                throw new \Exception($lang['strloginfailed']);
+            } catch (ADOdbException $e) {
+                throw new Exception($lang['strloginfailed']);
             }
         }
 
@@ -483,8 +489,7 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha = \sha1($server_string);
 
-            if (
-                $this->_server_id === $server_string ||
+            if ($this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
             ) {
                 if (isset($info['username'])) {
@@ -552,8 +557,7 @@ class Misc
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if (
-            null !== $this->_server_id &&
+        if (null !== $this->_server_id &&
             isset($server_info['useonlydefaultdb']) &&
             true === $server_info['useonlydefaultdb'] &&
             isset($server_info['defaultdb'])
@@ -803,7 +807,10 @@ class Misc
         $server = $this->container->server ? $this->container->server : $_REQUEST['server'];
         $database = $this->container->database ? $this->container->database : $_REQUEST['database'];
 
-        $_SESSION['history'][$server][$database]["{$time}"] = [
+        $_SESSION['history'][$server][$database][\sprintf(
+            '%s',
+            $time
+        )] = [
             'query' => $script,
             'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
             'queryid' => $time,

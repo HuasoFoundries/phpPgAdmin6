@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for column manipulation.
  */
@@ -35,7 +37,13 @@ trait ColumnTrait
         $this->clean($length);
 
         if ('' === $length) {
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" {$type}";
+            $sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ADD COLUMN "%s" %s',
+                $f_schema,
+                $table,
+                $column,
+                $type
+            );
         } else {
             switch ($type) {
                 // Have to account for weird placing of length for with/without
@@ -43,18 +51,39 @@ trait ColumnTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type, 9);
-                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" timestamp({$length}){$qual}";
+                    $sql = \sprintf(
+                        'ALTER TABLE "%s"."%s" ADD COLUMN "%s" timestamp(%s)%s',
+                        $f_schema,
+                        $table,
+                        $column,
+                        $length,
+                        $qual
+                    );
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type, 4);
-                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" time({$length}){$qual}";
+                    $sql = \sprintf(
+                        'ALTER TABLE "%s"."%s" ADD COLUMN "%s" time(%s)%s',
+                        $f_schema,
+                        $table,
+                        $column,
+                        $length,
+                        $qual
+                    );
 
                     break;
 
                 default:
-                    $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD COLUMN \"{$column}\" {$type}({$length})";
+                    $sql = \sprintf(
+                        'ALTER TABLE "%s"."%s" ADD COLUMN "%s" %s(%s)',
+                        $f_schema,
+                        $table,
+                        $column,
+                        $type,
+                        $length
+                    );
             }
         }
 
@@ -166,15 +195,25 @@ trait ColumnTrait
         $toAlter = [];
         // Create the command for changing nullability
         if ($notnull !== $oldnotnull) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" " . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
+            $toAlter[] = \sprintf(
+                'ALTER COLUMN "%s" ',
+                $name
+            ) . ($notnull ? 'SET' : 'DROP') . ' NOT NULL';
         }
 
         // Add default, if it has changed
         if ($default !== $olddefault) {
             if ('' === $default) {
-                $toAlter[] = "ALTER COLUMN \"{$name}\" DROP DEFAULT";
+                $toAlter[] = \sprintf(
+                    'ALTER COLUMN "%s" DROP DEFAULT',
+                    $name
+                );
             } else {
-                $toAlter[] = "ALTER COLUMN \"{$name}\" SET DEFAULT {$default}";
+                $toAlter[] = \sprintf(
+                    'ALTER COLUMN "%s" SET DEFAULT %s',
+                    $name,
+                    $default
+                );
             }
         }
 
@@ -188,18 +227,30 @@ trait ColumnTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type, 9);
-                    $ftype = "timestamp({$length}){$qual}";
+                    $ftype = \sprintf(
+                        'timestamp(%s)%s',
+                        $length,
+                        $qual
+                    );
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type, 4);
-                    $ftype = "time({$length}){$qual}";
+                    $ftype = \sprintf(
+                        'time(%s)%s',
+                        $length,
+                        $qual
+                    );
 
                     break;
 
                 default:
-                    $ftype = "{$type}({$length})";
+                    $ftype = \sprintf(
+                        '%s(%s)',
+                        $type,
+                        $length
+                    );
             }
         }
 
@@ -209,13 +260,21 @@ trait ColumnTrait
         }
 
         if ($ftype !== $oldtype) {
-            $toAlter[] = "ALTER COLUMN \"{$name}\" TYPE {$ftype}";
+            $toAlter[] = \sprintf(
+                'ALTER COLUMN "%s" TYPE %s',
+                $name,
+                $ftype
+            );
         }
 
         // Attempt to process the batch alteration, if anything has been changed
         if (!empty($toAlter)) {
             // Initialise an empty SQL string
-            $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" "
+            $sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $table
+            )
             . \implode(',', $toAlter);
 
             $status = $this->execute($sql);
@@ -256,7 +315,13 @@ trait ColumnTrait
         $this->fieldClean($column);
         $this->fieldClean($newName);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" RENAME COLUMN \"{$column}\" TO \"{$newName}\"";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" RENAME COLUMN "%s" TO "%s"',
+            $f_schema,
+            $table,
+            $column,
+            $newName
+        );
 
         $status = $this->execute($sql);
 
@@ -270,7 +335,7 @@ trait ColumnTrait
      * @param string $column  The column name to set
      * @param mixed  $default The new default value
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -279,7 +344,13 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" SET DEFAULT {$default}";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ALTER COLUMN "%s" SET DEFAULT %s',
+            $f_schema,
+            $table,
+            $column,
+            $default
+        );
 
         return $this->execute($sql);
     }
@@ -291,7 +362,7 @@ trait ColumnTrait
      * @param string $column The column to alter
      * @param bool   $state  True to set null, false to set not null
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -300,7 +371,12 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" " . ($state ? 'DROP' : 'SET') . ' NOT NULL';
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ALTER COLUMN "%s" ',
+            $f_schema,
+            $table,
+            $column
+        ) . ($state ? 'DROP' : 'SET') . ' NOT NULL';
 
         return $this->execute($sql);
     }
@@ -321,7 +397,12 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" DROP COLUMN \"{$column}\"";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" DROP COLUMN "%s"',
+            $f_schema,
+            $table,
+            $column
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -338,7 +419,7 @@ trait ColumnTrait
      * @param string $table  The table from which to drop
      * @param string $column The column name to drop default
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropColumnDefault($table, $column)
     {
@@ -347,7 +428,12 @@ trait ColumnTrait
         $this->fieldClean($table);
         $this->fieldClean($column);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ALTER COLUMN \"{$column}\" DROP DEFAULT";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ALTER COLUMN "%s" DROP DEFAULT',
+            $f_schema,
+            $table,
+            $column
+        );
 
         return $this->execute($sql);
     }

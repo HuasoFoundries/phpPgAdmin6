@@ -6,14 +6,16 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\ServersTrait;
 
 /**
  * Base controller class.
  */
 class ServersController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ServersTrait;
+    use ServersTrait;
 
     public $table_place = 'servers-servers';
 
@@ -171,7 +173,7 @@ class ServersController extends BaseController
             }
 
             $nodes = \array_merge($nodes, $this->getServers(false, $group_id));
-            $nodes = new \PHPPgAdmin\ArrayRecordSet($nodes);
+            $nodes = new ArrayRecordSet($nodes);
         } else {
             // no srv_group
             $nodes = $this->getServers(true, false);
@@ -202,7 +204,10 @@ class ServersController extends BaseController
 
         $this->view->setReloadBrowser(true);
 
-        echo \sprintf($this->lang['strlogoutmsg'], $server_info['desc']);
+        echo \sprintf(
+            $this->lang['strlogoutmsg'],
+            $server_info['desc']
+        );
     }
 
     /**
@@ -211,7 +216,7 @@ class ServersController extends BaseController
      * @param bool  $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array
      * @param mixed $group_id  a group name to filter the returned servers using $this->conf[srv_groups]
      *
-     * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     * @return array|ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
      */
     private function getServersGroups($recordset = false, $group_id = false)
     {
@@ -275,7 +280,7 @@ class ServersController extends BaseController
         }
 
         if ($recordset) {
-            return new \PHPPgAdmin\ArrayRecordSet($grps);
+            return new ArrayRecordSet($grps);
         }
 
         return $grps;

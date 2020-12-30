@@ -6,11 +6,13 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\Help\PostgresDoc91;
+
 /**
  * @file
  * PostgreSQL 9.1 support
  */
-
 /**
  * Id: Postgres82.php,v 1.10 2007/12/28 16:21:25 ioguix Exp $.
  */
@@ -24,7 +26,7 @@ class Postgres91 extends Postgres92
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc91::class;
+    public $help_classname = PostgresDoc91::class;
 
     // Administration functions
 
@@ -33,7 +35,7 @@ class Postgres91 extends Postgres92
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -43,10 +45,13 @@ class Postgres91 extends Postgres92
 				ORDER BY datname, usename, procpid';
         } else {
             $this->clean($database);
-            $sql = "SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
+            $sql = \sprintf(
+                'SELECT datname, usename, procpid AS pid, waiting, current_query AS query, query_start
 				FROM pg_catalog.pg_stat_activity
-				WHERE datname='{$database}'
-				ORDER BY usename, procpid";
+				WHERE datname=\'%s\'
+				ORDER BY usename, procpid',
+                $database
+            );
         }
 
         return $this->selectSet($sql);
@@ -59,7 +64,7 @@ class Postgres91 extends Postgres92
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -83,15 +88,18 @@ class Postgres91 extends Postgres92
      *
      * @param string $spcname
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getTablespace($spcname)
     {
         $this->clean($spcname);
 
-        $sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
-                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
-					FROM pg_catalog.pg_tablespace WHERE spcname='{$spcname}'";
+        $sql = \sprintf(
+            'SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, spclocation,
+                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid=\'pg_tablespace\'::regclass) AS spccomment
+					FROM pg_catalog.pg_tablespace WHERE spcname=\'%s\'',
+            $spcname
+        );
 
         return $this->selectSet($sql);
     }

@@ -6,19 +6,22 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\ArrayRecordSet;
+
 /**
  * Common trait for tables manipulation.
  */
 trait TableTrait
 {
-    use \PHPPgAdmin\Database\Traits\ColumnTrait;
-    use \PHPPgAdmin\Database\Traits\RowTrait;
-    use \PHPPgAdmin\Database\Traits\TriggerTrait;
+    use ColumnTrait;
+    use RowTrait;
+    use TriggerTrait;
 
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getAllTables()
     {
@@ -36,7 +39,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTables()
     {
@@ -60,12 +63,15 @@ trait TableTrait
             $sql .= "   'N/A' as table_size ";
         }
 
-        $sql .= " FROM pg_catalog.pg_class c
+        $sql .= \sprintf(
+            ' FROM pg_catalog.pg_class c
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                 LEFT JOIN  pg_catalog.pg_tablespace pt ON  pt.oid=c.reltablespace
-                WHERE c.relkind = 'r'
-                AND nspname='{$c_schema}'
-                ORDER BY c.relname";
+                WHERE c.relkind = \'r\'
+                AND nspname=\'%s\'
+                ORDER BY c.relname',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -75,7 +81,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTableParents($table)
     {
@@ -83,7 +89,8 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 pn.nspname, relname
             FROM
@@ -91,11 +98,14 @@ trait TableTrait
             WHERE
                 pc.oid=pi.inhparent
                 AND pc.relnamespace=pn.oid
-                AND pi.inhrelid = (SELECT oid from pg_catalog.pg_class WHERE relname='{$table}'
-                    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = '{$c_schema}'))
+                AND pi.inhrelid = (SELECT oid from pg_catalog.pg_class WHERE relname=\'%s\'
+                    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = \'%s\'))
             ORDER BY
                 pi.inhseqno
-        ";
+        ',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -105,7 +115,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTableChildren($table)
     {
@@ -113,7 +123,8 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 pn.nspname, relname
             FROM
@@ -121,9 +132,12 @@ trait TableTrait
             WHERE
                 pc.oid=pi.inhrelid
                 AND pc.relnamespace=pn.oid
-                AND pi.inhparent = (SELECT oid from pg_catalog.pg_class WHERE relname='{$table}'
-                    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = '{$c_schema}'))
-        ";
+                AND pi.inhparent = (SELECT oid from pg_catalog.pg_class WHERE relname=\'%s\'
+                    AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname = \'%s\'))
+        ',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -207,7 +221,13 @@ trait TableTrait
         if (null !== $t->fields['relcomment']) {
             $this->clean($t->fields['relcomment']);
             $sql .= "\n-- Comment\n\n";
-            $sql .= "COMMENT ON TABLE \"{$t->fields['nspname']}\".\"{$t->fields['relname']}\" IS '{$t->fields['relcomment']}';\n";
+            $sql .= \sprintf(
+                'COMMENT ON TABLE "%s"."%s" IS \'%s\';
+',
+                $t->fields['nspname'],
+                $t->fields['relname'],
+                $t->fields['relcomment']
+            );
         }
 
         // Add comments on columns, if any
@@ -242,7 +262,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTable($table)
     {
@@ -263,10 +283,14 @@ trait TableTrait
                  LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace ";
 
         $sql .= ($this->hasRoles() ? ' LEFT JOIN pg_catalog.pg_roles r ON c.relowner = r.oid ' : '') .
-            " WHERE c.relkind = 'r'
-                  AND n.nspname = '{$c_schema}'
+            \sprintf(
+                ' WHERE c.relkind = \'r\'
+                  AND n.nspname = \'%s\'
                   AND n.oid = c.relnamespace
-                  AND c.relname = '{$table}'";
+                  AND c.relname = \'%s\'',
+                $c_schema,
+                $table
+            );
 
         return $this->selectSet($sql);
     }
@@ -277,7 +301,7 @@ trait TableTrait
      * @param string $table The name of the table
      * @param string $field (optional) The name of a field to return
      *
-     * @return \PHPPgAdmin\ADORecordSet All attributes in order
+     * @return ADORecordSet All attributes in order
      */
     public function getTableAttributes($table, $field = '')
     {
@@ -301,7 +325,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getConstraints($table)
     {
@@ -311,11 +335,12 @@ trait TableTrait
 
         // This SQL is greatly complicated by the need to retrieve
         // index clustering information for primary and unique constraints
-        $sql = "SELECT
+        $sql = \sprintf(
+            'SELECT
                 pc.conname,
                 pg_catalog.pg_get_constraintdef(pc.oid, true) AS consrc,
                 pc.contype,
-                CASE WHEN pc.contype='u' OR pc.contype='p' THEN (
+                CASE WHEN pc.contype=\'u\' OR pc.contype=\'p\' THEN (
                     SELECT
                         indisclustered
                     FROM
@@ -333,12 +358,15 @@ trait TableTrait
             FROM
                 pg_catalog.pg_constraint pc
             WHERE
-                pc.conrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}'
+                pc.conrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
                     AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace
-                    WHERE nspname='{$c_schema}'))
+                    WHERE nspname=\'%s\'))
             ORDER BY
                 1
-        ";
+        ',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -356,8 +384,12 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT relhasoids FROM pg_catalog.pg_class WHERE relname='{$table}'
-            AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}')";
+        $sql = \sprintf(
+            'SELECT relhasoids FROM pg_catalog.pg_class WHERE relname=\'%s\'
+            AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname=\'%s\')',
+            $table,
+            $c_schema
+        );
 
         $rs = $this->selectSet($sql);
 
@@ -447,19 +479,22 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getIndexes($table = '', $unique = false)
     {
         $this->clean($table);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT c2.relname AS indname, i.indisprimary, i.indisunique, i.indisclustered,
                 pg_catalog.pg_get_indexdef(i.indexrelid, 0, true) AS inddef
             FROM pg_catalog.pg_class c, pg_catalog.pg_class c2, pg_catalog.pg_index i
-            WHERE c.relname = '{$table}' AND pg_catalog.pg_table_is_visible(c.oid)
+            WHERE c.relname = \'%s\' AND pg_catalog.pg_table_is_visible(c.oid)
                 AND c.oid = i.indrelid AND i.indexrelid = c2.oid
-        ";
+        ',
+            $table
+        );
 
         if ($unique) {
             $sql .= ' AND i.indisunique ';
@@ -475,7 +510,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTriggers($table = '')
     {
@@ -483,20 +518,24 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT
+        $sql = \sprintf(
+            'SELECT
                 t.tgname, pg_catalog.pg_get_triggerdef(t.oid) AS tgdef,
-                CASE WHEN t.tgenabled = 'D' THEN FALSE ELSE TRUE END AS tgenabled, p.oid AS prooid,
-                p.proname || ' (' || pg_catalog.oidvectortypes(p.proargtypes) || ')' AS proproto,
+                CASE WHEN t.tgenabled = \'D\' THEN FALSE ELSE TRUE END AS tgenabled, p.oid AS prooid,
+                p.proname || \' (\' || pg_catalog.oidvectortypes(p.proargtypes) || \')\' AS proproto,
                 ns.nspname AS pronamespace
             FROM pg_catalog.pg_trigger t, pg_catalog.pg_proc p, pg_catalog.pg_namespace ns
-            WHERE t.tgrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}'
-                AND relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
+            WHERE t.tgrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
+                AND relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname=\'%s\'))
                 AND ( tgconstraint = 0 OR NOT EXISTS
                         (SELECT 1 FROM pg_catalog.pg_depend d    JOIN pg_catalog.pg_constraint c
                             ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
-                        WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = 'i' AND c.contype = 'f'))
+                        WHERE d.classid = t.tableoid AND d.objid = t.oid AND d.deptype = \'i\' AND c.contype = \'f\'))
                 AND p.oid=t.tgfoid
-                AND p.pronamespace = ns.oid";
+                AND p.pronamespace = ns.oid',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -506,7 +545,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getRules($table)
     {
@@ -514,13 +553,17 @@ trait TableTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT *
             FROM pg_catalog.pg_rules
             WHERE
-                schemaname='{$c_schema}' AND tablename='{$table}'
+                schemaname=\'%s\' AND tablename=\'%s\'
             ORDER BY rulename
-        ";
+        ',
+            $c_schema,
+            $table
+        );
 
         return $this->selectSet($sql);
     }
@@ -574,7 +617,11 @@ trait TableTrait
         $found = false;
         $first = true;
         $comment_sql = ''; //Accumulate comments for the columns
-        $sql = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (";
+        $sql = \sprintf(
+            'CREATE TABLE "%s"."%s" (',
+            $f_schema,
+            $name
+        );
 
         for ($i = 0; $i < $fields; ++$i) {
             $this->fieldClean($field[$i]);
@@ -593,17 +640,24 @@ trait TableTrait
             } else {
                 $first = false;
             }
-            $length[$i]=$length[$i] ?? '';
+            $length[$i] = $length[$i] ?? '';
+
             switch ($type[$i]) {
                     // Have to account for weird placing of length for with/without
                     // time zone types
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type[$i], 9);
-                    $sql .= "\"{$field[$i]}\" timestamp";
+                    $sql .= \sprintf(
+                        '"%s" timestamp',
+                        $field[$i]
+                    );
 
-                    if ('' !== $length[$i] ) {
-                        $sql .= "({$length[$i]})";
+                    if ('' !== $length[$i]) {
+                        $sql .= \sprintf(
+                            '(%s)',
+                            $length[$i]
+                        );
                     }
 
                     $sql .= $qual;
@@ -612,10 +666,16 @@ trait TableTrait
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type[$i], 4);
-                    $sql .= "\"{$field[$i]}\" time";
+                    $sql .= \sprintf(
+                        '"%s" time',
+                        $field[$i]
+                    );
 
                     if ('' !== $length[$i]) {
-                        $sql .= "({$length[$i]})";
+                        $sql .= \sprintf(
+                            '(%s)',
+                            $length[$i]
+                        );
                     }
 
                     $sql .= $qual;
@@ -623,10 +683,17 @@ trait TableTrait
                     break;
 
                 default:
-                     $sql .= "\"{$field[$i]}\" {$type[$i]}";
+                     $sql .= \sprintf(
+                         '"%s" %s',
+                         $field[$i],
+                         $type[$i]
+                     );
 
-                    if ('' !== $length[$i]  ) {
-                        $sql .= "({$length[$i]})";
+                    if ('' !== $length[$i]) {
+                        $sql .= \sprintf(
+                            '(%s)',
+                            $length[$i]
+                        );
                     }
             }
             // Add array qualifier if necessary
@@ -646,11 +713,20 @@ trait TableTrait
             }
 
             if ('' !== $default[$i]) {
-                $sql .= " DEFAULT {$default[$i]}";
+                $sql .= \sprintf(
+                    ' DEFAULT %s',
+                    $default[$i]
+                );
             }
 
             if ('' !== $colcomment[$i]) {
-                $comment_sql .= "COMMENT ON COLUMN \"{$name}\".\"{$field[$i]}\" IS '{$colcomment[$i]}';\n";
+                $comment_sql .= \sprintf(
+                    'COMMENT ON COLUMN "%s"."%s" IS \'%s\';
+',
+                    $name,
+                    $field[$i],
+                    $colcomment[$i]
+                );
             }
 
             $found = true;
@@ -665,7 +741,10 @@ trait TableTrait
 
         for ($i = 0; $i < $fields; ++$i) {
             if (isset($primarykey[$i])) {
-                $primarykeycolumns[] = "\"{$field[$i]}\"";
+                $primarykeycolumns[] = \sprintf(
+                    '"%s"',
+                    $field[$i]
+                );
             }
         }
 
@@ -685,7 +764,10 @@ trait TableTrait
         // Tablespace
         if ($this->hasTablespaces() && '' !== $tablespace) {
             $this->fieldClean($tablespace);
-            $sql .= " TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         $status = $this->execute($sql);
@@ -742,7 +824,11 @@ trait TableTrait
         $this->fieldClean($name);
         $this->fieldClean($like['schema']);
         $this->fieldClean($like['table']);
-        $like = "\"{$like['schema']}\".\"{$like['table']}\"";
+        $like = \sprintf(
+            '"%s"."%s"',
+            $like['schema'],
+            $like['table']
+        );
 
         $status = $this->beginTransaction();
 
@@ -750,7 +836,12 @@ trait TableTrait
             return -1;
         }
 
-        $sql = "CREATE TABLE \"{$f_schema}\".\"{$name}\" (LIKE {$like}";
+        $sql = \sprintf(
+            'CREATE TABLE "%s"."%s" (LIKE %s',
+            $f_schema,
+            $name,
+            $like
+        );
 
         if ($defaults) {
             $sql .= ' INCLUDING DEFAULTS';
@@ -768,7 +859,10 @@ trait TableTrait
 
         if ($this->hasTablespaces() && '' !== $tablespace) {
             $this->fieldClean($tablespace);
-            $sql .= " TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         $status = $this->execute($sql);
@@ -811,7 +905,11 @@ trait TableTrait
 
             return -1;
         }
-        $sql_sentence = "ALTER TABLE \"{$this->_schema}\".\"{$tblrs->fields['relname']}\" ";
+        $sql_sentence = \sprintf(
+            'ALTER TABLE "%s"."%s" ',
+            $this->_schema,
+            $tblrs->fields['relname']
+        );
         $status = $this->_alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, !$with_oids, $sql_sentence);
         //dump(['_alterTable' => [$status, $sql_sentence.$this->getLastExecutedSQL()]]);
 
@@ -828,9 +926,9 @@ trait TableTrait
      * Enables or disables the oid system column to a table a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs       The table RecordSet returned by getTable()
-     * @param null|string              $owner
-     * @param bool                     $withoutoids
+     * @param ADORecordSet $tblrs       The table RecordSet returned by getTable()
+     * @param null|string  $owner
+     * @param bool         $withoutoids
      *
      * @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -844,7 +942,11 @@ trait TableTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
 
-            $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
+            $alter_sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $tblrs->fields['relname']
+            );
             $change_sql = '   SET ';
 
             if ($withoutoids) {
@@ -864,8 +966,8 @@ trait TableTrait
      * Alter a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
-     * @param null|string              $owner
+     * @param ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param null|string  $owner
      *
      * @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -880,8 +982,15 @@ trait TableTrait
             // If owner has been changed, then do the alteration.  We are
             // careful to avoid this generally as changing owner is a
             // superuser only function.
-            $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
-            $change_sql = " OWNER TO \"{$owner}\"";
+            $alter_sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $tblrs->fields['relname']
+            );
+            $change_sql = \sprintf(
+                ' OWNER TO "%s"',
+                $owner
+            );
             $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
@@ -894,8 +1003,8 @@ trait TableTrait
      * Alter a table's tablespace
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs      The table RecordSet returned by getTable()
-     * @param null|string              $tablespace
+     * @param ADORecordSet $tblrs      The table RecordSet returned by getTable()
+     * @param null|string  $tablespace
      *
      * @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -910,8 +1019,15 @@ trait TableTrait
 
             // If tablespace has been changed, then do the alteration.  We
             // don't want to do this unnecessarily.
-            $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
-            $change_sql = " SET TABLESPACE \"{$tablespace}\"";
+            $alter_sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $tblrs->fields['relname']
+            );
+            $change_sql = \sprintf(
+                ' SET TABLESPACE "%s"',
+                $tablespace
+            );
             $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
@@ -924,8 +1040,8 @@ trait TableTrait
      * Alter a table's name
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs The table RecordSet returned by getTable()
-     * @param string                   $name  The new table's name
+     * @param ADORecordSet $tblrs The table RecordSet returned by getTable()
+     * @param string       $name  The new table's name
      *
      *  @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -939,8 +1055,15 @@ trait TableTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
 
-            $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
-            $change_sql = " RENAME TO \"{$name}\"";
+            $alter_sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $tblrs->fields['relname']
+            );
+            $change_sql = \sprintf(
+                ' RENAME TO "%s"',
+                $name
+            );
             $sql = \implode(' ', [$alter_sql, $change_sql]);
             $status = $this->execute($sql);
 
@@ -958,8 +1081,8 @@ trait TableTrait
      * Alter a table's schema
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs  The table RecordSet returned by getTable()
-     * @param null|string              $schema
+     * @param ADORecordSet $tblrs  The table RecordSet returned by getTable()
+     * @param null|string  $schema
      *
      *  @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -973,8 +1096,15 @@ trait TableTrait
             $this->fieldClean($f_schema);
             // If tablespace has been changed, then do the alteration.  We
             // don't want to do this unnecessarily.
-            $alter_sql = "ALTER TABLE \"{$f_schema}\".\"{$tblrs->fields['relname']}\" ";
-            $change_sql = " SET SCHEMA \"{$schema}\"";
+            $alter_sql = \sprintf(
+                'ALTER TABLE "%s"."%s" ',
+                $f_schema,
+                $tblrs->fields['relname']
+            );
+            $change_sql = \sprintf(
+                ' SET SCHEMA "%s"',
+                $schema
+            );
             $sql = \implode(' ', [$alter_sql, $change_sql]);
 
             $status = $this->execute($sql);
@@ -997,7 +1127,11 @@ trait TableTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
 
-        $sql = "TRUNCATE TABLE \"{$f_schema}\".\"{$table}\" ";
+        $sql = \sprintf(
+            'TRUNCATE TABLE "%s"."%s" ',
+            $f_schema,
+            $table
+        );
 
         if ($cascade) {
             $sql = $sql . ' CASCADE';
@@ -1014,7 +1148,7 @@ trait TableTrait
      * @param string $table   The table to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropTable($table, $cascade)
     {
@@ -1022,7 +1156,11 @@ trait TableTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
 
-        $sql = "DROP TABLE \"{$f_schema}\".\"{$table}\"";
+        $sql = \sprintf(
+            'DROP TABLE "%s"."%s"',
+            $f_schema,
+            $table
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -1097,7 +1235,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1110,7 +1248,11 @@ trait TableTrait
             $oid_str = '';
         }
 
-        return $this->selectSet("SELECT {$oid_str}* FROM \"{$relation}\"");
+        return $this->selectSet(\sprintf(
+            'SELECT %s* FROM "%s"',
+            $oid_str,
+            $relation
+        ));
     }
 
     /**
@@ -1118,7 +1260,7 @@ trait TableTrait
      *
      * @param string $table if given, return autovacuum info for the given table or return all informations for all table
      *
-     * @return \PHPPgAdmin\ArrayRecordSet A recordset
+     * @return ArrayRecordSet A recordset
      */
     public function getTableAutovacuum($table = '')
     {
@@ -1129,14 +1271,18 @@ trait TableTrait
             $c_schema = $this->_schema;
             $this->clean($c_schema);
 
-            $sql = "SELECT c.oid, nspname, relname, pg_catalog.array_to_string(reloptions, E',') AS reloptions
+            $sql = \sprintf(
+                'SELECT c.oid, nspname, relname, pg_catalog.array_to_string(reloptions, E\',\') AS reloptions
                 FROM pg_class c
                     LEFT JOIN pg_namespace n ON n.oid = c.relnamespace
-                WHERE c.relkind = 'r'::\"char\"
-                    AND n.nspname NOT IN ('pg_catalog','information_schema')
+                WHERE c.relkind = \'r\'::"char"
+                    AND n.nspname NOT IN (\'pg_catalog\',\'information_schema\')
                     AND c.reloptions IS NOT NULL
-                    AND c.relname = '{$table}' AND n.nspname = '{$c_schema}'
-                ORDER BY nspname, relname";
+                    AND c.relname = \'%s\' AND n.nspname = \'%s\'
+                ORDER BY nspname, relname',
+                $table,
+                $c_schema
+            );
         } else {
             $sql = "SELECT c.oid, nspname, relname, pg_catalog.array_to_string(reloptions, E',') AS reloptions
                 FROM pg_class c
@@ -1169,7 +1315,7 @@ trait TableTrait
             $_autovacs->moveNext();
         }
 
-        return new \PHPPgAdmin\ArrayRecordSet($autovacs);
+        return new ArrayRecordSet($autovacs);
     }
 
     /**
@@ -1183,7 +1329,10 @@ trait TableTrait
     {
         $this->clean($user);
 
-        return "SET SESSION AUTHORIZATION '{$user}';";
+        return \sprintf(
+            'SET SESSION AUTHORIZATION \'%s\';',
+            $user
+        );
     }
 
     /**
@@ -1198,7 +1347,7 @@ trait TableTrait
      * @param int    $vaccostdelay   vacuum cost delay
      * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function saveAutovacuum(
         $table,
@@ -1216,41 +1365,66 @@ trait TableTrait
 
         $params = [];
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" SET (";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" SET (',
+            $f_schema,
+            $table
+        );
 
         if (!empty($vacenabled)) {
             $this->clean($vacenabled);
-            $params[] = "autovacuum_enabled='{$vacenabled}'";
+            $params[] = \sprintf(
+                'autovacuum_enabled=\'%s\'',
+                $vacenabled
+            );
         }
 
         if (!empty($vacthreshold)) {
             $this->clean($vacthreshold);
-            $params[] = "autovacuum_vacuum_threshold='{$vacthreshold}'";
+            $params[] = \sprintf(
+                'autovacuum_vacuum_threshold=\'%s\'',
+                $vacthreshold
+            );
         }
 
         if (!empty($vacscalefactor)) {
             $this->clean($vacscalefactor);
-            $params[] = "autovacuum_vacuum_scale_factor='{$vacscalefactor}'";
+            $params[] = \sprintf(
+                'autovacuum_vacuum_scale_factor=\'%s\'',
+                $vacscalefactor
+            );
         }
 
         if (!empty($anathresold)) {
             $this->clean($anathresold);
-            $params[] = "autovacuum_analyze_threshold='{$anathresold}'";
+            $params[] = \sprintf(
+                'autovacuum_analyze_threshold=\'%s\'',
+                $anathresold
+            );
         }
 
         if (!empty($anascalefactor)) {
             $this->clean($anascalefactor);
-            $params[] = "autovacuum_analyze_scale_factor='{$anascalefactor}'";
+            $params[] = \sprintf(
+                'autovacuum_analyze_scale_factor=\'%s\'',
+                $anascalefactor
+            );
         }
 
         if (!empty($vaccostdelay)) {
             $this->clean($vaccostdelay);
-            $params[] = "autovacuum_vacuum_cost_delay='{$vaccostdelay}'";
+            $params[] = \sprintf(
+                'autovacuum_vacuum_cost_delay=\'%s\'',
+                $vaccostdelay
+            );
         }
 
         if (!empty($vaccostlimit)) {
             $this->clean($vaccostlimit);
-            $params[] = "autovacuum_vacuum_cost_limit='{$vaccostlimit}'";
+            $params[] = \sprintf(
+                'autovacuum_vacuum_cost_limit=\'%s\'',
+                $vaccostlimit
+            );
         }
 
         $sql = $sql . \implode(',', $params) . ');';
@@ -1265,7 +1439,7 @@ trait TableTrait
      *
      * @param string $table The table
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropAutovacuum($table)
     {
@@ -1274,11 +1448,15 @@ trait TableTrait
         $this->fieldClean($table);
 
         return $this->execute(
-            "
-            ALTER TABLE \"{$f_schema}\".\"{$table}\" RESET (autovacuum_enabled, autovacuum_vacuum_threshold,
+            \sprintf(
+                '
+            ALTER TABLE "%s"."%s" RESET (autovacuum_enabled, autovacuum_vacuum_threshold,
                 autovacuum_vacuum_scale_factor, autovacuum_analyze_threshold, autovacuum_analyze_scale_factor,
                 autovacuum_vacuum_cost_delay, autovacuum_vacuum_cost_limit
-            );"
+            );',
+                $f_schema,
+                $table
+            )
         );
     }
 
@@ -1324,13 +1502,13 @@ trait TableTrait
      * Protected method which alter a table
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblrs       The table recordSet returned by getTable()
-     * @param string                   $name        The new name for the table
-     * @param string                   $owner       The new owner for the table
-     * @param string                   $schema      The new schema for the table
-     * @param string                   $comment     The comment on the table
-     * @param string                   $tablespace  The new tablespace for the table ('' means leave as is)
-     * @param bool                     $withoutoids If set to TRUE, will drop oids column
+     * @param ADORecordSet $tblrs       The table recordSet returned by getTable()
+     * @param string       $name        The new name for the table
+     * @param string       $owner       The new owner for the table
+     * @param string       $schema      The new schema for the table
+     * @param string       $comment     The comment on the table
+     * @param string       $tablespace  The new tablespace for the table ('' means leave as is)
+     * @param bool         $withoutoids If set to TRUE, will drop oids column
      *
      * @return int 0 success
      */
@@ -1351,7 +1529,11 @@ trait TableTrait
         // Owner
         $this->fieldClean($owner);
         [$TableOwnerStatus,$TableOwnerSQL] = $this->alterTableOwner($tblrs, $owner);
-        $this->lastExecutedSql .= $TableOwnerSQL ? \sprintf('%s%s', \PHP_EOL, $TableOwnerSQL) : '';
+        $this->lastExecutedSql .= $TableOwnerSQL ? \sprintf(
+            '%s%s',
+            \PHP_EOL,
+            $TableOwnerSQL
+        ) : '';
         //dump(['alterTableOwner' => [$TableOwnerStatus,$TableOwnerSQL]]);
 
         if (0 !== $TableOwnerStatus) {
@@ -1361,7 +1543,11 @@ trait TableTrait
         // Tablespace
         $this->fieldClean($tablespace);
         [$TableTablespaceStatus,$TableTablespaceSQL] = $this->alterTableTablespace($tblrs, $tablespace);
-        $this->lastExecutedSql .= $TableTablespaceSQL ? \sprintf('%s%s', \PHP_EOL, $TableTablespaceSQL) : '';
+        $this->lastExecutedSql .= $TableTablespaceSQL ? \sprintf(
+            '%s%s',
+            \PHP_EOL,
+            $TableTablespaceSQL
+        ) : '';
         //dump(['alterTableTablespace' => [$TableTablespaceStatus,$TableTablespaceSQL]]);
 
         if (0 !== $TableTablespaceStatus) {
@@ -1371,7 +1557,11 @@ trait TableTrait
         // Rename
         $this->fieldClean($name);
         [$TableNameStatus,$TableNameSQL] = $this->alterTableName($tblrs, $name);
-        $this->lastExecutedSql .= $TableNameSQL ? \sprintf('%s%s', \PHP_EOL, $TableNameSQL) : '';
+        $this->lastExecutedSql .= $TableNameSQL ? \sprintf(
+            '%s%s',
+            \PHP_EOL,
+            $TableNameSQL
+        ) : '';
         //dump(['alterTableName' => [$TableNameStatus,$TableNameSQL]]);
 
         if (0 !== $TableNameStatus) {
@@ -1381,14 +1571,22 @@ trait TableTrait
         // Schema
         $this->fieldClean($schema);
         [$TableSchemaStatus,$TableSchemaSQL] = $this->alterTableSchema($tblrs, $schema);
-        $this->lastExecutedSql .= $TableSchemaSQL ? \sprintf('%s%s', \PHP_EOL, $TableSchemaSQL) : '';
+        $this->lastExecutedSql .= $TableSchemaSQL ? \sprintf(
+            '%s%s',
+            \PHP_EOL,
+            $TableSchemaSQL
+        ) : '';
         //dump(['alterTableSchema' => [$TableSchemaStatus,$TableSchemaSQL]]);
 
         if (0 !== $TableSchemaStatus) {
             return -7;
         }
         [$TableOidsStatus,$TableOidsSQL] = $this->alterTableOids($tblrs, $withoutoids);
-        $this->lastExecutedSql .= $TableOidsSQL ? \sprintf('%s%s', \PHP_EOL, $TableOidsSQL) : '';
+        $this->lastExecutedSql .= $TableOidsSQL ? \sprintf(
+            '%s%s',
+            \PHP_EOL,
+            $TableOidsSQL
+        ) : '';
         //dump(['alterTableOids' => [$TableOidsStatus,$TableOidsSQL]]);
         if (0 !== $TableOidsStatus) {
             return -7;
@@ -1400,19 +1598,19 @@ trait TableTrait
     /**
      * Dumps serial-like columns in the table.
      *
-     * @param \PHPPgAdmin\ADORecordSet $atts             table attributes
-     * @param \PHPPgAdmin\ADORecordSet $tblfields        table fields object
-     * @param string                   $sql              The sql sentence
-     *                                                   generated so far
-     * @param string                   $col_comments_sql Column comments,
-     *                                                   passed by reference
-     * @param int                      $i                current counter to
-     *                                                   know if we should
-     *                                                   append a comma to the
-     *                                                   sentence
-     * @param int                      $num              Table attributes
-     *                                                   count + table
-     *                                                   constraints count
+     * @param ADORecordSet $atts             table attributes
+     * @param ADORecordSet $tblfields        table fields object
+     * @param string       $sql              The sql sentence
+     *                                       generated so far
+     * @param string       $col_comments_sql Column comments,
+     *                                       passed by reference
+     * @param int          $i                current counter to
+     *                                       know if we should
+     *                                       append a comma to the
+     *                                       sentence
+     * @param int          $num              Table attributes
+     *                                       count + table
+     *                                       constraints count
      *
      * @return string original $sql plus appended strings
      */
@@ -1420,7 +1618,10 @@ trait TableTrait
     {
         while (!$atts->EOF) {
             $this->fieldClean($atts->fields['attname']);
-            $sql .= "    \"{$atts->fields['attname']}\"";
+            $sql .= \sprintf(
+                '    "%s"',
+                $atts->fields['attname']
+            );
             // Dump SERIAL and BIGSERIAL columns correctly
             if ($this->phpBool($atts->fields['attisserial']) &&
                 ('integer' === $atts->fields['type'] || 'bigint' === $atts->fields['type'])
@@ -1440,7 +1641,10 @@ trait TableTrait
 
                 // Add default if necessary
                 if (null !== $atts->fields['adsrc']) {
-                    $sql .= " DEFAULT {$atts->fields['adsrc']}";
+                    $sql .= \sprintf(
+                        ' DEFAULT %s',
+                        $atts->fields['adsrc']
+                    );
                 }
             }
 
@@ -1454,7 +1658,13 @@ trait TableTrait
             // Does this column have a comment?
             if (null !== $atts->fields['comment']) {
                 $this->clean($atts->fields['comment']);
-                $col_comments_sql .= "COMMENT ON COLUMN \"{$tblfields->fields['relname']}\".\"{$atts->fields['attname']}\"  IS '{$atts->fields['comment']}';\n";
+                $col_comments_sql .= \sprintf(
+                    'COMMENT ON COLUMN "%s"."%s"  IS \'%s\';
+',
+                    $tblfields->fields['relname'],
+                    $atts->fields['attname'],
+                    $atts->fields['comment']
+                );
             }
 
             $atts->moveNext();
@@ -1467,20 +1677,23 @@ trait TableTrait
     /**
      * Dumps constraints.
      *
-     * @param \PHPPgAdmin\ADORecordSet $cons  The table constraints
-     * @param string                   $table The table to define
-     * @param string                   $sql   The sql sentence generated so
-     *                                        far
-     * @param mixed                    $i
-     * @param int                      $num   Table attributes count + table
-     *                                        constraints count
+     * @param ADORecordSet $cons  The table constraints
+     * @param string       $table The table to define
+     * @param string       $sql   The sql sentence generated so
+     *                            far
+     * @param mixed        $i
+     * @param int          $num   Table attributes count + table
+     *                            constraints count
      */
     private function _dumpConstraints($cons, $table, $sql, $i, $num): ?string
     {
         // Output all table constraints
         while (!$cons->EOF) {
             $this->fieldClean($cons->fields['conname']);
-            $sql .= "    CONSTRAINT \"{$cons->fields['conname']}\" ";
+            $sql .= \sprintf(
+                '    CONSTRAINT "%s" ',
+                $cons->fields['conname']
+            );
             // Nasty hack to support pre-7.4 PostgreSQL
             if (null !== $cons->fields['consrc']) {
                 $sql .= $cons->fields['consrc'];
@@ -1522,9 +1735,9 @@ trait TableTrait
     /**
      * Dumps col statistics.
      *
-     * @param \PHPPgAdmin\ADORecordSet $atts      table attributes
-     * @param \PHPPgAdmin\ADORecordSet $tblfields table field attributes
-     * @param string                   $sql       The sql sentence generated so far
+     * @param ADORecordSet $atts      table attributes
+     * @param ADORecordSet $tblfields table field attributes
+     * @param string       $sql       The sql sentence generated so far
      */
     private function _dumpColStats($atts, $tblfields, $sql): ?string
     {
@@ -1540,7 +1753,14 @@ trait TableTrait
                     $sql .= "\n";
                     $first = false;
                 }
-                $sql .= "ALTER TABLE ONLY \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STATISTICS {$atts->fields['attstattarget']};\n";
+                $sql .= \sprintf(
+                    'ALTER TABLE ONLY "%s"."%s" ALTER COLUMN "%s" SET STATISTICS %s;
+',
+                    $tblfields->fields['nspname'],
+                    $tblfields->fields['relname'],
+                    $atts->fields['attname'],
+                    $atts->fields['attstattarget']
+                );
             }
             // Then storage
             if ($atts->fields['attstorage'] !== $atts->fields['typstorage']) {
@@ -1568,7 +1788,14 @@ trait TableTrait
 
                         return null;
                 }
-                $sql .= "ALTER TABLE ONLY \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" ALTER COLUMN \"{$atts->fields['attname']}\" SET STORAGE {$storage};\n";
+                $sql .= \sprintf(
+                    'ALTER TABLE ONLY "%s"."%s" ALTER COLUMN "%s" SET STORAGE %s;
+',
+                    $tblfields->fields['nspname'],
+                    $tblfields->fields['relname'],
+                    $atts->fields['attname'],
+                    $storage
+                );
             }
 
             $atts->moveNext();
@@ -1580,9 +1807,9 @@ trait TableTrait
     /**
      * Dumps privileges.
      *
-     * @param \PHPPgAdmin\ADORecordSet $privs     The table privileges
-     * @param \PHPPgAdmin\ADORecordSet $tblfields The table fields definition
-     * @param string                   $sql       The sql sentence generated so far
+     * @param ADORecordSet $privs     The table privileges
+     * @param ADORecordSet $tblfields The table fields definition
+     * @param string       $sql       The sql sentence generated so far
      */
     private function _dumpPrivileges($privs, $tblfields, $sql): ?string
     {
@@ -1595,7 +1822,12 @@ trait TableTrait
          * wire-in knowledge about the default public privileges for different
          * kinds of objects.
          */
-        $sql .= "REVOKE ALL ON TABLE \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" FROM PUBLIC;\n";
+        $sql .= \sprintf(
+            'REVOKE ALL ON TABLE "%s"."%s" FROM PUBLIC;
+',
+            $tblfields->fields['nspname'],
+            $tblfields->fields['relname']
+        );
 
         foreach ($privs as $v) {
             // Get non-GRANT OPTION privs
@@ -1610,11 +1842,18 @@ trait TableTrait
             if ($this->hasGrantOption() && $v[3] !== $tblfields->fields['relowner']) {
                 $grantor = $v[3];
                 $this->clean($grantor);
-                $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
+                $sql .= \sprintf(
+                    'SET SESSION AUTHORIZATION \'%s\';
+',
+                    $grantor
+                );
             }
 
             // Output privileges with no GRANT OPTION
-            $sql .= 'GRANT ' . \implode(', ', $nongrant) . " ON TABLE \"{$tblfields->fields['relname']}\" TO ";
+            $sql .= 'GRANT ' . \implode(', ', $nongrant) . \sprintf(
+                ' ON TABLE "%s" TO ',
+                $tblfields->fields['relname']
+            );
 
             switch ($v[0]) {
                 case 'public':
@@ -1624,12 +1863,20 @@ trait TableTrait
                 case 'user':
                 case 'role':
                     $this->fieldClean($v[1]);
-                    $sql .= "\"{$v[1]}\";\n";
+                    $sql .= \sprintf(
+                        '"%s";
+',
+                        $v[1]
+                    );
 
                     break;
                 case 'group':
                     $this->fieldClean($v[1]);
-                    $sql .= "GROUP \"{$v[1]}\";\n";
+                    $sql .= \sprintf(
+                        'GROUP "%s";
+',
+                        $v[1]
+                    );
 
                     break;
 
@@ -1656,10 +1903,17 @@ trait TableTrait
             if ($this->hasGrantOption() && $v[3] !== $tblfields->fields['relowner']) {
                 $grantor = $v[3];
                 $this->clean($grantor);
-                $sql .= "SET SESSION AUTHORIZATION '{$grantor}';\n";
+                $sql .= \sprintf(
+                    'SET SESSION AUTHORIZATION \'%s\';
+',
+                    $grantor
+                );
             }
 
-            $sql .= 'GRANT ' . \implode(', ', $v[4]) . " ON \"{$tblfields->fields['relname']}\" TO ";
+            $sql .= 'GRANT ' . \implode(', ', $v[4]) . \sprintf(
+                ' ON "%s" TO ',
+                $tblfields->fields['relname']
+            );
 
             switch ($v[0]) {
                 case 'public':
@@ -1669,12 +1923,18 @@ trait TableTrait
                 case 'user':
                 case 'role':
                     $this->fieldClean($v[1]);
-                    $sql .= "\"{$v[1]}\"";
+                    $sql .= \sprintf(
+                        '"%s"',
+                        $v[1]
+                    );
 
                     break;
                 case 'group':
                     $this->fieldClean($v[1]);
-                    $sql .= "GROUP \"{$v[1]}\"";
+                    $sql .= \sprintf(
+                        'GROUP "%s"',
+                        $v[1]
+                    );
 
                     break;
 
@@ -1696,24 +1956,39 @@ trait TableTrait
     /**
      * Dumps a create.
      *
-     * @param \PHPPgAdmin\ADORecordSet $tblfields   table fields object
-     * @param string                   $sql         The sql sentence generated so far
-     * @param string                   $cleanprefix set to '-- ' to avoid issuing DROP statement
-     * @param mixed                    $fields
+     * @param ADORecordSet $tblfields   table fields object
+     * @param string       $sql         The sql sentence generated so far
+     * @param string       $cleanprefix set to '-- ' to avoid issuing DROP statement
+     * @param mixed        $fields
      *
      * @return string original $sql plus appended strings
      */
     private function _dumpCreate($tblfields, $sql, $cleanprefix)
     {
         // Set schema search path
-        $sql .= "SET search_path = \"{$tblfields->fields['nspname']}\", pg_catalog;\n\n";
+        $sql .= \sprintf(
+            'SET search_path = "%s", pg_catalog;
+
+',
+            $tblfields->fields['nspname']
+        );
 
         // Begin CREATE TABLE definition
         $sql .= "-- Definition\n\n";
         // DROP TABLE must be fully qualified in case a table with the same name exists
         $sql .= $cleanprefix . 'DROP TABLE ';
-        $sql .= "\"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\";\n";
-        $sql .= "CREATE TABLE \"{$tblfields->fields['nspname']}\".\"{$tblfields->fields['relname']}\" (\n";
+        $sql .= \sprintf(
+            '"%s"."%s";
+',
+            $tblfields->fields['nspname'],
+            $tblfields->fields['relname']
+        );
+        $sql .= \sprintf(
+            'CREATE TABLE "%s"."%s" (
+',
+            $tblfields->fields['nspname'],
+            $tblfields->fields['relname']
+        );
 
         return $sql;
     }
@@ -1724,11 +1999,12 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 a.attname,
                 a.attnum,
@@ -1756,15 +2032,18 @@ trait TableTrait
             LEFT JOIN pg_catalog.pg_type t  ON a.atttypid=t.oid
             LEFT JOIN  pg_catalog.pg_depend pd  ON pd.refobjid=a.attrelid
                                                 AND pd.refobjsubid=a.attnum
-                                                AND pd.deptype='i'
+                                                AND pd.deptype=\'i\'
             LEFT JOIN pg_catalog.pg_class pc ON pd.objid=pc.oid
                                             AND pd.classid=pc.tableoid
                                             AND pd.refclassid=pc.tableoid
-                                            AND pc.relkind='S'
-            WHERE tbl.tablename='{$table}'
-            AND tbl.schemaname='{$c_schema}'
+                                            AND pc.relkind=\'S\'
+            WHERE tbl.tablename=\'%s\'
+            AND tbl.schemaname=\'%s\'
             AND a.attnum > 0 AND NOT a.attisdropped
-            ORDER BY a.attnum";
+            ORDER BY a.attnum',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -1776,11 +2055,12 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {
-        $sql = "
+        $sql = \sprintf(
+            '
                 SELECT
                     a.attname, a.attnum,
                     pg_catalog.format_type(a.atttypid, a.atttypmod) as type,
@@ -1795,10 +2075,14 @@ trait TableTrait
                     AND a.attnum=adef.adnum
                     LEFT JOIN pg_catalog.pg_type t ON a.atttypid=t.oid
                 WHERE
-                    a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}'
+                    a.attrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
                         AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-                        nspname = '{$c_schema}'))
-                    AND a.attname = '{$field}'";
+                        nspname = \'%s\'))
+                    AND a.attname = \'%s\'',
+            $table,
+            $c_schema,
+            $field
+        );
 
         return $this->selectSet($sql);
     }

@@ -6,14 +6,25 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\ArrayRecordSet;
+use PHPPgAdmin\ContainerUtils;
+use PHPPgAdmin\Misc;
+use PHPPgAdmin\Traits\HelperTrait;
+use PHPPgAdmin\ViewManager;
 use PHPPgAdmin\XHtml;
+use PHPPgAdmin\XHtml\HTMLFooterController;
+use PHPPgAdmin\XHtml\HTMLHeaderController;
+use PHPPgAdmin\XHtml\HTMLNavbarController;
+use PHPPgAdmin\XHtml\HTMLTableController;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
  */
 class BaseController
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public $appLangFiles = [];
 
@@ -50,12 +61,12 @@ class BaseController
     public $msg = '';
 
     /**
-     * @var \PHPPgAdmin\ViewManager
+     * @var ViewManager
      */
     public $view;
 
     /**
-     * @var \PHPPgAdmin\Misc
+     * @var Misc
      */
     public $misc;
 
@@ -64,7 +75,7 @@ class BaseController
     public $phpMinVer;
 
     /**
-     * @var \PHPPgAdmin\ContainerUtils
+     * @var ContainerUtils
      */
     protected $container;
 
@@ -113,10 +124,10 @@ class BaseController
     /**
      * Constructs the base controller (common for almost all controllers).
      *
-     * @param \PHPPgAdmin\ContainerUtils $container        the $app container
-     * @param bool                       $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
+     * @param ContainerUtils $container        the $app container
+     * @param bool           $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
      */
-    public function __construct(\PHPPgAdmin\ContainerUtils $container)
+    public function __construct(ContainerUtils $container)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');
@@ -207,12 +218,12 @@ class BaseController
     /**
      * Display a table of data.
      *
-     * @param \ADORecordSet|\PHPPgAdmin\ArrayRecordSet $tabledata a set of data to be formatted
-     * @param array                                    $columns   An associative array of columns to be displayed:
-     * @param array                                    $actions   Actions that can be performed on each object:
-     * @param string                                   $place     Place where the $actions are displayed. Like 'display-browse',
-     * @param string                                   $nodata    (optional) Message to display if data set is empty
-     * @param callable                                 $pre_fn    (optional) callback closure for each row
+     * @param ADORecordSet|ArrayRecordSet $tabledata a set of data to be formatted
+     * @param array                       $columns   An associative array of columns to be displayed:
+     * @param array                       $actions   Actions that can be performed on each object:
+     * @param string                      $place     Place where the $actions are displayed. Like 'display-browse',
+     * @param string                      $nodata    (optional) Message to display if data set is empty
+     * @param callable                    $pre_fn    (optional) callback closure for each row
      *
      * @return string the html of the table
      */
@@ -230,7 +241,7 @@ class BaseController
      *
      * @param array $tabs The tabs
      *
-     * @return \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     * @return ADORecordSet|ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
      */
     public function adjustTabsForTree(&$tabs)
     {
@@ -242,12 +253,12 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\ADORecordSet|\PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
-     * @param array                                               $attrs     Attributes for tree items
-     * @param string                                              $section   The section where the branch is linked in the tree
-     * @param bool                                                $print     either to return or echo the result
+     * @param ADORecordSet|ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param array                       $attrs     Attributes for tree items
+     * @param string                      $section   The section where the branch is linked in the tree
+     * @param bool                        $print     either to return or echo the result
      *
-     * @return \Slim\Http\Response|string the json rendered tree
+     * @return Response|string the json rendered tree
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
@@ -273,10 +284,10 @@ class BaseController
     }
 
     /**
-     * @param (array|mixed)[][] $navlinks
-     * @param string            $place
-     * @param array             $env
-     * @param mixed             $do_print
+     * @param (array[][]|mixed)[][] $navlinks
+     * @param string                $place
+     * @param array                 $env
+     * @param mixed                 $do_print
      */
     public function printNavLinks(array $navlinks, string $place, array $env = [], $do_print = true)
     {
@@ -466,7 +477,7 @@ class BaseController
     public function printMsg($msg, $do_print = true)
     {
         $html = '';
-        $msg = \htmlspecialchars(\PHPPgAdmin\ContainerUtils::br2ln($msg));
+        $msg = \htmlspecialchars(ContainerUtils::br2ln($msg));
 
         if ('' !== $msg) {
             $html .= '<p class="message">' . \nl2br($msg) . '</p>' . \PHP_EOL;
@@ -485,16 +496,19 @@ class BaseController
     {
         if (false === $this->misc->getNoDBConnection()) {
             if (null === $this->misc->getServerId()) {
-                $servers_controller = new \PHPPgAdmin\Controller\ServersController($this->container);
+                $servers_controller = new ServersController($this->container);
 
                 $servers_controller->render();
             } else {
                 $_server_info = $this->misc->getServerInfo();
                 // Redirect to the login form if not logged in
                 if (!isset($_server_info['username'])) {
-                    $msg = \sprintf($this->lang['strlogoutmsg'], $_server_info['desc']);
+                    $msg = \sprintf(
+                        $this->lang['strlogoutmsg'],
+                        $_server_info['desc']
+                    );
 
-                    $servers_controller = new \PHPPgAdmin\Controller\ServersController($container);
+                    $servers_controller = new ServersController($container);
 
                     $servers_controller->render();
                 }
@@ -505,7 +519,7 @@ class BaseController
     private function _getTableController()
     {
         if (null === $this->_table_controller) {
-            $this->_table_controller = new XHtml\HTMLTableController($this->getContainer(), $this->controller_name);
+            $this->_table_controller = new HTMLTableController($this->getContainer(), $this->controller_name);
         }
 
         return $this->_table_controller;
@@ -514,7 +528,7 @@ class BaseController
     private function _getFooterController()
     {
         if (null === $this->_footer_controller) {
-            $this->_footer_controller = new XHtml\HTMLFooterController($this->getContainer(), $this->controller_name);
+            $this->_footer_controller = new HTMLFooterController($this->getContainer(), $this->controller_name);
         }
 
         return $this->_footer_controller;
@@ -523,7 +537,7 @@ class BaseController
     private function _getHeaderController()
     {
         if (null === $this->_header_controller) {
-            $this->_header_controller = new XHtml\HTMLHeaderController($this->getContainer(), $this->controller_name);
+            $this->_header_controller = new HTMLHeaderController($this->getContainer(), $this->controller_name);
         }
 
         return $this->_header_controller;
@@ -532,7 +546,7 @@ class BaseController
     private function _getNavbarController()
     {
         if (null === $this->_trail_controller) {
-            $this->_trail_controller = new XHtml\HTMLNavbarController($this->getContainer(), $this->controller_name);
+            $this->_trail_controller = new HTMLNavbarController($this->getContainer(), $this->controller_name);
         }
 
         return $this->_trail_controller;

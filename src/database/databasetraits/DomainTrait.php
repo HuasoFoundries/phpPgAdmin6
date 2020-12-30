@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for domains manipulation.
  */
@@ -16,7 +18,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain to fetch
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDomain($domain)
     {
@@ -24,21 +26,25 @@ trait DomainTrait
         $this->clean($c_schema);
         $this->clean($domain);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 t.typname AS domname,
                 pg_catalog.format_type(t.typbasetype, t.typtypmod) AS domtype,
                 t.typnotnull AS domnotnull,
                 t.typdefault AS domdef,
                 pg_catalog.pg_get_userbyid(t.typowner) AS domowner,
-                pg_catalog.obj_description(t.oid, 'pg_type') AS domcomment
+                pg_catalog.obj_description(t.oid, \'pg_type\') AS domcomment
             FROM
                 pg_catalog.pg_type t
             WHERE
-                t.typtype = 'd'
-                AND t.typname = '{$domain}'
+                t.typtype = \'d\'
+                AND t.typname = \'%s\'
                 AND t.typnamespace = (SELECT oid FROM pg_catalog.pg_namespace
-                    WHERE nspname = '{$c_schema}')";
+                    WHERE nspname = \'%s\')',
+            $domain,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -46,28 +52,31 @@ trait DomainTrait
     /**
      * Return all domains in current schema.  Excludes domain constraints.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDomains()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 t.typname AS domname,
                 pg_catalog.format_type(t.typbasetype, t.typtypmod) AS domtype,
                 t.typnotnull AS domnotnull,
                 t.typdefault AS domdef,
                 pg_catalog.pg_get_userbyid(t.typowner) AS domowner,
-                pg_catalog.obj_description(t.oid, 'pg_type') AS domcomment
+                pg_catalog.obj_description(t.oid, \'pg_type\') AS domcomment
             FROM
                 pg_catalog.pg_type t
             WHERE
-                t.typtype = 'd'
+                t.typtype = \'d\'
                 AND t.typnamespace = (SELECT oid FROM pg_catalog.pg_namespace
-                    WHERE nspname='{$c_schema}')
-            ORDER BY t.typname";
+                    WHERE nspname=\'%s\')
+            ORDER BY t.typname',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -77,7 +86,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain whose constraints to fetch
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDomainConstraints($domain)
     {
@@ -85,7 +94,8 @@ trait DomainTrait
         $this->clean($c_schema);
         $this->clean($domain);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 conname,
                 contype,
@@ -95,12 +105,15 @@ trait DomainTrait
             WHERE
                 contypid = (
                     SELECT oid FROM pg_catalog.pg_type
-                    WHERE typname='{$domain}'
+                    WHERE typname=\'%s\'
                         AND typnamespace = (
                             SELECT oid FROM pg_catalog.pg_namespace
-                            WHERE nspname = '{$c_schema}')
+                            WHERE nspname = \'%s\')
                 )
-            ORDER BY conname";
+            ORDER BY conname',
+            $domain,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -116,7 +129,7 @@ trait DomainTrait
      * @param string $default Default value for domain
      * @param string $check   A CHECK constraint if there is one
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function createDomain($domain, $type, $length, $array, $notnull, $default, $check)
     {
@@ -124,7 +137,11 @@ trait DomainTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($domain);
 
-        $sql = "CREATE DOMAIN \"{$f_schema}\".\"{$domain}\" AS ";
+        $sql = \sprintf(
+            'CREATE DOMAIN "%s"."%s" AS ',
+            $f_schema,
+            $domain
+        );
 
         if ('' === $length) {
             $sql .= $type;
@@ -135,18 +152,30 @@ trait DomainTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type, 9);
-                    $sql .= "timestamp({$length}){$qual}";
+                    $sql .= \sprintf(
+                        'timestamp(%s)%s',
+                        $length,
+                        $qual
+                    );
 
                     break;
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type, 4);
-                    $sql .= "time({$length}){$qual}";
+                    $sql .= \sprintf(
+                        'time(%s)%s',
+                        $length,
+                        $qual
+                    );
 
                     break;
 
                 default:
-                    $sql .= "{$type}({$length})";
+                    $sql .= \sprintf(
+                        '%s(%s)',
+                        $type,
+                        $length
+                    );
             }
         }
 
@@ -160,11 +189,17 @@ trait DomainTrait
         }
 
         if ('' !== $default) {
-            $sql .= " DEFAULT {$default}";
+            $sql .= \sprintf(
+                ' DEFAULT %s',
+                $default
+            );
         }
 
         if ($this->hasDomainConstraints() && '' !== $check) {
-            $sql .= " CHECK ({$check})";
+            $sql .= \sprintf(
+                ' CHECK (%s)',
+                $check
+            );
         }
 
         return $this->execute($sql);
@@ -197,9 +232,18 @@ trait DomainTrait
 
         // Default
         if ('' === $domdefault) {
-            $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP DEFAULT";
+            $sql = \sprintf(
+                'ALTER DOMAIN "%s"."%s" DROP DEFAULT',
+                $f_schema,
+                $domain
+            );
         } else {
-            $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" SET DEFAULT {$domdefault}";
+            $sql = \sprintf(
+                'ALTER DOMAIN "%s"."%s" SET DEFAULT %s',
+                $f_schema,
+                $domain,
+                $domdefault
+            );
         }
 
         $status = $this->execute($sql);
@@ -212,9 +256,17 @@ trait DomainTrait
 
         // NOT NULL
         if ($domnotnull) {
-            $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" SET NOT NULL";
+            $sql = \sprintf(
+                'ALTER DOMAIN "%s"."%s" SET NOT NULL',
+                $f_schema,
+                $domain
+            );
         } else {
-            $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP NOT NULL";
+            $sql = \sprintf(
+                'ALTER DOMAIN "%s"."%s" DROP NOT NULL',
+                $f_schema,
+                $domain
+            );
         }
 
         $status = $this->execute($sql);
@@ -226,7 +278,12 @@ trait DomainTrait
         }
 
         // Owner
-        $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" OWNER TO \"{$domowner}\"";
+        $sql = \sprintf(
+            'ALTER DOMAIN "%s"."%s" OWNER TO "%s"',
+            $f_schema,
+            $domain,
+            $domowner
+        );
 
         $status = $this->execute($sql);
 
@@ -245,7 +302,7 @@ trait DomainTrait
      * @param string $domain  The name of the domain to drop
      * @param string $cascade True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropDomain($domain, $cascade)
     {
@@ -253,7 +310,11 @@ trait DomainTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($domain);
 
-        $sql = "DROP DOMAIN \"{$f_schema}\".\"{$domain}\"";
+        $sql = \sprintf(
+            'DROP DOMAIN "%s"."%s"',
+            $f_schema,
+            $domain
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -269,7 +330,7 @@ trait DomainTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function addDomainCheckConstraint($domain, $definition, $name = '')
     {
@@ -278,13 +339,23 @@ trait DomainTrait
         $this->fieldClean($domain);
         $this->fieldClean($name);
 
-        $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" ADD ";
+        $sql = \sprintf(
+            'ALTER DOMAIN "%s"."%s" ADD ',
+            $f_schema,
+            $domain
+        );
 
         if ('' !== $name) {
-            $sql .= "CONSTRAINT \"{$name}\" ";
+            $sql .= \sprintf(
+                'CONSTRAINT "%s" ',
+                $name
+            );
         }
 
-        $sql .= "CHECK ({$definition})";
+        $sql .= \sprintf(
+            'CHECK (%s)',
+            $definition
+        );
 
         return $this->execute($sql);
     }
@@ -296,7 +367,7 @@ trait DomainTrait
      * @param string $constraint The constraint to remove
      * @param bool   $cascade    True to cascade, false otherwise
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropDomainConstraint($domain, $constraint, $cascade)
     {
@@ -305,7 +376,12 @@ trait DomainTrait
         $this->fieldClean($domain);
         $this->fieldClean($constraint);
 
-        $sql = "ALTER DOMAIN \"{$f_schema}\".\"{$domain}\" DROP CONSTRAINT \"{$constraint}\"";
+        $sql = \sprintf(
+            'ALTER DOMAIN "%s"."%s" DROP CONSTRAINT "%s"',
+            $f_schema,
+            $domain,
+            $constraint
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';

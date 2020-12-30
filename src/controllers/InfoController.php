@@ -105,7 +105,10 @@ class InfoController extends BaseController
 
     private function _printChildren($children): void
     {
-        echo "<h3>{$this->lang['strchildtables']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strchildtables']
+        ) . \PHP_EOL;
 
         $columns = [
             'schema' => [
@@ -141,28 +144,64 @@ class InfoController extends BaseController
 
     private function _printTablestatstups($tablestatstups): void
     {
-        echo "<h3>{$this->lang['strrowperf']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strrowperf']
+        ) . \PHP_EOL;
 
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"2\">{$this->lang['strsequential']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"2\">{$this->lang['strindex']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strrows2']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="2">%s</th>',
+            $this->lang['strsequential']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="2">%s</th>',
+            $this->lang['strindex']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="3">%s</th>',
+            $this->lang['strrows2']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strread']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strfetch']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strinsert']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strupdate']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdelete']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strscan']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strread']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strscan']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strfetch']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strinsert']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strupdate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdelete']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         $i = 0;
 
         while (!$tablestatstups->EOF) {
             $id = (0 === ($i % 2) ? '1' : '2');
-            echo "\t<tr class=\"data{$id}\">" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr class="data%s">',
+                $id
+            ) . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_scan'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['seq_tup_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['idx_scan'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -180,34 +219,88 @@ class InfoController extends BaseController
 
     private function _printTablestatsio($tablestatsio): void
     {
-        echo "<h3>{$this->lang['strioperf']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strioperf']
+        ) . \PHP_EOL;
 
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strheap']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strindex']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strtoast']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\" colspan=\"3\">{$this->lang['strtoastindex']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="3">%s</th>',
+            $this->lang['strheap']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="3">%s</th>',
+            $this->lang['strindex']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="3">%s</th>',
+            $this->lang['strtoast']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data" colspan="3">%s</th>',
+            $this->lang['strtoastindex']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdisk']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strcache']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strpercent']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdisk']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strcache']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strpercent']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdisk']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strcache']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strpercent']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdisk']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strcache']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strpercent']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         $i = 0;
 
         while (!$tablestatsio->EOF) {
             $id = (0 === ($i % 2) ? '1' : '2');
-            echo "\t<tr class=\"data{$id}\">" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr class="data%s">',
+                $id
+            ) . \PHP_EOL;
 
             $total = $tablestatsio->fields['heap_blks_hit'] + $tablestatsio->fields['heap_blks_read'];
 
@@ -219,7 +312,11 @@ class InfoController extends BaseController
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
-            echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>" . \PHP_EOL;
+            echo \sprintf(
+                '		<td>(%s%s)</td>',
+                $percentage,
+                $this->lang['strpercent']
+            ) . \PHP_EOL;
 
             $total = $tablestatsio->fields['idx_blks_hit'] + $tablestatsio->fields['idx_blks_read'];
 
@@ -231,7 +328,11 @@ class InfoController extends BaseController
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
-            echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>" . \PHP_EOL;
+            echo \sprintf(
+                '		<td>(%s%s)</td>',
+                $percentage,
+                $this->lang['strpercent']
+            ) . \PHP_EOL;
 
             $total = $tablestatsio->fields['toast_blks_hit'] + $tablestatsio->fields['toast_blks_read'];
 
@@ -243,7 +344,11 @@ class InfoController extends BaseController
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
-            echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>" . \PHP_EOL;
+            echo \sprintf(
+                '		<td>(%s%s)</td>',
+                $percentage,
+                $this->lang['strpercent']
+            ) . \PHP_EOL;
 
             $total = $tablestatsio->fields['tidx_blks_hit'] + $tablestatsio->fields['tidx_blks_read'];
 
@@ -255,7 +360,11 @@ class InfoController extends BaseController
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
-            echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>" . \PHP_EOL;
+            echo \sprintf(
+                '		<td>(%s%s)</td>',
+                $percentage,
+                $this->lang['strpercent']
+            ) . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
             $tablestatsio->movenext();
             ++$i;
@@ -266,20 +375,38 @@ class InfoController extends BaseController
 
     private function _printIndexstatstups($indexstatstups): void
     {
-        echo "<h3>{$this->lang['stridxrowperf']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['stridxrowperf']
+        ) . \PHP_EOL;
 
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strindex']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strscan']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strread']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strfetch']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strindex']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strscan']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strread']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strfetch']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         $i = 0;
 
         while (!$indexstatstups->EOF) {
             $id = (0 === ($i % 2) ? '1' : '2');
-            echo "\t<tr class=\"data{$id}\">" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr class="data%s">',
+                $id
+            ) . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['indexrelname']), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_scan'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -294,20 +421,38 @@ class InfoController extends BaseController
 
     private function _printIndexstatsio($indexstatsio): void
     {
-        echo "<h3>{$this->lang['stridxioperf']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['stridxioperf']
+        ) . \PHP_EOL;
 
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strindex']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strdisk']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strcache']}</th>" . \PHP_EOL;
-        echo "\t\t<th class=\"data\">{$this->lang['strpercent']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strindex']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strdisk']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strcache']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strpercent']
+        ) . \PHP_EOL;
         echo "\t</tr>" . \PHP_EOL;
         $i = 0;
 
         while (!$indexstatsio->EOF) {
             $id = (0 === ($i % 2) ? '1' : '2');
-            echo "\t<tr class=\"data{$id}\">" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr class="data%s">',
+                $id
+            ) . \PHP_EOL;
             $total = $indexstatsio->fields['idx_blks_hit'] + $indexstatsio->fields['idx_blks_read'];
 
             if (0 < $total) {
@@ -319,7 +464,11 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['indexrelname']), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
-            echo "\t\t<td>({$percentage}{$this->lang['strpercent']})</td>" . \PHP_EOL;
+            echo \sprintf(
+                '		<td>(%s%s)</td>',
+                $percentage,
+                $this->lang['strpercent']
+            ) . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
             $indexstatsio->movenext();
             ++$i;
@@ -330,7 +479,10 @@ class InfoController extends BaseController
 
     private function _printParents($parents): void
     {
-        echo "<h3>{$this->lang['strparenttables']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strparenttables']
+        ) . \PHP_EOL;
 
         $columns = [
             'schema' => [
@@ -366,7 +518,10 @@ class InfoController extends BaseController
 
     private function _printReferring($referrers): void
     {
-        echo "<h3>{$this->lang['strreferringtables']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strreferringtables']
+        ) . \PHP_EOL;
 
         $columns = [
             'schema' => [

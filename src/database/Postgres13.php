@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\Help\PostgresDoc12;
+
 /**
  * @file
  * PostgreSQL 13.x support
@@ -24,5 +26,5 @@ class Postgres13 extends Postgres12
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc12::class;
+    public $help_classname = PostgresDoc12::class;
 }

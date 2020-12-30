@@ -52,7 +52,13 @@ class IntroController extends BaseController
 
         foreach ($this->appLangFiles as $k => $v) {
             $selected = ($k === $language) ? ' selected="selected"' : '';
-            $intro_html .= "\t<option value=\"{$k}\"" . $selected . ">{$v}</option>" . \PHP_EOL;
+            $intro_html .= \sprintf(
+                '	<option value="%s"',
+                $k
+            ) . $selected . \sprintf(
+                '>%s</option>',
+                $v
+            ) . \PHP_EOL;
         }
 
         $intro_html .= '</select>';
@@ -65,7 +71,13 @@ class IntroController extends BaseController
 
         foreach ($this->appThemes as $k => $v) {
             $selected = ($k === $this->conf['theme']) ? ' selected="selected"' : '';
-            $intro_html .= "\t<option value=\"{$k}\"" . $selected . ">{$v}</option>" . \PHP_EOL;
+            $intro_html .= \sprintf(
+                '	<option value="%s"',
+                $k
+            ) . $selected . \sprintf(
+                '>%s</option>',
+                $v
+            ) . \PHP_EOL;
         }
 
         $intro_html .= '</select>';

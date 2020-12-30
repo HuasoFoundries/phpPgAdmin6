@@ -55,7 +55,7 @@ class DataexportController extends BaseController
                 // instead of custom dump code
                 if (!$forcemimic && $this->misc->isDumpEnabled() && ('copy' === $_REQUEST['d_format'] || 'sql' === $_REQUEST['d_format'])) {
                     //$this->prtrace('DUMP ENABLED, d_format is', $_REQUEST['d_format']);
-                    $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+                    $dbexport_controller = new DbexportController($this->getContainer());
 
                     return $dbexport_controller->render();
                 }
@@ -68,7 +68,7 @@ class DataexportController extends BaseController
                 // Check to see if they have pg_dump set up and if they do, use that
                 // instead of custom dump code
                 if (!$forcemimic && $this->misc->isDumpEnabled()) {
-                    $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+                    $dbexport_controller = new DbexportController($this->getContainer());
 
                     return $dbexport_controller->render();
                 }
@@ -79,7 +79,7 @@ class DataexportController extends BaseController
                 // Check to see if they have pg_dump set up and if they do, use that
                 // instead of custom dump code
                 if (!$forcemimic && $this->misc->isDumpEnabled()) {
-                    $dbexport_controller = new \PHPPgAdmin\Controller\DbexportController($this->getContainer());
+                    $dbexport_controller = new DbexportController($this->getContainer());
 
                     return $dbexport_controller->render();
                 }
@@ -111,29 +111,48 @@ class DataexportController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataexport" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
-        echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data">%s:</th><td><select name="d_format">',
+            $this->lang['strformat']
+        ) . \PHP_EOL;
         // COPY and SQL require a table
         if (isset($_REQUEST['table'])) {
             echo '<option value="copy">COPY</option>' . \PHP_EOL;
             echo '<option value="sql">SQL</option>' . \PHP_EOL;
         }
         echo '<option value="csv">CSV</option>' . \PHP_EOL;
-        echo "<option value=\"tab\">{$this->lang['strtabbed']}</option>" . \PHP_EOL;
+        echo \sprintf(
+            '<option value="tab">%s</option>',
+            $this->lang['strtabbed']
+        ) . \PHP_EOL;
         echo '<option value="html">XHTML</option>' . \PHP_EOL;
         echo '<option value="xml">XML</option>' . \PHP_EOL;
         echo '</select></td></tr>';
         echo '</table>' . \PHP_EOL;
 
-        echo "<h3>{$this->lang['stroptions']}</h3>" . \PHP_EOL;
-        echo "<p><input type=\"radio\" id=\"output1\" name=\"output\" value=\"show\" checked=\"checked\" /><label for=\"output1\">{$this->lang['strshow']}</label>" . \PHP_EOL;
-        echo "<br/><input type=\"radio\" id=\"output2\" name=\"output\" value=\"download\" /><label for=\"output2\">{$this->lang['strdownload']}</label></p>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['stroptions']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<p><input type="radio" id="output1" name="output" value="show" checked="checked" /><label for="output1">%s</label>',
+            $this->lang['strshow']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<br/><input type="radio" id="output2" name="output" value="download" /><label for="output2">%s</label></p>',
+            $this->lang['strdownload']
+        ) . \PHP_EOL;
 
         echo '<p><input type="hidden" name="action" value="export" />' . \PHP_EOL;
         echo '<input type="hidden" name="what" value="dataonly" />' . \PHP_EOL;
 
         if (isset($_REQUEST['table'])) {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
         } else {
             echo '<input type="hidden" name="subject" value="table" />' . \PHP_EOL;
         }
@@ -145,7 +164,10 @@ class DataexportController extends BaseController
             echo '<input type="hidden" name="search_path" value="', \htmlspecialchars($_REQUEST['search_path']), '" />' . \PHP_EOL;
         }
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strexport']}\" /></p>" . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" value="%s" /></p>',
+            $this->lang['strexport']
+        ) . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 
         $this->printFooter();
@@ -292,7 +314,10 @@ class DataexportController extends BaseController
     private function _mimicCopy($data, $object, $oids, $rs): void
     {
         $data->fieldClean($object);
-        echo "COPY \"{$_REQUEST['table']}\"";
+        echo \sprintf(
+            'COPY "%s"',
+            $_REQUEST['table']
+        );
 
         if ($oids) {
             echo ' WITH OIDS';
@@ -386,7 +411,11 @@ class DataexportController extends BaseController
                 $finfo = $rs->fetchField($j++);
                 $name = \htmlspecialchars($finfo->name);
                 $type = \htmlspecialchars($finfo->type);
-                echo "\t\t<column name=\"{$name}\" type=\"{$type}\" />" . \PHP_EOL;
+                echo \sprintf(
+                    '		<column name="%s" type="%s" />',
+                    $name,
+                    $type
+                ) . \PHP_EOL;
             }
             echo "\t</header>" . \PHP_EOL;
         }
@@ -404,7 +433,13 @@ class DataexportController extends BaseController
                     $v = \htmlspecialchars($v);
                 }
 
-                echo "\t\t\t<column name=\"{$name}\"", (null === $v ? ' null="null"' : ''), ">{$v}</column>" . \PHP_EOL;
+                echo \sprintf(
+                    '			<column name="%s"',
+                    $name
+                ), (null === $v ? ' null="null"' : ''), \sprintf(
+                    '>%s</column>',
+                    $v
+                ) . \PHP_EOL;
             }
             echo "\t\t</row>" . \PHP_EOL;
             $rs->moveNext();
@@ -419,7 +454,10 @@ class DataexportController extends BaseController
         $values = '';
 
         while (!$rs->EOF) {
-            echo "INSERT INTO \"{$object}\" (";
+            echo \sprintf(
+                'INSERT INTO "%s" (',
+                $object
+            );
             $first = true;
             $j = 0;
 
@@ -432,9 +470,15 @@ class DataexportController extends BaseController
                 $data->fieldClean($k);
 
                 if ($first) {
-                    echo "\"{$k}\"";
+                    echo \sprintf(
+                        '"%s"',
+                        $k
+                    );
                 } else {
-                    echo ", \"{$k}\"";
+                    echo \sprintf(
+                        ', "%s"',
+                        $k
+                    );
                 }
 
                 if (null !== $v) {
@@ -449,13 +493,23 @@ class DataexportController extends BaseController
                 }
 
                 if ($first) {
-                    $values = (null === $v ? 'NULL' : "'{$v}'");
+                    $values = (null === $v ? 'NULL' : \sprintf(
+                        '\'%s\'',
+                        $v
+                    ));
                     $first = false;
                 } else {
-                    $values .= ', ' . ((null === $v ? 'NULL' : "'{$v}'"));
+                    $values .= ', ' . ((null === $v ? 'NULL' : \sprintf(
+                        '\'%s\'',
+                        $v
+                    )));
                 }
             }
-            echo ") VALUES ({$values});\n";
+            echo \sprintf(
+                ') VALUES (%s);
+',
+                $values
+            );
             $rs->moveNext();
         }
     }
@@ -487,10 +541,17 @@ class DataexportController extends BaseController
                 }
 
                 if ($first) {
-                    echo "\"{$v}\"";
+                    echo \sprintf(
+                        '"%s"',
+                        $v
+                    );
                     $first = false;
                 } else {
-                    echo "{$sep}\"{$v}\"";
+                    echo \sprintf(
+                        '%s"%s"',
+                        $sep,
+                        $v
+                    );
                 }
             }
             echo "\r\n";
@@ -505,10 +566,20 @@ class DataexportController extends BaseController
                 }
 
                 if ($first) {
-                    echo (null === $v) ? '"\\N"' : "\"{$v}\"";
+                    echo (null === $v) ? '"\\N"' : \sprintf(
+                        '"%s"',
+                        $v
+                    );
                     $first = false;
                 } else {
-                    echo null === $v ? "{$sep}\"\\N\"" : "{$sep}\"{$v}\"";
+                    echo null === $v ? \sprintf(
+                        '%s"\N"',
+                        $sep
+                    ) : \sprintf(
+                        '%s"%s"',
+                        $sep,
+                        $v
+                    );
                 }
             }
             echo "\r\n";

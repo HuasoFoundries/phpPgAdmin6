@@ -6,6 +6,14 @@
 
 namespace PHPPgAdmin\Database;
 
+use ADODB_postgres9;
+use Exception;
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\ContainerUtils;
+use PHPPgAdmin\Database\Traits\DatabaseTrait;
+use PHPPgAdmin\Database\Traits\HasTrait;
+use PHPPgAdmin\Traits\HelperTrait;
+
 /**
  * @file
  * Parent class of all ADODB objects.
@@ -14,9 +22,9 @@ namespace PHPPgAdmin\Database;
  */
 class ADOdbBase
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\Database\Traits\HasTrait;
-    use \PHPPgAdmin\Database\Traits\DatabaseTrait;
+    use HelperTrait;
+    use HasTrait;
+    use DatabaseTrait;
 
     /**
      * @var array
@@ -29,12 +37,12 @@ class ADOdbBase
     public $conf;
 
     /**
-     * @var \ADODB_postgres9
+     * @var ADODB_postgres9
      */
     public $conn;
 
     /**
-     * @var \PHPPgAdmin\ContainerUtils
+     * @var ContainerUtils
      */
     protected $container;
 
@@ -51,9 +59,9 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param \ADODB_postgres9 $conn        The connection object
-     * @param mixed            $container
-     * @param mixed            $server_info
+     * @param ADODB_postgres9 $conn        The connection object
+     * @param mixed           $container
+     * @param mixed           $server_info
      */
     public function __construct(&$conn, $container, $server_info)
     {
@@ -94,10 +102,14 @@ class ADOdbBase
             return [];
         }
 
-        $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
-			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
-			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . \implode("','", $atts) . "')";
+        $sql = \sprintf(
+            'SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
+			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\' AND
+			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname=\'%s\'))
+			AND attnum IN (\'',
+            $table,
+            $c_schema
+        ) . \implode("','", $atts) . "')";
 
         $rs = $this->selectSet($sql);
 
@@ -126,11 +138,14 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return int|\PHPPgAdmin\ADORecordSet recordset of results or error code
+     * @return ADORecordSet|int recordset of results or error code
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
-        $sql = "COMMENT ON {$obj_type} ";
+        $sql = \sprintf(
+            'COMMENT ON %s ',
+            $obj_type
+        );
 
         $f_schema = $this->_schema;
         $this->fieldClean($f_schema);
@@ -144,11 +159,20 @@ class ADOdbBase
 
         switch ($obj_type) {
             case 'TABLE':
-                $sql .= "\"{$f_schema}\".\"{$table}\" IS ";
+                $sql .= \sprintf(
+                    '"%s"."%s" IS ',
+                    $f_schema,
+                    $table
+                );
 
                 break;
             case 'COLUMN':
-                $sql .= "\"{$f_schema}\".\"{$table}\".\"{$obj_name}\" IS ";
+                $sql .= \sprintf(
+                    '"%s"."%s"."%s" IS ',
+                    $f_schema,
+                    $table,
+                    $obj_name
+                );
 
                 break;
             case 'SEQUENCE':
@@ -159,21 +183,36 @@ class ADOdbBase
             case 'TEXT SEARCH TEMPLATE':
             case 'TEXT SEARCH PARSER':
             case 'TYPE':
-                $sql .= "\"{$f_schema}\".";
+                $sql .= \sprintf(
+                    '"%s".',
+                    $f_schema
+                );
             // no break
             case 'DATABASE':
             case 'ROLE':
             case 'SCHEMA':
             case 'TABLESPACE':
-                $sql .= "\"{$obj_name}\" IS ";
+                $sql .= \sprintf(
+                    '"%s" IS ',
+                    $obj_name
+                );
 
                 break;
             case 'FUNCTION':
-                $sql .= "\"{$f_schema}\".{$obj_name} IS ";
+                $sql .= \sprintf(
+                    '"%s".%s IS ',
+                    $f_schema,
+                    $obj_name
+                );
 
                 break;
             case 'AGGREGATE':
-                $sql .= "\"{$f_schema}\".\"{$obj_name}\" (\"{$basetype}\") IS ";
+                $sql .= \sprintf(
+                    '"%s"."%s" ("%s") IS ',
+                    $f_schema,
+                    $obj_name,
+                    $basetype
+                );
 
                 break;
 
@@ -183,7 +222,10 @@ class ADOdbBase
         }
 
         if ('' !== $comment) {
-            $sql .= "'{$comment}';";
+            $sql .= \sprintf(
+                '\'%s\';',
+                $comment
+            );
         } else {
             $sql .= 'NULL;';
         }
@@ -254,7 +296,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error code
+     * @return ADORecordSet|int A recordset or an error code
      */
     public function execute($sql)
     {
@@ -263,7 +305,7 @@ class ADOdbBase
             $rs = $this->conn->Execute($sql);
 
             return $this->ErrorNo();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getCode();
         }
     }
@@ -282,14 +324,14 @@ class ADOdbBase
      *
      * @param string $sql The SQL statement to be executed
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset or an error number
+     * @return ADORecordSet|int A recordset or an error number
      */
     public function selectSet($sql)
     {
         // Execute the statement
         try {
             return $this->conn->Execute($sql);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getCode();
         }
     }
@@ -348,7 +390,10 @@ class ADOdbBase
 
         if (!empty($schema)) {
             $this->fieldClean($schema);
-            $schema = "\"{$schema}\".";
+            $schema = \sprintf(
+                '"%s".',
+                $schema
+            );
         }
 
         // Build clause
@@ -359,9 +404,19 @@ class ADOdbBase
             $this->clean($value);
 
             if ($sql) {
-                $sql .= " AND \"{$key}\"='{$value}'";
+                $sql .= \sprintf(
+                    ' AND "%s"=\'%s\'',
+                    $key,
+                    $value
+                );
             } else {
-                $sql = "DELETE FROM {$schema}\"{$table}\" WHERE \"{$key}\"='{$value}'";
+                $sql = \sprintf(
+                    'DELETE FROM %s"%s" WHERE "%s"=\'%s\'',
+                    $schema,
+                    $table,
+                    $key,
+                    $value
+                );
             }
         }
 
@@ -450,15 +505,28 @@ class ADOdbBase
                 $this->clean($value);
 
                 if ($fields) {
-                    $fields .= ", \"{$key}\"";
+                    $fields .= \sprintf(
+                        ', "%s"',
+                        $key
+                    );
                 } else {
-                    $fields = "INSERT INTO \"{$table}\" (\"{$key}\"";
+                    $fields = \sprintf(
+                        'INSERT INTO "%s" ("%s"',
+                        $table,
+                        $key
+                    );
                 }
 
                 if ($values) {
-                    $values .= ", '{$value}'";
+                    $values .= \sprintf(
+                        ', \'%s\'',
+                        $value
+                    );
                 } else {
-                    $values = ") VALUES ('{$value}'";
+                    $values = \sprintf(
+                        ') VALUES (\'%s\'',
+                        $value
+                    );
                 }
             }
             $sql .= $fields . $values . ')';
@@ -504,9 +572,18 @@ class ADOdbBase
             $this->clean($value);
 
             if ($setClause) {
-                $setClause .= ", \"{$key}\"='{$value}'";
+                $setClause .= \sprintf(
+                    ', "%s"=\'%s\'',
+                    $key,
+                    $value
+                );
             } else {
-                $setClause = "UPDATE \"{$table}\" SET \"{$key}\"='{$value}'";
+                $setClause = \sprintf(
+                    'UPDATE "%s" SET "%s"=\'%s\'',
+                    $table,
+                    $key,
+                    $value
+                );
             }
         }
 
@@ -516,9 +593,16 @@ class ADOdbBase
             $this->fieldClean($value);
 
             if ($setClause) {
-                $setClause .= ", \"{$value}\"=NULL";
+                $setClause .= \sprintf(
+                    ', "%s"=NULL',
+                    $value
+                );
             } else {
-                $setClause = "UPDATE \"{$table}\" SET \"{$value}\"=NULL";
+                $setClause = \sprintf(
+                    'UPDATE "%s" SET "%s"=NULL',
+                    $table,
+                    $value
+                );
             }
         }
 
@@ -529,9 +613,17 @@ class ADOdbBase
             $this->clean($value);
 
             if ($whereClause) {
-                $whereClause .= " AND \"{$key}\"='{$value}'";
+                $whereClause .= \sprintf(
+                    ' AND "%s"=\'%s\'',
+                    $key,
+                    $value
+                );
             } else {
-                $whereClause = " WHERE \"{$key}\"='{$value}'";
+                $whereClause = \sprintf(
+                    ' WHERE "%s"=\'%s\'',
+                    $key,
+                    $value
+                );
             }
         }
 
@@ -594,7 +686,7 @@ class ADOdbBase
     {
         try {
             return $this->conn->platform;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->prtrace($e->getMessage());
 
             return 'UNKNOWN';

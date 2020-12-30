@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use ADORecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -117,7 +118,10 @@ class FunctionsController extends BaseController
             'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => \containerInstance()->subFolder . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . \sprintf(
+                    '/redirect/function?action=properties&amp;%s&amp;',
+                    $this->misc->href
+                ),
                 'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
@@ -295,7 +299,10 @@ class FunctionsController extends BaseController
         $fndata = $data->getFunction($_REQUEST['function_oid']);
 
         if (0 >= $fndata->recordCount()) {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
 
             return;
         }
@@ -334,11 +341,26 @@ class FunctionsController extends BaseController
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
         echo '<table style="width: 95%">' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strfunction']}</th>" . \PHP_EOL;
-        echo "<th class=\"data\">{$this->lang['strarguments']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strreturns']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strschema']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strfunction']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data">%s</th>',
+            $this->lang['strarguments']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strreturns']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strproglanguage']
+        ) . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
 
         echo '<tr>' . \PHP_EOL;
@@ -363,7 +385,10 @@ class FunctionsController extends BaseController
         echo '</td>' . \PHP_EOL;
         echo '<td class="data1">';
         echo '<input type="hidden" name="original_function" value="', \htmlspecialchars($fndata->fields['proname']), '" />' . \PHP_EOL;
-        echo "<input name=\"formFunction\" style=\"width: 100%; box-sizing: border-box;\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_POST['formFunction']), '" />';
+        echo \sprintf(
+            '<input name="formFunction" style="width: 100%; box-sizing: border-box;" maxlength="%s" value="',
+            $data->_maxNameLen
+        ), \htmlspecialchars($_POST['formFunction']), '" />';
         echo '</td>' . \PHP_EOL;
 
         echo '<td class="data1">', $this->misc->printVal($args), \PHP_EOL;
@@ -393,18 +418,30 @@ class FunctionsController extends BaseController
         $fnlang = \mb_strtolower($fndata->fields['prolanguage']);
 
         if ('c' === $fnlang) {
-            echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>" . \PHP_EOL;
-            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data required" colspan="2">%s</th>',
+                $this->lang['strobjectfile']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<th class="data" colspan="2">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
             \htmlspecialchars($_POST['formObjectFile']), '" /></td>' . \PHP_EOL;
             echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             \htmlspecialchars($_POST['formLinkSymbol']), '" /></td></tr>' . \PHP_EOL;
         } elseif ('internal' === $fnlang) {
-            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="5">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="5"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             \htmlspecialchars($_POST['formLinkSymbol']), '" /></td></tr>' . \PHP_EOL;
         } else {
-            echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data required" colspan="5">%s</th></tr>',
+                $this->lang['strdefinition']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="5">';
             $textarea_id = ('sql' === $fnlang || 'plpgsql' === $fnlang) ? 'query' : 'formDefinition';
             echo '<textarea style="width:100%;" rows="20" cols="50" id="' . $textarea_id . '" name="formDefinition">';
@@ -413,7 +450,10 @@ class FunctionsController extends BaseController
         }
 
         // Display function comment
-        echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strcomment']}</th></tr>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data" colspan="5">%s</th></tr>',
+            $this->lang['strcomment']
+        ) . \PHP_EOL;
         echo '<tr><td class="data1" colspan="5">';
         echo '<textarea style="width:100%;" name="formComment" rows="3" cols="50">';
         echo \htmlspecialchars($_POST['formComment']);
@@ -421,21 +461,36 @@ class FunctionsController extends BaseController
 
         // Display function cost options
         if ($data->hasFunctionCosting()) {
-            echo "<tr><th class=\"data required\" colspan=\"5\">{$this->lang['strfunctioncosting']}</th></tr>" . \PHP_EOL;
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
+            echo \sprintf(
+                '<tr><th class="data required" colspan="5">%s</th></tr>',
+                $this->lang['strfunctioncosting']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: <input name="formCost" size="16" value="',
+                $this->lang['strexecutioncost']
+            ) .
             \htmlspecialchars($_POST['formCost']) . '" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"",
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: <input name="formRows" size="16" value="',
+                $this->lang['strresultrows']
+            ),
             \htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
         }
 
         // Display function properties
         if (\is_array($data->funcprops) && 0 < \count($data->funcprops)) {
-            echo "<tr><th class=\"data\" colspan=\"5\">{$this->lang['strproperties']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="5">%s</th></tr>',
+                $this->lang['strproperties']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="5">' . \PHP_EOL;
             $i = 0;
 
             foreach ($data->funcprops as $k => $v) {
-                echo "<select name=\"formProperties[{$i}]\">" . \PHP_EOL;
+                echo \sprintf(
+                    '<select name="formProperties[%s]">',
+                    $i
+                ) . \PHP_EOL;
 
                 foreach ($v as $p) {
                     echo '<option value="', \htmlspecialchars($p), '"',
@@ -451,7 +506,10 @@ class FunctionsController extends BaseController
         // function owner
         if ($data->hasFunctionAlterOwner()) {
             $users = $data->getUsers();
-            echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: <select name=\"formFuncOwn\">";
+            echo \sprintf(
+                '<tr><td class="data1" colspan="5">%s: <select name="formFuncOwn">',
+                $this->lang['strowner']
+            );
 
             while (!$users->EOF) {
                 $uname = $users->fields['usename'];
@@ -468,8 +526,15 @@ class FunctionsController extends BaseController
         echo '<input type="hidden" name="function" value="', \htmlspecialchars($_REQUEST['function']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="function_oid" value="', \htmlspecialchars($_REQUEST['function_oid']), '" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['stralter']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 
@@ -494,7 +559,10 @@ class FunctionsController extends BaseController
         $func_full = '';
 
         if (0 >= $funcdata->recordCount()) {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
 
             return $this->_printNavLinks('functions-properties', $func_full);
         }
@@ -503,26 +571,70 @@ class FunctionsController extends BaseController
 
         $fnlang = \mb_strtolower($funcdata->fields['prolanguage']);
         echo '<tr><td class="data1" colspan="4">';
-        echo \sprintf('<pre><code class="sql hljs">%s', \PHP_EOL);
+        echo \sprintf(
+            '<pre><code class="sql hljs">%s',
+            \PHP_EOL
+        );
 
-        echo \sprintf('%s--%s', \PHP_EOL, \PHP_EOL);
-        echo \sprintf('-- Name: %s; Type: FUNCTION; Schema: %s; Owner: %s', $fname, $funcdata->fields['nspname'], $funcdata->fields['relowner']);
-        echo \sprintf('%s--%s%s', \PHP_EOL, \PHP_EOL, \PHP_EOL);
+        echo \sprintf(
+            '%s--%s',
+            \PHP_EOL,
+            \PHP_EOL
+        );
+        echo \sprintf(
+            '-- Name: %s; Type: FUNCTION; Schema: %s; Owner: %s',
+            $fname,
+            $funcdata->fields['nspname'],
+            $funcdata->fields['relowner']
+        );
+        echo \sprintf(
+            '%s--%s%s',
+            \PHP_EOL,
+            \PHP_EOL,
+            \PHP_EOL
+        );
 
-        echo \sprintf('%s;', $funcdata->fields['pg_get_functiondef']);
+        echo \sprintf(
+            '%s;',
+            $funcdata->fields['pg_get_functiondef']
+        );
 
-        echo \sprintf('%s%sALTER FUNCTION %s OWNER TO %s;%s', \PHP_EOL, \PHP_EOL, $fname, $funcdata->fields['relowner'], \PHP_EOL);
+        echo \sprintf(
+            '%s%sALTER FUNCTION %s OWNER TO %s;%s',
+            \PHP_EOL,
+            \PHP_EOL,
+            $fname,
+            $funcdata->fields['relowner'],
+            \PHP_EOL
+        );
 
         // Show comment if any
         if (null !== $funcdata->fields['relcomment']) {
-            echo \sprintf('%s--%s', \PHP_EOL, \PHP_EOL);
-            echo \sprintf('-- Name: %s; Type: COMMENT; Schema: %s; Owner: %s', $fname, $funcdata->fields['nspname'], $funcdata->fields['relowner']);
-            echo \sprintf('%s--%s%s', \PHP_EOL, \PHP_EOL, \PHP_EOL);
+            echo \sprintf(
+                '%s--%s',
+                \PHP_EOL,
+                \PHP_EOL
+            );
+            echo \sprintf(
+                '-- Name: %s; Type: COMMENT; Schema: %s; Owner: %s',
+                $fname,
+                $funcdata->fields['nspname'],
+                $funcdata->fields['relowner']
+            );
+            echo \sprintf(
+                '%s--%s%s',
+                \PHP_EOL,
+                \PHP_EOL,
+                \PHP_EOL
+            );
             echo \sprintf("%sCOMMENT ON FUNCTION %s.%s IS '%s';%s", \PHP_EOL, $funcdata->fields['nspname'], $fname, $funcdata->fields['relcomment'], \PHP_EOL);
             //echo '<p class="comment">', $this->misc->printVal($funcdata->fields['relcomment']), '</p>' . PHP_EOL;
         }
 
-        echo \sprintf('%s</code></pre>', \PHP_EOL);
+        echo \sprintf(
+            '%s</code></pre>',
+            \PHP_EOL
+        );
 
         echo '</td></tr>' . \PHP_EOL;
 
@@ -549,7 +661,10 @@ class FunctionsController extends BaseController
         $func_full = '';
 
         if (0 >= $funcdata->recordCount()) {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
 
             return $this->_printNavLinks('functions-properties', $func_full);
         }
@@ -566,10 +681,26 @@ class FunctionsController extends BaseController
 
         echo '<table style="width: 95%">' . \PHP_EOL;
 
-        echo \sprintf('<tr><th class="data">%s</th>%s', $this->lang['strfunction'], \PHP_EOL);
-        echo \sprintf('<th class="data">%s</th>%s', $this->lang['strarguments'], \PHP_EOL);
-        echo \sprintf('<th class="data">%s</th>%s', $this->lang['strreturns'], \PHP_EOL);
-        echo \sprintf('<th class="data">%s</th></tr>%s', $this->lang['strproglanguage'], \PHP_EOL);
+        echo \sprintf(
+            '<tr><th class="data">%s</th>%s',
+            $this->lang['strfunction'],
+            \PHP_EOL
+        );
+        echo \sprintf(
+            '<th class="data">%s</th>%s',
+            $this->lang['strarguments'],
+            \PHP_EOL
+        );
+        echo \sprintf(
+            '<th class="data">%s</th>%s',
+            $this->lang['strreturns'],
+            \PHP_EOL
+        );
+        echo \sprintf(
+            '<th class="data">%s</th></tr>%s',
+            $this->lang['strproglanguage'],
+            \PHP_EOL
+        );
 
         echo '<tr><td class="data1">', $this->misc->printVal($funcdata->fields['proname']), '</td>' . \PHP_EOL;
         echo '<td class="data1">', $this->misc->printVal($args), '</td>' . \PHP_EOL;
@@ -585,31 +716,56 @@ class FunctionsController extends BaseController
         $fnlang = \mb_strtolower($funcdata->fields['prolanguage']);
 
         if ('c' === $fnlang) {
-            echo "<tr><th class=\"data\" colspan=\"2\">{$this->lang['strobjectfile']}</th>" . \PHP_EOL;
-            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="2">%s</th>',
+                $this->lang['strobjectfile']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<th class="data" colspan="2">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['probin']), '</td>' . \PHP_EOL;
             echo '<td class="data1" colspan="2">', $this->misc->printVal($funcdata->fields['prosrc']), '</td></tr>' . \PHP_EOL;
         } elseif ('internal' === $fnlang) {
-            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="4">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="4">', $this->misc->printVal($funcdata->fields['prosrc']), '</td></tr>' . \PHP_EOL;
         } else {
             echo '<tr><td class="data1" colspan="4">';
-            echo \sprintf('<pre><code class="%s hljs">%s</code></pre>', $fnlang, $funcdata->fields['prosrc']);
+            echo \sprintf(
+                '<pre><code class="%s hljs">%s</code></pre>',
+                $fnlang,
+                $funcdata->fields['prosrc']
+            );
             echo '</td></tr>' . \PHP_EOL;
         }
 
         // Display function cost options
         if ($data->hasFunctionCosting()) {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>" . \PHP_EOL;
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: ", $this->misc->printVal($funcdata->fields['procost']), ' </td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: ", $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
+            echo \sprintf(
+                '<tr><th class="data required" colspan="4">%s</th></tr>',
+                $this->lang['strfunctioncosting']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: ',
+                $this->lang['strexecutioncost']
+            ), $this->misc->printVal($funcdata->fields['procost']), ' </td>';
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: ',
+                $this->lang['strresultrows']
+            ), $this->misc->printVal($funcdata->fields['prorows']), ' </td>';
         }
 
         // Show flags
         if (\is_array($data->funcprops) && 0 < \count($data->funcprops)) {
             // Fetch an array of the function properties
             $funcprops = $data->getFunctionProperties($funcdata->fields);
-            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="4">%s</th></tr>',
+                $this->lang['strproperties']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="4">' . \PHP_EOL;
 
             foreach ($funcprops as $v) {
@@ -618,7 +774,10 @@ class FunctionsController extends BaseController
             echo '</td></tr>' . \PHP_EOL;
         }
 
-        echo "<tr><td class=\"data1\" colspan=\"5\">{$this->lang['strowner']}: ", \htmlspecialchars($funcdata->fields['proowner']), \PHP_EOL;
+        echo \sprintf(
+            '<tr><td class="data1" colspan="5">%s: ',
+            $this->lang['strowner']
+        ), \htmlspecialchars($funcdata->fields['proowner']), \PHP_EOL;
         echo '</td></tr>' . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
 
@@ -649,12 +808,18 @@ class FunctionsController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                    echo '<p>', \sprintf($this->lang['strconfdropfunction'], $this->misc->printVal($a['function'])), '</p>' . \PHP_EOL;
+                    echo '<p>', \sprintf(
+                        $this->lang['strconfdropfunction'],
+                        $this->misc->printVal($a['function'])
+                    ), '</p>' . \PHP_EOL;
                     echo '<input type="hidden" name="function[]" value="', \htmlspecialchars($a['function']), '" />' . \PHP_EOL;
                     echo '<input type="hidden" name="function_oid[]" value="', \htmlspecialchars($a['function_oid']), '" />' . \PHP_EOL;
                 }
             } else {
-                echo '<p>', \sprintf($this->lang['strconfdropfunction'], $this->misc->printVal($_REQUEST['function'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfdropfunction'],
+                    $this->misc->printVal($_REQUEST['function'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="function" value="', \htmlspecialchars($_REQUEST['function']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="function_oid" value="', \htmlspecialchars($_REQUEST['function_oid']), '" />' . \PHP_EOL;
             }
@@ -662,9 +827,18 @@ class FunctionsController extends BaseController
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
 
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /><label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" />',
+                $this->lang['strcancel']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['function_oid'])) {
@@ -783,12 +957,18 @@ class FunctionsController extends BaseController
                 $szSelected = ' selected="selected"';
             }
             // this variable is include in the JS code bellow, so we need to ENT_QUOTES
-            $szTypes .= '<option value="' . \htmlspecialchars($types->fields['typname'], \ENT_QUOTES) . "\"{$szSelected}>";
+            $szTypes .= '<option value="' . \htmlspecialchars($types->fields['typname'], \ENT_QUOTES) . \sprintf(
+                '"%s>',
+                $szSelected
+            );
             $szTypes .= \htmlspecialchars($types->fields['typname'], \ENT_QUOTES) . '</option>';
             $types->moveNext();
         }
 
-        $szFunctionName = "<td class=\"data1\"><input name=\"formFunction\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"" .
+        $szFunctionName = \sprintf(
+            '<td class="data1"><input name="formFunction" size="16" maxlength="%s" value="',
+            $data->_maxNameLen
+        ) .
         \htmlspecialchars($_POST['formFunction']) . '" /></td>';
 
         $szArguments = '<td class="data1"><input name="formArguments" style="width:100%;" size="16" value="' .
@@ -804,8 +984,14 @@ class FunctionsController extends BaseController
         }
         $szReturns = '<td class="data1" colspan="2">';
         $szReturns .= '<select name="formSetOf">';
-        $szReturns .= "<option value=\"\"{$szNotSetOfSelected}></option>";
-        $szReturns .= "<option value=\"SETOF\"{$szSetOfSelected}>SETOF</option>";
+        $szReturns .= \sprintf(
+            '<option value=""%s></option>',
+            $szNotSetOfSelected
+        );
+        $szReturns .= \sprintf(
+            '<option value="SETOF"%s>SETOF</option>',
+            $szSetOfSelected
+        );
         $szReturns .= '</select>';
 
         $szReturns .= '<select class="select2" name="formReturns">' . $szTypes . '</select>';
@@ -822,8 +1008,14 @@ class FunctionsController extends BaseController
         }
 
         $szReturns .= '<select name="formArray">';
-        $szReturns .= "<option value=\"\"{$szNotArraySelected}></option>";
-        $szReturns .= "<option value=\"[]\"{$szArraySelected}>[ ]</option>";
+        $szReturns .= \sprintf(
+            '<option value=""%s></option>',
+            $szNotArraySelected
+        );
+        $szReturns .= \sprintf(
+            '<option value="[]"%s>[ ]</option>',
+            $szArraySelected
+        );
         $szReturns .= "</select>\n</td>";
 
         // Create string for language
@@ -831,7 +1023,10 @@ class FunctionsController extends BaseController
 
         if ('c' === $fnlang || 'internal' === $fnlang) {
             $szLanguage .= $_POST['formLanguage'] . \PHP_EOL;
-            $szLanguage .= "<input type=\"hidden\" name=\"formLanguage\" value=\"{$_POST['formLanguage']}\" />" . \PHP_EOL;
+            $szLanguage .= \sprintf(
+                '<input type="hidden" name="formLanguage" value="%s" />',
+                $_POST['formLanguage']
+            ) . \PHP_EOL;
         } else {
             $szLanguage .= '<select name="formLanguage">' . \PHP_EOL;
 
@@ -843,7 +1038,11 @@ class FunctionsController extends BaseController
                 }
 
                 if ('c' !== \mb_strtolower($langs->fields['lanname']) && 'internal' !== \mb_strtolower($langs->fields['lanname'])) {
-                    $szLanguage .= '<option value="' . \htmlspecialchars($langs->fields['lanname']) . "\"{$szSelected}>\n" .
+                    $szLanguage .= '<option value="' . \htmlspecialchars($langs->fields['lanname']) . \sprintf(
+                        '"%s>
+',
+                        $szSelected
+                    ) .
                     $this->misc->printVal($langs->fields['lanname']) . '</option>';
                 }
 
@@ -853,12 +1052,19 @@ class FunctionsController extends BaseController
         }
 
         $szLanguage .= '</td>';
-        $szJSArguments = "<tr><th class=\"data\" colspan=\"7\">{$this->lang['strarguments']}</th></tr>";
+        $szJSArguments = \sprintf(
+            '<tr><th class="data" colspan="7">%s</th></tr>',
+            $this->lang['strarguments']
+        );
         $arrayModes = ['IN', 'OUT', 'INOUT'];
         $szModes = '<select name="formArgModes[]" style="width:100%;">';
 
         foreach ($arrayModes as $pV) {
-            $szModes .= "<option value=\"{$pV}\">{$pV}</option>";
+            $szModes .= \sprintf(
+                '<option value="%s">%s</option>',
+                $pV,
+                $pV
+            );
         }
         $szModes .= '</select>';
         $szArgReturns = '<select name="formArgArray[]">';
@@ -868,28 +1074,49 @@ class FunctionsController extends BaseController
         $subfolder = \containerInstance()->subFolder;
 
         if (!empty($this->conf['theme'])) {
-            $szImgPath = \containerInstance()->subFolder . "/assets/images/themes/{$this->conf['theme']}";
+            $szImgPath = \containerInstance()->subFolder . \sprintf(
+                '/assets/images/themes/%s',
+                $this->conf['theme']
+            );
         } else {
             $szImgPath = \containerInstance()->subFolder . '/assets/images/themes/default';
         }
 
         if (empty($msg)) {
-            $szJSTRArg = "<script type=\"text/javascript\" >addArg('{$subfolder}');</script>" . \PHP_EOL;
+            $szJSTRArg = \sprintf(
+                '<script type="text/javascript" >addArg(\'%s\');</script>',
+                $subfolder
+            ) . \PHP_EOL;
         } else {
             $szJSTRArg = '';
         }
-        $szJSAddTR = "<tr id=\"parent_add_tr\" onclick=\"addArg('{$subfolder}');\" onmouseover=\"this.style.cursor='pointer'\">" . \PHP_EOL;
+        $szJSAddTR = \sprintf(
+            '<tr id="parent_add_tr" onclick="addArg(\'%s\');" onmouseover="this.style.cursor=\'pointer\'">',
+            $subfolder
+        ) . \PHP_EOL;
         $szJSAddTR .= '<td style="text-align: right" colspan="6" class="data3"><table><tr><td class="data3">';
-        $szJSAddTR .= "<img src=\"{$szImgPath}/AddArguments.png\" alt=\"Add Argument\" /></td>";
-        $szJSAddTR .= "<td class=\"data3\"><span style=\"font-size: 8pt\">{$this->lang['strargadd']}</span></td></tr></table></td>\n</tr>" . \PHP_EOL;
+        $szJSAddTR .= \sprintf(
+            '<img src="%s/AddArguments.png" alt="Add Argument" /></td>',
+            $szImgPath
+        );
+        $szJSAddTR .= \sprintf(
+            '<td class="data3"><span style="font-size: 8pt">%s</span></td></tr></table></td>
+</tr>',
+            $this->lang['strargadd']
+        ) . \PHP_EOL;
 
-        echo '<script src="' . \containerInstance()->subFolder . "/assets/js/functions.js\" type=\"text/javascript\"></script>
-		<script type=\"text/javascript\">
+        echo '<script src="' . \containerInstance()->subFolder . \sprintf(
+            '/assets/js/functions.js" type="text/javascript"></script>
+		<script type="text/javascript">
 			//<![CDATA[
-			var g_types_select = '<select class=\"select2\" name=\"formArgType[]\">{$szTypes}</select>{$szArgReturns}';
-			var g_modes_select = '{$szModes}';
-			var g_name = '';
-			var g_lang_strargremove = '", \htmlspecialchars($this->lang['strargremove'], \ENT_QUOTES), "';
+			var g_types_select = \'<select class="select2" name="formArgType[]">%s</select>%s\';
+			var g_modes_select = \'%s\';
+			var g_name = \'\';
+			var g_lang_strargremove = \'',
+            $szTypes,
+            $szArgReturns,
+            $szModes
+        ), \htmlspecialchars($this->lang['strargremove'], \ENT_QUOTES), "';
 			var g_lang_strargnoargs = '", \htmlspecialchars($this->lang['strargnoargs'], \ENT_QUOTES), "';
 			var g_lang_strargenableargs = '", \htmlspecialchars($this->lang['strargenableargs'], \ENT_QUOTES), "';
 			var g_lang_strargnorowabove = '", \htmlspecialchars($this->lang['strargnorowabove'], \ENT_QUOTES), "';
@@ -902,35 +1129,65 @@ class FunctionsController extends BaseController
 		";
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
         echo '<table><tbody id="args_table">' . \PHP_EOL;
-        echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strreturns']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strproglanguage']}</th></tr>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required" colspan="2">%s</th>',
+            $this->lang['strreturns']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th></tr>',
+            $this->lang['strproglanguage']
+        ) . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
-        echo "{$szFunctionName}\n";
-        echo "{$szReturns}\n";
-        echo "{$szLanguage}\n";
+        echo $szFunctionName . \PHP_EOL;
+        echo $szReturns . \PHP_EOL;
+        echo $szLanguage . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
-        echo "{$szJSArguments}\n";
+        echo $szJSArguments . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strargmode']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "<th class=\"data required\" colspan=\"2\">{$this->lang['strargtype']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strargmode']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data required" colspan="2">%s</th>',
+            $this->lang['strargtype']
+        ) . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
-        echo "{$szJSAddTR}\n";
+        echo $szJSAddTR . \PHP_EOL;
 
         if ('c' === $fnlang) {
-            echo "<tr><th class=\"data required\" colspan=\"2\">{$this->lang['strobjectfile']}</th>" . \PHP_EOL;
-            echo "<th class=\"data\" colspan=\"2\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data required" colspan="2">%s</th>',
+                $this->lang['strobjectfile']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<th class="data" colspan="2">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="2"><input type="text" name="formObjectFile" style="width:100%" value="',
             \htmlspecialchars($_POST['formObjectFile']), '" /></td>' . \PHP_EOL;
             echo '<td class="data1" colspan="2"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             \htmlspecialchars($_POST['formLinkSymbol']), '" /></td></tr>' . \PHP_EOL;
         } elseif ('internal' === $fnlang) {
-            echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strlinksymbol']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data" colspan="4">%s</th></tr>',
+                $this->lang['strlinksymbol']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="4"><input type="text" name="formLinkSymbol" style="width:100%" value="',
             \htmlspecialchars($_POST['formLinkSymbol']), '" /></td></tr>' . \PHP_EOL;
         } else {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data required" colspan="4">%s</th></tr>',
+                $this->lang['strdefinition']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="4">';
             echo '<textarea style="width:100%;" rows="20" cols="50" name="formDefinition">';
             echo \htmlspecialchars($_POST['formDefinition']);
@@ -938,27 +1195,45 @@ class FunctionsController extends BaseController
         }
 
         // Display function comment
-        echo "<tr><th class=\"data\" colspan=\"4\">{$this->lang['strcomment']}</th></tr>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data" colspan="4">%s</th></tr>',
+            $this->lang['strcomment']
+        ) . \PHP_EOL;
         echo '<tr><td class="data1" colspan="4"><textarea style="width:100%;" name="formComment" rows="3" cols="50">',
         \htmlspecialchars($_POST['formComment']), '</textarea></td></tr>' . \PHP_EOL;
 
         // Display function cost options
         if ($data->hasFunctionCosting()) {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strfunctioncosting']}</th></tr>" . \PHP_EOL;
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strexecutioncost']}: <input name=\"formCost\" size=\"16\" value=\"" .
+            echo \sprintf(
+                '<tr><th class="data required" colspan="4">%s</th></tr>',
+                $this->lang['strfunctioncosting']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: <input name="formCost" size="16" value="',
+                $this->lang['strexecutioncost']
+            ) .
             \htmlspecialchars($_POST['formCost']) . '" /></td>';
-            echo "<td class=\"data1\" colspan=\"2\">{$this->lang['strresultrows']}: <input name=\"formRows\" size=\"16\" value=\"" .
+            echo \sprintf(
+                '<td class="data1" colspan="2">%s: <input name="formRows" size="16" value="',
+                $this->lang['strresultrows']
+            ) .
             \htmlspecialchars($_POST['formRows']) . '" /></td>';
         }
 
         // Display function properties
         if (\is_array($data->funcprops) && 0 < \count($data->funcprops)) {
-            echo "<tr><th class=\"data required\" colspan=\"4\">{$this->lang['strproperties']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data required" colspan="4">%s</th></tr>',
+                $this->lang['strproperties']
+            ) . \PHP_EOL;
             echo '<tr><td class="data1" colspan="4">' . \PHP_EOL;
             $i = 0;
 
             foreach ($data->funcprops as $k => $v) {
-                echo "<select name=\"formProperties[{$i}]\">" . \PHP_EOL;
+                echo \sprintf(
+                    '<select name="formProperties[%s]">',
+                    $i
+                ) . \PHP_EOL;
 
                 foreach ($v as $p) {
                     echo '<option value="', \htmlspecialchars($p), '"',
@@ -974,8 +1249,15 @@ class FunctionsController extends BaseController
         echo $szJSTRArg;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
         echo $szJS;
     }
@@ -1261,7 +1543,14 @@ class FunctionsController extends BaseController
             $arrayProperArgs[] = [$szMode, $szArgName, $szArgType, $bArgIsArray];
             $subfolder = \containerInstance()->subFolder;
             $szReturn .= '<script type="text/javascript">';
-            $szReturn .= "RebuildArgTR('{$szMode}','{$szArgName}','{$szArgType}',new Boolean({$bArgIsArray},{$subfolder}));";
+            $szReturn .= \sprintf(
+                'RebuildArgTR(\'%s\',\'%s\',\'%s\',new Boolean(%s,%s));',
+                $szMode,
+                $szArgName,
+                $szArgType,
+                $bArgIsArray,
+                $subfolder
+            );
             $szReturn .= '</script>;';
             ++$nC;
         }
@@ -1284,7 +1573,10 @@ class FunctionsController extends BaseController
         }
 
         foreach ($arrayModes as $pV) {
-            $arrayPModes[] = "'{$pV}'";
+            $arrayPModes[] = \sprintf(
+                '\'%s\'',
+                $pV
+            );
         }
 
         $szTypes = 'g_main_types = new Array(' . \implode(',', $arrayPTypes) . ');';
@@ -1296,7 +1588,7 @@ class FunctionsController extends BaseController
     /**
      * Get the concatenated arguments for a function.
      *
-     * @param \ADORecordSet $funcdata The funcdata record
+     * @param ADORecordSet $funcdata The funcdata record
      *
      * @return string The arguments of the function
      */

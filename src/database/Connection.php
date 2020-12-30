@@ -6,6 +6,10 @@
 
 namespace PHPPgAdmin\Database;
 
+use Exception;
+use PHPPgAdmin\Traits\HelperTrait;
+use Slim\Container;
+
 /**
  * @file
  * Class to represent a database connection
@@ -14,7 +18,7 @@ namespace PHPPgAdmin\Database;
  */
 class Connection
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public $conn;
 
@@ -45,10 +49,10 @@ class Connection
     /**
      * Creates a new connection.  Will actually make a database connection.
      *
-     * @param array           $server_info
-     * @param string          $database    database name
-     * @param \Slim\Container $container
-     * @param int             $fetchMode   Defaults to associative.  Override for different behaviour
+     * @param array     $server_info
+     * @param string    $database    database name
+     * @param Container $container
+     * @param int       $fetchMode   Defaults to associative.  Override for different behaviour
      */
     public function __construct($server_info, $database, $container, $fetchMode = \ADODB_FETCH_ASSOC)
     {
@@ -74,7 +78,11 @@ class Connection
                 $pghost = '';
             }
         } else {
-            $pghost = "{$host}:{$port}";
+            $pghost = \sprintf(
+                '%s:%s',
+                $host,
+                $port
+            );
         }
 
         // Add sslmode to $pghost as needed
@@ -87,7 +95,7 @@ class Connection
         try {
             $this->conn->connect($pghost, $user, $password, $database);
             //$this->prtrace($this->conn);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             dump($e);
             $this->prtrace($e->getMessage(), $e->getTrace());
         }
@@ -140,7 +148,10 @@ class Connection
             $version = $params[1]; // eg. 8.4.4
         }
 
-        $description = "PostgreSQL {$version}";
+        $description = \sprintf(
+            'PostgreSQL %s',
+            $version
+        );
 
         $version_parts = \explode('.', $version);
 

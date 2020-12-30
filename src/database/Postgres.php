@@ -6,6 +6,26 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\Database\Traits\AggregateTrait;
+use PHPPgAdmin\Database\Traits\DatabaseTrait;
+use PHPPgAdmin\Database\Traits\DomainTrait;
+use PHPPgAdmin\Database\Traits\FtsTrait;
+use PHPPgAdmin\Database\Traits\FunctionTrait;
+use PHPPgAdmin\Database\Traits\IndexTrait;
+use PHPPgAdmin\Database\Traits\OperatorTrait;
+use PHPPgAdmin\Database\Traits\PrivilegesTrait;
+use PHPPgAdmin\Database\Traits\RoleTrait;
+use PHPPgAdmin\Database\Traits\SchemaTrait;
+use PHPPgAdmin\Database\Traits\SequenceTrait;
+use PHPPgAdmin\Database\Traits\StatsTrait;
+use PHPPgAdmin\Database\Traits\TablespaceTrait;
+use PHPPgAdmin\Database\Traits\TableTrait;
+use PHPPgAdmin\Database\Traits\TypeTrait;
+use PHPPgAdmin\Database\Traits\ViewTrait;
+use PHPPgAdmin\Help\PostgresDoc;
+use PHPPgAdmin\Traits\HelperTrait;
+
 /**
  * A Class that implements the DB Interface for Postgres
  * Note: This Class uses ADODB and returns RecordSets.
@@ -14,23 +34,23 @@ namespace PHPPgAdmin\Database;
  */
 class Postgres extends ADOdbBase
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
-    use \PHPPgAdmin\Database\Traits\AggregateTrait;
-    use \PHPPgAdmin\Database\Traits\DatabaseTrait;
-    use \PHPPgAdmin\Database\Traits\DomainTrait;
-    use \PHPPgAdmin\Database\Traits\FtsTrait;
-    use \PHPPgAdmin\Database\Traits\FunctionTrait;
-    use \PHPPgAdmin\Database\Traits\IndexTrait;
-    use \PHPPgAdmin\Database\Traits\OperatorTrait;
-    use \PHPPgAdmin\Database\Traits\RoleTrait;
-    use \PHPPgAdmin\Database\Traits\SchemaTrait;
-    use \PHPPgAdmin\Database\Traits\SequenceTrait;
-    use \PHPPgAdmin\Database\Traits\TablespaceTrait;
-    use \PHPPgAdmin\Database\Traits\TableTrait;
-    use \PHPPgAdmin\Database\Traits\TypeTrait;
-    use \PHPPgAdmin\Database\Traits\ViewTrait;
-    use \PHPPgAdmin\Database\Traits\StatsTrait;
-    use \PHPPgAdmin\Database\Traits\PrivilegesTrait;
+    use HelperTrait;
+    use AggregateTrait;
+    use DatabaseTrait;
+    use DomainTrait;
+    use FtsTrait;
+    use FunctionTrait;
+    use IndexTrait;
+    use OperatorTrait;
+    use RoleTrait;
+    use SchemaTrait;
+    use SequenceTrait;
+    use TablespaceTrait;
+    use TableTrait;
+    use TypeTrait;
+    use ViewTrait;
+    use StatsTrait;
+    use PrivilegesTrait;
 
     public $lang;
 
@@ -44,10 +64,10 @@ class Postgres extends ADOdbBase
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc::class;
+    public $help_classname = PostgresDoc::class;
 
     /**
-     * @var \PHPPgAdmin\Help\PostgresDoc
+     * @var PostgresDoc
      */
     public $help_class;
 
@@ -127,7 +147,10 @@ class Postgres extends ADOdbBase
         $extra_str = '';
 
         foreach ($extras as $k => $v) {
-            $extra_str .= " {$k}=\"" . \htmlspecialchars($v) . '"';
+            $extra_str .= \sprintf(
+                ' %s="',
+                $k
+            ) . \htmlspecialchars($v) . '"';
         }
 
         switch (\mb_substr($type, 0, 9)) {
@@ -143,13 +166,29 @@ class Postgres extends ADOdbBase
 
                 // If value is null, 't' or 'f'...
                 if (null === $value || 't' === $value || 'f' === $value) {
-                    echo '<select name="', \htmlspecialchars($name), "\"{$extra_str}>\n";
+                    echo '<select name="', \htmlspecialchars($name), \sprintf(
+                        '"%s>
+',
+                        $extra_str
+                    );
                     echo '<option value=""', (null === $value) ? ' selected="selected"' : '', "></option>\n";
-                    echo '<option value="t"', ('t' === $value) ? ' selected="selected"' : '', ">{$lang['strtrue']}</option>\n";
-                    echo '<option value="f"', ('f' === $value) ? ' selected="selected"' : '', ">{$lang['strfalse']}</option>\n";
+                    echo '<option value="t"', ('t' === $value) ? ' selected="selected"' : '', \sprintf(
+                        '>%s</option>
+',
+                        $lang['strtrue']
+                    );
+                    echo '<option value="f"', ('f' === $value) ? ' selected="selected"' : '', \sprintf(
+                        '>%s</option>
+',
+                        $lang['strfalse']
+                    );
                     echo "</select>\n";
                 } else {
-                    echo '<input name="', \htmlspecialchars($name), '" value="', \htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
+                    echo '<input name="', \htmlspecialchars($name), '" value="', \htmlspecialchars($value), \sprintf(
+                        '" size="35"%s />
+',
+                        $extra_str
+                    );
                 }
 
                 break;
@@ -168,7 +207,12 @@ class Postgres extends ADOdbBase
                 $n = \mb_substr_count($value, "\n");
                 $n = 5 > $n ? \max(2, $n) : $n;
                 $n = 20 < $n ? 20 : $n;
-                echo '<textarea name="', \htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"85\"{$extra_str}>\n";
+                echo '<textarea name="', \htmlspecialchars($name), \sprintf(
+                    '" rows="%s" cols="85"%s>
+',
+                    $n,
+                    $extra_str
+                );
                 echo \htmlspecialchars($value);
                 echo "</textarea>\n";
 
@@ -178,14 +222,23 @@ class Postgres extends ADOdbBase
                 $n = \mb_substr_count($value, "\n");
                 $n = 5 > $n ? 5 : $n;
                 $n = 20 < $n ? 20 : $n;
-                echo '<textarea name="', \htmlspecialchars($name), "\" rows=\"{$n}\" cols=\"35\"{$extra_str}>\n";
+                echo '<textarea name="', \htmlspecialchars($name), \sprintf(
+                    '" rows="%s" cols="35"%s>
+',
+                    $n,
+                    $extra_str
+                );
                 echo \htmlspecialchars($value);
                 echo "</textarea>\n";
 
                 break;
 
             default:
-                echo '<input name="', \htmlspecialchars($name), '" value="', \htmlspecialchars($value), "\" size=\"35\"{$extra_str} />\n";
+                echo '<input name="', \htmlspecialchars($name), '" value="', \htmlspecialchars($value), \sprintf(
+                    '" size="35"%s />
+',
+                    $extra_str
+                );
 
                 break;
         }
@@ -197,7 +250,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function findObject($term, $filter)
     {
@@ -235,107 +288,153 @@ class Postgres extends ADOdbBase
             $sql = 'SELECT * FROM (';
         }
 
-        $term = "\$_PATERN_\$%{$term}%\$_PATERN_\$";
+        $term = \sprintf(
+            '$_PATERN_$%%s%$_PATERN_$',
+            $term
+        );
 
-        $sql .= "
-			SELECT 'SCHEMA' AS type, oid, NULL AS schemaname, NULL AS relname, nspname AS name
-				FROM pg_catalog.pg_namespace pn WHERE nspname ILIKE {$term} {$where}
+        $sql .= \sprintf(
+            '
+			SELECT \'SCHEMA\' AS type, oid, NULL AS schemaname, NULL AS relname, nspname AS name
+				FROM pg_catalog.pg_namespace pn WHERE nspname ILIKE %s %s
 			UNION ALL
-			SELECT CASE WHEN relkind='r' THEN 'TABLE' WHEN relkind='v' THEN 'VIEW' WHEN relkind='S' THEN 'SEQUENCE' END, pc.oid,
+			SELECT CASE WHEN relkind=\'r\' THEN \'TABLE\' WHEN relkind=\'v\' THEN \'VIEW\' WHEN relkind=\'S\' THEN \'SEQUENCE\' END, pc.oid,
 				pn.nspname, NULL, pc.relname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn
-				WHERE pc.relnamespace=pn.oid AND relkind IN ('r', 'v', 'S') AND relname ILIKE {$term} {$where}
+				WHERE pc.relnamespace=pn.oid AND relkind IN (\'r\', \'v\', \'S\') AND relname ILIKE %s %s
 			UNION ALL
-			SELECT CASE WHEN pc.relkind='r' THEN 'COLUMNTABLE' ELSE 'COLUMNVIEW' END, NULL, pn.nspname, pc.relname, pa.attname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
+			SELECT CASE WHEN pc.relkind=\'r\' THEN \'COLUMNTABLE\' ELSE \'COLUMNVIEW\' END, NULL, pn.nspname, pc.relname, pa.attname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
 				pg_catalog.pg_attribute pa WHERE pc.relnamespace=pn.oid AND pc.oid=pa.attrelid
-				AND pa.attname ILIKE {$term} AND pa.attnum > 0 AND NOT pa.attisdropped AND pc.relkind IN ('r', 'v') {$where}
+				AND pa.attname ILIKE %s AND pa.attnum > 0 AND NOT pa.attisdropped AND pc.relkind IN (\'r\', \'v\') %s
 			UNION ALL
-			SELECT 'FUNCTION', pp.oid, pn.nspname, NULL, pp.proname || '(' || pg_catalog.oidvectortypes(pp.proargtypes) || ')' FROM pg_catalog.pg_proc pp, pg_catalog.pg_namespace pn
-				WHERE pp.pronamespace=pn.oid AND NOT pp.proisagg AND pp.proname ILIKE {$term} {$where}
+			SELECT \'FUNCTION\', pp.oid, pn.nspname, NULL, pp.proname || \'(\' || pg_catalog.oidvectortypes(pp.proargtypes) || \')\' FROM pg_catalog.pg_proc pp, pg_catalog.pg_namespace pn
+				WHERE pp.pronamespace=pn.oid AND NOT pp.proisagg AND pp.proname ILIKE %s %s
 			UNION ALL
-			SELECT 'INDEX', NULL, pn.nspname, pc.relname, pc2.relname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
+			SELECT \'INDEX\', NULL, pn.nspname, pc.relname, pc2.relname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
 				pg_catalog.pg_index pi, pg_catalog.pg_class pc2 WHERE pc.relnamespace=pn.oid AND pc.oid=pi.indrelid
 				AND pi.indexrelid=pc2.oid
 				AND NOT EXISTS (
 					SELECT 1 FROM pg_catalog.pg_depend d JOIN pg_catalog.pg_constraint c
 					ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
-					WHERE d.classid = pc2.tableoid AND d.objid = pc2.oid AND d.deptype = 'i' AND c.contype IN ('u', 'p')
+					WHERE d.classid = pc2.tableoid AND d.objid = pc2.oid AND d.deptype = \'i\' AND c.contype IN (\'u\', \'p\')
 				)
-				AND pc2.relname ILIKE {$term} {$where}
+				AND pc2.relname ILIKE %s %s
 			UNION ALL
-			SELECT 'CONSTRAINTTABLE', NULL, pn.nspname, pc.relname, pc2.conname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
+			SELECT \'CONSTRAINTTABLE\', NULL, pn.nspname, pc.relname, pc2.conname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
 				pg_catalog.pg_constraint pc2 WHERE pc.relnamespace=pn.oid AND pc.oid=pc2.conrelid AND pc2.conrelid != 0
-				AND CASE WHEN pc2.contype IN ('f', 'c') THEN TRUE ELSE NOT EXISTS (
+				AND CASE WHEN pc2.contype IN (\'f\', \'c\') THEN TRUE ELSE NOT EXISTS (
 					SELECT 1 FROM pg_catalog.pg_depend d JOIN pg_catalog.pg_constraint c
 					ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
-					WHERE d.classid = pc2.tableoid AND d.objid = pc2.oid AND d.deptype = 'i' AND c.contype IN ('u', 'p')
+					WHERE d.classid = pc2.tableoid AND d.objid = pc2.oid AND d.deptype = \'i\' AND c.contype IN (\'u\', \'p\')
 				) END
-				AND pc2.conname ILIKE {$term} {$where}
+				AND pc2.conname ILIKE %s %s
 			UNION ALL
-			SELECT 'CONSTRAINTDOMAIN', pt.oid, pn.nspname, pt.typname, pc.conname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn,
+			SELECT \'CONSTRAINTDOMAIN\', pt.oid, pn.nspname, pt.typname, pc.conname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn,
 				pg_catalog.pg_constraint pc WHERE pt.typnamespace=pn.oid AND pt.oid=pc.contypid AND pc.contypid != 0
-				AND pc.conname ILIKE {$term} {$where}
+				AND pc.conname ILIKE %s %s
 			UNION ALL
-			SELECT 'TRIGGER', NULL, pn.nspname, pc.relname, pt.tgname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
+			SELECT \'TRIGGER\', NULL, pn.nspname, pc.relname, pt.tgname FROM pg_catalog.pg_class pc, pg_catalog.pg_namespace pn,
 				pg_catalog.pg_trigger pt WHERE pc.relnamespace=pn.oid AND pc.oid=pt.tgrelid
 					AND ( pt.tgconstraint = 0 OR NOT EXISTS
 					(SELECT 1 FROM pg_catalog.pg_depend d JOIN pg_catalog.pg_constraint c
 					ON (d.refclassid = c.tableoid AND d.refobjid = c.oid)
-					WHERE d.classid = pt.tableoid AND d.objid = pt.oid AND d.deptype = 'i' AND c.contype = 'f'))
-				AND pt.tgname ILIKE {$term} {$where}
+					WHERE d.classid = pt.tableoid AND d.objid = pt.oid AND d.deptype = \'i\' AND c.contype = \'f\'))
+				AND pt.tgname ILIKE %s %s
 			UNION ALL
-			SELECT 'RULETABLE', NULL, pn.nspname AS schemaname, c.relname AS tablename, r.rulename FROM pg_catalog.pg_rewrite r
+			SELECT \'RULETABLE\', NULL, pn.nspname AS schemaname, c.relname AS tablename, r.rulename FROM pg_catalog.pg_rewrite r
 				JOIN pg_catalog.pg_class c ON c.oid = r.ev_class
 				LEFT JOIN pg_catalog.pg_namespace pn ON pn.oid = c.relnamespace
-				WHERE c.relkind='r' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
+				WHERE c.relkind=\'r\' AND r.rulename != \'_RETURN\' AND r.rulename ILIKE %s %s
 			UNION ALL
-			SELECT 'RULEVIEW', NULL, pn.nspname AS schemaname, c.relname AS tablename, r.rulename FROM pg_catalog.pg_rewrite r
+			SELECT \'RULEVIEW\', NULL, pn.nspname AS schemaname, c.relname AS tablename, r.rulename FROM pg_catalog.pg_rewrite r
 				JOIN pg_catalog.pg_class c ON c.oid = r.ev_class
 				LEFT JOIN pg_catalog.pg_namespace pn ON pn.oid = c.relnamespace
-				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
-		";
+				WHERE c.relkind=\'v\' AND r.rulename != \'_RETURN\' AND r.rulename ILIKE %s %s
+		',
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where,
+            $term,
+            $where
+        );
 
         // Add advanced objects if show_advanced is set
         if ($conf['show_advanced']) {
-            $sql .= "
+            $sql .= \sprintf(
+                '
 				UNION ALL
-				SELECT CASE WHEN pt.typtype='d' THEN 'DOMAIN' ELSE 'TYPE' END, pt.oid, pn.nspname, NULL,
+				SELECT CASE WHEN pt.typtype=\'d\' THEN \'DOMAIN\' ELSE \'TYPE\' END, pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
-					WHERE pt.typnamespace=pn.oid AND typname ILIKE {$term}
-					AND (pt.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
-					{$where}
+					WHERE pt.typnamespace=pn.oid AND typname ILIKE %s
+					AND (pt.typrelid = 0 OR (SELECT c.relkind = \'c\' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
+					%s
 			 	UNION ALL
-				SELECT 'OPERATOR', po.oid, pn.nspname, NULL, po.oprname FROM pg_catalog.pg_operator po, pg_catalog.pg_namespace pn
-					WHERE po.oprnamespace=pn.oid AND oprname ILIKE {$term} {$where}
+				SELECT \'OPERATOR\', po.oid, pn.nspname, NULL, po.oprname FROM pg_catalog.pg_operator po, pg_catalog.pg_namespace pn
+					WHERE po.oprnamespace=pn.oid AND oprname ILIKE %s %s
 				UNION ALL
-				SELECT 'CONVERSION', pc.oid, pn.nspname, NULL, pc.conname FROM pg_catalog.pg_conversion pc,
-					pg_catalog.pg_namespace pn WHERE pc.connamespace=pn.oid AND conname ILIKE {$term} {$where}
+				SELECT \'CONVERSION\', pc.oid, pn.nspname, NULL, pc.conname FROM pg_catalog.pg_conversion pc,
+					pg_catalog.pg_namespace pn WHERE pc.connamespace=pn.oid AND conname ILIKE %s %s
 				UNION ALL
-				SELECT 'LANGUAGE', pl.oid, NULL, NULL, pl.lanname FROM pg_catalog.pg_language pl
-					WHERE lanname ILIKE {$term} {$lan_where}
+				SELECT \'LANGUAGE\', pl.oid, NULL, NULL, pl.lanname FROM pg_catalog.pg_language pl
+					WHERE lanname ILIKE %s %s
 				UNION ALL
-				SELECT DISTINCT ON (p.proname) 'AGGREGATE', p.oid, pn.nspname, NULL, p.proname FROM pg_catalog.pg_proc p
+				SELECT DISTINCT ON (p.proname) \'AGGREGATE\', p.oid, pn.nspname, NULL, p.proname FROM pg_catalog.pg_proc p
 					LEFT JOIN pg_catalog.pg_namespace pn ON p.pronamespace=pn.oid
-					WHERE p.proisagg AND p.proname ILIKE {$term} {$where}
+					WHERE p.proisagg AND p.proname ILIKE %s %s
 				UNION ALL
-				SELECT DISTINCT ON (po.opcname) 'OPCLASS', po.oid, pn.nspname, NULL, po.opcname FROM pg_catalog.pg_opclass po,
+				SELECT DISTINCT ON (po.opcname) \'OPCLASS\', po.oid, pn.nspname, NULL, po.opcname FROM pg_catalog.pg_opclass po,
 					pg_catalog.pg_namespace pn WHERE po.opcnamespace=pn.oid
-					AND po.opcname ILIKE {$term} {$where}
-			";
+					AND po.opcname ILIKE %s %s
+			',
+                $term,
+                $where,
+                $term,
+                $where,
+                $term,
+                $where,
+                $term,
+                $lan_where,
+                $term,
+                $where,
+                $term,
+                $where
+            );
         } else {
             // Otherwise just add domains
-            $sql .= "
+            $sql .= \sprintf(
+                '
 				UNION ALL
-				SELECT 'DOMAIN', pt.oid, pn.nspname, NULL,
+				SELECT \'DOMAIN\', pt.oid, pn.nspname, NULL,
 					pt.typname FROM pg_catalog.pg_type pt, pg_catalog.pg_namespace pn
-					WHERE pt.typnamespace=pn.oid AND pt.typtype='d' AND typname ILIKE {$term}
-					AND (pt.typrelid = 0 OR (SELECT c.relkind = 'c' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
-					{$where}
-			";
+					WHERE pt.typnamespace=pn.oid AND pt.typtype=\'d\' AND typname ILIKE %s
+					AND (pt.typrelid = 0 OR (SELECT c.relkind = \'c\' FROM pg_catalog.pg_class c WHERE c.oid = pt.typrelid))
+					%s
+			',
+                $term,
+                $where
+            );
         }
 
         if ('' !== $filter) {
             // We use like to make RULE, CONSTRAINT and COLUMN searches work
-            $sql .= ") AS sub WHERE type LIKE '{$filter}%' ";
+            $sql .= \sprintf(
+                ') AS sub WHERE type LIKE \'%s%\' ',
+                $filter
+            );
         }
 
         $sql .= 'ORDER BY type, schemaname, relname, name';
@@ -348,7 +447,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getLanguages($all = false)
     {
@@ -360,15 +459,18 @@ class Postgres extends ADOdbBase
             $where = 'WHERE lanispl';
         }
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT
 				lanname, lanpltrusted,
 				lanplcallfoid::pg_catalog.regproc AS lanplcallf
 			FROM
 				pg_catalog.pg_language
-			{$where}
+			%s
 			ORDER BY lanname
-		";
+		',
+            $where
+        );
 
         return $this->selectSet($sql);
     }
@@ -458,8 +560,7 @@ class Postgres extends ADOdbBase
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
-                    if (
-                        \mb_substr($line, $i, 1) === $in_quote &&
+                    if (\mb_substr($line, $i, 1) === $in_quote &&
                         (0 === $bslash_count % 2 || '"' === $in_quote)
                     ) {
                         $in_quote = 0;
@@ -665,12 +766,12 @@ class Postgres extends ADOdbBase
      * @param null|int $page_size The number of rows per page
      * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A  recordset on success or an int with error code
-     *                                      - -1 transaction error
-     *                                      - -2 counting error
-     *                                      - -3 page or page_size invalid
-     *                                      - -4 unknown type
-     *                                      - -5 failed setting transaction read only
+     * @return ADORecordSet|int A  recordset on success or an int with error code
+     *                          - -1 transaction error
+     *                          - -2 counting error
+     *                          - -3 page or page_size invalid
+     *                          - -4 unknown type
+     *                          - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {
@@ -707,7 +808,10 @@ class Postgres extends ADOdbBase
         }
 
         // Generate count query
-        $count = "SELECT COUNT(*) AS total FROM ({$query}) AS sub";
+        $count = \sprintf(
+            'SELECT COUNT(*) AS total FROM (%s) AS sub',
+            $query
+        );
 
         // Open a transaction
         $status = $this->beginTransaction();
@@ -757,7 +861,10 @@ class Postgres extends ADOdbBase
         // Figure out ORDER BY.  Sort key is always the column number (based from one)
         // of the column to order by.  Only need to do this for non-TABLE queries
         if ('TABLE' !== $type && \preg_match('/^[0-9]+$/', $sortkey) && 0 < $sortkey) {
-            $orderby = " ORDER BY {$sortkey}";
+            $orderby = \sprintf(
+                ' ORDER BY %s',
+                $sortkey
+            );
             // Add sort order
             if ('desc' === $sortdir) {
                 $orderby .= ' DESC';
@@ -769,7 +876,12 @@ class Postgres extends ADOdbBase
         }
 
         // Actually retrieve the rows, with offset and limit
-        $rs = $this->selectSet("SELECT * FROM ({$query}) AS sub {$orderby} LIMIT {$page_size} OFFSET " . ($page - 1) * $page_size);
+        $rs = $this->selectSet(\sprintf(
+            'SELECT * FROM (%s) AS sub %s LIMIT %s OFFSET ',
+            $query,
+            $orderby,
+            $page_size
+        ) . ($page - 1) * $page_size);
         $status = $this->endTransaction();
 
         if (0 !== $status) {
@@ -800,14 +912,20 @@ class Postgres extends ADOdbBase
         // If an empty array is passed in, then show all columns
         if (0 === \count($show)) {
             if ($this->hasObjectID($table)) {
-                $sql = "SELECT \"{$this->id}\", * FROM ";
+                $sql = \sprintf(
+                    'SELECT "%s", * FROM ',
+                    $this->id
+                );
             } else {
                 $sql = 'SELECT * FROM ';
             }
         } else {
             // Add oid column automatically to results for editing purposes
             if (!\in_array($this->id, $show, true) && $this->hasObjectID($table)) {
-                $sql = "SELECT \"{$this->id}\", \"";
+                $sql = \sprintf(
+                    'SELECT "%s", "',
+                    $this->id
+                );
             } else {
                 $sql = 'SELECT "';
             }
@@ -820,9 +938,15 @@ class Postgres extends ADOdbBase
         if (isset($_REQUEST['schema'])) {
             $f_schema = $_REQUEST['schema'];
             $this->fieldClean($f_schema);
-            $sql .= "\"{$f_schema}\".";
+            $sql .= \sprintf(
+                '"%s".',
+                $f_schema
+            );
         }
-        $sql .= "\"{$table}\"";
+        $sql .= \sprintf(
+            '"%s"',
+            $table
+        );
 
         // If we have values specified, add them to the WHERE clause
         $first = true;
@@ -845,19 +969,38 @@ class Postgres extends ADOdbBase
                             // this is because (x), subqueries need to
                             // to allow 'a','b' as input.
                             $this->clean($v);
-                            $sql .= "\"{$k}\" {$ops[$k]} '{$v}'";
+                            $sql .= \sprintf(
+                                '"%s" %s \'%s\'',
+                                $k,
+                                $ops[$k],
+                                $v
+                            );
 
                             break;
                         case 'p':
-                            $sql .= "\"{$k}\" {$ops[$k]}";
+                            $sql .= \sprintf(
+                                '"%s" %s',
+                                $k,
+                                $ops[$k]
+                            );
 
                             break;
                         case 'x':
-                            $sql .= "\"{$k}\" {$ops[$k]} ({$v})";
+                            $sql .= \sprintf(
+                                '"%s" %s (%s)',
+                                $k,
+                                $ops[$k],
+                                $v
+                            );
 
                             break;
                         case 't':
-                            $sql .= "\"{$k}\" {$ops[$k]}('{$v}')";
+                            $sql .= \sprintf(
+                                '"%s" %s(\'%s\')',
+                                $k,
+                                $ops[$k],
+                                $v
+                            );
 
                             break;
 

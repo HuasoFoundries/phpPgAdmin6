@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\Help\PostgresDoc94;
+
 /**
  * @file
  * PostgreSQL 9.4 support
@@ -17,7 +19,7 @@ class Postgres94 extends Postgres95
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc94::class;
+    public $help_classname = PostgresDoc94::class;
 
     /**
      * @var float

@@ -6,11 +6,12 @@
 
 namespace PHPPgAdmin;
 
+use Exception;
+
 /**
  * @file
  * Handles Exceptions on ADODb
  */
-
 /**
  * Released under both BSD-3-CLAUSE license and GPL-2.0-OR-LATER. Whenever
  * there is any discrepancy between the two licenses, the BSD license will take
@@ -25,7 +26,7 @@ namespace PHPPgAdmin;
  *
  * @version   Release: 5.20.9
  */
-class ADOdbException extends \Exception
+class ADOdbException extends Exception
 {
     public $dbms;
 
@@ -72,7 +73,7 @@ class ADOdbException extends \Exception
      * @param string $p2             parameter 2
      * @param mixed  $thisConnection connection
      *
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection)
     {
@@ -80,18 +81,42 @@ class ADOdbException extends \Exception
             case 'EXECUTE':
                 $this->sql = \is_array($p1) ? $p1[0] : $p1;
                 $this->params = $p2;
-                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}(\"{$this->sql}\")";
+                $s = \sprintf(
+                    '%s error: [%s: %s] in %s("%s")',
+                    $dbms,
+                    $errno,
+                    $errmsg,
+                    $fn,
+                    $this->sql
+                );
 
                 break;
             case 'PCONNECT':
             case 'CONNECT':
                 $user = $thisConnection->user;
-                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, '{$user}', '****', {$p2})";
+                $s = \sprintf(
+                    '%s error: [%s: %s] in %s(%s, \'%s\', \'****\', %s)',
+                    $dbms,
+                    $errno,
+                    $errmsg,
+                    $fn,
+                    $p1,
+                    $user,
+                    $p2
+                );
 
                 break;
 
             default:
-                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, {$p2})";
+                $s = \sprintf(
+                    '%s error: [%s: %s] in %s(%s, %s)',
+                    $dbms,
+                    $errno,
+                    $errmsg,
+                    $fn,
+                    $p1,
+                    $p2
+                );
 
                 break;
         }
@@ -143,16 +168,20 @@ class ADOdbException extends \Exception
             'spacer' => ' ',
             'line' => $backtrace[0]['line'],
         ];
-        $errmsg = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($errmsg), \ENT_NOQUOTES);
-        $p1 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p1), \ENT_NOQUOTES);
-        $p2 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p2), \ENT_NOQUOTES);
+        $errmsg = \htmlentities(ContainerUtils::br2ln($errmsg), \ENT_NOQUOTES);
+        $p1 = \htmlentities(ContainerUtils::br2ln($p1), \ENT_NOQUOTES);
+        $p2 = \htmlentities(ContainerUtils::br2ln($p2), \ENT_NOQUOTES);
 
         $tag = \implode('', $btarray0);
 
         //\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
 
         $adoException = new self($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
-        echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$adoException->msg}</td></tr></table><br />\n";
+        echo \sprintf(
+            '<table class="error" cellpadding="5"><tr><td>%s</td></tr></table><br />
+',
+            $adoException->msg
+        );
 
         // adodb_backtrace($adoException->getTrace());
         throw $adoException;

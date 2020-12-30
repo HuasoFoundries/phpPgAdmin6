@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for full text search manipulation.
  */
@@ -17,7 +19,7 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -31,22 +33,26 @@ trait FunctionTrait
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where = "n.nspname = '{$c_schema}'";
+            $where = \sprintf(
+                'n.nspname = \'%s\'',
+                $c_schema
+            );
             $distinct = '';
         }
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
-                {$distinct}
+                %s
                 p.oid AS prooid,
                 p.proname,
                 p.proretset,
                 pg_catalog.format_type(p.prorettype, NULL) AS proresult,
                 pg_catalog.oidvectortypes(p.proargtypes) AS proarguments,
                 pl.lanname AS prolanguage,
-                pg_catalog.obj_description(p.oid, 'pg_proc') AS procomment,
-                p.proname || ' (' || pg_catalog.oidvectortypes(p.proargtypes) || ')' AS proproto,
-                CASE WHEN p.proretset THEN 'setof ' ELSE '' END || pg_catalog.format_type(p.prorettype, NULL) AS proreturns,
+                pg_catalog.obj_description(p.oid, \'pg_proc\') AS procomment,
+                p.proname || \' (\' || pg_catalog.oidvectortypes(p.proargtypes) || \')\' AS proproto,
+                CASE WHEN p.proretset THEN \'setof \' ELSE \'\' END || pg_catalog.format_type(p.prorettype, NULL) AS proreturns,
                 coalesce(u.usename::text,p.proowner::text) AS proowner
 
             FROM pg_catalog.pg_proc p
@@ -54,9 +60,12 @@ trait FunctionTrait
                 INNER JOIN pg_catalog.pg_language pl ON pl.oid = p.prolang
                 LEFT JOIN pg_catalog.pg_user u ON u.usesysid = p.proowner
             WHERE NOT p.proisagg
-                AND {$where}
+                AND %s
             ORDER BY p.proname, proresult
-            ";
+            ',
+            $distinct,
+            $where
+        );
 
         return $this->selectSet($sql);
     }
@@ -64,7 +73,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return \PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
+     * @return ADORecordSet Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
     {
@@ -177,7 +186,13 @@ trait FunctionTrait
         $this->fieldClean($newname);
         /* $funcname is escaped in createFunction */
         if ($funcname !== $newname) {
-            $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) RENAME TO \"{$newname}\"";
+            $sql = \sprintf(
+                'ALTER FUNCTION "%s"."%s"(%s) RENAME TO "%s"',
+                $f_schema,
+                $funcname,
+                $args,
+                $newname
+            );
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -194,7 +209,13 @@ trait FunctionTrait
             $this->fieldClean($newown);
 
             if ($funcown !== $newown) {
-                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) OWNER TO \"{$newown}\"";
+                $sql = \sprintf(
+                    'ALTER FUNCTION "%s"."%s"(%s) OWNER TO "%s"',
+                    $f_schema,
+                    $funcname,
+                    $args,
+                    $newown
+                );
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -210,7 +231,13 @@ trait FunctionTrait
             $this->fieldClean($newschema);
             /* $funcschema is escaped in createFunction */
             if ($funcschema !== $newschema) {
-                $sql = "ALTER FUNCTION \"{$f_schema}\".\"{$funcname}\"({$args}) SET SCHEMA \"{$newschema}\"";
+                $sql = \sprintf(
+                    'ALTER FUNCTION "%s"."%s"(%s) SET SCHEMA "%s"',
+                    $f_schema,
+                    $funcname,
+                    $args,
+                    $newschema
+                );
                 $status = $this->execute($sql);
 
                 if (0 !== $status) {
@@ -268,7 +295,11 @@ trait FunctionTrait
             $sql .= ' OR REPLACE';
         }
 
-        $sql .= " FUNCTION \"{$f_schema}\".\"{$funcname}\" (";
+        $sql .= \sprintf(
+            ' FUNCTION "%s"."%s" (',
+            $f_schema,
+            $funcname
+        );
 
         if ('' !== $args) {
             $sql .= $args;
@@ -281,7 +312,10 @@ trait FunctionTrait
             $sql .= 'SETOF ';
         }
 
-        $sql .= "{$returns} AS ";
+        $sql .= \sprintf(
+            '%s AS ',
+            $returns
+        );
 
         if (\is_array($definition)) {
             $this->arrayClean($definition);
@@ -295,15 +329,24 @@ trait FunctionTrait
             $sql .= "'" . $definition . "'";
         }
 
-        $sql .= " LANGUAGE \"{$language}\"";
+        $sql .= \sprintf(
+            ' LANGUAGE "%s"',
+            $language
+        );
 
         // Add costs
         if (!empty($cost)) {
-            $sql .= " COST {$cost}";
+            $sql .= \sprintf(
+                ' COST %s',
+                $cost
+            );
         }
 
         if (0 !== $rows) {
-            $sql .= " ROWS {$rows}";
+            $sql .= \sprintf(
+                ' ROWS %s',
+                $rows
+            );
         }
 
         // Add flags
@@ -313,7 +356,7 @@ trait FunctionTrait
                 continue;
             }
 
-            $sql .= "\n{$v}";
+            $sql .= \PHP_EOL . $v;
         }
 
         $status = $this->execute($sql);
@@ -325,7 +368,11 @@ trait FunctionTrait
         }
 
         /* set the comment */
-        $status = $this->setComment('FUNCTION', "\"{$funcname}\"({$args})", null, $comment);
+        $status = $this->setComment('FUNCTION', \sprintf(
+            '"%s"(%s)',
+            $funcname,
+            $args
+        ), null, $comment);
 
         if (0 !== $status) {
             $this->rollbackTransaction();
@@ -342,7 +389,7 @@ trait FunctionTrait
      * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -352,7 +399,12 @@ trait FunctionTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($fn->fields['proname']);
 
-        $sql = "DROP FUNCTION \"{$f_schema}\".\"{$fn->fields['proname']}\"({$fn->fields['proarguments']})";
+        $sql = \sprintf(
+            'DROP FUNCTION "%s"."%s"(%s)',
+            $f_schema,
+            $fn->fields['proname'],
+            $fn->fields['proarguments']
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -366,7 +418,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -374,7 +426,8 @@ trait FunctionTrait
     {
         $this->clean($function_oid);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 pc.oid AS prooid, proname,
                 pg_catalog.pg_get_userbyid(proowner) AS proowner,
@@ -383,7 +436,7 @@ trait FunctionTrait
                 probin, proretset, proisstrict, provolatile, prosecdef,
                 pg_catalog.oidvectortypes(pc.proargtypes) AS proarguments,
                 proargnames AS proargnames,
-                pg_catalog.obj_description(pc.oid, 'pg_proc') AS procomment,
+                pg_catalog.obj_description(pc.oid, \'pg_proc\') AS procomment,
                 proconfig,
                 (select array_agg( (select typname from pg_type pt
                     where pt.oid = p.oid) ) from unnest(proallargtypes) p)
@@ -393,9 +446,11 @@ trait FunctionTrait
                 pg_catalog.pg_proc pc, pg_catalog.pg_language pl,
                 pg_catalog.pg_namespace pn
             WHERE
-                pc.oid = '{$function_oid}'::oid AND pc.prolang = pl.oid
+                pc.oid = \'%s\'::oid AND pc.prolang = pl.oid
                 AND pc.pronamespace = pn.oid
-            ";
+            ',
+            $function_oid
+        );
 
         return $this->selectSet($sql);
     }
@@ -405,17 +460,18 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getFunctionDef($function_oid)
     {
         $this->clean($function_oid);
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 f.proname as relname,
                 n.nspname,
                 u.usename AS relowner,
-                 pg_catalog.obj_description(f.oid, 'pg_proc') as relcomment,
+                 pg_catalog.obj_description(f.oid, \'pg_proc\') as relcomment,
                  (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=f.pronamespace) AS tablespace,
                 pg_get_functiondef(f.oid),
                 pl.lanname AS prolanguage
@@ -423,8 +479,10 @@ trait FunctionTrait
                 JOIN pg_catalog.pg_namespace n ON (f.pronamespace = n.oid)
                 JOIN pg_catalog.pg_language pl ON pl.oid = f.prolang
                 LEFT JOIN pg_catalog.pg_user u ON u.usesysid=f.proowner
-                WHERE f.oid='{$function_oid}'
-        ";
+                WHERE f.oid=\'%s\'
+        ',
+            $function_oid
+        );
 
         return $this->selectSet($sql);
     }

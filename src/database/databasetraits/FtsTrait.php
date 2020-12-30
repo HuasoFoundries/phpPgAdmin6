@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use ADORecordSet;
+
 /**
  * Common trait for full text search manipulation.
  */
@@ -31,19 +33,34 @@ trait FtsTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($cfgname);
 
-        $sql = "CREATE TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" (";
+        $sql = \sprintf(
+            'CREATE TEXT SEARCH CONFIGURATION "%s"."%s" (',
+            $f_schema,
+            $cfgname
+        );
 
         if ('' !== $parser) {
             $this->fieldClean($parser['schema']);
             $this->fieldClean($parser['parser']);
-            $parser = "\"{$parser['schema']}\".\"{$parser['parser']}\"";
-            $sql .= " PARSER = {$parser}";
+            $parser = \sprintf(
+                '"%s"."%s"',
+                $parser['schema'],
+                $parser['parser']
+            );
+            $sql .= \sprintf(
+                ' PARSER = %s',
+                $parser
+            );
         }
 
         if ('' !== $template) {
             $this->fieldClean($template['schema']);
             $this->fieldClean($template['name']);
-            $sql .= " COPY = \"{$template['schema']}\".\"{$template['name']}\"";
+            $sql .= \sprintf(
+                ' COPY = "%s"."%s"',
+                $template['schema'],
+                $template['name']
+            );
         }
         $sql .= ')';
 
@@ -87,7 +104,7 @@ trait FtsTrait
      *
      * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsConfigurations($all = true)
     {
@@ -105,7 +122,11 @@ trait FtsTrait
                 pg_catalog.pg_ts_config_is_visible(c.oid)";
 
         if (!$all) {
-            $sql .= " AND  n.nspname='{$c_schema}'\n";
+            $sql .= \sprintf(
+                ' AND  n.nspname=\'%s\'
+',
+                $c_schema
+            );
         }
 
         $sql .= 'ORDER BY name';
@@ -121,7 +142,7 @@ trait FtsTrait
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -129,29 +150,36 @@ trait FtsTrait
         $this->clean($c_schema);
         $this->fieldClean($ftscfg);
 
-        $oidSet = $this->selectSet("SELECT c.oid
+        $oidSet = $this->selectSet(\sprintf(
+            'SELECT c.oid
             FROM pg_catalog.pg_ts_config AS c
                 LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.cfgnamespace)
-            WHERE c.cfgname = '{$ftscfg}'
-                AND n.nspname='{$c_schema}'");
+            WHERE c.cfgname = \'%s\'
+                AND n.nspname=\'%s\'',
+            $ftscfg,
+            $c_schema
+        ));
 
         $oid = $oidSet->fields['oid'];
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 (SELECT t.alias FROM pg_catalog.ts_token_type(c.cfgparser) AS t WHERE t.tokid = m.maptokentype) AS name,
                 (SELECT t.description FROM pg_catalog.ts_token_type(c.cfgparser) AS t WHERE t.tokid = m.maptokentype) AS description,
-                c.cfgname AS cfgname, n.nspname ||'.'|| d.dictname as dictionaries
+                c.cfgname AS cfgname, n.nspname ||\'.\'|| d.dictname as dictionaries
             FROM
                 pg_catalog.pg_ts_config AS c, pg_catalog.pg_ts_config_map AS m, pg_catalog.pg_ts_dict d,
                 pg_catalog.pg_namespace n
             WHERE
-                c.oid = {$oid}
+                c.oid = %s
                 AND m.mapcfg = c.oid
                 AND m.mapdict = d.oid
                 AND d.dictnamespace = n.oid
             ORDER BY name
-            ";
+            ',
+            $oid
+        );
 
         return $this->selectSet($sql);
     }
@@ -161,7 +189,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsParsers($all = true)
     {
@@ -177,7 +205,11 @@ trait FtsTrait
             WHERE pg_catalog.pg_ts_parser_is_visible(p.oid)";
 
         if (!$all) {
-            $sql .= " AND n.nspname='{$c_schema}'\n";
+            $sql .= \sprintf(
+                ' AND n.nspname=\'%s\'
+',
+                $c_schema
+            );
         }
 
         $sql .= 'ORDER BY name';
@@ -190,7 +222,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Dics from the current schema
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsDictionaries($all = true)
     {
@@ -205,7 +237,11 @@ trait FtsTrait
             WHERE pg_catalog.pg_ts_dict_is_visible(d.oid)";
 
         if (!$all) {
-            $sql .= " AND n.nspname='{$c_schema}'\n";
+            $sql .= \sprintf(
+                ' AND n.nspname=\'%s\'
+',
+                $c_schema
+            );
         }
 
         $sql .= 'ORDER BY name;';
@@ -216,7 +252,7 @@ trait FtsTrait
     /**
      * Returns all FTS dictionary templates available.
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsDictionaryTemplates()
     {
@@ -247,7 +283,7 @@ trait FtsTrait
      * @param string $ftscfg  The configuration's name
      * @param bool   $cascade true to Cascade to dependenced objects
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function dropFtsConfiguration($ftscfg, $cascade)
     {
@@ -255,7 +291,11 @@ trait FtsTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($ftscfg);
 
-        $sql = "DROP TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$ftscfg}\"";
+        $sql = \sprintf(
+            'DROP TEXT SEARCH CONFIGURATION "%s"."%s"',
+            $f_schema,
+            $ftscfg
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -270,7 +310,7 @@ trait FtsTrait
      * @param string $ftsdict The dico's name
      * @param bool   $cascade Cascade to dependenced objects
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      *
      * @todo Support of dictionary templates dropping
      */
@@ -281,7 +321,11 @@ trait FtsTrait
         $this->fieldClean($ftsdict);
 
         $sql = 'DROP TEXT SEARCH DICTIONARY';
-        $sql .= " \"{$f_schema}\".\"{$ftsdict}\"";
+        $sql .= \sprintf(
+            ' "%s"."%s"',
+            $f_schema,
+            $ftsdict
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -325,7 +369,12 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$cfgname}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf(
+                'ALTER TEXT SEARCH CONFIGURATION "%s"."%s" RENAME TO "%s"',
+                $f_schema,
+                $cfgname,
+                $name
+            );
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -371,31 +420,55 @@ trait FtsTrait
         $sql = 'CREATE TEXT SEARCH';
 
         if ($isTemplate) {
-            $sql .= " TEMPLATE \"{$f_schema}\".\"{$dictname}\" (";
+            $sql .= \sprintf(
+                ' TEMPLATE "%s"."%s" (',
+                $f_schema,
+                $dictname
+            );
 
             if ('' !== $lexize) {
-                $sql .= " LEXIZE = {$lexize}";
+                $sql .= \sprintf(
+                    ' LEXIZE = %s',
+                    $lexize
+                );
             }
 
             if ('' !== $init) {
-                $sql .= ", INIT = {$init}";
+                $sql .= \sprintf(
+                    ', INIT = %s',
+                    $init
+                );
             }
 
             $sql .= ')';
             $whatToComment = 'TEXT SEARCH TEMPLATE';
         } else {
-            $sql .= " DICTIONARY \"{$f_schema}\".\"{$dictname}\" (";
+            $sql .= \sprintf(
+                ' DICTIONARY "%s"."%s" (',
+                $f_schema,
+                $dictname
+            );
 
             if ('' !== $template) {
                 $this->fieldClean($template['schema']);
                 $this->fieldClean($template['name']);
-                $template = "\"{$template['schema']}\".\"{$template['name']}\"";
+                $template = \sprintf(
+                    '"%s"."%s"',
+                    $template['schema'],
+                    $template['name']
+                );
 
-                $sql .= " TEMPLATE = {$template}";
+                $sql .= \sprintf(
+                    ' TEMPLATE = %s',
+                    $template
+                );
             }
 
             if ('' !== $option) {
-                $sql .= ", {$option}";
+                $sql .= \sprintf(
+                    ', %s',
+                    $option
+                );
             }
 
             $sql .= ')';
@@ -471,7 +544,12 @@ trait FtsTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($name);
 
-            $sql = "ALTER TEXT SEARCH DICTIONARY \"{$f_schema}\".\"{$dictname}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf(
+                'ALTER TEXT SEARCH DICTIONARY "%s"."%s" RENAME TO "%s"',
+                $f_schema,
+                $dictname,
+                $name
+            );
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -489,7 +567,7 @@ trait FtsTrait
      *
      * @param string $ftsdict The name of the FTS dictionary
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -497,21 +575,25 @@ trait FtsTrait
         $this->clean($c_schema);
         $this->clean($ftsdict);
 
-        $sql = "SELECT
+        $sql = \sprintf(
+            'SELECT
                n.nspname as schema,
                d.dictname as name,
-               ( SELECT COALESCE(nt.nspname, '(null)')::pg_catalog.text || '.' || t.tmplname FROM
+               ( SELECT COALESCE(nt.nspname, \'(null)\')::pg_catalog.text || \'.\' || t.tmplname FROM
                  pg_catalog.pg_ts_template t
                                       LEFT JOIN pg_catalog.pg_namespace nt ON nt.oid = t.tmplnamespace
                                       WHERE d.dicttemplate = t.oid ) AS  template,
                d.dictinitoption as init,
-               pg_catalog.obj_description(d.oid, 'pg_ts_dict') as comment
+               pg_catalog.obj_description(d.oid, \'pg_ts_dict\') as comment
             FROM pg_catalog.pg_ts_dict d
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = d.dictnamespace
-            WHERE d.dictname = '{$ftsdict}'
+            WHERE d.dictname = \'%s\'
                AND pg_catalog.pg_ts_dict_is_visible(d.oid)
-               AND n.nspname='{$c_schema}'
-            ORDER BY name";
+               AND n.nspname=\'%s\'
+            ORDER BY name',
+            $ftsdict,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -524,7 +606,7 @@ trait FtsTrait
      * @param string $action   What to do with the mapping: add, alter or drop
      * @param string $dictname Dictionary that will process tokens given or null in case of drop action
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      *
      * @internal param string $cfgname The name of the FTS configuration to alter
      */
@@ -553,11 +635,19 @@ trait FtsTrait
                     break;
             }
 
-            $sql = "ALTER TEXT SEARCH CONFIGURATION \"{$f_schema}\".\"{$ftscfg}\" {$whatToDo} MAPPING FOR ";
+            $sql = \sprintf(
+                'ALTER TEXT SEARCH CONFIGURATION "%s"."%s" %s MAPPING FOR ',
+                $f_schema,
+                $ftscfg,
+                $whatToDo
+            );
             $sql .= \implode(',', $mapping);
 
             if ('drop' !== $action && !empty($dictname)) {
-                $sql .= " WITH {$dictname}";
+                $sql .= \sprintf(
+                    ' WITH %s',
+                    $dictname
+                );
             }
 
             return $this->execute($sql);
@@ -572,7 +662,7 @@ trait FtsTrait
      * @param string $ftscfg  The name of the FTS configuration
      * @param string $mapping The name of the mapping
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsMappingByName($ftscfg, $mapping)
     {
@@ -581,27 +671,39 @@ trait FtsTrait
         $this->clean($ftscfg);
         $this->clean($mapping);
 
-        $oidSet = $this->selectSet("SELECT c.oid, cfgparser
+        $oidSet = $this->selectSet(\sprintf(
+            'SELECT c.oid, cfgparser
             FROM pg_catalog.pg_ts_config AS c
                 LEFT JOIN pg_catalog.pg_namespace AS n ON n.oid = c.cfgnamespace
-            WHERE c.cfgname = '{$ftscfg}'
-                AND n.nspname='{$c_schema}'");
+            WHERE c.cfgname = \'%s\'
+                AND n.nspname=\'%s\'',
+            $ftscfg,
+            $c_schema
+        ));
 
         $oid = $oidSet->fields['oid'];
         $cfgparser = $oidSet->fields['cfgparser'];
 
-        $tokenIdSet = $this->selectSet("SELECT tokid
-            FROM pg_catalog.ts_token_type({$cfgparser})
-            WHERE alias = '{$mapping}'");
+        $tokenIdSet = $this->selectSet(\sprintf(
+            'SELECT tokid
+            FROM pg_catalog.ts_token_type(%s)
+            WHERE alias = \'%s\'',
+            $cfgparser,
+            $mapping
+        ));
 
         $tokid = $tokenIdSet->fields['tokid'];
 
-        $sql = "SELECT
+        $sql = \sprintf(
+            'SELECT
                 (SELECT t.alias FROM pg_catalog.ts_token_type(c.cfgparser) AS t WHERE t.tokid = m.maptokentype) AS name,
                     d.dictname as dictionaries
             FROM pg_catalog.pg_ts_config AS c, pg_catalog.pg_ts_config_map AS m, pg_catalog.pg_ts_dict d
-            WHERE c.oid = {$oid} AND m.mapcfg = c.oid AND m.maptokentype = {$tokid} AND m.mapdict = d.oid
-            LIMIT 1;";
+            WHERE c.oid = %s AND m.mapcfg = c.oid AND m.maptokentype = %s AND m.mapdict = d.oid
+            LIMIT 1;',
+            $oid,
+            $tokid
+        );
 
         return $this->selectSet($sql);
     }
@@ -612,15 +714,18 @@ trait FtsTrait
      *
      * @param string $ftscfg The config's name that use the parser
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsMappings($ftscfg)
     {
         $cfg = $this->getFtsConfigurationByName($ftscfg);
 
-        $sql = "SELECT alias AS name, description
-            FROM pg_catalog.ts_token_type({$cfg->fields['parser_id']})
-            ORDER BY name";
+        $sql = \sprintf(
+            'SELECT alias AS name, description
+            FROM pg_catalog.ts_token_type(%s)
+            ORDER BY name',
+            $cfg->fields['parser_id']
+        );
 
         return $this->selectSet($sql);
     }
@@ -630,26 +735,30 @@ trait FtsTrait
      *
      * @param string $ftscfg The name of the FTS configuration
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getFtsConfigurationByName($ftscfg)
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         $this->clean($ftscfg);
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 n.nspname as schema,
                 c.cfgname as name,
                 p.prsname as parser,
                 c.cfgparser as parser_id,
-                pg_catalog.obj_description(c.oid, 'pg_ts_config') as comment
+                pg_catalog.obj_description(c.oid, \'pg_ts_config\') as comment
             FROM pg_catalog.pg_ts_config c
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.cfgnamespace
                 LEFT JOIN pg_catalog.pg_ts_parser p ON p.oid = c.cfgparser
             WHERE pg_catalog.pg_ts_config_is_visible(c.oid)
-                AND c.cfgname = '{$ftscfg}'
-                AND n.nspname='{$c_schema}'";
+                AND c.cfgname = \'%s\'
+                AND n.nspname=\'%s\'',
+            $ftscfg,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }

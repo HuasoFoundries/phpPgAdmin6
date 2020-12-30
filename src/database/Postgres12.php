@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\Help\PostgresDoc12;
+
 /**
  * @file
  * PostgreSQL 12.x support
@@ -23,7 +25,7 @@ class Postgres12 extends Postgres11
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc12::class;
+    public $help_classname = PostgresDoc12::class;
 
     /**
      * Checks to see whether or not a table has a unique id column.

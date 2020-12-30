@@ -7,13 +7,14 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\ExportTrait;
 
 /**
  * Base controller class.
  */
 class SchemasController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ExportTrait;
+    use ExportTrait;
 
     public $controller_title = 'strschemas';
 
@@ -106,7 +107,10 @@ class SchemasController extends BaseController
             'schema' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url' => \containerInstance()->subFolder . "{$destination}&amp;",
+                'url' => \containerInstance()->subFolder . \sprintf(
+                    '%s&amp;',
+                    $destination
+                ),
                 'vars' => ['schema' => 'nspname'],
             ],
             'owner' => [
@@ -282,21 +286,42 @@ class SchemasController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data1"><input name="formName" size="32" maxlength="%s" value="',
+            $data->_maxNameLen
+        ),
         \htmlspecialchars($_POST['formName']), "\" /></td>\n\t</tr>" . \PHP_EOL;
         // Owner
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strowner']
+        ) . \PHP_EOL;
         echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"formAuth\">" . \PHP_EOL;
 
         while (!$users->EOF) {
             $uname = \htmlspecialchars($users->fields['usename']);
-            echo "\t\t\t\t<option value=\"{$uname}\"",
-            ($uname === $_POST['formAuth']) ? ' selected="selected"' : '', ">{$uname}</option>" . \PHP_EOL;
+            echo \sprintf(
+                '				<option value="%s"',
+                $uname
+            ),
+            ($uname === $_POST['formAuth']) ? ' selected="selected"' : '', \sprintf(
+                '>%s</option>',
+                $uname
+            ) . \PHP_EOL;
             $users->moveNext();
         }
         echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['strcomment']
+        ) . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
         \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
 
@@ -305,8 +330,14 @@ class SchemasController extends BaseController
         echo '<input type="hidden" name="action" value="create" />' . \PHP_EOL;
         echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="create" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s" />',
+            $this->lang['strcancel']
+        ) . \PHP_EOL;
         echo '</p>' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
     }
@@ -362,16 +393,25 @@ class SchemasController extends BaseController
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
-            echo "\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '		<th class="data left required">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo "\t\t<td class=\"data1\">";
-            echo "\t\t\t<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '			<input name="name" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
             \htmlspecialchars($_POST['name']), '" />' . \PHP_EOL;
             echo "\t\t</td>" . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
 
             if ($data->hasAlterSchemaOwner()) {
                 $users = $data->getUsers();
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strowner']
+                ) . \PHP_EOL;
                 echo '<td class="data2"><select name="owner">';
 
                 while (!$users->EOF) {
@@ -382,22 +422,38 @@ class SchemasController extends BaseController
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             } else {
-                echo "<input name=\"owner\" value=\"{$_POST['owner']}\" type=\"hidden\" />";
+                echo \sprintf(
+                    '<input name="owner" value="%s" type="hidden" />',
+                    $_POST['owner']
+                );
             }
 
             echo "\t<tr>" . \PHP_EOL;
-            echo "\t\t<th class=\"data\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '		<th class="data">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><textarea cols=\"32\" rows=\"3\" name=\"comment\">", \htmlspecialchars($_POST['comment']), '</textarea></td>' . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
             echo '<input type="hidden" name="schema" value="', \htmlspecialchars($_POST['schema']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -442,20 +498,36 @@ class SchemasController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                    echo '<p>', \sprintf($this->lang['strconfdropschema'], $this->misc->printVal($a['nsp'])), '</p>' . \PHP_EOL;
+                    echo '<p>', \sprintf(
+                        $this->lang['strconfdropschema'],
+                        $this->misc->printVal($a['nsp'])
+                    ), '</p>' . \PHP_EOL;
                     echo '<input type="hidden" name="nsp[]" value="', \htmlspecialchars($a['nsp']), '" />' . \PHP_EOL;
                 }
             } else {
-                echo '<p>', \sprintf($this->lang['strconfdropschema'], $this->misc->printVal($_REQUEST['nsp'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfdropschema'],
+                    $this->misc->printVal($_REQUEST['nsp'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="nsp" value="', \htmlspecialchars($_REQUEST['nsp']), '" />' . \PHP_EOL;
             }
 
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['nsp'])) {

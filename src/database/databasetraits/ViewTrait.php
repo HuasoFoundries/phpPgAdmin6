@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for views manipulation.
  */
@@ -14,19 +16,19 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getViews()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        $sql = "
+        $sql = \sprintf('
 			SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
-				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+				pg_catalog.obj_description(c.oid, \'pg_class\') AS relcomment
 			FROM pg_catalog.pg_class c
 				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
-			WHERE (n.nspname='{$c_schema}') AND (c.relkind = 'v'::\"char\")
-			ORDER BY relname";
+			WHERE (n.nspname=\'%s\') AND (c.relkind = \'v\'::"char")
+			ORDER BY relname', $c_schema);
 
         return $this->selectSet($sql);
     }
@@ -34,19 +36,19 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getMaterializedViews()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        $sql = "
+        $sql = \sprintf('
 			SELECT c.relname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
-				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment
+				pg_catalog.obj_description(c.oid, \'pg_class\') AS relcomment
 			FROM pg_catalog.pg_class c
 				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
-			WHERE (n.nspname='{$c_schema}') AND (c.relkind = 'm'::\"char\")
-			ORDER BY relname";
+			WHERE (n.nspname=\'%s\') AND (c.relkind = \'m\'::"char")
+			ORDER BY relname', $c_schema);
 
         return $this->selectSet($sql);
     }
@@ -97,7 +99,7 @@ trait ViewTrait
 
         $obj_type = $materialized ? ' MATERIALIZED VIEW ' : ' VIEW ';
 
-        $sql .= $obj_type . " \"{$f_schema}\".\"{$viewname}\" AS {$definition}";
+        $sql .= $obj_type . \sprintf(' "%s"."%s" AS %s', $f_schema, $viewname, $definition);
 
         $status = $this->execute($sql);
 
@@ -163,7 +165,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getView($view)
     {
@@ -171,14 +173,14 @@ trait ViewTrait
         $this->clean($c_schema);
         $this->clean($view);
 
-        $sql = "
+        $sql = \sprintf('
 			SELECT c.relname, n.nspname, pg_catalog.pg_get_userbyid(c.relowner) AS relowner,
 				pg_catalog.pg_get_viewdef(c.oid, true) AS vwdefinition,
-				pg_catalog.obj_description(c.oid, 'pg_class') AS relcomment,
+				pg_catalog.obj_description(c.oid, \'pg_class\') AS relcomment,
                 c.relkind
 			FROM pg_catalog.pg_class c
 				LEFT JOIN pg_catalog.pg_namespace n ON (n.oid = c.relnamespace)
-			WHERE (c.relname = '{$view}') AND n.nspname='{$c_schema}'";
+			WHERE (c.relname = \'%s\') AND n.nspname=\'%s\'', $view, $c_schema);
 
         return $this->selectSet($sql);
     }
@@ -186,10 +188,10 @@ trait ViewTrait
     /**
      * Alter a view's owner.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs  The view recordSet returned by getView()
-     * @param null|string              $owner
+     * @param ADORecordSet $vwrs  The view recordSet returned by getView()
+     * @param null|string  $owner
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      *
      * @internal param  $name new view's owner
      */
@@ -203,7 +205,7 @@ trait ViewTrait
             // If owner has been changed, then do the alteration.  We are
             // careful to avoid this generally as changing owner is a
             // superuser only function.
-            $sql = "ALTER {$type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" OWNER TO \"{$owner}\"";
+            $sql = \sprintf('ALTER %s "%s"."%s" OWNER TO "%s"', $type, $f_schema, $vwrs->fields['relname'], $owner);
 
             return $this->execute($sql);
         }
@@ -214,10 +216,10 @@ trait ViewTrait
     /**
      * Rename a view.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs The view recordSet returned by getView()
-     * @param string                   $name The new view's name
+     * @param ADORecordSet $vwrs The view recordSet returned by getView()
+     * @param string       $name The new view's name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function alterViewName($vwrs, $name)
     {
@@ -227,7 +229,7 @@ trait ViewTrait
         if (!empty($name) && ($name !== $vwrs->fields['relname'])) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER {$type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf('ALTER %s "%s"."%s" RENAME TO "%s"', $type, $f_schema, $vwrs->fields['relname'], $name);
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -243,10 +245,10 @@ trait ViewTrait
     /**
      * Alter a view's schema.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs   The view recordSet returned by getView()
-     * @param string                   $schema
+     * @param ADORecordSet $vwrs   The view recordSet returned by getView()
+     * @param string       $schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      *
      * @internal param The $name new view's schema
      */
@@ -260,7 +262,7 @@ trait ViewTrait
             $this->fieldClean($f_schema);
             // If tablespace has been changed, then do the alteration.  We
             // don't want to do this unnecessarily.
-            $sql = "ALTER {$type} \"{$f_schema}\".\"{$vwrs->fields['relname']}\" SET SCHEMA \"{$schema}\"";
+            $sql = \sprintf('ALTER %s "%s"."%s" SET SCHEMA "%s"', $type, $f_schema, $vwrs->fields['relname'], $schema);
 
             return $this->execute($sql);
         }
@@ -274,7 +276,7 @@ trait ViewTrait
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropView($viewname, $cascade)
     {
@@ -285,7 +287,7 @@ trait ViewTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($viewname);
 
-        $sql = "DROP {$type} \"{$f_schema}\".\"{$viewname}\"";
+        $sql = \sprintf('DROP %s "%s"."%s"', $type, $f_schema, $viewname);
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -316,11 +318,11 @@ trait ViewTrait
      * Protected method which alter a view
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \PHPPgAdmin\ADORecordSet $vwrs    The view recordSet returned by getView()
-     * @param string                   $name    The new name for the view
-     * @param string                   $owner   The new owner for the view
-     * @param string                   $schema  Schema name
-     * @param string                   $comment The comment on the view
+     * @param ADORecordSet $vwrs    The view recordSet returned by getView()
+     * @param string       $name    The new name for the view
+     * @param string       $owner   The new owner for the view
+     * @param string       $schema  Schema name
+     * @param string       $comment The comment on the view
      *
      * @return int 0 success
      */

@@ -172,25 +172,49 @@ class RulesController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/rules" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-            echo "<td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<td class="data1"><input name="name" size="16" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
             \htmlspecialchars($_POST['name']), '" /></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strevent']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strevent']
+            ) . \PHP_EOL;
             echo '<td class="data1"><select name="event">' . \PHP_EOL;
 
             foreach ($data->rule_events as $v) {
-                echo "<option value=\"{$v}\"", ($v === $_POST['event']) ? ' selected="selected"' : '',
-                ">{$v}</option>" . \PHP_EOL;
+                echo \sprintf(
+                    '<option value="%s"',
+                    $v
+                ), ($v === $_POST['event']) ? ' selected="selected"' : '',
+                \sprintf(
+                    '>%s</option>',
+                    $v
+                ) . \PHP_EOL;
             }
             echo '</select></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strwhere']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strwhere']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="where" size="32" value="',
             \htmlspecialchars($_POST['where']), '" /></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\"><label for=\"instead\">{$this->lang['strinstead']}</label></th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left"><label for="instead">%s</label></th>',
+                $this->lang['strinstead']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
             echo '<input type="checkbox" id="instead" name="instead" ', (isset($_POST['instead'])) ? ' checked="checked"' : '', ' />' . \PHP_EOL;
             echo '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['straction']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['straction']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
             echo '<input type="radio" id="type1" name="type" value="NOTHING"', ('NOTHING' === $_POST['type']) ? ' checked="checked"' : '', ' /> <label for="type1">NOTHING</label><br />' . \PHP_EOL;
             echo '<input type="radio" name="type" value="SOMETHING"', ('SOMETHING' === $_POST['type']) ? ' checked="checked"' : '', ' />' . \PHP_EOL;
@@ -203,8 +227,15 @@ class RulesController extends BaseController
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['subject']),
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['subject']]), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<p><input type=\"submit\" name=\"ok\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<p><input type="submit" name="ok" value="%s" />',
+                $this->lang['strcreate']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_POST['name'])) {
@@ -255,9 +286,18 @@ class RulesController extends BaseController
             '" value="', \htmlspecialchars($_REQUEST[$_REQUEST['reltype']]), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="rule" value="', \htmlspecialchars($_REQUEST['rule']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropRule($_POST['rule'], $_POST[$_POST['subject']], isset($_POST['cascade']));

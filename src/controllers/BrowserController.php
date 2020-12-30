@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -65,7 +66,7 @@ class BrowserController extends BaseController
      */
     public function doTree()
     {
-        $treedata = new \PHPPgAdmin\ArrayRecordSet([]);
+        $treedata = new ArrayRecordSet([]);
         $reqvars = [];
         $action = Decorator::url('/src/views/servers');
         $branch = Decorator::url('/src/views/servers', $reqvars, ['action' => 'tree']);

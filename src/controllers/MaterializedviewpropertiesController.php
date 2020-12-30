@@ -6,13 +6,16 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\Traits\ExportTrait;
+use PHPPgAdmin\Traits\ViewsMatViewsPropertiesTrait;
+
 /**
  * Base controller class.
  */
 class MaterializedviewpropertiesController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ExportTrait;
-    use \PHPPgAdmin\Traits\ViewsMatViewsPropertiesTrait;
+    use ExportTrait;
+    use ViewsMatViewsPropertiesTrait;
 
     public $controller_title = 'strviews';
 
@@ -152,21 +155,39 @@ class MaterializedviewpropertiesController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
             echo '<table style="width: 100%">' . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left required">%s</th>',
+                $this->lang['strdefinition']
+            ) . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><textarea style=\"width: 100%;\" rows=\"20\" cols=\"50\" name=\"formDefinition\">",
             \htmlspecialchars($_POST['formDefinition']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><textarea rows=\"3\" cols=\"32\" name=\"formComment\">",
             \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
             echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -191,8 +212,16 @@ class MaterializedviewpropertiesController extends BaseController
 
                 // Output matview header
                 echo '<table>' . \PHP_EOL;
-                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th><th class=\"data required\">{$this->lang['strtype']}</th>";
-                echo "<th class=\"data\">{$this->lang['strdefault']}</th><th class=\"data\">{$this->lang['strcomment']}</th></tr>";
+                echo \sprintf(
+                    '<tr><th class="data required">%s</th><th class="data required">%s</th>',
+                    $this->lang['strname'],
+                    $this->lang['strtype']
+                );
+                echo \sprintf(
+                    '<th class="data">%s</th><th class="data">%s</th></tr>',
+                    $this->lang['strdefault'],
+                    $this->lang['strcomment']
+                );
 
                 $column = $data->getTableAttributes($_REQUEST[$this->subject], $_REQUEST['column']);
 
@@ -218,8 +247,15 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="olddefault" value="', \htmlspecialchars($_REQUEST['olddefault']), '" />' . \PHP_EOL;
-                echo "<input type=\"submit\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf(
+                    '<input type="submit" value="%s" />',
+                    $this->lang['stralter']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                    $this->lang['strcancel'],
+                    \PHP_EOL
+                );
                 echo '</form>' . \PHP_EOL;
 
                 break;
@@ -260,7 +296,10 @@ class MaterializedviewpropertiesController extends BaseController
                 break;
 
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strinvalidparam']
+                ) . \PHP_EOL;
         }
     }
 
@@ -287,16 +326,25 @@ class MaterializedviewpropertiesController extends BaseController
 
                 echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
-                echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strname']
+                ) . \PHP_EOL;
                 echo '<td class="data1">';
-                echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+                echo \sprintf(
+                    '<input name="name" size="32" maxlength="%s" value="',
+                    $data->_maxNameLen
+                ),
                 \htmlspecialchars($_POST['name']), '" /></td></tr>' . \PHP_EOL;
 
                 if ($data->isSuperUser()) {
                     // Fetch all users
                     $users = $data->getUsers();
 
-                    echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+                    echo \sprintf(
+                        '<tr><th class="data left required">%s</th>',
+                        $this->lang['strowner']
+                    ) . \PHP_EOL;
                     echo '<td class="data1"><select name="owner">';
 
                     while (!$users->EOF) {
@@ -310,7 +358,10 @@ class MaterializedviewpropertiesController extends BaseController
 
                 if ($data->hasAlterTableSchema()) {
                     $schemas = $data->getSchemas();
-                    echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
+                    echo \sprintf(
+                        '<tr><th class="data left required">%s</th>',
+                        $this->lang['strschema']
+                    ) . \PHP_EOL;
                     echo '<td class="data1"><select name="newschema">';
 
                     while (!$schemas->EOF) {
@@ -322,7 +373,10 @@ class MaterializedviewpropertiesController extends BaseController
                     echo '</select></td></tr>' . \PHP_EOL;
                 }
 
-                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left">%s</th>',
+                    $this->lang['strcomment']
+                ) . \PHP_EOL;
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">';
                 echo \htmlspecialchars($_POST['comment']), '</textarea></td></tr>' . \PHP_EOL;
@@ -330,11 +384,21 @@ class MaterializedviewpropertiesController extends BaseController
                 echo '<input type="hidden" name="action" value="alter" />' . \PHP_EOL;
                 echo '<input type="hidden" name="matview" value="', \htmlspecialchars($_REQUEST[$this->subject]), '" />' . \PHP_EOL;
                 echo $this->view->form;
-                echo "<p><input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf(
+                    '<p><input type="submit" name="alter" value="%s" />',
+                    $this->lang['stralter']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                    $this->lang['strcancel'],
+                    \PHP_EOL
+                );
                 echo '</form>' . \PHP_EOL;
             } else {
-                echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strnodata']
+                ) . \PHP_EOL;
             }
         } else {
             // For databases that don't allow owner change

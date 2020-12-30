@@ -6,6 +6,9 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\Help\PostgresDoc96;
+
 /**
  * @file
  * PostgreSQL 9.6 support
@@ -22,7 +25,7 @@ class Postgres96 extends Postgres
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc96::class;
+    public $help_classname = PostgresDoc96::class;
 
     // Administration functions
 
@@ -31,7 +34,7 @@ class Postgres96 extends Postgres
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -45,14 +48,17 @@ class Postgres96 extends Postgres
 					ORDER BY datname, usename, pid";
         } else {
             $this->clean($database);
-            $sql = "SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
+            $sql = \sprintf(
+                'SELECT datid, datname, pid, usename, application_name, client_addr, state, wait_event_type, wait_event, state_change as query_start,
 					CASE
-                        WHEN state='active' THEN query
+                        WHEN state=\'active\' THEN query
                         ELSE state
                     END AS query
 					FROM pg_catalog.pg_stat_activity
-					WHERE datname='{$database}'
-					ORDER BY usename, pid";
+					WHERE datname=\'%s\'
+					ORDER BY usename, pid',
+                $database
+            );
         }
 
         return $this->selectSet($sql);
@@ -75,7 +81,7 @@ class Postgres96 extends Postgres
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
-     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
+     * @return ADORecordSet|int 0 if operation was successful
      *
      * @internal param $group (array) The groups to create the user in
      */
@@ -87,10 +93,16 @@ class Postgres96 extends Postgres
         $this->clean($expiry);
         $this->fieldArrayClean($groups);
 
-        $sql = "CREATE USER \"{$username}\"";
+        $sql = \sprintf(
+            'CREATE USER "%s"',
+            $username
+        );
 
         if ('' !== $password) {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+            $sql .= \sprintf(
+                ' WITH ENCRYPTED PASSWORD \'%s\'',
+                $enc
+            );
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
@@ -101,7 +113,10 @@ class Postgres96 extends Postgres
         }
 
         if ('' !== $expiry) {
-            $sql .= " VALID UNTIL '{$expiry}'";
+            $sql .= \sprintf(
+                ' VALID UNTIL \'%s\'',
+                $expiry
+            );
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }

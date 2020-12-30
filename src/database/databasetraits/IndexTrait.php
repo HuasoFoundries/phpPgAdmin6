@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for indexes and constraints manipulation.
  */
@@ -24,13 +26,17 @@ trait IndexTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT i.indisclustered
+        $sql = \sprintf(
+            'SELECT i.indisclustered
 			FROM pg_catalog.pg_class c, pg_catalog.pg_index i
-			WHERE c.relname = '{$table}'
+			WHERE c.relname = \'%s\'
 				AND c.oid = i.indrelid AND i.indisclustered
 				AND c.relnamespace = (SELECT oid FROM pg_catalog.pg_namespace
-					WHERE nspname='{$c_schema}')
-				";
+					WHERE nspname=\'%s\')
+				',
+            $table,
+            $c_schema
+        );
 
         $v = $this->selectSet($sql);
 
@@ -66,9 +72,17 @@ trait IndexTrait
 
         $sql .= $concurrently ? ' CONCURRENTLY ' : '';
 
-        $sql .= $name ? "  \"{$name}\" " : '';
+        $sql .= $name ? \sprintf(
+            '  "%s" ',
+            $name
+        ) : '';
 
-        $sql .= " ON \"{$f_schema}\".\"{$table}\" USING {$type} ";
+        $sql .= \sprintf(
+            ' ON "%s"."%s" USING %s ',
+            $f_schema,
+            $table,
+            $type
+        );
 
         if (\is_array($columns)) {
             $this->arrayClean($columns);
@@ -80,12 +94,18 @@ trait IndexTrait
         // Tablespace
         if ($this->hasTablespaces() && '' !== $tablespace) {
             $this->fieldClean($tablespace);
-            $sql .= " TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         // Predicate
         if ('' !== \trim($where)) {
-            $sql .= " WHERE ({$where})";
+            $sql .= \sprintf(
+                ' WHERE (%s)',
+                $where
+            );
         }
 
         $status = $this->execute($sql);
@@ -107,7 +127,11 @@ trait IndexTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($index);
 
-        $sql = "DROP INDEX \"{$f_schema}\".\"{$index}\"";
+        $sql = \sprintf(
+            'DROP INDEX "%s"."%s"',
+            $f_schema,
+            $index
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -126,7 +150,7 @@ trait IndexTrait
      * @param bool   $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
      *                      7.2-7.3, ignored in >=7.4
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function reindex($type, $name, $force = false)
     {
@@ -136,7 +160,11 @@ trait IndexTrait
 
         switch ($type) {
             case 'DATABASE':
-                $sql = "REINDEX {$type} \"{$name}\"";
+                $sql = \sprintf(
+                    'REINDEX %s "%s"',
+                    $type,
+                    $name
+                );
 
                 if ($force) {
                     $sql .= ' FORCE';
@@ -145,7 +173,12 @@ trait IndexTrait
                 break;
             case 'TABLE':
             case 'INDEX':
-                $sql = "REINDEX {$type} \"{$f_schema}\".\"{$name}\"";
+                $sql = \sprintf(
+                    'REINDEX %s "%s"."%s"',
+                    $type,
+                    $f_schema,
+                    $name
+                );
 
                 if ($force) {
                     $sql .= ' FORCE';
@@ -179,11 +212,18 @@ trait IndexTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $this->fieldClean($table);
-            $sql .= " \"{$f_schema}\".\"{$table}\"";
+            $sql .= \sprintf(
+                ' "%s"."%s"',
+                $f_schema,
+                $table
+            );
 
             if (!empty($index)) {
                 $this->fieldClean($index);
-                $sql .= " USING \"{$index}\"";
+                $sql .= \sprintf(
+                    ' USING "%s"',
+                    $index
+                );
             }
         }
 
@@ -199,7 +239,7 @@ trait IndexTrait
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getConstraintsWithFields($table)
     {
@@ -208,13 +248,17 @@ trait IndexTrait
         $this->clean($table);
 
         // get the max number of col used in a constraint for the table
-        $sql = "SELECT DISTINCT
-			max(SUBSTRING(array_dims(c.conkey) FROM  \$patern\$^\\[.*:(.*)\\]$\$patern\$)) as nb
+        $sql = \sprintf(
+            'SELECT DISTINCT
+			max(SUBSTRING(array_dims(c.conkey) FROM  $patern$^\[.*:(.*)\]$$patern$)) as nb
 		FROM pg_catalog.pg_constraint AS c
 			JOIN pg_catalog.pg_class AS r ON (c.conrelid=r.oid)
 			JOIN pg_catalog.pg_namespace AS ns ON (r.relnamespace=ns.oid)
 		WHERE
-			r.relname = '{$table}' AND ns.nspname='{$c_schema}'";
+			r.relname = \'%s\' AND ns.nspname=\'%s\'',
+            $table,
+            $c_schema
+        );
 
         $rs = $this->selectSet($sql);
 
@@ -237,7 +281,10 @@ trait IndexTrait
 				JOIN pg_catalog.pg_attribute AS f1 ON (f1.attrelid=r1.oid AND (f1.attnum=c.conkey[1]';
 
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR f1.attnum=c.conkey[{$i}]";
+            $sql .= \sprintf(
+                ' OR f1.attnum=c.conkey[%s]',
+                $i
+            );
         }
         $sql .= '))
 				JOIN pg_catalog.pg_namespace AS ns1 ON r1.relnamespace=ns1.oid
@@ -248,7 +295,11 @@ trait IndexTrait
 					(f2.attrelid=r2.oid AND ((c.confkey[1]=f2.attnum AND c.conkey[1]=f1.attnum)';
 
         for ($i = 2; $i <= $rs->fields['nb']; ++$i) {
-            $sql .= " OR (c.confkey[{$i}]=f2.attnum AND c.conkey[{$i}]=f1.attnum)";
+            $sql .= \sprintf(
+                ' OR (c.confkey[%s]=f2.attnum AND c.conkey[%s]=f1.attnum)',
+                $i,
+                $i
+            );
         }
 
         $sql .= \sprintf("))
@@ -267,7 +318,7 @@ trait IndexTrait
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -282,16 +333,26 @@ trait IndexTrait
         $this->fieldClean($name);
         $this->fieldClean($tablespace);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ADD ',
+            $f_schema,
+            $table
+        );
 
         if ('' !== $name) {
-            $sql .= "CONSTRAINT \"{$name}\" ";
+            $sql .= \sprintf(
+                'CONSTRAINT "%s" ',
+                $name
+            );
         }
 
         $sql .= 'PRIMARY KEY ("' . \implode('","', $fields) . '")';
 
         if ('' !== $tablespace && $this->hasTablespaces()) {
-            $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' USING INDEX TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         return $this->execute($sql);
@@ -305,7 +366,7 @@ trait IndexTrait
      * @param string      $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string      $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -320,16 +381,26 @@ trait IndexTrait
         $this->fieldClean($name);
         $this->fieldClean($tablespace);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ADD ',
+            $f_schema,
+            $table
+        );
 
         if ('' !== $name) {
-            $sql .= "CONSTRAINT \"{$name}\" ";
+            $sql .= \sprintf(
+                'CONSTRAINT "%s" ',
+                $name
+            );
         }
 
         $sql .= 'UNIQUE ("' . \implode('","', $fields) . '")';
 
         if ('' !== $tablespace && $this->hasTablespaces()) {
-            $sql .= " USING INDEX TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' USING INDEX TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         return $this->execute($sql);
@@ -344,7 +415,7 @@ trait IndexTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function addCheckConstraint($table, $definition, $name = '')
     {
@@ -354,13 +425,23 @@ trait IndexTrait
         $this->fieldClean($name);
         // @@ How the heck do you clean a definition???
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ADD ',
+            $f_schema,
+            $table
+        );
 
         if ('' !== $name) {
-            $sql .= "CONSTRAINT \"{$name}\" ";
+            $sql .= \sprintf(
+                'CONSTRAINT "%s" ',
+                $name
+            );
         }
 
-        $sql .= "CHECK ({$definition})";
+        $sql .= \sprintf(
+            'CHECK (%s)',
+            $definition
+        );
 
         return $this->execute($sql);
     }
@@ -392,7 +473,11 @@ trait IndexTrait
         }
 
         // Properly lock the table
-        $sql = "LOCK TABLE \"{$f_schema}\".\"{$table}\" IN ACCESS EXCLUSIVE MODE";
+        $sql = \sprintf(
+            'LOCK TABLE "%s"."%s" IN ACCESS EXCLUSIVE MODE',
+            $f_schema,
+            $table
+        );
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -402,9 +487,14 @@ trait IndexTrait
         }
 
         // Delete the check constraint
-        $sql = "DELETE FROM pg_relcheck WHERE rcrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$c_table}'
+        $sql = \sprintf(
+            'DELETE FROM pg_relcheck WHERE rcrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
 			AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-			nspname = '{$c_schema}')) AND rcname='{$name}'";
+			nspname = \'%s\')) AND rcname=\'%s\'',
+            $c_table,
+            $c_schema,
+            $name
+        );
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -414,11 +504,16 @@ trait IndexTrait
         }
 
         // Update the pg_class catalog to reflect the new number of checks
-        $sql = "UPDATE pg_class SET relchecks=(SELECT COUNT(*) FROM pg_relcheck WHERE
-					rcrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$c_table}'
+        $sql = \sprintf(
+            'UPDATE pg_class SET relchecks=(SELECT COUNT(*) FROM pg_relcheck WHERE
+					rcrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
 						AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE
-						nspname = '{$c_schema}')))
-					WHERE relname='{$c_table}'";
+						nspname = \'%s\')))
+					WHERE relname=\'%s\'',
+            $c_table,
+            $c_schema,
+            $c_table
+        );
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -446,7 +541,7 @@ trait IndexTrait
      * @param string $initially  The initially parameter for the FK (eg. INITIALLY IMMEDIATE)
      * @param string $name       [optional] The name to give the key, otherwise default name is assigned
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      *
      * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
      * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
@@ -478,34 +573,60 @@ trait IndexTrait
         $this->fieldArrayClean($tfields);
         $this->fieldClean($name);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$table}\" ADD ";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" ADD ',
+            $f_schema,
+            $table
+        );
 
         if ('' !== $name) {
-            $sql .= "CONSTRAINT \"{$name}\" ";
+            $sql .= \sprintf(
+                'CONSTRAINT "%s" ',
+                $name
+            );
         }
 
         $sql .= 'FOREIGN KEY ("' . \implode('","', $sfields) . '") ';
         // Target table needs to be fully qualified
-        $sql .= "REFERENCES \"{$targschema}\".\"{$targtable}\"(\"" . \implode('","', $tfields) . '") ';
+        $sql .= \sprintf(
+            'REFERENCES "%s"."%s"("',
+            $targschema,
+            $targtable
+        ) . \implode('","', $tfields) . '") ';
 
         if ($match !== $this->fkmatches[0]) {
-            $sql .= " {$match}";
+            $sql .= \sprintf(
+                ' %s',
+                $match
+            );
         }
 
         if ($upd_action !== $this->fkactions[0]) {
-            $sql .= " ON UPDATE {$upd_action}";
+            $sql .= \sprintf(
+                ' ON UPDATE %s',
+                $upd_action
+            );
         }
 
         if ($del_action !== $this->fkactions[0]) {
-            $sql .= " ON DELETE {$del_action}";
+            $sql .= \sprintf(
+                ' ON DELETE %s',
+                $del_action
+            );
         }
 
         if ($deferrable !== $this->fkdeferrable[0]) {
-            $sql .= " {$deferrable}";
+            $sql .= \sprintf(
+                ' %s',
+                $deferrable
+            );
         }
 
         if ($initially !== $this->fkinitial[0]) {
-            $sql .= " {$initially}";
+            $sql .= \sprintf(
+                ' %s',
+                $initially
+            );
         }
 
         return $this->execute($sql);
@@ -519,7 +640,7 @@ trait IndexTrait
      * @param string $type       The type of constraint (c, f, u or p)
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropConstraint($constraint, $relation, $type, $cascade)
     {
@@ -528,7 +649,12 @@ trait IndexTrait
         $this->fieldClean($constraint);
         $this->fieldClean($relation);
 
-        $sql = "ALTER TABLE \"{$f_schema}\".\"{$relation}\" DROP CONSTRAINT \"{$constraint}\"";
+        $sql = \sprintf(
+            'ALTER TABLE "%s"."%s" DROP CONSTRAINT "%s"',
+            $f_schema,
+            $relation,
+            $constraint
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -542,7 +668,7 @@ trait IndexTrait
      *
      * @param array $tables multi dimensional assoc array that holds schema and table name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet recordset of linked tables and columns or -1 if $tables isn't an array
+     * @return ADORecordSet|int recordset of linked tables and columns or -1 if $tables isn't an array
      */
     public function getLinkingKeys($tables)
     {
@@ -552,22 +678,43 @@ trait IndexTrait
 
         $this->clean($tables[0]['tablename']);
         $this->clean($tables[0]['schemaname']);
-        $tables_list = "'{$tables[0]['tablename']}'";
-        $schema_list = "'{$tables[0]['schemaname']}'";
-        $schema_tables_list = "'{$tables[0]['schemaname']}.{$tables[0]['tablename']}'";
+        $tables_list = \sprintf(
+            '\'%s\'',
+            $tables[0]['tablename']
+        );
+        $schema_list = \sprintf(
+            '\'%s\'',
+            $tables[0]['schemaname']
+        );
+        $schema_tables_list = \sprintf(
+            '\'%s.%s\'',
+            $tables[0]['schemaname'],
+            $tables[0]['tablename']
+        );
         $tablescount = \count($tables);
 
         for ($i = 1; $i < $tablescount; ++$i) {
             $this->clean($tables[$i]['tablename']);
             $this->clean($tables[$i]['schemaname']);
-            $tables_list .= ", '{$tables[$i]['tablename']}'";
-            $schema_list .= ", '{$tables[$i]['schemaname']}'";
-            $schema_tables_list .= ", '{$tables[$i]['schemaname']}.{$tables[$i]['tablename']}'";
+            $tables_list .= \sprintf(
+                ', \'%s\'',
+                $tables[$i]['tablename']
+            );
+            $schema_list .= \sprintf(
+                ', \'%s\'',
+                $tables[$i]['schemaname']
+            );
+            $schema_tables_list .= \sprintf(
+                ', \'%s.%s\'',
+                $tables[$i]['schemaname'],
+                $tables[$i]['tablename']
+            );
         }
 
         $maxDimension = 1;
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT DISTINCT
 				array_dims(pc.conkey) AS arr_dim,
 				pgc1.relname AS p_table
@@ -575,10 +722,12 @@ trait IndexTrait
 				pg_catalog.pg_constraint AS pc,
 				pg_catalog.pg_class AS pgc1
 			WHERE
-				pc.contype = 'f'
+				pc.contype = \'f\'
 				AND (pc.conrelid = pgc1.relfilenode OR pc.confrelid = pgc1.relfilenode)
-				AND pgc1.relname IN ({$tables_list})
-			";
+				AND pgc1.relname IN (%s)
+			',
+            $tables_list
+        );
 
         //parse our output to find the highest dimension of foreign keys since pc.conkey is stored in an array
         $rs = $this->selectSet($sql);
@@ -595,11 +744,16 @@ trait IndexTrait
         $cons_str = '( (pfield.attnum = conkey[1] AND cfield.attnum = confkey[1]) ';
 
         for ($i = 2; $i <= $maxDimension; ++$i) {
-            $cons_str .= "OR (pfield.attnum = conkey[{$i}] AND cfield.attnum = confkey[{$i}]) ";
+            $cons_str .= \sprintf(
+                'OR (pfield.attnum = conkey[%s] AND cfield.attnum = confkey[%s]) ',
+                $i,
+                $i
+            );
         }
         $cons_str .= ') ';
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT
 				pgc1.relname AS p_table,
 				pgc2.relname AS f_table,
@@ -613,20 +767,26 @@ trait IndexTrait
 				pg_catalog.pg_class AS pgc2,
 				pg_catalog.pg_attribute AS pfield,
 				pg_catalog.pg_attribute AS cfield,
-				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN ({$schema_list}) ) AS pgns1,
- 				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN ({$schema_list}) ) AS pgns2
+				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN (%s) ) AS pgns1,
+ 				(SELECT oid AS ns_id, nspname FROM pg_catalog.pg_namespace WHERE nspname IN (%s) ) AS pgns2
 			WHERE
-				pc.contype = 'f'
+				pc.contype = \'f\'
 				AND pgc1.relnamespace = pgns1.ns_id
  				AND pgc2.relnamespace = pgns2.ns_id
 				AND pc.conrelid = pgc1.relfilenode
 				AND pc.confrelid = pgc2.relfilenode
 				AND pfield.attrelid = pc.conrelid
 				AND cfield.attrelid = pc.confrelid
-				AND {$cons_str}
-				AND pgns1.nspname || '.' || pgc1.relname IN ({$schema_tables_list})
-				AND pgns2.nspname || '.' || pgc2.relname IN ({$schema_tables_list})
-		";
+				AND %s
+				AND pgns1.nspname || \'.\' || pgc1.relname IN (%s)
+				AND pgns2.nspname || \'.\' || pgc2.relname IN (%s)
+		',
+            $schema_list,
+            $schema_list,
+            $cons_str,
+            $schema_tables_list,
+            $schema_tables_list
+        );
 
         return $this->selectSet($sql);
     }
@@ -636,7 +796,7 @@ trait IndexTrait
      *
      * @param string $table The table to find referrers for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset or -1 in case of error
+     * @return ADORecordSet|int A recordset or -1 in case of error
      */
     public function getReferrers($table)
     {
@@ -651,7 +811,8 @@ trait IndexTrait
         $c_schema = $this->_schema;
         $this->clean($c_schema);
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT
 				pn.nspname,
 				pl.relname,
@@ -664,12 +825,15 @@ trait IndexTrait
 			WHERE
 				pc.connamespace = pn.oid
 				AND pc.conrelid = pl.oid
-				AND pc.contype = 'f'
-				AND confrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}'
+				AND pc.contype = \'f\'
+				AND confrelid = (SELECT oid FROM pg_catalog.pg_class WHERE relname=\'%s\'
 					AND relnamespace = (SELECT oid FROM pg_catalog.pg_namespace
-					WHERE nspname='{$c_schema}'))
+					WHERE nspname=\'%s\'))
 			ORDER BY 1,2,3
-		";
+		',
+            $table,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }

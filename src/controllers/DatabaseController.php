@@ -7,14 +7,16 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\AdminTrait;
+use PHPPgAdmin\Traits\ExportTrait;
 
 /**
  * Base controller class.
  */
 class DatabaseController extends BaseController
 {
-    use \PHPPgAdmin\Traits\AdminTrait;
-    use \PHPPgAdmin\Traits\ExportTrait;
+    use AdminTrait;
+    use ExportTrait;
 
     public $table_place = 'database-variables';
 
@@ -47,13 +49,35 @@ class DatabaseController extends BaseController
 
             $scripts .= '<script type="text/javascript">' . \PHP_EOL;
             $scripts .= "var Database = {\n";
-            $scripts .= "ajax_time_refresh: {$refreshTime},\n";
-            $scripts .= "str_start: {text:'{$this->lang['strstart']}',icon: '" . $this->view->icon('Execute') . "'},\n";
-            $scripts .= "str_stop: {text:'{$this->lang['strstop']}',icon: '" . $this->view->icon('Stop') . "'},\n";
+            $scripts .= \sprintf(
+                'ajax_time_refresh: %s,
+',
+                $refreshTime
+            );
+            $scripts .= \sprintf(
+                'str_start: {text:\'%s\',icon: \'',
+                $this->lang['strstart']
+            ) . $this->view->icon('Execute') . "'},\n";
+            $scripts .= \sprintf(
+                'str_stop: {text:\'%s\',icon: \'',
+                $this->lang['strstop']
+            ) . $this->view->icon('Stop') . "'},\n";
             $scripts .= "load_icon: '" . $this->view->icon('Loading') . "',\n";
-            $scripts .= "server:'{$_REQUEST['server']}',\n";
-            $scripts .= "dbname:'{$_REQUEST['database']}',\n";
-            $scripts .= "action:'refresh_{$this->action}',\n";
+            $scripts .= \sprintf(
+                'server:\'%s\',
+',
+                $_REQUEST['server']
+            );
+            $scripts .= \sprintf(
+                'dbname:\'%s\',
+',
+                $_REQUEST['database']
+            );
+            $scripts .= \sprintf(
+                'action:\'refresh_%s\',
+',
+                $this->action
+            );
             $scripts .= "errmsg: '" . \str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
             $scripts .= "};\n";
             $scripts .= '</script>' . \PHP_EOL;
@@ -186,7 +210,10 @@ class DatabaseController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/database" method="post">' . \PHP_EOL;
         echo '<p><input name="term" value="', \htmlspecialchars($_REQUEST['term']),
-        "\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" />" . \PHP_EOL;
+        \sprintf(
+            '" size="32" maxlength="%s" />',
+            $data->_maxNameLen
+        ) . \PHP_EOL;
         // Output list of filters.  This is complex due to all the 'has' and 'conf' feature possibilities
         echo '<select name="filter">' . \PHP_EOL;
 
@@ -213,7 +240,10 @@ class DatabaseController extends BaseController
         }
 
         echo '</select>' . \PHP_EOL;
-        echo "<input type=\"submit\" value=\"{$this->lang['strfind']}\" />" . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strfind']
+        ) . \PHP_EOL;
         echo $this->view->form;
         echo '<input type="hidden" name="action" value="find" /></p>' . \PHP_EOL;
         echo '<input type="hidden" name="confirm" value="true" /></p>' . \PHP_EOL;
@@ -268,7 +298,10 @@ class DatabaseController extends BaseController
 
             echo '<p>', $rs->recordCount(), ' ', $this->lang['strobjects'], '</p>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnoobjects']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnoobjects']
+            ) . \PHP_EOL;
         }
     }
 
@@ -343,7 +376,12 @@ class DatabaseController extends BaseController
         $this->printMsg($msg);
 
         if (0 === \mb_strlen($msg)) {
-            echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+            echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . \sprintf(
+                '" alt="%s" title="%s"/>&nbsp;%s</a>',
+                $this->lang['strrefresh'],
+                $this->lang['strrefresh'],
+                $this->lang['strrefresh']
+            );
         }
 
         echo '<div id="data_block">';
@@ -357,7 +395,10 @@ class DatabaseController extends BaseController
 
         // Display prepared transactions
         if ($data->hasPreparedXacts()) {
-            echo "<h3>{$this->lang['strpreparedxacts']}</h3>" . \PHP_EOL;
+            echo \sprintf(
+                '<h3>%s</h3>',
+                $this->lang['strpreparedxacts']
+            ) . \PHP_EOL;
             $prep_xacts = $data->getPreparedXacts($_REQUEST['database']);
 
             $columns = [
@@ -385,7 +426,10 @@ class DatabaseController extends BaseController
         }
 
         // Fetch the processes from the database
-        echo "<h3>{$this->lang['strprocesses']}</h3>" . \PHP_EOL;
+        echo \sprintf(
+            '<h3>%s</h3>',
+            $this->lang['strprocesses']
+        ) . \PHP_EOL;
         $processes = $data->getProcesses($_REQUEST['database']);
 
         $columns = [
@@ -526,7 +570,12 @@ class DatabaseController extends BaseController
         $this->printTrail('database');
         $this->printTabs('database', 'locks');
 
-        echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . "\" alt=\"{$this->lang['strrefresh']}\" title=\"{$this->lang['strrefresh']}\"/>&nbsp;{$this->lang['strrefresh']}</a>";
+        echo '<br /><a id="control" href=""><img src="' . $this->view->icon('Refresh') . \sprintf(
+            '" alt="%s" title="%s"/>&nbsp;%s</a>',
+            $this->lang['strrefresh'],
+            $this->lang['strrefresh'],
+            $this->lang['strrefresh']
+        );
 
         echo '<div id="data_block">';
         $this->currentLocks();
@@ -545,9 +594,15 @@ class DatabaseController extends BaseController
 
         $this->printTrail('database');
         $this->printTabs('database', 'sql');
-        echo "<p>{$this->lang['strentersql']}</p>" . \PHP_EOL;
+        echo \sprintf(
+            '<p>%s</p>',
+            $this->lang['strentersql']
+        ) . \PHP_EOL;
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">' . \PHP_EOL;
-        echo "<p>{$this->lang['strsql']}<br />" . \PHP_EOL;
+        echo \sprintf(
+            '<p>%s<br />',
+            $this->lang['strsql']
+        ) . \PHP_EOL;
         echo '<textarea style="width:95%;" rows="15" cols="50" name="query" id="query">',
         \htmlspecialchars($_SESSION['sqlquery']), '</textarea></p>' . \PHP_EOL;
 
@@ -557,15 +612,30 @@ class DatabaseController extends BaseController
             $max_size = $this->misc->inisizeToBytes(\ini_get('upload_max_filesize'));
 
             if (\is_float($max_size) && 0 < $max_size) {
-                echo "<p><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />" . \PHP_EOL;
-                echo "<label for=\"script\">{$this->lang['struploadscript']}</label> <input id=\"script\" name=\"script\" type=\"file\" /></p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p><input type="hidden" name="MAX_FILE_SIZE" value="%s" />',
+                    $max_size
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<label for="script">%s</label> <input id="script" name="script" type="file" /></p>',
+                    $this->lang['struploadscript']
+                ) . \PHP_EOL;
             }
         }
 
-        echo '<p><input type="checkbox" id="paginate" name="paginate"', (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), " /><label for=\"paginate\">{$this->lang['strpaginate']}</label></p>" . \PHP_EOL;
-        echo "<p><input type=\"submit\" name=\"execute\" accesskey=\"r\" value=\"{$this->lang['strexecute']}\" />" . \PHP_EOL;
+        echo '<p><input type="checkbox" id="paginate" name="paginate"', (isset($_REQUEST['paginate']) ? ' checked="checked"' : ''), \sprintf(
+            ' /><label for="paginate">%s</label></p>',
+            $this->lang['strpaginate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<p><input type="submit" name="execute" accesskey="r" value="%s" />',
+            $this->lang['strexecute']
+        ) . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"reset\" accesskey=\"q\" value=\"{$this->lang['strreset']}\" /></p>" . \PHP_EOL;
+        echo \sprintf(
+            '<input type="reset" accesskey="q" value="%s" /></p>',
+            $this->lang['strreset']
+        ) . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 
         // Default focus
@@ -587,13 +657,21 @@ class DatabaseController extends BaseController
 
     private function _highlight($string, $term)
     {
-        return \str_replace($term, "<b>{$term}</b>", $string);
+        return \str_replace($term, \sprintf(
+            '<b>%s</b>',
+            $term
+        ), $string);
     }
 
     private function _printTypeOption(string $curr)
     {
         $filter = $_REQUEST['filter'];
-        $optionhtml = \sprintf('%s<option value="%s" %s>', "\t", $curr, ($curr === $filter) ? ' selected="selected"' : '');
+        $optionhtml = \sprintf(
+            '%s<option value="%s" %s>',
+            "\t",
+            $curr,
+            ($curr === $filter) ? ' selected="selected"' : ''
+        );
         $optionhtml .= $this->_translatedType($curr);
         $optionhtml .= '</option>' . \PHP_EOL;
 
@@ -643,7 +721,10 @@ class DatabaseController extends BaseController
         switch ($curr) {
             case 'SCHEMA':
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<li><a href="' . \containerInstance()->subFolder . "{$destination}";
+                echo '<li><a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s',
+                    $destination
+                );
                 echo $this->misc->printVal($rs->fields['name']), '">';
                 echo $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']);
                 echo '</a></li>' . \PHP_EOL;
@@ -651,33 +732,63 @@ class DatabaseController extends BaseController
                 break;
             case 'TABLE':
                 echo '<li>';
-                echo "<a href=\"tables?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="tables?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('table');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;table=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'VIEW':
                 echo '<li>';
-                echo "<a href=\"views?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="views?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('view');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;view=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;view=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'SEQUENCE':
                 echo '<li>';
-                echo "<a href=\"sequences?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"sequences?subject=sequence&amp;action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']),
+                echo \sprintf(
+                    '<a href="sequences?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="sequences?subject=sequence&amp;action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']),
                 '&amp;sequence=', \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'COLUMNTABLE':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"tblproperties?subject=table&{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"colproperties?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="tblproperties?subject=table&%s&table=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="colproperties?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;table=',
                 \urlencode($rs->fields['relname']), '&amp;column=', \urlencode($rs->fields['name']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
@@ -685,9 +796,19 @@ class DatabaseController extends BaseController
             case 'COLUMNVIEW':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"viewproperties?subject=view&{$this->misc->href}&view=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"colproperties?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;view=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="viewproperties?subject=view&%s&view=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="colproperties?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;view=',
                 \urlencode($rs->fields['relname']), '&amp;column=', \urlencode($rs->fields['name']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
@@ -695,111 +816,218 @@ class DatabaseController extends BaseController
             case 'INDEX':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('table');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"indexes?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&table=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="indexes?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'CONSTRAINTTABLE':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('table');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"constraints?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&table=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="constraints?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;table=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'CONSTRAINTDOMAIN':
                 echo '<li>';
-                echo "<a href=\"domains?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"domains?action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;domain=', \urlencode($rs->fields['relname']), '">',
+                echo \sprintf(
+                    '<a href="domains?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="domains?action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;domain=', \urlencode($rs->fields['relname']), '">',
                 $this->misc->printVal($rs->fields['relname']), '.', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'TRIGGER':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('table');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"triggers?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&table=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="triggers?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;table=', \urlencode($rs->fields['relname']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'RULETABLE':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('table');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&table=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"rules?subject=table&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&table=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="rules?subject=table&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;reltype=table&amp;table=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'RULEVIEW':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
                 $destination = $this->container->getDestinationWithLastTab('view');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&view=", \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
-                echo "<a href=\"rules?subject=view&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&view=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['relname']), '&amp;schema=', \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['relname']), '</a>.';
+                echo \sprintf(
+                    '<a href="rules?subject=view&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;reltype=view&amp;view=',
                 \urlencode($rs->fields['relname']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'FUNCTION':
                 echo '<li>';
-                echo "<a href=\"functions?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"functions?action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;function=',
+                echo \sprintf(
+                    '<a href="functions?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="functions?action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;function=',
                 \urlencode($rs->fields['name']), '&amp;function_oid=', \urlencode($rs->fields['oid']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'TYPE':
                 echo '<li>';
-                echo "<a href=\"types?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"types?action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;type=',
+                echo \sprintf(
+                    '<a href="types?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="types?action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;type=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'DOMAIN':
                 echo '<li>';
-                echo "<a href=\"domains?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"domains?action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;domain=',
+                echo \sprintf(
+                    '<a href="domains?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="domains?action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;domain=',
                 \urlencode($rs->fields['name']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'OPERATOR':
                 echo '<li>';
-                echo "<a href=\"operators?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"operators?action=properties&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '&amp;operator=',
+                echo \sprintf(
+                    '<a href="operators?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="operators?action=properties&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '&amp;operator=',
                 \urlencode($rs->fields['name']), '&amp;operator_oid=', \urlencode($rs->fields['oid']), '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'CONVERSION':
                 echo '<li>';
-                echo "<a href=\"conversions?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"conversions?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']),
+                echo \sprintf(
+                    '<a href="conversions?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="conversions?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']),
                 '">', $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'LANGUAGE':
-                echo "<li><a href=\"languages?{$this->misc->href}\">", $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
+                echo \sprintf(
+                    '<li><a href="languages?%s">',
+                    $this->misc->href
+                ), $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'AGGREGATE':
                 echo '<li>';
-                echo "<a href=\"aggregates?subject=schema&{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"aggregates?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">',
+                echo \sprintf(
+                    '<a href="aggregates?subject=schema&%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="aggregates?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;
             case 'OPCLASS':
                 echo '<li>';
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<a href="' . \containerInstance()->subFolder . "{$destination}?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
-                echo "<a href=\"opclasses?{$this->misc->href}&schema=", \urlencode($rs->fields['schemaname']), '">',
+                echo '<a href="' . \containerInstance()->subFolder . \sprintf(
+                    '%s?%s&schema=',
+                    $destination,
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">', $this->misc->printVal($rs->fields['schemaname']), '</a>.';
+                echo \sprintf(
+                    '<a href="opclasses?%s&schema=',
+                    $this->misc->href
+                ), \urlencode($rs->fields['schemaname']), '">',
                 $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']), '</a></li>' . \PHP_EOL;
 
                 break;

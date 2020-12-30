@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for tables manipulation.
  */
@@ -16,7 +18,7 @@ trait SchemaTrait
     /**
      * Return all schemas in the current database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getSchemas()
     {
@@ -43,12 +45,15 @@ trait SchemaTrait
             $sql .= " 'N/A' as schema_size ";
         }
 
-        $sql .= " FROM pg_catalog.pg_namespace pn
+        $sql .= \sprintf(
+            ' FROM pg_catalog.pg_namespace pn
             LEFT JOIN pg_catalog.pg_class  ON relnamespace = pn.oid
             LEFT JOIN pg_catalog.pg_roles pu ON (pn.nspowner = pu.oid)
-            {$where}
-            GROUP BY pn.nspname, pu.rolname, pg_catalog.obj_description(pn.oid, 'pg_namespace')
-            ORDER BY nspname";
+            %s
+            GROUP BY pn.nspname, pu.rolname, pg_catalog.obj_description(pn.oid, \'pg_namespace\')
+            ORDER BY nspname',
+            $where
+        );
 
         return $this->selectSet($sql);
     }
@@ -99,7 +104,7 @@ trait SchemaTrait
      *
      * @param mixed $paths An array of schemas in required search order
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function setSearchPath($paths)
     {
@@ -145,10 +150,16 @@ trait SchemaTrait
         $this->fieldClean($schemaname);
         $this->fieldClean($authorization);
 
-        $sql = "CREATE SCHEMA \"{$schemaname}\"";
+        $sql = \sprintf(
+            'CREATE SCHEMA "%s"',
+            $schemaname
+        );
 
         if ('' !== $authorization) {
-            $sql .= " AUTHORIZATION \"{$authorization}\"";
+            $sql .= \sprintf(
+                ' AUTHORIZATION "%s"',
+                $authorization
+            );
         }
 
         if ('' !== $comment) {
@@ -219,7 +230,11 @@ trait SchemaTrait
         $schema_rs = $this->getSchemaByName($schemaname);
         /* Only if the owner change */
         if ($schema_rs->fields['ownername'] !== $owner) {
-            $sql = "ALTER SCHEMA \"{$schemaname}\" OWNER TO \"{$owner}\"";
+            $sql = \sprintf(
+                'ALTER SCHEMA "%s" OWNER TO "%s"',
+                $schemaname,
+                $owner
+            );
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -231,7 +246,11 @@ trait SchemaTrait
 
         // Only if the name has changed
         if ($name !== $schemaname) {
-            $sql = "ALTER SCHEMA \"{$schemaname}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf(
+                'ALTER SCHEMA "%s" RENAME TO "%s"',
+                $schemaname,
+                $name
+            );
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -249,17 +268,20 @@ trait SchemaTrait
      *
      * @param string $schema The name of the schema
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getSchemaByName($schema)
     {
         $this->clean($schema);
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT nspname, nspowner, r.rolname AS ownername, nspacl,
-                pg_catalog.obj_description(pn.oid, 'pg_namespace') as nspcomment
+                pg_catalog.obj_description(pn.oid, \'pg_namespace\') as nspcomment
             FROM pg_catalog.pg_namespace pn
                 LEFT JOIN pg_roles as r ON pn.nspowner = r.oid
-            WHERE nspname='{$schema}'";
+            WHERE nspname=\'%s\'',
+            $schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -272,13 +294,16 @@ trait SchemaTrait
      * @param string $schemaname The name of the schema to drop
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropSchema($schemaname, $cascade)
     {
         $this->fieldClean($schemaname);
 
-        $sql = "DROP SCHEMA \"{$schemaname}\"";
+        $sql = \sprintf(
+            'DROP SCHEMA "%s"',
+            $schemaname
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';

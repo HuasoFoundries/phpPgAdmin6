@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Help;
 
+use PHPPgAdmin\Traits\HelperTrait;
+
 /**
  * Help links for PostgreSQL 7.4 documentation.
  *
@@ -13,7 +15,7 @@ namespace PHPPgAdmin\Help;
  */
 class PostgresDoc
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     /**
      * @var float

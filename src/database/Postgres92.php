@@ -6,6 +6,9 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\Help\PostgresDoc92;
+
 /**
  * @file
  * PostgreSQL 9.2 support
@@ -22,14 +25,14 @@ class Postgres92 extends Postgres93
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc92::class;
+    public $help_classname = PostgresDoc92::class;
 
     /**
      * Returns all available process information.
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getProcesses($database = null)
     {
@@ -40,11 +43,14 @@ class Postgres92 extends Postgres93
 				ORDER BY datname, usename, pid";
         } else {
             $this->clean($database);
-            $sql = "SELECT datname, usename, pid, waiting, state_change as query_start,
-                  case when state='idle in transaction' then '<IDLE> in transaction' when state = 'idle' then '<IDLE>' else query end as query
+            $sql = \sprintf(
+                'SELECT datname, usename, pid, waiting, state_change as query_start,
+                  case when state=\'idle in transaction\' then \'<IDLE> in transaction\' when state = \'idle\' then \'<IDLE>\' else query end as query
 				FROM pg_catalog.pg_stat_activity
-				WHERE datname='{$database}'
-				ORDER BY usename, pid";
+				WHERE datname=\'%s\'
+				ORDER BY usename, pid',
+                $database
+            );
         }
 
         return $this->selectSet($sql);
@@ -55,7 +61,7 @@ class Postgres92 extends Postgres93
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -81,15 +87,18 @@ class Postgres92 extends Postgres93
      *
      * @param string $spcname
      *
-     * @return int|\PHPPgAdmin\ADORecordSet A recordset
+     * @return ADORecordSet|int A recordset
      */
     public function getTablespace($spcname)
     {
         $this->clean($spcname);
 
-        $sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, pg_catalog.pg_tablespace_location(oid) as spclocation,
-                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
-					FROM pg_catalog.pg_tablespace WHERE spcname='{$spcname}'";
+        $sql = \sprintf(
+            'SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, pg_catalog.pg_tablespace_location(oid) as spclocation,
+                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid=\'pg_tablespace\'::regclass) AS spccomment
+					FROM pg_catalog.pg_tablespace WHERE spcname=\'%s\'',
+            $spcname
+        );
 
         return $this->selectSet($sql);
     }

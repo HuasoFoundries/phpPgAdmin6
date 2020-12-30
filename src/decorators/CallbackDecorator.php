@@ -6,9 +6,11 @@
 
 namespace PHPPgAdmin\Decorators;
 
+use Closure;
+
 class CallbackDecorator extends Decorator
 {
-    public function __construct(\Closure $callback, $param = null)
+    public function __construct(Closure $callback, $param = null)
     {
         $this->fn = $callback;
         $this->p = $param;

@@ -6,14 +6,18 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\ArrayRecordSet;
+use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\HelperTrait;
+use Slim\Http\Response;
 
 /**
  * Base TreeController controller class.
  */
 class TreeController extends BaseController
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public $form = '';
 
@@ -42,7 +46,7 @@ class TreeController extends BaseController
     protected $container;
 
     // Constructor
-    public function __construct(\PHPPgAdmin\ContainerUtils $container, $controller_name = null)
+    public function __construct(ContainerUtils $container, $controller_name = null)
     {
         $this->container = $container;
         $this->lang = $container->get('lang');
@@ -65,21 +69,21 @@ class TreeController extends BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\ArrayRecordSet $_treedata a set of records to populate the tree
-     * @param array                      $attrs     Attributes for tree items
-     *                                              'text' - the text for the tree node
-     *                                              'icon' - an icon for node
-     *                                              'openIcon' - an alternative icon when the node is expanded
-     *                                              'toolTip' - tool tip text for the node
-     *                                              'action' - URL to visit when single clicking the node
-     *                                              'iconAction' - URL to visit when single clicking the icon node
-     *                                              'branch' - URL for child nodes (tree XML)
-     *                                              'expand' - the action to return XML for the subtree
-     *                                              'nodata' - message to display when node has no children
-     * @param string                     $section   The section where the branch is linked in the tree
-     * @param bool                       $print     either to return or echo the result
+     * @param ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param array          $attrs     Attributes for tree items
+     *                                  'text' - the text for the tree node
+     *                                  'icon' - an icon for node
+     *                                  'openIcon' - an alternative icon when the node is expanded
+     *                                  'toolTip' - tool tip text for the node
+     *                                  'action' - URL to visit when single clicking the node
+     *                                  'iconAction' - URL to visit when single clicking the icon node
+     *                                  'branch' - URL for child nodes (tree XML)
+     *                                  'expand' - the action to return XML for the subtree
+     *                                  'nodata' - message to display when node has no children
+     * @param string         $section   The section where the branch is linked in the tree
+     * @param bool           $print     either to return or echo the result
      *
-     * @return \Slim\Http\Response|string the json rendered tree
+     * @return Response|string the json rendered tree
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
@@ -106,7 +110,7 @@ class TreeController extends BaseController
      *
      * @param array $tabs The tabs
      *
-     * @return \PHPPgAdmin\ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     * @return ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
      */
     public function adjustTabsForTree(&$tabs)
     {
@@ -116,7 +120,7 @@ class TreeController extends BaseController
             }
         }
 
-        return new \PHPPgAdmin\ArrayRecordSet($tabs);
+        return new ArrayRecordSet($tabs);
     }
 
     /**

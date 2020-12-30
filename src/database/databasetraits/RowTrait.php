@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for tables manipulation.
  */
@@ -17,7 +19,7 @@ trait RowTrait
      * @param string $table The name of a table
      * @param array  $key   The associative array holding the key to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function browseRow($table, $key)
     {
@@ -25,7 +27,11 @@ trait RowTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($table);
 
-        $sql = "SELECT * FROM \"{$f_schema}\".\"{$table}\"";
+        $sql = \sprintf(
+            'SELECT * FROM "%s"."%s"',
+            $f_schema,
+            $table
+        );
 
         if (\is_array($key) && 0 < \count($key)) {
             $sql .= ' WHERE true';
@@ -33,7 +39,11 @@ trait RowTrait
             foreach ($key as $k => $v) {
                 $this->fieldClean($k);
                 $this->clean($v);
-                $sql .= " AND \"{$k}\"='{$v}'";
+                $sql .= \sprintf(
+                    ' AND "%s"=\'%s\'',
+                    $k,
+                    $v
+                );
             }
         }
 
@@ -62,17 +72,21 @@ trait RowTrait
 
         // Get the first primary or unique index (sorting primary keys first) that
         // is NOT a partial index.
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT indrelid, indkey
             FROM pg_catalog.pg_index
             WHERE indisunique AND indrelid=(
                 SELECT oid FROM pg_catalog.pg_class
-                WHERE relname='{$table}' AND relnamespace=(
+                WHERE relname=\'%s\' AND relnamespace=(
                     SELECT oid FROM pg_catalog.pg_namespace
-                    WHERE nspname='{$c_schema}'
+                    WHERE nspname=\'%s\'
                 )
             ) AND indpred IS NULL AND indexprs IS NULL
-            ORDER BY indisprimary DESC LIMIT 1";
+            ORDER BY indisprimary DESC LIMIT 1',
+            $table,
+            $c_schema
+        );
         $rs = $this->selectSet($sql);
 
         // If none, check for an OID column.  Even though OIDs can be duplicated, the edit and delete row
@@ -112,7 +126,7 @@ trait RowTrait
      * @param array  $format An array of the data type (VALUE or EXPRESSION)
      * @param array  $types  An array of field types
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {
@@ -142,7 +156,11 @@ trait RowTrait
                 }
             }
 
-            $sql = "INSERT INTO \"{$f_schema}\".\"{$table}\" (\"" . \implode('","', $fields) . '")
+            $sql = \sprintf(
+                'INSERT INTO "%s"."%s" ("',
+                $f_schema,
+                $table
+            ) . \implode('","', $fields) . '")
                 VALUES (' . \mb_substr($sql, 1) . ')';
 
             return $this->execute($sql);
@@ -203,13 +221,19 @@ trait RowTrait
                     }
                     $this->clean($value);
 
-                    return "'{$value}'";
+                    return \sprintf(
+                        '\'%s\'',
+                        $value
+                    );
                 }
 
                 if ('VALUE' === $format) {
                     $this->clean($value);
 
-                    return "'{$value}'";
+                    return \sprintf(
+                        '\'%s\'',
+                        $value
+                    );
                 }
 
                 return $value;
@@ -253,9 +277,19 @@ trait RowTrait
                 }
 
                 if (0 < \mb_strlen($sql)) {
-                    $sql .= ", \"{$key}\"={$tmp}";
+                    $sql .= \sprintf(
+                        ', "%s"=%s',
+                        $key,
+                        $tmp
+                    );
                 } else {
-                    $sql = "UPDATE \"{$f_schema}\".\"{$table}\" SET \"{$key}\"={$tmp}";
+                    $sql = \sprintf(
+                        'UPDATE "%s"."%s" SET "%s"=%s',
+                        $f_schema,
+                        $table,
+                        $key,
+                        $tmp
+                    );
                 }
             }
             $first = true;
@@ -265,10 +299,18 @@ trait RowTrait
                 $this->clean($v);
 
                 if ($first) {
-                    $sql .= " WHERE \"{$k}\"='{$v}'";
+                    $sql .= \sprintf(
+                        ' WHERE "%s"=\'%s\'',
+                        $k,
+                        $v
+                    );
                     $first = false;
                 } else {
-                    $sql .= " AND \"{$k}\"='{$v}'";
+                    $sql .= \sprintf(
+                        ' AND "%s"=\'%s\'',
+                        $k,
+                        $v
+                    );
                 }
             }
         }

@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin;
 
+use Slim\Flash\Messages;
+
 /**
  * Auxiliary class to handle injection of dependencies to avoid
  * declaring them in the container class.
@@ -13,14 +15,14 @@ namespace PHPPgAdmin;
 class ContainerHandlers
 {
     /**
-     * @var \PHPPgAdmin\ContainerUtils
+     * @var ContainerUtils
      * */
     private $container;
 
     /**
-     * @param \PHPPgAdmin\ContainerUtils $container
+     * @param ContainerUtils $container
      */
-    public function __construct(\PHPPgAdmin\ContainerUtils $container)
+    public function __construct(ContainerUtils $container)
     {
         $this->container = $container;
     }
@@ -46,9 +48,9 @@ class ContainerHandlers
         $container = $this->container;
 
         /**
-         * @return \PHPPgAdmin\ViewManager
+         * @return ViewManager
          */
-        $container['view'] = static function (\PHPPgAdmin\ContainerUtils $c): \PHPPgAdmin\ViewManager {
+        $container['view'] = static function (ContainerUtils $c): ViewManager {
             $misc = $c->misc;
             $view = new ViewManager(BASE_PATH . '/assets/templates', [
                 'cache' => BASE_PATH . '/temp/twigcache',
@@ -73,10 +75,10 @@ class ContainerHandlers
     {
         $container = $this->container;
         /**
-         * @return \PHPPgAdmin\Misc
+         * @return Misc
          */
-        $container['misc'] = static function (\PHPPgAdmin\ContainerUtils $c): \PHPPgAdmin\Misc {
-            $misc = new \PHPPgAdmin\Misc($c);
+        $container['misc'] = static function (ContainerUtils $c): Misc {
+            $misc = new Misc($c);
 
             $conf = $c->get('conf');
 
@@ -97,12 +99,12 @@ class ContainerHandlers
     public function setExtra(): self
     {
         $container = $this->container;
-        $container['flash'] = static function (): \Slim\Flash\Messages {
-            return new \Slim\Flash\Messages();
+        $container['flash'] = static function (): Messages {
+            return new Messages();
         };
 
-        $container['lang'] = static function (\PHPPgAdmin\ContainerUtils $c): array {
-            $translations = new \PHPPgAdmin\Translations($c);
+        $container['lang'] = static function (ContainerUtils $c): array {
+            $translations = new Translations($c);
 
             return $translations->lang;
         };
@@ -112,7 +114,7 @@ class ContainerHandlers
 
     public function setHaltHandler(): self
     {
-        $this->container['haltHandler'] = static function (\PHPPgAdmin\ContainerUtils $c) {
+        $this->container['haltHandler'] = static function (ContainerUtils $c) {
             return static function ($request, $response, $exits, $status = 500) {
                 $title = 'PHPPgAdmin Error';
 

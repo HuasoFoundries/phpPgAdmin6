@@ -6,9 +6,12 @@
 
 namespace PHPPgAdmin\Decorators;
 
+use Closure;
+use PHPPgAdmin\Traits\HelperTrait;
+
 class Decorator
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public $container;
 
@@ -56,10 +59,10 @@ class Decorator
     }
 
     /**
-     * @param \Closure              $callback
-     * @param (mixed|string)[]|null $params
+     * @param Closure                 $callback
+     * @param ((mixed|string)[]|null) $params
      */
-    public static function callback(\Closure $callback, ?array $params = null)
+    public static function callback(Closure $callback, ?array $params = null)
     {
         return new  CallbackDecorator($callback, $params);
     }
@@ -75,7 +78,7 @@ class Decorator
 
     public static function concat(/* ... */)
     {
-        return new \PHPPgAdmin\Decorators\ConcatDecorator(\func_get_args());
+        return new ConcatDecorator(\func_get_args());
     }
 
     /**
@@ -84,7 +87,7 @@ class Decorator
      */
     public static function replace(string $str, array $params)
     {
-        return new \PHPPgAdmin\Decorators\ReplaceDecorator($str, $params);
+        return new ReplaceDecorator($str, $params);
     }
 
     /**

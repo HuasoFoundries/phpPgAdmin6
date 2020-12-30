@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\Decorators\Decorator;
+
 /**
  * Base controller class.
  */
@@ -86,15 +88,15 @@ class TablespacesController extends BaseController
         $columns = [
             'database' => [
                 'title' => $this->lang['strname'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                'field' => Decorator::field('spcname'),
             ],
             'owner' => [
                 'title' => $this->lang['strowner'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spcowner'),
+                'field' => Decorator::field('spcowner'),
             ],
             'location' => [
                 'title' => $this->lang['strlocation'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spclocation'),
+                'field' => Decorator::field('spclocation'),
             ],
             'actions' => [
                 'title' => $this->lang['stractions'],
@@ -104,7 +106,7 @@ class TablespacesController extends BaseController
         if ($data->hasSharedComments()) {
             $columns['comment'] = [
                 'title' => $this->lang['strcomment'],
-                'field' => \PHPPgAdmin\Decorators\Decorator::field('spccomment'),
+                'field' => Decorator::field('spccomment'),
             ];
         }
 
@@ -116,7 +118,7 @@ class TablespacesController extends BaseController
                         'url' => 'tablespaces',
                         'urlvars' => [
                             'action' => 'edit',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                            'tablespace' => Decorator::field('spcname'),
                         ],
                     ],
                 ],
@@ -128,7 +130,7 @@ class TablespacesController extends BaseController
                         'url' => 'tablespaces',
                         'urlvars' => [
                             'action' => 'confirm_drop',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                            'tablespace' => Decorator::field('spcname'),
                         ],
                     ],
                 ],
@@ -140,7 +142,7 @@ class TablespacesController extends BaseController
                         'url' => 'privileges',
                         'urlvars' => [
                             'subject' => 'tablespace',
-                            'tablespace' => \PHPPgAdmin\Decorators\Decorator::field('spcname'),
+                            'tablespace' => Decorator::field('spcname'),
                         ],
                     ],
                 ],
@@ -191,11 +193,20 @@ class TablespacesController extends BaseController
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<input name="name" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
             \htmlspecialchars($_POST['name']), '" /></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strowner']
+            ) . \PHP_EOL;
             echo '<td class="data1"><select name="owner">';
 
             while (!$users->EOF) {
@@ -207,7 +218,10 @@ class TablespacesController extends BaseController
             echo '</select></td></tr>' . \PHP_EOL;
 
             if ($data->hasSharedComments()) {
-                echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left">%s</th>',
+                    $this->lang['strcomment']
+                ) . \PHP_EOL;
                 echo '<td class="data1">';
                 echo '<textarea rows="3" cols="32" name="comment">',
                 \htmlspecialchars($_POST['comment']), '</textarea></td></tr>' . \PHP_EOL;
@@ -215,11 +229,21 @@ class TablespacesController extends BaseController
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="save_edit" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -262,14 +286,23 @@ class TablespacesController extends BaseController
             $this->printTrail('tablespace');
             $this->printTitle($this->lang['strdrop'], 'pg.tablespace.drop');
 
-            echo '<p>', \sprintf($this->lang['strconfdroptablespace'], $this->misc->printVal($_REQUEST['tablespace'])), '</p>' . \PHP_EOL;
+            echo '<p>', \sprintf(
+                $this->lang['strconfdroptablespace'],
+                $this->misc->printVal($_REQUEST['tablespace'])
+            ), '</p>' . \PHP_EOL;
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" />',
+                $this->lang['strcancel']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->droptablespace($_REQUEST['tablespace']);
@@ -311,9 +344,20 @@ class TablespacesController extends BaseController
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
         echo $this->view->form;
         echo '<table>' . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formSpcname\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data1"><input size="32" name="formSpcname" maxlength="%s" value="',
+            $data->_maxNameLen
+        ), \htmlspecialchars($_POST['formSpcname']), "\" /></td>\n\t</tr>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strowner']
+        ) . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><select name=\"formOwner\">" . \PHP_EOL;
 
         while (!$users->EOF) {
@@ -323,18 +367,33 @@ class TablespacesController extends BaseController
             $users->moveNext();
         }
         echo "\t\t</select></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strlocation']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strlocation']
+        ) . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"32\" name=\"formLoc\" value=\"", \htmlspecialchars($_POST['formLoc']), "\" /></td>\n\t</tr>" . \PHP_EOL;
         // Comments (if available)
         if ($data->hasSharedComments()) {
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo "\t\t<td><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
             \htmlspecialchars($_POST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
         }
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 

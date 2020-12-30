@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for roles and users manipulation.
  */
@@ -16,7 +18,7 @@ trait RoleTrait
      *
      * @param string $rolename (optional) The role name to exclude from the select
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getRoles($rolename = '')
     {
@@ -38,7 +40,10 @@ trait RoleTrait
             ';
 
         if ($rolename) {
-            $sql .= " WHERE r.rolname!='{$rolename}'";
+            $sql .= \sprintf(
+                ' WHERE r.rolname!=\'%s\'',
+                $rolename
+            );
         }
 
         $sql .= ' ORDER BY r.rolname';
@@ -51,13 +56,14 @@ trait RoleTrait
      *
      * @param string $rolename The name of the role to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getRole($rolename)
     {
         $this->clean($rolename);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 r.rolname,
                 r1.rolname as group,
@@ -72,7 +78,9 @@ trait RoleTrait
             FROM pg_catalog.pg_roles r
             LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.oid)
             LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
-            WHERE r.rolname='{$rolename}'";
+            WHERE r.rolname=\'%s\'',
+            $rolename
+        );
 
         return $this->selectSet($sql);
     }
@@ -80,7 +88,7 @@ trait RoleTrait
     /**
      * Returns all users in the database cluster.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getUsers()
     {
@@ -102,13 +110,14 @@ trait RoleTrait
      *
      * @param string $username The username of the user to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getUser($username)
     {
         $this->clean($username);
 
-        $sql = "SELECT
+        $sql = \sprintf(
+            'SELECT
                 r.usename,
                 r1.rolname as group,
                 r.usesuper,
@@ -117,7 +126,9 @@ trait RoleTrait
             FROM pg_catalog.pg_user r
             LEFT JOIN pg_catalog.pg_auth_members m ON (m.member = r.usesysid)
             LEFT JOIN pg_roles r1 ON (m.roleid=r1.oid)
-			WHERE r.usename='{$username}'";
+			WHERE r.usename=\'%s\'',
+            $username
+        );
 
         return $this->selectSet($sql);
     }
@@ -138,7 +149,7 @@ trait RoleTrait
      * @param array  $new_members_of_role (array) Roles which are automatically added as members of the new role
      * @param array  $new_admins_of_role  (array) Roles which are automatically added as admin members of the new role
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function createRole(
         $rolename,
@@ -163,10 +174,16 @@ trait RoleTrait
         $this->fieldArrayClean($new_members_of_role);
         $this->fieldArrayClean($new_admins_of_role);
 
-        $sql = "CREATE ROLE \"{$rolename}\"";
+        $sql = \sprintf(
+            'CREATE ROLE "%s"',
+            $rolename
+        );
 
         if ('' !== $password) {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+            $sql .= \sprintf(
+                ' WITH ENCRYPTED PASSWORD \'%s\'',
+                $enc
+            );
         }
 
         $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
@@ -176,13 +193,19 @@ trait RoleTrait
         $sql .= $login ? ' LOGIN' : ' NOLOGIN';
 
         if ('' !== $connlimit) {
-            $sql .= " CONNECTION LIMIT {$connlimit}";
+            $sql .= \sprintf(
+                ' CONNECTION LIMIT %s',
+                $connlimit
+            );
         } else {
             $sql .= ' CONNECTION LIMIT -1';
         }
 
         if ('' !== $expiry) {
-            $sql .= " VALID UNTIL '{$expiry}'";
+            $sql .= \sprintf(
+                ' VALID UNTIL \'%s\'',
+                $expiry
+            );
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }
@@ -305,14 +328,18 @@ trait RoleTrait
      * @param string $rolename    The name of the role to rename
      * @param string $newrolename The new name of the role
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function renameRole($rolename, $newrolename)
     {
         $this->fieldClean($rolename);
         $this->fieldClean($newrolename);
 
-        $sql = "ALTER ROLE \"{$rolename}\" RENAME TO \"{$newrolename}\"";
+        $sql = \sprintf(
+            'ALTER ROLE "%s" RENAME TO "%s"',
+            $rolename,
+            $newrolename
+        );
 
         return $this->execute($sql);
     }
@@ -404,14 +431,18 @@ trait RoleTrait
      * @param string $rolename The name of the role that will belong to the target role
      * @param int    $admin    (optional) Flag to grant the admin option
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function grantRole($role, $rolename, $admin = 0)
     {
         $this->fieldClean($role);
         $this->fieldClean($rolename);
 
-        $sql = "GRANT \"{$role}\" TO \"{$rolename}\"";
+        $sql = \sprintf(
+            'GRANT "%s" TO "%s"',
+            $role,
+            $rolename
+        );
 
         if (1 === $admin) {
             $sql .= ' WITH ADMIN OPTION';
@@ -428,7 +459,7 @@ trait RoleTrait
      * @param int    $admin    (optional) Flag to revoke only the admin option
      * @param string $type     (optional) Type of revoke: RESTRICT | CASCADE
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function revokeRole($role, $rolename, $admin = 0, $type = 'RESTRICT')
     {
@@ -441,7 +472,12 @@ trait RoleTrait
             $sql .= 'ADMIN OPTION FOR ';
         }
 
-        $sql .= "\"{$role}\" FROM \"{$rolename}\" {$type}";
+        $sql .= \sprintf(
+            '"%s" FROM "%s" %s',
+            $role,
+            $rolename,
+            $type
+        );
 
         return $this->execute($sql);
     }
@@ -451,13 +487,16 @@ trait RoleTrait
      *
      * @param string $rolename The name of the role to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropRole($rolename)
     {
         $this->fieldClean($rolename);
 
-        $sql = "DROP ROLE \"{$rolename}\"";
+        $sql = \sprintf(
+            'DROP ROLE "%s"',
+            $rolename
+        );
 
         return $this->execute($sql);
     }
@@ -472,7 +511,7 @@ trait RoleTrait
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      *
      * @internal param $group (array) The groups to create the user in
      */
@@ -484,10 +523,16 @@ trait RoleTrait
         $this->clean($expiry);
         $this->fieldArrayClean($groups);
 
-        $sql = "CREATE USER \"{$username}\"";
+        $sql = \sprintf(
+            'CREATE USER "%s"',
+            $username
+        );
 
         if ('' !== $password) {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+            $sql .= \sprintf(
+                ' WITH ENCRYPTED PASSWORD \'%s\'',
+                $enc
+            );
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
@@ -498,7 +543,10 @@ trait RoleTrait
         }
 
         if ('' !== $expiry) {
-            $sql .= " VALID UNTIL '{$expiry}'";
+            $sql .= \sprintf(
+                ' VALID UNTIL \'%s\'',
+                $expiry
+            );
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }
@@ -554,14 +602,18 @@ trait RoleTrait
      * @param string $username The username of the user to rename
      * @param string $newname  The new name of the user
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function renameUser($username, $newname)
     {
         $this->fieldClean($username);
         $this->fieldClean($newname);
 
-        $sql = "ALTER USER \"{$username}\" RENAME TO \"{$newname}\"";
+        $sql = \sprintf(
+            'ALTER USER "%s" RENAME TO "%s"',
+            $username,
+            $newname
+        );
 
         return $this->execute($sql);
     }
@@ -577,7 +629,7 @@ trait RoleTrait
      * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function setUser($username, $password, $createdb, $createuser, $expiry)
     {
@@ -586,17 +638,26 @@ trait RoleTrait
         $this->clean($enc);
         $this->clean($expiry);
 
-        $sql = "ALTER USER \"{$username}\"";
+        $sql = \sprintf(
+            'ALTER USER "%s"',
+            $username
+        );
 
         if ('' !== $password) {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+            $sql .= \sprintf(
+                ' WITH ENCRYPTED PASSWORD \'%s\'',
+                $enc
+            );
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
         $sql .= $createuser ? ' CREATEUSER' : ' NOCREATEUSER';
 
         if ('' !== $expiry) {
-            $sql .= " VALID UNTIL '{$expiry}'";
+            $sql .= \sprintf(
+                ' VALID UNTIL \'%s\'',
+                $expiry
+            );
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }
@@ -609,13 +670,16 @@ trait RoleTrait
      *
      * @param string $username The username of the user to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropUser($username)
     {
         $this->fieldClean($username);
 
-        $sql = "DROP USER \"{$username}\"";
+        $sql = \sprintf(
+            'DROP USER "%s"',
+            $username
+        );
 
         return $this->execute($sql);
     }
@@ -626,7 +690,7 @@ trait RoleTrait
      * @param string $rolename The role name
      * @param string $password The new password
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function changePassword($rolename, $password)
     {
@@ -634,7 +698,11 @@ trait RoleTrait
         $this->fieldClean($rolename);
         $this->clean($enc);
 
-        $sql = "ALTER ROLE \"{$rolename}\" WITH ENCRYPTED PASSWORD '{$enc}'";
+        $sql = \sprintf(
+            'ALTER ROLE "%s" WITH ENCRYPTED PASSWORD \'%s\'',
+            $rolename,
+            $enc
+        );
 
         return $this->execute($sql);
     }
@@ -645,14 +713,18 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param string $user    The name of the user to add to the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function addGroupMember($groname, $user)
     {
         $this->fieldClean($groname);
         $this->fieldClean($user);
 
-        $sql = "ALTER GROUP \"{$groname}\" ADD USER \"{$user}\"";
+        $sql = \sprintf(
+            'ALTER GROUP "%s" ADD USER "%s"',
+            $groname,
+            $user
+        );
 
         return $this->execute($sql);
     }
@@ -662,19 +734,22 @@ trait RoleTrait
      *
      * @param string $rolename The role name
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getMemberOf($rolename)
     {
         $this->clean($rolename);
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT rolname FROM pg_catalog.pg_roles R, pg_auth_members M
 			WHERE R.oid=M.roleid
 				AND member IN (
 					SELECT oid FROM pg_catalog.pg_roles
-					WHERE rolname='{$rolename}')
-			ORDER BY rolname";
+					WHERE rolname=\'%s\')
+			ORDER BY rolname',
+            $rolename
+        );
 
         return $this->selectSet($sql);
     }
@@ -687,18 +762,22 @@ trait RoleTrait
      * @param string $rolename The role name
      * @param string $admin    (optional) Find only admin members
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getMembers($rolename, $admin = 'f')
     {
         $this->clean($rolename);
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT rolname FROM pg_catalog.pg_roles R, pg_auth_members M
-			WHERE R.oid=M.member AND admin_option='{$admin}'
+			WHERE R.oid=M.member AND admin_option=\'%s\'
 				AND roleid IN (SELECT oid FROM pg_catalog.pg_roles
-					WHERE rolname='{$rolename}')
-			ORDER BY rolname";
+					WHERE rolname=\'%s\')
+			ORDER BY rolname',
+            $admin,
+            $rolename
+        );
 
         return $this->selectSet($sql);
     }
@@ -709,14 +788,18 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param string $user    The name of the user to remove from the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropGroupMember($groname, $user)
     {
         $this->fieldClean($groname);
         $this->fieldClean($user);
 
-        $sql = "ALTER GROUP \"{$groname}\" DROP USER \"{$user}\"";
+        $sql = \sprintf(
+            'ALTER GROUP "%s" DROP USER "%s"',
+            $groname,
+            $user
+        );
 
         return $this->execute($sql);
     }
@@ -726,16 +809,19 @@ trait RoleTrait
      *
      * @param string $groname The name of the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getGroup($groname)
     {
         $this->clean($groname);
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT s.usename FROM pg_catalog.pg_user s, pg_catalog.pg_group g
-			WHERE g.groname='{$groname}' AND s.usesysid = ANY (g.grolist)
-			ORDER BY s.usename";
+			WHERE g.groname=\'%s\' AND s.usesysid = ANY (g.grolist)
+			ORDER BY s.usename',
+            $groname
+        );
 
         return $this->selectSet($sql);
     }
@@ -743,7 +829,7 @@ trait RoleTrait
     /**
      * Returns all groups in the database cluser.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getGroups()
     {
@@ -758,13 +844,16 @@ trait RoleTrait
      * @param string $groname The name of the group
      * @param array  $users   An array of users to add to the group
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function createGroup($groname, $users)
     {
         $this->fieldClean($groname);
 
-        $sql = "CREATE GROUP \"{$groname}\"";
+        $sql = \sprintf(
+            'CREATE GROUP "%s"',
+            $groname
+        );
 
         if (\is_array($users) && 0 < \count($users)) {
             $this->fieldArrayClean($users);
@@ -779,13 +868,16 @@ trait RoleTrait
      *
      * @param string $groname The name of the group to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropGroup($groname)
     {
         $this->fieldClean($groname);
 
-        $sql = "DROP GROUP \"{$groname}\"";
+        $sql = \sprintf(
+            'DROP GROUP "%s"',
+            $groname
+        );
 
         return $this->execute($sql);
     }
@@ -906,10 +998,16 @@ trait RoleTrait
         $this->clean($connlimit);
         $this->clean($expiry);
 
-        $sql = "ALTER ROLE \"{$rolename}\"";
+        $sql = \sprintf(
+            'ALTER ROLE "%s"',
+            $rolename
+        );
 
         if ('' !== $password) {
-            $sql .= " WITH ENCRYPTED PASSWORD '{$enc}'";
+            $sql .= \sprintf(
+                ' WITH ENCRYPTED PASSWORD \'%s\'',
+                $enc
+            );
         }
 
         $sql .= $superuser ? ' SUPERUSER' : ' NOSUPERUSER';
@@ -919,13 +1017,19 @@ trait RoleTrait
         $sql .= $login ? ' LOGIN' : ' NOLOGIN';
 
         if ('' !== $connlimit) {
-            $sql .= " CONNECTION LIMIT {$connlimit}";
+            $sql .= \sprintf(
+                ' CONNECTION LIMIT %s',
+                $connlimit
+            );
         } else {
             $sql .= ' CONNECTION LIMIT -1';
         }
 
         if ('' !== $expiry) {
-            $sql .= " VALID UNTIL '{$expiry}'";
+            $sql .= \sprintf(
+                ' VALID UNTIL \'%s\'',
+                $expiry
+            );
         } else {
             $sql .= " VALID UNTIL 'infinity'";
         }

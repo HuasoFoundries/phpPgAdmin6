@@ -7,13 +7,14 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\ExportTrait;
 
 /**
  * Base controller class.
  */
 class TblpropertiesController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ExportTrait;
+    use ExportTrait;
 
     public $controller_title = 'strtables';
 
@@ -359,14 +360,23 @@ class TblpropertiesController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/tblproperties" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<input name="name" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
                 \htmlspecialchars($_POST['name'], \ENT_QUOTES),
                 '" /></td></tr>' . \PHP_EOL;
 
             if ($data->isSuperUser()) {
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strowner']
+                ) . \PHP_EOL;
                 echo '<td class="data1"><select name="owner">';
 
                 while (!$users->EOF) {
@@ -383,7 +393,10 @@ class TblpropertiesController extends BaseController
 
             if ($data->hasAlterTableSchema()) {
                 $schemas = $data->getSchemas();
-                echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strschema']
+                ) . \PHP_EOL;
                 echo '<td class="data1"><select name="newschema">';
 
                 while (!$schemas->EOF) {
@@ -400,7 +413,11 @@ class TblpropertiesController extends BaseController
 
             // Tablespace (if there are any)
             if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
-                echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strtablespace']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '	<tr>
+		<th class="data left">%s</th>',
+                    $this->lang['strtablespace']
+                ) . \PHP_EOL;
                 echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"tablespace\">" . \PHP_EOL;
                 // Always offer the default (empty) option
                 echo "\t\t\t\t<option value=\"\"",
@@ -409,32 +426,66 @@ class TblpropertiesController extends BaseController
                 // Display all other tablespaces
                 while (!$tablespaces->EOF) {
                     $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
-                    echo "\t\t\t\t<option value=\"{$spcname}\"",
+                    echo \sprintf(
+                        '				<option value="%s"',
+                        $spcname
+                    ),
                         ($spcname === $_POST['tablespace']) ? ' selected="selected"' : '',
-                        ">{$spcname}</option>" . \PHP_EOL;
+                        \sprintf(
+                            '>%s</option>',
+                            $spcname
+                        ) . \PHP_EOL;
                     $tablespaces->moveNext();
                 }
                 echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
             }
             echo '<tr><th class="data left"> </th>' . \PHP_EOL;
             echo '<td class="data1">';
-            echo \sprintf('<input type="checkbox" name="with_oids" value="1" %s /> %s', $data->hasObjectID($table->fields['relname']) ? 'checked' : '', ' WITH OIDS');
+            echo \sprintf(
+                '<input type="checkbox" name="with_oids" value="1" %s /> %s',
+                $data->hasObjectID($table->fields['relname']) ? 'checked' : '',
+                ' WITH OIDS'
+            );
 
             echo '</td></tr>';
 
-            echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo \sprintf('<textarea rows="3" cols="62" name="comment">%s</textarea>', \htmlspecialchars($_POST['comment']));
-            echo \sprintf('</td></tr>%s</table>%s', \PHP_EOL, \PHP_EOL);
+            echo \sprintf(
+                '<textarea rows="3" cols="62" name="comment">%s</textarea>',
+                \htmlspecialchars($_POST['comment'])
+            );
+            echo \sprintf(
+                '</td></tr>%s</table>%s',
+                \PHP_EOL,
+                \PHP_EOL
+            );
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
 
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -474,7 +525,10 @@ class TblpropertiesController extends BaseController
 
         // Check that file uploads are enabled
         if (!\ini_get('file_uploads')) {
-            echo "<p>{$this->lang['strnouploads']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnouploads']
+            ) . \PHP_EOL;
 
             return;
         }
@@ -484,28 +538,63 @@ class TblpropertiesController extends BaseController
         if (\is_float($max_size) && 0 < $max_size) {
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataimport" method="post" enctype="multipart/form-data">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strformat']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left required">%s</th>',
+                $this->lang['strformat']
+            ) . \PHP_EOL;
             echo "\t\t<td><select name=\"format\">" . \PHP_EOL;
-            echo "\t\t\t<option value=\"auto\">{$this->lang['strauto']}</option>" . \PHP_EOL;
+            echo \sprintf(
+                '			<option value="auto">%s</option>',
+                $this->lang['strauto']
+            ) . \PHP_EOL;
             echo "\t\t\t<option value=\"csv\">CSV</option>" . \PHP_EOL;
-            echo "\t\t\t<option value=\"tab\">{$this->lang['strtabbed']}</option>" . \PHP_EOL;
+            echo \sprintf(
+                '			<option value="tab">%s</option>',
+                $this->lang['strtabbed']
+            ) . \PHP_EOL;
 
             if (\function_exists('xml_parser_create')) {
                 echo "\t\t\t<option value=\"xml\">XML</option>" . \PHP_EOL;
             }
             echo "\t\t</select></td>\n\t</tr>" . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strallowednulls']}</th>" . \PHP_EOL;
-            echo "\t\t<td><label><input type=\"checkbox\" name=\"allowednulls[0]\" value=\"\\N\" checked=\"checked\" />{$this->lang['strbackslashn']}</label><br />" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left required">%s</th>',
+                $this->lang['strallowednulls']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '		<td><label><input type="checkbox" name="allowednulls[0]" value="\N" checked="checked" />%s</label><br />',
+                $this->lang['strbackslashn']
+            ) . \PHP_EOL;
             echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[1]\" value=\"NULL\" />NULL</label><br />" . \PHP_EOL;
-            echo "\t\t<label><input type=\"checkbox\" name=\"allowednulls[2]\" value=\"\" />{$this->lang['stremptystring']}</label></td>\n\t</tr>" . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strfile']}</th>" . \PHP_EOL;
-            echo "\t\t<td><input type=\"hidden\" name=\"MAX_FILE_SIZE\" value=\"{$max_size}\" />";
+            echo \sprintf(
+                '		<label><input type="checkbox" name="allowednulls[2]" value="" />%s</label></td>
+	</tr>',
+                $this->lang['stremptystring']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left required">%s</th>',
+                $this->lang['strfile']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '		<td><input type="hidden" name="MAX_FILE_SIZE" value="%s" />',
+                $max_size
+            );
             echo "<input type=\"file\" name=\"source\" /></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="import" />' . \PHP_EOL;
             echo $this->view->form;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
-            echo "<input type=\"submit\" value=\"{$this->lang['strimport']}\" /></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
+            echo \sprintf(
+                '<input type="submit" value="%s" /></p>',
+                $this->lang['strimport']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         }
     }
@@ -550,16 +639,35 @@ class TblpropertiesController extends BaseController
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
-                echo "<tr><th class=\"data required\">{$this->lang['strname']}</th>\n<th colspan=\"2\" class=\"data required\">{$this->lang['strtype']}</th>" . \PHP_EOL;
-                echo "<th class=\"data\">{$this->lang['strlength']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data required">%s</th>
+<th colspan="2" class="data required">%s</th>',
+                    $this->lang['strname'],
+                    $this->lang['strtype']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<th class="data">%s</th>',
+                    $this->lang['strlength']
+                ) . \PHP_EOL;
 
                 if ($data->hasCreateFieldWithConstraints()) {
-                    echo "<th class=\"data\">{$this->lang['strnotnull']}</th>\n<th class=\"data\">{$this->lang['strdefault']}</th>" . \PHP_EOL;
+                    echo \sprintf(
+                        '<th class="data">%s</th>
+<th class="data">%s</th>',
+                        $this->lang['strnotnull'],
+                        $this->lang['strdefault']
+                    ) . \PHP_EOL;
                 }
 
-                echo "<th class=\"data\">{$this->lang['strcomment']}</th></tr>" . \PHP_EOL;
+                echo \sprintf(
+                    '<th class="data">%s</th></tr>',
+                    $this->lang['strcomment']
+                ) . \PHP_EOL;
 
-                echo "<tr><td><input name=\"field\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+                echo \sprintf(
+                    '<tr><td><input name="field" size="16" maxlength="%s" value="',
+                    $data->_maxNameLen
+                ),
                     \htmlspecialchars($_POST['field']),
                     '" /></td>' . \PHP_EOL;
                 echo "<td><select  class=\"select2\" name=\"type\" id=\"type\" onchange=\"checkLengths(document.getElementById('type').value,'');\">" . \PHP_EOL;
@@ -594,7 +702,10 @@ class TblpropertiesController extends BaseController
                 $escaped_predef_types = []; // the JS escaped array elements
 
                 foreach ($predefined_size_types as $value) {
-                    $escaped_predef_types[] = "'{$value}'";
+                    $escaped_predef_types[] = \sprintf(
+                        '\'%s\'',
+                        $value
+                    );
                 }
 
                 echo '<td><input name="length" id="lengths" size="8" value="',
@@ -616,13 +727,24 @@ class TblpropertiesController extends BaseController
                 echo '<p><input type="hidden" name="action" value="add_column" />' . \PHP_EOL;
                 echo '<input type="hidden" name="stage" value="2" />' . \PHP_EOL;
                 echo $this->view->form;
-                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf(
+                    '<input type="hidden" name="table" value="%s"  />%s',
+                    \htmlspecialchars($_REQUEST['table']),
+                    \PHP_EOL
+                );
 
                 if (!$data->hasCreateFieldWithConstraints()) {
                     echo '<input type="hidden" name="default" value="" />' . \PHP_EOL;
                 }
-                echo "<input type=\"submit\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
-                echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+                echo \sprintf(
+                    '<input type="submit" value="%s" />',
+                    $this->lang['stradd']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                    $this->lang['strcancel'],
+                    \PHP_EOL
+                );
                 echo '</form>' . \PHP_EOL;
                 echo '<script type="text/javascript">predefined_lengths = new Array(' . \implode(',', $escaped_predef_types) . ");checkLengths(document.getElementById('type').value,'');</script>" . \PHP_EOL;
 
@@ -650,7 +772,12 @@ class TblpropertiesController extends BaseController
 
                 if (0 === $status) {
                     $this->view->setReloadBrowser(true);
-                    $this->doDefault(\sprintf('%s %s %s', $sql, \PHP_EOL, $this->lang['strcolumnadded']));
+                    $this->doDefault(\sprintf(
+                        '%s %s %s',
+                        $sql,
+                        \PHP_EOL,
+                        $this->lang['strcolumnadded']
+                    ));
                 } else {
                     $_REQUEST['stage'] = 1;
                     $this->doAddColumn($this->lang['strcolumnaddedbad']);
@@ -661,7 +788,10 @@ class TblpropertiesController extends BaseController
                 break;
 
             default:
-                echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strinvalidparam']
+                ) . \PHP_EOL;
         }
     }
 
@@ -679,23 +809,45 @@ class TblpropertiesController extends BaseController
             $this->printTrail('column');
             $this->printTitle($this->lang['strdrop'], 'pg.column.drop');
 
-            echo '<p>' . \sprintf($this->lang['strconfdropcolumn'], $misc->printVal($_REQUEST['column']), $misc->printVal($_REQUEST['table'])) . '</p>' . \PHP_EOL;
+            echo '<p>' . \sprintf(
+                $this->lang['strconfdropcolumn'],
+                $misc->printVal($_REQUEST['column']),
+                $misc->printVal($_REQUEST['table'])
+            ) . '</p>' . \PHP_EOL;
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/tblproperties" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
             echo '<input type="hidden" name="column" value="', \htmlspecialchars($_REQUEST['column']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\"> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade"> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" />',
+                $this->lang['strcancel']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             [$status, $sql] = $data->dropColumn($_POST['table'], $_POST['column'], isset($_POST['cascade']));
 
             if (0 === $status) {
                 $this->view->setReloadBrowser(true);
-                $this->doDefault(\sprintf('%s %s %s', $sql, \PHP_EOL, $this->lang['strcolumndropped']));
+                $this->doDefault(\sprintf(
+                    '%s %s %s',
+                    $sql,
+                    \PHP_EOL,
+                    $this->lang['strcolumndropped']
+                ));
             } else {
                 $this->doDefault($this->lang['strcolumndroppedbad']);
             }
@@ -711,8 +863,14 @@ class TblpropertiesController extends BaseController
             $data->fieldClean($attname);
             $data->fieldClean($table);
 
-            $actions['browse']['attr']['href']['urlvars']['query'] = "SELECT \"{$attname}\", count(*) AS \"count\"
-                FROM \"{$table}\" GROUP BY \"{$attname}\" ORDER BY \"{$attname}\"";
+            $actions['browse']['attr']['href']['urlvars']['query'] = \sprintf(
+                'SELECT "%s", count(*) AS "count"
+                FROM "%s" GROUP BY "%s" ORDER BY "%s"',
+                $attname,
+                $table,
+                $attname,
+                $attname
+            );
 
             return $actions;
         };
@@ -800,7 +958,10 @@ class TblpropertiesController extends BaseController
             'column' => [
                 'title' => $this->lang['strcolumn'],
                 'field' => Decorator::field('attname'),
-                'url' => "colproperties?subject=column&amp;{$misc->href}&amp;table=" . \urlencode($_REQUEST['table']) . '&amp;',
+                'url' => \sprintf(
+                    'colproperties?subject=column&amp;%s&amp;table=',
+                    $misc->href
+                ) . \urlencode($_REQUEST['table']) . '&amp;',
                 'vars' => ['column' => 'attname'],
             ],
             'type' => [

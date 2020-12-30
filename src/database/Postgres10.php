@@ -6,6 +6,9 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\ADORecordSet;
+use PHPPgAdmin\Help\PostgresDoc10;
+
 /**
  * @file
  * PostgreSQL 10.x support
@@ -14,7 +17,6 @@ namespace PHPPgAdmin\Database;
  *
  * @see https://blog.2ndquadrant.com/postgresql-10-identity-columns/
  */
-
 /**
  * Class to add support for Postgres10.
  */
@@ -28,12 +30,12 @@ class Postgres10 extends Postgres96
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc10::class;
+    public $help_classname = PostgresDoc10::class;
 
     /**
      * Return all tables in current database (and schema).
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All tables, sorted alphabetically
+     * @return ADORecordSet|int All tables, sorted alphabetically
      */
     public function getTables()
     {
@@ -57,12 +59,15 @@ class Postgres10 extends Postgres96
             $sql .= "   'N/A' as table_size ";
         }
 
-        $sql .= " FROM pg_catalog.pg_class c
+        $sql .= \sprintf(
+            ' FROM pg_catalog.pg_class c
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = c.relnamespace
                 LEFT JOIN  pg_catalog.pg_tablespace pt ON  pt.oid=c.reltablespace
-                WHERE c.relkind IN ('r','p')
-                AND nspname='{$c_schema}'
-                ORDER BY c.relname";
+                WHERE c.relkind IN (\'r\',\'p\')
+                AND nspname=\'%s\'
+                ORDER BY c.relname',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }

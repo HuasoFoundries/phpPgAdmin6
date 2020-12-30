@@ -102,9 +102,17 @@ class PrivilegesController extends BaseController
             echo '<table>' . \PHP_EOL;
 
             if ($data->hasRoles()) {
-                echo "<tr><th class=\"data\">{$this->lang['strrole']}</th>";
+                echo \sprintf(
+                    '<tr><th class="data">%s</th>',
+                    $this->lang['strrole']
+                );
             } else {
-                echo "<tr><th class=\"data\">{$this->lang['strtype']}</th><th class=\"data\">{$this->lang['struser']}/{$this->lang['strgroup']}</th>";
+                echo \sprintf(
+                    '<tr><th class="data">%s</th><th class="data">%s/%s</th>',
+                    $this->lang['strtype'],
+                    $this->lang['struser'],
+                    $this->lang['strgroup']
+                );
             }
 
             foreach ($data->privlist[$subject] as $v2) {
@@ -113,11 +121,17 @@ class PrivilegesController extends BaseController
                     continue;
                 }
 
-                echo "<th class=\"data\">{$v2}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<th class="data">%s</th>',
+                    $v2
+                ) . \PHP_EOL;
             }
 
             if ($data->hasGrantOption()) {
-                echo "<th class=\"data\">{$this->lang['strgrantor']}</th>";
+                echo \sprintf(
+                    '<th class="data">%s</th>',
+                    $this->lang['strgrantor']
+                );
             }
             echo '</tr>' . \PHP_EOL;
 
@@ -126,7 +140,10 @@ class PrivilegesController extends BaseController
 
             foreach ($privileges as $v) {
                 $id = (0 === ($i % 2) ? '1' : '2');
-                echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr class="data%s">',
+                    $id
+                ) . \PHP_EOL;
 
                 if (!$data->hasRoles()) {
                     echo '<td>', $this->misc->printVal($v[0]), '</td>' . \PHP_EOL;
@@ -165,7 +182,10 @@ class PrivilegesController extends BaseController
 
             echo '</table>';
         } else {
-            echo "<p>{$this->lang['strnoprivileges']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnoprivileges']
+            ) . \PHP_EOL;
         }
         $this->printGrantLinks();
     }
@@ -183,9 +203,18 @@ class PrivilegesController extends BaseController
             case 'sequence':
             case 'function':
             case 'tablespace':
-                $alllabel = "showall{$subject}s";
-                $allurl = "{$subject}s";
-                $alltxt = $this->lang["strshowall{$subject}s"];
+                $alllabel = \sprintf(
+                    'showall%ss',
+                    $subject
+                );
+                $allurl = \sprintf(
+                    '%ss',
+                    $subject
+                );
+                $alltxt = $this->lang[\sprintf(
+                    'strshowall%ss',
+                    $subject
+                )];
 
                 break;
             case 'schema':
@@ -212,7 +241,10 @@ class PrivilegesController extends BaseController
                 'database' => $_REQUEST['database'],
                 'schema' => $_REQUEST['schema'],
                 $subject => $object,
-                "{$subject}_oid" => $objectoid,
+                \sprintf(
+                    '%s_oid',
+                    $subject
+                ) => $objectoid,
                 'subject' => $subject,
             ];
         } elseif ('column' === $subject) {
@@ -318,17 +350,29 @@ class PrivilegesController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/privileges" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
-        echo "<tr><th class=\"data left\">{$this->lang['strusers']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strusers']
+        ) . \PHP_EOL;
         echo '<td class="data1"><select name="username[]" multiple="multiple" size="', \min(6, $users->recordCount()), '">' . \PHP_EOL;
 
         while (!$users->EOF) {
             $uname = \htmlspecialchars($users->fields['usename']);
-            echo "<option value=\"{$uname}\"",
-            \in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', ">{$uname}</option>" . \PHP_EOL;
+            echo \sprintf(
+                '<option value="%s"',
+                $uname
+            ),
+            \in_array($users->fields['usename'], $_REQUEST['username'], true) ? ' selected="selected"' : '', \sprintf(
+                '>%s</option>',
+                $uname
+            ) . \PHP_EOL;
             $users->moveNext();
         }
         echo '</select></td></tr>' . \PHP_EOL;
-        echo "<tr><th class=\"data left\">{$this->lang['strgroups']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strgroups']
+        ) . \PHP_EOL;
         echo '<td class="data1">' . \PHP_EOL;
         echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), ' /><label for="public">PUBLIC</label>' . \PHP_EOL;
         // Only show groups if there are groups!
@@ -337,25 +381,45 @@ class PrivilegesController extends BaseController
 
             while (!$groups->EOF) {
                 $gname = \htmlspecialchars($groups->fields['groname']);
-                echo "<option value=\"{$gname}\"",
-                \in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', ">{$gname}</option>" . \PHP_EOL;
+                echo \sprintf(
+                    '<option value="%s"',
+                    $gname
+                ),
+                \in_array($groups->fields['groname'], $_REQUEST['groupname'], true) ? ' selected="selected"' : '', \sprintf(
+                    '>%s</option>',
+                    $gname
+                ) . \PHP_EOL;
                 $groups->moveNext();
             }
             echo '</select>' . \PHP_EOL;
         }
         echo '</td></tr>' . \PHP_EOL;
-        echo "<tr><th class=\"data left required\">{$this->lang['strprivileges']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left required">%s</th>',
+            $this->lang['strprivileges']
+        ) . \PHP_EOL;
         echo '<td class="data1">' . \PHP_EOL;
 
         foreach ($data->privlist[$_REQUEST['subject']] as $v) {
             $v = \htmlspecialchars($v);
-            echo "<input type=\"checkbox\" id=\"privilege[{$v}]\" name=\"privilege[{$v}]\"",
-            isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', " /><label for=\"privilege[{$v}]\">{$v}</label><br />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="checkbox" id="privilege[%s]" name="privilege[%s]"',
+                $v,
+                $v
+            ),
+            isset($_REQUEST['privilege'][$v]) ? ' checked="checked"' : '', \sprintf(
+                ' /><label for="privilege[%s]">%s</label><br />',
+                $v,
+                $v
+            ) . \PHP_EOL;
         }
         echo '</td></tr>' . \PHP_EOL;
         // Grant option
         if ($data->hasGrantOption()) {
-            echo "<tr><th class=\"data left\">{$this->lang['stroptions']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['stroptions']
+            ) . \PHP_EOL;
             echo '<td class="data1">' . \PHP_EOL;
 
             if ('grant' === $mode) {
@@ -389,9 +453,17 @@ class PrivilegesController extends BaseController
         }
 
         echo $this->view->form;
-        echo \sprintf('<input type="submit" name="%s" value="%s" />%s', $mode, $this->lang['str' . $mode], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" name="%s" value="%s" />%s',
+            $mode,
+            $this->lang['str' . $mode],
+            \PHP_EOL
+        );
 
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" /></p>";
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s" /></p>',
+            $this->lang['strcancel']
+        );
         echo '</form>' . \PHP_EOL;
     }
 

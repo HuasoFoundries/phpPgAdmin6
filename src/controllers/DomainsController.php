@@ -121,7 +121,10 @@ class DomainsController extends BaseController
             'domain' => [
                 'title' => $this->lang['strdomain'],
                 'field' => Decorator::field('domname'),
-                'url' => "domains?action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \sprintf(
+                    'domains?action=properties&amp;%s&amp;',
+                    $this->misc->href
+                ),
                 'vars' => ['domain' => 'domname'],
             ],
             'type' => [
@@ -286,16 +289,31 @@ class DomainsController extends BaseController
             // Display domain info
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required" style="width: 70px">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strtype']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strtype']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$this->lang['strnotnull']}</label></th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left"><label for="domnotnull">%s</label></th>',
+                $this->lang['strnotnull']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"', (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), ' /></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strdefault']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="domdefault" size="32" value="',
             \htmlspecialchars($_POST['domdefault']), '" /></td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strowner']
+            ) . \PHP_EOL;
             echo '<td class="data1"><select name="domowner">';
 
             while (!$users->EOF) {
@@ -309,11 +327,21 @@ class DomainsController extends BaseController
             echo '<p><input type="hidden" name="action" value="save_alter" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -338,10 +366,19 @@ class DomainsController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
-            echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<th class="data required">%s</th></tr>',
+                $this->lang['strdefinition']
+            ) . \PHP_EOL;
 
-            echo "<tr><td class=\"data1\"><input name=\"name\" size=\"16\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<tr><td class="data1"><input name="name" size="16" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
             \htmlspecialchars($_POST['name']), '" /></td>' . \PHP_EOL;
 
             echo '<td class="data1">(<input name="definition" size="32" value="',
@@ -351,8 +388,15 @@ class DomainsController extends BaseController
             echo '<p><input type="hidden" name="action" value="save_add_check" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"add\" value=\"{$this->lang['stradd']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="add" value="%s" />',
+                $this->lang['stradd']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             if ('' === \trim($_POST['definition'])) {
@@ -398,9 +442,18 @@ class DomainsController extends BaseController
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="constraint" value="', \htmlspecialchars($_REQUEST['constraint']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" />',
+                $this->lang['strcancel']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropDomainConstraint($_POST['domain'], $_POST['constraint'], isset($_POST['cascade']));
@@ -437,20 +490,38 @@ class DomainsController extends BaseController
             // Display domain info
             $domaindata->fields['domnotnull'] = $data->phpBool($domaindata->fields['domnotnull']);
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left" style="width: 70px">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domname']), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strtype']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strtype']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domtype']), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strnotnull']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strnotnull']
+            ) . \PHP_EOL;
             echo '<td class="data1">', ($domaindata->fields['domnotnull'] ? 'NOT NULL' : ''), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strdefault']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domdef']), '</td></tr>' . \PHP_EOL;
-            echo "<tr><th class=\"data left\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strowner']
+            ) . \PHP_EOL;
             echo '<td class="data1">', $this->misc->printVal($domaindata->fields['domowner']), '</td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
 
             // Display domain constraints
-            echo "<h3>{$this->lang['strconstraints']}</h3>" . \PHP_EOL;
+            echo \sprintf(
+                '<h3>%s</h3>',
+                $this->lang['strconstraints']
+            ) . \PHP_EOL;
 
             if ($data->hasDomainConstraints()) {
                 $domaincons = $data->getDomainConstraints($_REQUEST['domain']);
@@ -489,7 +560,10 @@ class DomainsController extends BaseController
                 echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $this->lang['strnodata']);
             }
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
 
         $navlinks = [
@@ -559,14 +633,27 @@ class DomainsController extends BaseController
             $this->printTrail('domain');
             $this->printTitle($this->lang['strdrop'], 'pg.domain.drop');
 
-            echo '<p>', \sprintf($this->lang['strconfdropdomain'], $this->misc->printVal($_REQUEST['domain'])), '</p>' . \PHP_EOL;
+            echo '<p>', \sprintf(
+                $this->lang['strconfdropdomain'],
+                $this->misc->printVal($_REQUEST['domain'])
+            ), '</p>' . \PHP_EOL;
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /><label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /><label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropDomain($_POST['domain'], isset($_POST['cascade']));
@@ -608,10 +695,19 @@ class DomainsController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/domains" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
-        echo "<tr><th class=\"data left required\" style=\"width: 70px\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "<td class=\"data1\"><input name=\"domname\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '<tr><th class="data left required" style="width: 70px">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<td class="data1"><input name="domname" size="32" maxlength="%s" value="',
+            $data->_maxNameLen
+        ),
         \htmlspecialchars($_POST['domname']), '" /></td></tr>' . \PHP_EOL;
-        echo "<tr><th class=\"data left required\">{$this->lang['strtype']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left required">%s</th>',
+            $this->lang['strtype']
+        ) . \PHP_EOL;
         echo '<td class="data1">' . \PHP_EOL;
         // Output return type list
         echo '<select name="domtype">' . \PHP_EOL;
@@ -633,23 +729,39 @@ class DomainsController extends BaseController
         echo '<option value="[]"', ('[]' === $_POST['domarray']) ? ' selected="selected"' : '', '>[ ]</option>' . \PHP_EOL;
         echo '</select></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\"><label for=\"domnotnull\">{$this->lang['strnotnull']}</label></th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left"><label for="domnotnull">%s</label></th>',
+            $this->lang['strnotnull']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input type="checkbox" id="domnotnull" name="domnotnull"',
         (isset($_POST['domnotnull']) ? ' checked="checked"' : ''), ' /></td></tr>' . \PHP_EOL;
-        echo "<tr><th class=\"data left\">{$this->lang['strdefault']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strdefault']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="domdefault" size="32" value="',
         \htmlspecialchars($_POST['domdefault']), '" /></td></tr>' . \PHP_EOL;
 
         if ($data->hasDomainConstraints()) {
-            echo "<tr><th class=\"data left\">{$this->lang['strconstraints']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strconstraints']
+            ) . \PHP_EOL;
             echo '<td class="data1">CHECK (<input name="domcheck" size="32" value="',
             \htmlspecialchars($_POST['domcheck']), '" />)</td></tr>' . \PHP_EOL;
         }
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 

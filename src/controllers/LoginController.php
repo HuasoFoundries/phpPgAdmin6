@@ -86,7 +86,10 @@ class LoginController extends BaseController
         }
 
         $server_info = $this->misc->getServerInfo($server_id);
-        $title = \sprintf($this->lang['strlogintitle'], $server_info['desc']);
+        $title = \sprintf(
+            $this->lang['strlogintitle'],
+            $server_info['desc']
+        );
 
         $printTitle = $this->printTitle($title, null, false);
 

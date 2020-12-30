@@ -6,12 +6,17 @@
 
 namespace PHPPgAdmin\Controller;
 
+use ADORecordSet;
+use Exception;
+use PHPPgAdmin\ADOdbException;
+use PHPPgAdmin\Traits\InsertEditRowTrait;
+
 /**
  * Base controller class.
  */
 class DisplayController extends BaseController
 {
-    use \PHPPgAdmin\Traits\InsertEditRowTrait;
+    use InsertEditRowTrait;
 
     /**
      * Default method to render the controller according to the action parameter.
@@ -131,10 +136,17 @@ class DisplayController extends BaseController
             $f_schema = $_REQUEST['f_schema'];
             $f_table = $_REQUEST['f_table'];
 
-            $_REQUEST['query'] = "SELECT \"{$object}\",
-            count(*) AS \"count\"
-            FROM \"{$f_schema}\".\"{$f_table}\"
-            GROUP BY \"{$object}\" ORDER BY \"{$object}\"";
+            $_REQUEST['query'] = \sprintf(
+                'SELECT "%s",
+            count(*) AS "count"
+            FROM "%s"."%s"
+            GROUP BY "%s" ORDER BY "%s"',
+                $object,
+                $f_schema,
+                $f_table,
+                $object,
+                $object
+            );
         } elseif ('table' === $subject && !isset($_REQUEST['query'])) {
             $show = $this->getPostParam('show', []);
             $values = $this->getPostParam('values', []);
@@ -200,7 +212,7 @@ class DisplayController extends BaseController
                 $this->conf['max_rows'],
                 $max_pages
             );
-        } catch (\PHPPgAdmin\ADOdbException $e) {
+        } catch (ADOdbException $e) {
             return $this->halt($e->getMessage());
         }
 
@@ -236,7 +248,11 @@ class DisplayController extends BaseController
             $this->misc->saveScriptHistory($_REQUEST['query']);
         }
 
-        $query = $query ? $query : \sprintf('SELECT * FROM %s.%s', $_REQUEST['schema'], $object);
+        $query = $query ? $query : \sprintf(
+            'SELECT * FROM %s.%s',
+            $_REQUEST['schema'],
+            $object
+        );
 
         //$query = isset($_REQUEST['query'])? $_REQUEST['query'] : "select * from {$_REQUEST['schema']}.{$_REQUEST['table']};";
 
@@ -466,7 +482,10 @@ class DisplayController extends BaseController
     public function printResultsTable($resultset, $page, $max_pages, array $_gets, $object): void
     {
         if (!\is_object($resultset) || 0 >= $resultset->recordCount()) {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
 
             return;
         }
@@ -486,11 +505,14 @@ class DisplayController extends BaseController
         try {
             // Display edit and delete actions if we have a key
             $display_action_column = (0 < \count($actions['actionbuttons']) && 0 < \count($key));
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $display_action_column = false;
         }
 
-        echo $display_action_column ? "<th class=\"data\">{$this->lang['stractions']}</th>" . \PHP_EOL : '';
+        echo $display_action_column ? \sprintf(
+            '<th class="data">%s</th>',
+            $this->lang['stractions']
+        ) . \PHP_EOL : '';
 
         // we show OIDs only if we are in TABLE or SELECT type browsing
         $this->printTableHeaderCells($resultset, $_gets, isset($object));
@@ -506,7 +528,10 @@ class DisplayController extends BaseController
             $trclass = ('data2' === $trclass) ? 'data1' : 'data2';
             $buttonclass = ('opbutton2' === $buttonclass) ? 'opbutton1' : 'opbutton2';
 
-            echo \sprintf('<tr class="%s">', $trclass) . \PHP_EOL;
+            echo \sprintf(
+                '<tr class="%s">',
+                $trclass
+            ) . \PHP_EOL;
 
             $this->_printResultsTableActionButtons($resultset, $key, $actions, $display_action_column, $buttonclass);
 
@@ -517,7 +542,10 @@ class DisplayController extends BaseController
         }
         echo '</table>' . \PHP_EOL;
 
-        echo '<p>', $resultset->recordCount(), " {$this->lang['strrows']}</p>" . \PHP_EOL;
+        echo '<p>', $resultset->recordCount(), \sprintf(
+            ' %s</p>',
+            $this->lang['strrows']
+        ) . \PHP_EOL;
         // Show page navigation
         echo $paginator;
     }
@@ -525,9 +553,9 @@ class DisplayController extends BaseController
     /**
      * Print table header cells.
      *
-     * @param \ADORecordSet $resultset set of results from getRow operation
-     * @param array|bool    $args      - associative array for sort link parameters, or false if there isn't any
-     * @param bool          $withOid   either to display OIDs or not
+     * @param ADORecordSet $resultset set of results from getRow operation
+     * @param array|bool   $args      - associative array for sort link parameters, or false if there isn't any
+     * @param bool         $withOid   either to display OIDs or not
      */
     public function printTableHeaderCells(&$resultset, $args, $withOid): void
     {
@@ -555,12 +583,19 @@ class DisplayController extends BaseController
 
             $sortLink = \http_build_query($args);
 
-            echo "<th class=\"data\"><a href=\"?{$sortLink}\">";
+            echo \sprintf(
+                '<th class="data"><a href="?%s">',
+                $sortLink
+            );
             echo $this->misc->printVal($finfo->name);
 
             if (($index + 1) === $_REQUEST['sortkey']) {
                 $icon = ('asc' === $_REQUEST['sortdir']) ? $this->view->icon('RaiseArgument') : $this->view->icon('LowerArgument');
-                echo \sprintf('<img src="%s" alt="%s">', $icon, $_REQUEST['sortdir']);
+                echo \sprintf(
+                    '<img src="%s" alt="%s">',
+                    $icon,
+                    $_REQUEST['sortdir']
+                );
             }
             echo '</a></th>' . \PHP_EOL;
         }
@@ -571,9 +606,9 @@ class DisplayController extends BaseController
     /**
      * Print table rows.
      *
-     * @param \ADORecordSet $resultset        The resultset
-     * @param array         $fkey_information The fkey information
-     * @param bool          $withOid          either to display OIDs or not
+     * @param ADORecordSet $resultset        The resultset
+     * @param array        $fkey_information The fkey information
+     * @param bool         $withOid          either to display OIDs or not
      */
     public function printTableRowCells(&$resultset, &$fkey_information, $withOid): void
     {
@@ -634,9 +669,20 @@ class DisplayController extends BaseController
             echo '<table>' . \PHP_EOL;
 
             // Output table header
-            echo "<tr><th class=\"data\">{$this->lang['strcolumn']}</th><th class=\"data\">{$this->lang['strtype']}</th>";
-            echo "<th class=\"data\">{$this->lang['strformat']}</th>" . \PHP_EOL;
-            echo "<th class=\"data\">{$this->lang['strnull']}</th><th class=\"data\">{$this->lang['strvalue']}</th></tr>";
+            echo \sprintf(
+                '<tr><th class="data">%s</th><th class="data">%s</th>',
+                $this->lang['strcolumn'],
+                $this->lang['strtype']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strformat']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<th class="data">%s</th><th class="data">%s</th></tr>',
+                $this->lang['strnull'],
+                $this->lang['strvalue']
+            );
 
             $i = 0;
 
@@ -649,7 +695,10 @@ class DisplayController extends BaseController
                     $_REQUEST['format'][$attrs->fields['attname']] = 'VALUE';
                 }
 
-                echo "<tr class=\"data{$id}\">" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr class="data%s">',
+                    $id
+                ) . \PHP_EOL;
                 echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
                 echo '<td style="white-space:nowrap;">' . \PHP_EOL;
                 echo $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod']));
@@ -658,9 +707,15 @@ class DisplayController extends BaseController
                 ++$elements;
                 echo '<td style="white-space:nowrap;">' . \PHP_EOL;
                 echo '<select name="format[' . \htmlspecialchars($attrs->fields['attname']), ']">' . \PHP_EOL;
-                echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] === 'VALUE') ? ' selected="selected"' : '', ">{$this->lang['strvalue']}</option>" . \PHP_EOL;
+                echo '<option value="VALUE"', ($_REQUEST['format'][$attrs->fields['attname']] === 'VALUE') ? ' selected="selected"' : '', \sprintf(
+                    '>%s</option>',
+                    $this->lang['strvalue']
+                ) . \PHP_EOL;
                 $selected = ($_REQUEST['format'][$attrs->fields['attname']] === 'EXPRESSION') ? ' selected="selected"' : '';
-                echo '<option value="EXPRESSION"' . $selected . ">{$this->lang['strexpression']}</option>" . \PHP_EOL;
+                echo '<option value="EXPRESSION"' . $selected . \sprintf(
+                    '>%s</option>',
+                    $this->lang['strexpression']
+                ) . \PHP_EOL;
                 echo "</select>\n</td>" . \PHP_EOL;
                 ++$elements;
                 echo '<td style="white-space:nowrap;">';
@@ -672,14 +727,20 @@ class DisplayController extends BaseController
                     ) {
                         $_REQUEST['nulls'][$attrs->fields['attname']] = 'on';
                     }
-                    echo "<label><span><input type=\"checkbox\" class=\"nullcheckbox\" name=\"nulls[{$attrs->fields['attname']}]\"",
+                    echo \sprintf(
+                        '<label><span><input type="checkbox" class="nullcheckbox" name="nulls[%s]"',
+                        $attrs->fields['attname']
+                    ),
                     isset($_REQUEST['nulls'][$attrs->fields['attname']]) ? ' checked="checked"' : '', ' /></span></label></td>' . \PHP_EOL;
                     ++$elements;
                 } else {
                     echo '&nbsp;</td>';
                 }
 
-                echo "<td id=\"row_att_{$attrs->fields['attnum']}\" style=\"white-space:nowrap;\">";
+                echo \sprintf(
+                    '<td id="row_att_%s" style="white-space:nowrap;">',
+                    $attrs->fields['attnum']
+                );
 
                 $extras = [];
 
@@ -692,11 +753,17 @@ class DisplayController extends BaseController
                 }
 
                 if ((false !== $fksprops) && isset($fksprops['byfield'][$attrs->fields['attnum']])) {
-                    $extras['id'] = "attr_{$attrs->fields['attnum']}";
+                    $extras['id'] = \sprintf(
+                        'attr_%s',
+                        $attrs->fields['attnum']
+                    );
                     $extras['autocomplete'] = 'off';
                 }
 
-                echo $data->printField("values[{$attrs->fields['attname']}]", $resultset->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
+                echo $data->printField(\sprintf(
+                    'values[%s]',
+                    $attrs->fields['attname']
+                ), $resultset->fields[$attrs->fields['attname']], $attrs->fields['type'], $extras);
 
                 echo '</td>';
                 ++$elements;
@@ -708,9 +775,15 @@ class DisplayController extends BaseController
 
             $error = false;
         } elseif (1 !== $resultset->recordCount()) {
-            echo "<p>{$this->lang['strrownotunique']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strrownotunique']
+            ) . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strinvalidparam']
+            ) . \PHP_EOL;
         }
 
         echo '<input type="hidden" name="action" value="editrow" />' . \PHP_EOL;
@@ -720,15 +793,35 @@ class DisplayController extends BaseController
 
         $subject = $this->getRequestParam('subject', $_REQUEST['subject'] ?? null);
         $return = $this->getRequestParam('return', $_REQUEST['return'] ?? null);
-        echo isset($_REQUEST['table']) ? \sprintf('<input type="hidden" name="table" value="%s" />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL) : '';
+        echo isset($_REQUEST['table']) ? \sprintf(
+            '<input type="hidden" name="table" value="%s" />%s',
+            \htmlspecialchars($_REQUEST['table']),
+            \PHP_EOL
+        ) : '';
 
-        echo isset($subject) ? \sprintf('<input type="hidden" name="subject" value="%s" />%s', \htmlspecialchars($_REQUEST['subject']), \PHP_EOL) : '';
+        echo isset($subject) ? \sprintf(
+            '<input type="hidden" name="subject" value="%s" />%s',
+            \htmlspecialchars($_REQUEST['subject']),
+            \PHP_EOL
+        ) : '';
 
-        echo isset($_REQUEST['query']) ? \sprintf('<input type="hidden" name="query" value="%s" />%s', \htmlspecialchars($_REQUEST['query']), \PHP_EOL) : '';
+        echo isset($_REQUEST['query']) ? \sprintf(
+            '<input type="hidden" name="query" value="%s" />%s',
+            \htmlspecialchars($_REQUEST['query']),
+            \PHP_EOL
+        ) : '';
 
-        echo isset($_REQUEST['count']) ? \sprintf('<input type="hidden" name="count" value="%s" />%s', \htmlspecialchars($_REQUEST['count']), \PHP_EOL) : '';
+        echo isset($_REQUEST['count']) ? \sprintf(
+            '<input type="hidden" name="count" value="%s" />%s',
+            \htmlspecialchars($_REQUEST['count']),
+            \PHP_EOL
+        ) : '';
 
-        echo isset($return) ? \sprintf('<input type="hidden" name="return" value="%s" />%s', \htmlspecialchars($_REQUEST['return']), \PHP_EOL) : '';
+        echo isset($return) ? \sprintf(
+            '<input type="hidden" name="return" value="%s" />%s',
+            \htmlspecialchars($_REQUEST['return']),
+            \PHP_EOL
+        ) : '';
 
         echo '<input type="hidden" name="page" value="', \htmlspecialchars($_REQUEST['page']), '" />' . \PHP_EOL;
         echo '<input type="hidden" name="sortkey" value="', \htmlspecialchars($_REQUEST['sortkey']), '" />' . \PHP_EOL;
@@ -738,16 +831,28 @@ class DisplayController extends BaseController
         echo '<p>';
 
         if (!$error) {
-            echo "<input type=\"submit\" name=\"save\" accesskey=\"r\" value=\"{$this->lang['strsave']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="save" accesskey="r" value="%s" />',
+                $this->lang['strsave']
+            ) . \PHP_EOL;
         }
 
-        echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s" />',
+            $this->lang['strcancel']
+        ) . \PHP_EOL;
 
         if (false !== $fksprops) {
-            $autocomplete_string = "<input type=\"checkbox\" id=\"no_ac\" value=\"0\" /><label for=\"no_ac\">{$this->lang['strac']}</label>";
+            $autocomplete_string = \sprintf(
+                '<input type="checkbox" id="no_ac" value="0" /><label for="no_ac">%s</label>',
+                $this->lang['strac']
+            );
 
             if ('default off' !== $this->conf['autocomplete']) {
-                $autocomplete_string = "<input type=\"checkbox\" id=\"no_ac\" value=\"1\" checked=\"checked\" /><label for=\"no_ac\">{$this->lang['strac']}</label>";
+                $autocomplete_string = \sprintf(
+                    '<input type="checkbox" id="no_ac" value="1" checked="checked" /><label for="no_ac">%s</label>',
+                    $this->lang['strac']
+                );
             }
             echo $autocomplete_string . \PHP_EOL;
         }
@@ -809,7 +914,10 @@ class DisplayController extends BaseController
             echo $this->view->form;
 
             if (1 === $resultset->recordCount()) {
-                echo "<p>{$this->lang['strconfdeleterow']}</p>" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strconfdeleterow']
+                ) . \PHP_EOL;
 
                 $fkinfo = [];
                 echo '<table><tr>';
@@ -822,18 +930,40 @@ class DisplayController extends BaseController
                 echo '<br />' . \PHP_EOL;
 
                 echo '<input type="hidden" name="action" value="delrow" />' . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="yes" value="%s" />',
+                    $this->lang['stryes']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="no" value="%s" />',
+                    $this->lang['strno']
+                ) . \PHP_EOL;
             } elseif (1 !== $resultset->recordCount()) {
-                echo "<p>{$this->lang['strrownotunique']}</p>" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strrownotunique']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s" />',
+                    $this->lang['strcancel']
+                ) . \PHP_EOL;
             } else {
-                echo "<p>{$this->lang['strinvalidparam']}</p>" . \PHP_EOL;
-                echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+                echo \sprintf(
+                    '<p>%s</p>',
+                    $this->lang['strinvalidparam']
+                ) . \PHP_EOL;
+                echo \sprintf(
+                    '<input type="submit" name="cancel" value="%s" />',
+                    $this->lang['strcancel']
+                ) . \PHP_EOL;
             }
 
             if (isset($_REQUEST['table'])) {
-                echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+                echo \sprintf(
+                    '<input type="hidden" name="table" value="%s"  />%s',
+                    \htmlspecialchars($_REQUEST['table']),
+                    \PHP_EOL
+                );
             }
 
             if (isset($_REQUEST['subject'])) {
@@ -1044,7 +1174,7 @@ class DisplayController extends BaseController
         return [$actions, $key];
     }
 
-    private function _printResultsTableActionButtons(\ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
+    private function _printResultsTableActionButtons(ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
     {
         if (!$display_action_column) {
             return;
@@ -1062,7 +1192,10 @@ class DisplayController extends BaseController
 
                 break;
             }
-            $keys_array["key[{$v}]"] = $resultset->fields[$v];
+            $keys_array[\sprintf(
+                'key[%s]',
+                $v
+            )] = $resultset->fields[$v];
         }
 
         if ($has_nulls) {
@@ -1086,7 +1219,10 @@ class DisplayController extends BaseController
                 $keys_array
             );
         }
-        echo \sprintf('<td class="%s" style="white-space:nowrap">', $buttonclass);
+        echo \sprintf(
+            '<td class="%s" style="white-space:nowrap">',
+            $buttonclass
+        );
 
         foreach ($actions['actionbuttons'] as $action) {
             $this->printLink($action, true, __METHOD__);
@@ -1095,13 +1231,13 @@ class DisplayController extends BaseController
     }
 
     /**
-     * @param bool[]        $printvalOpts
-     * @param \ADORecordSet $resultset
-     * @param array         $fkey_information
-     * @param mixed         $k
-     * @param mixed         $v
+     * @param bool[]       $printvalOpts
+     * @param ADORecordSet $resultset
+     * @param array        $fkey_information
+     * @param mixed        $k
+     * @param mixed        $v
      */
-    private function _printFKLinks(\ADORecordSet $resultset, array $fkey_information, $k, $v, array &$printvalOpts): void
+    private function _printFKLinks(ADORecordSet $resultset, array $fkey_information, $k, $v, array &$printvalOpts): void
     {
         if ((null === $v) || !isset($fkey_information['byfield'][$k])) {
             return;
@@ -1111,15 +1247,26 @@ class DisplayController extends BaseController
             $query_params = $fkey_information['byconstr'][$conid]['url_data'];
 
             foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {
-                $query_params .= '&amp;' . \urlencode("fkey[{$f_field}]") . '=' . \urlencode($resultset->fields[$p_field]);
+                $query_params .= '&amp;' . \urlencode(\sprintf(
+                    'fkey[%s]',
+                    $f_field
+                )) . '=' . \urlencode($resultset->fields[$p_field]);
             }
 
             // $fkey_information['common_url'] is already urlencoded
             $query_params .= '&amp;' . $fkey_information['common_url'];
             $title = \htmlentities($fkey_information['byconstr'][$conid]['consrc'], \ENT_QUOTES, 'UTF-8');
             echo '<div style="display:inline-block;">';
-            echo \sprintf('<a class="fk fk_%s" href="display?%s">', \htmlentities($conid, \ENT_QUOTES, 'UTF-8'), $query_params);
-            echo \sprintf('<img src="%s" style="vertical-align:middle;" alt="[fk]" title="%s" />', $this->view->icon('ForeignKey'), $title);
+            echo \sprintf(
+                '<a class="fk fk_%s" href="display?%s">',
+                \htmlentities($conid, \ENT_QUOTES, 'UTF-8'),
+                $query_params
+            );
+            echo \sprintf(
+                '<img src="%s" style="vertical-align:middle;" alt="[fk]" title="%s" />',
+                $this->view->icon('ForeignKey'),
+                $title
+            );
             echo '</a>';
             echo '</div>';
         }
@@ -1187,19 +1334,47 @@ class DisplayController extends BaseController
         $result = '<p style="text-align: center">' . \PHP_EOL;
 
         if (1 !== $page) {
-            $result .= \sprintf('<a class="pagenav" href="?%s&page=1">%s</a>%s&nbsp;', $url, $lang['strfirst'], \PHP_EOL);
-            $result .= \sprintf('<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $page - 1, $lang['strprev'], \PHP_EOL);
+            $result .= \sprintf(
+                '<a class="pagenav" href="?%s&page=1">%s</a>%s&nbsp;',
+                $url,
+                $lang['strfirst'],
+                \PHP_EOL
+            );
+            $result .= \sprintf(
+                '<a class="pagenav" href="?%s&page=%s">%s</a>%s',
+                $url,
+                $page - 1,
+                $lang['strprev'],
+                \PHP_EOL
+            );
         }
 
         [$min_page, $max_page] = $this->_getMinMaxPages($page, $pages);
 
         for ($i = $min_page; $i <= $max_page; ++$i) {
-            $result .= (($i === $page) ? $i : \sprintf('<a class="pagenav" href="display?%s&page=%s">%s</a>', $url, $i, $i)) . \PHP_EOL;
+            $result .= (($i === $page) ? $i : \sprintf(
+                '<a class="pagenav" href="display?%s&page=%s">%s</a>',
+                $url,
+                $i,
+                $i
+            )) . \PHP_EOL;
         }
 
         if ($page !== $pages) {
-            $result .= \sprintf('<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $page + 1, $lang['strnext'], \PHP_EOL);
-            $result .= \sprintf('&nbsp;<a class="pagenav" href="?%s&page=%s">%s</a>%s', $url, $pages, $lang['strlast'], \PHP_EOL);
+            $result .= \sprintf(
+                '<a class="pagenav" href="?%s&page=%s">%s</a>%s',
+                $url,
+                $page + 1,
+                $lang['strnext'],
+                \PHP_EOL
+            );
+            $result .= \sprintf(
+                '&nbsp;<a class="pagenav" href="?%s&page=%s">%s</a>%s',
+                $url,
+                $pages,
+                $lang['strlast'],
+                \PHP_EOL
+            );
         }
         $result .= '</p>' . \PHP_EOL;
 

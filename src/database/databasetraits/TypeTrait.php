@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use ADORecordSet;
+
 /**
  * Common trait for types manipulation.
  */
@@ -39,7 +41,7 @@ trait TypeTrait
             $temp = 'character';
 
             if (1 < $len) {
-                $temp .= "({$len})";
+                $temp .= \sprintf('(%s)', $len);
             }
         } elseif ('varchar' === $typname) {
             $temp = 'character varying';
@@ -54,7 +56,7 @@ trait TypeTrait
                 $tmp_typmod = $typmod - $varhdrsz;
                 $precision = ($tmp_typmod >> 16) & 0xffff;
                 $scale = $tmp_typmod & 0xffff;
-                $temp .= "({$precision}, {$scale})";
+                $temp .= \sprintf('(%s, %s)', $precision, $scale);
             }
         } else {
             $temp = $typname;
@@ -73,14 +75,14 @@ trait TypeTrait
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getType($typname)
     {
         $this->clean($typname);
 
-        $sql = "SELECT typtype, typbyval, typname, typinput AS typin, typoutput AS typout, typlen, typalign
-            FROM pg_type WHERE typname='{$typname}'";
+        $sql = \sprintf('SELECT typtype, typbyval, typname, typinput AS typin, typoutput AS typout, typlen, typalign
+            FROM pg_type WHERE typname=\'%s\'', $typname);
 
         return $this->selectSet($sql);
     }
@@ -92,7 +94,7 @@ trait TypeTrait
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -101,7 +103,7 @@ trait TypeTrait
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $where = "n.nspname = '{$c_schema}'";
+            $where = \sprintf('n.nspname = \'%s\'', $c_schema);
         }
         // Never show system table types
         $where2 = "AND c.relnamespace NOT IN (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname LIKE 'pg@_%' ESCAPE '@')";
@@ -118,20 +120,20 @@ trait TypeTrait
             $where .= " AND t.typtype != 'd'";
         }
 
-        $sql = "SELECT
+        $sql = \sprintf('SELECT
                 t.typname AS basename,
                 pg_catalog.format_type(t.oid, NULL) AS typname,
                 pu.usename AS typowner,
                 t.typtype,
-                pg_catalog.obj_description(t.oid, 'pg_type') AS typcomment
+                pg_catalog.obj_description(t.oid, \'pg_type\') AS typcomment
             FROM (pg_catalog.pg_type t
                 LEFT JOIN pg_catalog.pg_namespace n ON n.oid = t.typnamespace)
                 LEFT JOIN pg_catalog.pg_user pu ON t.typowner = pu.usesysid
-            WHERE (t.typrelid = 0 OR (SELECT c.relkind IN ({$tqry}) FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid {$where2}))
-            AND t.typname !~ '^_'
-            AND {$where}
+            WHERE (t.typrelid = 0 OR (SELECT c.relkind IN (%s) FROM pg_catalog.pg_class c WHERE c.oid = t.typrelid %s))
+            AND t.typname !~ \'^_\'
+            AND %s
             ORDER BY typname
-        ";
+        ', $tqry, $where2, $where);
 
         return $this->selectSet($sql);
     }
@@ -150,7 +152,7 @@ trait TypeTrait
      * @param string $typalign
      * @param string $typstorage
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      *
      * @internal param $ ...
      */
@@ -172,22 +174,22 @@ trait TypeTrait
         $this->fieldClean($typin);
         $this->fieldClean($typout);
 
-        $sql = "
-            CREATE TYPE \"{$f_schema}\".\"{$typname}\" (
-                INPUT = \"{$typin}\",
-                OUTPUT = \"{$typout}\",
-                INTERNALLENGTH = {$typlen}";
+        $sql = \sprintf('
+            CREATE TYPE "%s"."%s" (
+                INPUT = "%s",
+                OUTPUT = "%s",
+                INTERNALLENGTH = %s', $f_schema, $typname, $typin, $typout, $typlen);
 
         if ('' !== $typdef) {
-            $sql .= ", DEFAULT = {$typdef}";
+            $sql .= \sprintf(', DEFAULT = %s', $typdef);
         }
 
         if ('' !== $typelem) {
-            $sql .= ", ELEMENT = {$typelem}";
+            $sql .= \sprintf(', ELEMENT = %s', $typelem);
         }
 
         if ('' !== $typdelim) {
-            $sql .= ", DELIMITER = {$typdelim}";
+            $sql .= \sprintf(', DELIMITER = %s', $typdelim);
         }
 
         if ($typbyval) {
@@ -195,11 +197,11 @@ trait TypeTrait
         }
 
         if ('' !== $typalign) {
-            $sql .= ", ALIGNMENT = {$typalign}";
+            $sql .= \sprintf(', ALIGNMENT = %s', $typalign);
         }
 
         if ('' !== $typstorage) {
-            $sql .= ", STORAGE = {$typstorage}";
+            $sql .= \sprintf(', STORAGE = %s', $typstorage);
         }
 
         $sql .= ')';
@@ -213,7 +215,7 @@ trait TypeTrait
      * @param string $typname The name of the type to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function dropType($typname, $cascade)
     {
@@ -221,7 +223,7 @@ trait TypeTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($typname);
 
-        $sql = "DROP TYPE \"{$f_schema}\".\"{$typname}\"";
+        $sql = \sprintf('DROP TYPE "%s"."%s"', $f_schema, $typname);
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -263,7 +265,7 @@ trait TypeTrait
             $this->clean($values[$i]);
         }
 
-        $sql = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS ENUM ('";
+        $sql = \sprintf('CREATE TYPE "%s"."%s" AS ENUM (\'', $f_schema, $name);
         $sql .= \implode("','", $values);
         $sql .= "')";
 
@@ -293,15 +295,15 @@ trait TypeTrait
      *
      * @param string $name
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getEnumValues($name)
     {
         $this->clean($name);
 
-        $sql = "SELECT enumlabel AS enumval
+        $sql = \sprintf('SELECT enumlabel AS enumval
         FROM pg_catalog.pg_type t JOIN pg_catalog.pg_enum e ON (t.oid=e.enumtypid)
-        WHERE t.typname = '{$name}' ORDER BY e.oid";
+        WHERE t.typname = \'%s\' ORDER BY e.oid', $name);
 
         return $this->selectSet($sql);
     }
@@ -337,7 +339,7 @@ trait TypeTrait
         $found = false;
         $first = true;
         $comment_sql = ''; // Accumulate comments for the columns
-        $sql = "CREATE TYPE \"{$f_schema}\".\"{$name}\" AS (";
+        $sql = \sprintf('CREATE TYPE "%s"."%s" AS (', $f_schema, $name);
 
         for ($i = 0; $i < $fields; ++$i) {
             $this->fieldClean($field[$i]);
@@ -363,10 +365,10 @@ trait TypeTrait
                 case 'timestamp with time zone':
                 case 'timestamp without time zone':
                     $qual = \mb_substr($type[$i], 9);
-                    $sql .= "\"{$field[$i]}\" timestamp";
+                    $sql .= \sprintf('"%s" timestamp', $field[$i]);
 
                     if ('' !== $length[$i]) {
-                        $sql .= "({$length[$i]})";
+                        $sql .= \sprintf('(%s)', $length[$i]);
                     }
 
                     $sql .= $qual;
@@ -375,10 +377,10 @@ trait TypeTrait
                 case 'time with time zone':
                 case 'time without time zone':
                     $qual = \mb_substr($type[$i], 4);
-                    $sql .= "\"{$field[$i]}\" time";
+                    $sql .= \sprintf('"%s" time', $field[$i]);
 
                     if ('' !== $length[$i]) {
-                        $sql .= "({$length[$i]})";
+                        $sql .= \sprintf('(%s)', $length[$i]);
                     }
 
                     $sql .= $qual;
@@ -386,10 +388,10 @@ trait TypeTrait
                     break;
 
                 default:
-                    $sql .= "\"{$field[$i]}\" {$type[$i]}";
+                    $sql .= \sprintf('"%s" %s', $field[$i], $type[$i]);
 
                     if ('' !== $length[$i]) {
-                        $sql .= "({$length[$i]})";
+                        $sql .= \sprintf('(%s)', $length[$i]);
                     }
             }
             // Add array qualifier if necessary
@@ -398,7 +400,8 @@ trait TypeTrait
             }
 
             if ('' !== $colcomment[$i]) {
-                $comment_sql .= "COMMENT ON COLUMN \"{$f_schema}\".\"{$name}\".\"{$field[$i]}\" IS '{$colcomment[$i]}';\n";
+                $comment_sql .= \sprintf('COMMENT ON COLUMN "%s"."%s"."%s" IS \'%s\';
+', $f_schema, $name, $field[$i], $colcomment[$i]);
             }
 
             $found = true;
@@ -444,7 +447,7 @@ trait TypeTrait
     /**
      * Returns a list of all casts in the database.
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getCasts()
     {
@@ -460,14 +463,14 @@ trait TypeTrait
             ';
         }
 
-        $sql = "
+        $sql = \sprintf('
             SELECT
                 c.castsource::pg_catalog.regtype AS castsource,
                 c.casttarget::pg_catalog.regtype AS casttarget,
                 CASE WHEN c.castfunc=0 THEN NULL
                 ELSE c.castfunc::pg_catalog.regprocedure END AS castfunc,
                 c.castcontext,
-                obj_description(c.oid, 'pg_cast') as castcomment
+                obj_description(c.oid, \'pg_cast\') as castcomment
             FROM
                 (pg_catalog.pg_cast c LEFT JOIN pg_catalog.pg_proc p ON c.castfunc=p.oid JOIN pg_catalog.pg_namespace n3 ON p.pronamespace=n3.oid),
                 pg_catalog.pg_type t1,
@@ -479,9 +482,9 @@ trait TypeTrait
                 AND c.casttarget=t2.oid
                 AND t1.typnamespace=n1.oid
                 AND t2.typnamespace=n2.oid
-                {$where}
+                %s
             ORDER BY 1, 2
-        ";
+        ', $where);
 
         return $this->selectSet($sql);
     }
@@ -489,24 +492,24 @@ trait TypeTrait
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getConversions()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        $sql = "
+        $sql = \sprintf('
             SELECT
                    c.conname,
                    pg_catalog.pg_encoding_to_char(c.conforencoding) AS conforencoding,
                    pg_catalog.pg_encoding_to_char(c.contoencoding) AS contoencoding,
                    c.condefault,
-                   pg_catalog.obj_description(c.oid, 'pg_conversion') AS concomment
+                   pg_catalog.obj_description(c.oid, \'pg_conversion\') AS concomment
             FROM pg_catalog.pg_conversion c, pg_catalog.pg_namespace n
             WHERE n.oid = c.connamespace
-                  AND n.nspname='{$c_schema}'
+                  AND n.nspname=\'%s\'
             ORDER BY 1;
-        ";
+        ', $c_schema);
 
         return $this->selectSet($sql);
     }

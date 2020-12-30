@@ -101,7 +101,10 @@ class AggregatesController extends BaseController
             'aggrname' => [
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('proname'),
-                'url' => "redirect.php?subject=aggregate&amp;action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \sprintf(
+                    'redirect.php?subject=aggregate&amp;action=properties&amp;%s&amp;',
+                    $this->misc->href
+                ),
                 'vars' => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
             ],
             'aggrtype' => [
@@ -278,36 +281,96 @@ class AggregatesController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="name" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrbasetype']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"basetype\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['straggrbasetype']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="basetype" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['basetype']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrsfunc']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"sfunc\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['straggrsfunc']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="sfunc" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['sfunc']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['straggrstype']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"stype\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['straggrstype']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="stype" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['stype']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrffunc']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"ffunc\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['straggrffunc']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="ffunc" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['ffunc']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrinitcond']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"initcond\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['straggrinitcond']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="initcond" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['initcond']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['straggrsortop']}</th>" . \PHP_EOL;
-        echo "\t\t<td class=\"data\"><input name=\"sortop\" size=\"32\" maxlength=\"{$this->data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['straggrsortop']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<td class="data"><input name="sortop" size="32" maxlength="%s" value="',
+            $this->data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['sortop']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['strcomment']
+        ) . \PHP_EOL;
         echo "\t\t<td><textarea name=\"aggrcomment\" rows=\"3\" cols=\"32\">",
         \htmlspecialchars($_REQUEST['aggrcomment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
 
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 
@@ -365,15 +428,30 @@ class AggregatesController extends BaseController
         if (0 < $aggrdata->recordCount()) {
             // Output table header
             echo '<table>' . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data required\">{$this->lang['strname']}</th>";
-            echo "<th class=\"data required\">{$this->lang['strowner']}</th>";
-            echo "<th class=\"data required\">{$this->lang['strschema']}</th>\n\t</tr>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data required">%s</th>',
+                $this->lang['strname']
+            );
+            echo \sprintf(
+                '<th class="data required">%s</th>',
+                $this->lang['strowner']
+            );
+            echo \sprintf(
+                '<th class="data required">%s</th>
+	</tr>',
+                $this->lang['strschema']
+            ) . \PHP_EOL;
 
             // Display aggregate's name, owner and schema
             echo "\t<tr>\n\t\t<td><input name=\"newaggrname\" size=\"32\" maxlength=\"32\" value=\"", \htmlspecialchars($_REQUEST['aggrname']), '" /></td>';
             echo '<td><input name="newaggrowner" size="32" maxlength="32" value="', \htmlspecialchars($aggrdata->fields['usename']), '" /></td>';
             echo '<td><input name="newaggrschema" size="32" maxlength="32" value="', \htmlspecialchars($_REQUEST['schema']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-            echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '	<tr>
+		<th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo "\t\t<td><textarea name=\"newaggrcomment\" rows=\"3\" cols=\"32\">",
             \htmlspecialchars($aggrdata->fields['aggrcomment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
@@ -384,11 +462,24 @@ class AggregatesController extends BaseController
             echo '<input type="hidden" name="aggrowner" value="', \htmlspecialchars($aggrdata->fields['usename']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrschema" value="', \htmlspecialchars($_REQUEST['schema']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrcomment" value="', \htmlspecialchars($aggrdata->fields['aggrcomment']), '" />' . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strback']}\" /></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" /></p>',
+                $this->lang['strback']
+            ) . \PHP_EOL;
         }
         echo '</form>' . \PHP_EOL;
     }
@@ -406,16 +497,29 @@ class AggregatesController extends BaseController
             $this->printTrail('aggregate');
             $this->printTitle($this->lang['strdrop'], 'pg.aggregate.drop');
 
-            echo '<p>', \sprintf($this->lang['strconfdropaggregate'], \htmlspecialchars($_REQUEST['aggrname'])), '</p>' . \PHP_EOL;
+            echo '<p>', \sprintf(
+                $this->lang['strconfdropaggregate'],
+                \htmlspecialchars($_REQUEST['aggrname'])
+            ), '</p>' . \PHP_EOL;
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrname" value="', \htmlspecialchars($_REQUEST['aggrname']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="aggrtype" value="', \htmlspecialchars($_REQUEST['aggrtype']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $this->data->dropAggregate($_POST['aggrname'], $_POST['aggrtype'], isset($_POST['cascade']));
@@ -447,30 +551,69 @@ class AggregatesController extends BaseController
         if (0 < $aggrdata->recordCount()) {
             // Display aggregate's info
             echo '<table>' . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($_REQUEST['aggrname']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrbasetype']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['straggrbasetype']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($_REQUEST['aggrtype']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrsfunc']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['straggrsfunc']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['aggtransfn']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrstype']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['straggrstype']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['aggstype']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrffunc']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['straggrffunc']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['aggfinalfn']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrinitcond']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['straggrinitcond']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['agginitval']), "</td>\n</tr>" . \PHP_EOL;
 
             if ($this->data->hasAggregateSortOp()) {
-                echo "<tr>\n\t<th class=\"data left\">{$this->lang['straggrsortop']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr>
+	<th class="data left">%s</th>',
+                    $this->lang['straggrsortop']
+                ) . \PHP_EOL;
                 echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['aggsortop']), "</td>\n</tr>" . \PHP_EOL;
             }
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['strowner']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", \htmlspecialchars($aggrdata->fields['usename']), "</td>\n</tr>" . \PHP_EOL;
-            echo "<tr>\n\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr>
+	<th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo "\t<td class=\"data1\">", $this->misc->printVal($aggrdata->fields['aggrcomment']), "</td>\n</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
 
         $navlinks = [

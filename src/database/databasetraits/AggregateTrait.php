@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for aggregates manipulation.
  */
@@ -39,18 +41,34 @@ trait AggregateTrait
 
         $this->beginTransaction();
 
-        $sql = "CREATE AGGREGATE \"{$f_schema}\".\"{$name}\" (BASETYPE = \"{$basetype}\", SFUNC = \"{$sfunc}\", STYPE = \"{$stype}\"";
+        $sql = \sprintf(
+            'CREATE AGGREGATE "%s"."%s" (BASETYPE = "%s", SFUNC = "%s", STYPE = "%s"',
+            $f_schema,
+            $name,
+            $basetype,
+            $sfunc,
+            $stype
+        );
 
         if ('' !== \trim($ffunc)) {
-            $sql .= ", FINALFUNC = \"{$ffunc}\"";
+            $sql .= \sprintf(
+                ', FINALFUNC = "%s"',
+                $ffunc
+            );
         }
 
         if ('' !== \trim($initcond)) {
-            $sql .= ", INITCOND = \"{$initcond}\"";
+            $sql .= \sprintf(
+                ', INITCOND = "%s"',
+                $initcond
+            );
         }
 
         if ('' !== \trim($sortop)) {
-            $sql .= ", SORTOP = \"{$sortop}\"";
+            $sql .= \sprintf(
+                ', SORTOP = "%s"',
+                $sortop
+            );
         }
 
         $sql .= ')';
@@ -83,7 +101,7 @@ trait AggregateTrait
      * @param string $aggrtype The input data type of the aggregate
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -92,7 +110,12 @@ trait AggregateTrait
         $this->fieldClean($aggrname);
         $this->fieldClean($aggrtype);
 
-        $sql = "DROP AGGREGATE \"{$f_schema}\".\"{$aggrname}\" (\"{$aggrtype}\")";
+        $sql = \sprintf(
+            'DROP AGGREGATE "%s"."%s" ("%s")',
+            $f_schema,
+            $aggrname,
+            $aggrtype
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -107,7 +130,7 @@ trait AggregateTrait
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getAggregate($name, $basetype)
     {
@@ -116,16 +139,19 @@ trait AggregateTrait
         $this->fieldClean($name);
         $this->fieldClean($basetype);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT p.proname, CASE p.proargtypes[0]
-                WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN NULL
+                WHEN \'pg_catalog."any"\'::pg_catalog.regtype THEN NULL
                 ELSE pg_catalog.format_type(p.proargtypes[0], NULL) END AS proargtypes,
                 a.aggtransfn, format_type(a.aggtranstype, NULL) AS aggstype, a.aggfinalfn,
-                a.agginitval, a.aggsortop, u.usename, pg_catalog.obj_description(p.oid, 'pg_proc') AS aggrcomment
+                a.agginitval, a.aggsortop, u.usename, pg_catalog.obj_description(p.oid, \'pg_proc\') AS aggrcomment
             FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
             WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
-                AND p.proisagg AND n.nspname='{$c_schema}'
-                AND p.proname='" . $name . "'
+                AND p.proisagg AND n.nspname=\'%s\'
+                AND p.proname=\'',
+            $c_schema
+        ) . $name . "'
                 AND CASE p.proargtypes[0]
                     WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN ''
                     ELSE pg_catalog.format_type(p.proargtypes[0], NULL)
@@ -137,18 +163,21 @@ trait AggregateTrait
     /**
      * Gets all aggregates.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getAggregates()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        $sql = "SELECT p.proname, CASE p.proargtypes[0] WHEN 'pg_catalog.\"any\"'::pg_catalog.regtype THEN NULL ELSE
+        $sql = \sprintf(
+            'SELECT p.proname, CASE p.proargtypes[0] WHEN \'pg_catalog."any"\'::pg_catalog.regtype THEN NULL ELSE
                pg_catalog.format_type(p.proargtypes[0], NULL) END AS proargtypes, a.aggtransfn, u.usename,
-               pg_catalog.obj_description(p.oid, 'pg_proc') AS aggrcomment
+               pg_catalog.obj_description(p.oid, \'pg_proc\') AS aggrcomment
                FROM pg_catalog.pg_proc p, pg_catalog.pg_namespace n, pg_catalog.pg_user u, pg_catalog.pg_aggregate a
                WHERE n.oid = p.pronamespace AND p.proowner=u.usesysid AND p.oid=a.aggfnoid
-               AND p.proisagg AND n.nspname='{$c_schema}' ORDER BY 1, 2";
+               AND p.proisagg AND n.nspname=\'%s\' ORDER BY 1, 2',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -244,7 +273,7 @@ trait AggregateTrait
      * @param string $aggrtype     The input data type of the aggregate
      * @param string $newaggrowner The new owner of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -252,7 +281,13 @@ trait AggregateTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($aggrname);
         $this->fieldClean($newaggrowner);
-        $sql = "ALTER AGGREGATE \"{$f_schema}\".\"{$aggrname}\" (\"{$aggrtype}\") OWNER TO \"{$newaggrowner}\"";
+        $sql = \sprintf(
+            'ALTER AGGREGATE "%s"."%s" ("%s") OWNER TO "%s"',
+            $f_schema,
+            $aggrname,
+            $aggrtype,
+            $newaggrowner
+        );
 
         return $this->execute($sql);
     }
@@ -264,7 +299,7 @@ trait AggregateTrait
      * @param string $aggrtype      The input data type of the aggregate
      * @param string $newaggrschema The new schema for the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -272,7 +307,13 @@ trait AggregateTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($aggrname);
         $this->fieldClean($newaggrschema);
-        $sql = "ALTER AGGREGATE \"{$f_schema}\".\"{$aggrname}\" (\"{$aggrtype}\") SET SCHEMA  \"{$newaggrschema}\"";
+        $sql = \sprintf(
+            'ALTER AGGREGATE "%s"."%s" ("%s") SET SCHEMA  "%s"',
+            $f_schema,
+            $aggrname,
+            $aggrtype,
+            $newaggrschema
+        );
 
         return $this->execute($sql);
     }
@@ -285,12 +326,20 @@ trait AggregateTrait
      * @param string $aggrtype    The actual input data type of the aggregate
      * @param string $newaggrname The new name of the aggregate
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {
         /* this function is called from alterAggregate where params are cleaned */
-        $sql = "ALTER AGGREGATE \"{$aggrschema}\"" . '.' . "\"{$aggrname}\" (\"{$aggrtype}\") RENAME TO \"{$newaggrname}\"";
+        $sql = \sprintf(
+            'ALTER AGGREGATE "%s"',
+            $aggrschema
+        ) . '.' . \sprintf(
+            '"%s" ("%s") RENAME TO "%s"',
+            $aggrname,
+            $aggrtype,
+            $newaggrname
+        );
 
         return $this->execute($sql);
     }

@@ -131,7 +131,10 @@ class DbexportController extends BaseController
         switch ($subject) {
             case 'schema':
                 // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
-                $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
+                $cmd .= ' -n ' . $this->misc->escapeShellArg(\sprintf(
+                    '"%s"',
+                    $f_schema
+                ));
 
                 break;
             case 'table':
@@ -144,7 +147,11 @@ class DbexportController extends BaseController
                 // Starting in 8.2, -n and -t are orthagonal, so we now schema qualify
                 // the table name in the -t argument and quote both identifiers
                 if (8.2 <= ((float) $version[1])) {
-                    $cmd .= ' -t ' . $this->misc->escapeShellArg("\"{$f_schema}\".\"{$f_object}\"");
+                    $cmd .= ' -t ' . $this->misc->escapeShellArg(\sprintf(
+                        '"%s"."%s"',
+                        $f_schema,
+                        $f_object
+                    ));
                 } else {
                     // If we are 7.4 or higher, assume they are using 7.4 pg_dump and
                     // set dump schema as well.  Also, mixed case dumping has been fixed

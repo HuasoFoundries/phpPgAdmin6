@@ -6,9 +6,11 @@
 
 namespace PHPPgAdmin\Middleware;
 
+use PHPPgAdmin\Traits\HelperTrait;
+
 class Middleware
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     protected $container;
 

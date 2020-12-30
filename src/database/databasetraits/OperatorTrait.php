@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for operators manipulation.
  */
@@ -14,27 +16,30 @@ trait OperatorTrait
     /**
      * Returns a list of all operators in the database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getOperators()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
         // We stick with the subselects here, as you cannot ORDER BY a regtype
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 po.oid, po.oprname,
                 (SELECT pg_catalog.format_type(oid, NULL) FROM pg_catalog.pg_type pt WHERE pt.oid=po.oprleft) AS oprleftname,
                 (SELECT pg_catalog.format_type(oid, NULL) FROM pg_catalog.pg_type pt WHERE pt.oid=po.oprright) AS oprrightname,
                 po.oprresult::pg_catalog.regtype AS resultname,
-                pg_catalog.obj_description(po.oid, 'pg_operator') AS oprcomment
+                pg_catalog.obj_description(po.oid, \'pg_operator\') AS oprcomment
             FROM
                 pg_catalog.pg_operator po
             WHERE
-                po.oprnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}')
+                po.oprnamespace = (SELECT oid FROM pg_catalog.pg_namespace WHERE nspname=\'%s\')
             ORDER BY
                 po.oprname, oprleftname, oprrightname
-        ";
+        ',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -45,7 +50,7 @@ trait OperatorTrait
      * @param mixed $operator_oid The OID of the operator to drop
      * @param bool  $cascade      True to cascade drop, false to restrict
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropOperator($operator_oid, $cascade)
     {
@@ -55,7 +60,11 @@ trait OperatorTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($opr->fields['oprname']);
 
-        $sql = "DROP OPERATOR \"{$f_schema}\".{$opr->fields['oprname']} (";
+        $sql = \sprintf(
+            'DROP OPERATOR "%s".%s (',
+            $f_schema,
+            $opr->fields['oprname']
+        );
         // Quoting or formatting here???
         if (null !== $opr->fields['oprleftname']) {
             $sql .= $opr->fields['oprleftname'] . ', ';
@@ -81,13 +90,14 @@ trait OperatorTrait
      *
      * @param mixed $operator_oid The oid of the operator
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getOperator($operator_oid)
     {
         $this->clean($operator_oid);
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 po.oid, po.oprname,
                 oprleft::pg_catalog.regtype AS oprleftname,
@@ -103,8 +113,10 @@ trait OperatorTrait
             FROM
                 pg_catalog.pg_operator po
             WHERE
-                po.oid='{$operator_oid}'
-        ";
+                po.oid=\'%s\'
+        ',
+            $operator_oid
+        );
 
         return $this->selectSet($sql);
     }
@@ -112,26 +124,29 @@ trait OperatorTrait
     /**
      * Gets all opclasses.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getOpClasses()
     {
         $c_schema = $this->_schema;
         $this->clean($c_schema);
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 pa.amname, po.opcname,
                 po.opcintype::pg_catalog.regtype AS opcintype,
                 po.opcdefault,
-                pg_catalog.obj_description(po.oid, 'pg_opclass') AS opccomment
+                pg_catalog.obj_description(po.oid, \'pg_opclass\') AS opccomment
             FROM
                 pg_catalog.pg_opclass po, pg_catalog.pg_am pa, pg_catalog.pg_namespace pn
             WHERE
                 po.opcmethod=pa.oid
                 AND po.opcnamespace=pn.oid
-                AND pn.nspname='{$c_schema}'
+                AND pn.nspname=\'%s\'
             ORDER BY 1,2
-            ";
+            ',
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }

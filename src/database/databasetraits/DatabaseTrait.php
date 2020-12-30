@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for tables manipulation.
  */
@@ -42,7 +44,10 @@ trait DatabaseTrait
             }
         }
 
-        $sql = "SELECT usesuper FROM pg_user WHERE usename='{$username}'";
+        $sql = \sprintf(
+            'SELECT usesuper FROM pg_user WHERE usename=\'%s\'',
+            $username
+        );
 
         $usesuper = $this->selectField($sql, 'usesuper');
 
@@ -58,7 +63,7 @@ trait DatabaseTrait
      *
      * @param string $table (optional) The table to analyze
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function analyzeDB($table = '')
     {
@@ -67,7 +72,11 @@ trait DatabaseTrait
             $this->fieldClean($f_schema);
             $this->fieldClean($table);
 
-            $sql = "ANALYZE \"{$f_schema}\".\"{$table}\"";
+            $sql = \sprintf(
+                'ANALYZE "%s"."%s"',
+                $f_schema,
+                $table
+            );
         } else {
             $sql = 'ANALYZE';
         }
@@ -80,12 +89,15 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to retrieve
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDatabase($database)
     {
         $this->clean($database);
-        $sql = "SELECT * FROM pg_database WHERE datname='{$database}'";
+        $sql = \sprintf(
+            'SELECT * FROM pg_database WHERE datname=\'%s\'',
+            $database
+        );
 
         return $this->selectSet($sql);
     }
@@ -95,7 +107,7 @@ trait DatabaseTrait
      *
      * @param null|string $currentdatabase database name that should be on top of the resultset
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -107,26 +119,38 @@ trait DatabaseTrait
         if (isset($conf['owned_only']) && $conf['owned_only'] && !$this->isSuperUser()) {
             $username = $server_info['username'];
             $this->clean($username);
-            $clause = " AND pr.rolname='{$username}'";
+            $clause = \sprintf(
+                ' AND pr.rolname=\'%s\'',
+                $username
+            );
         } else {
             $clause = '';
         }
 
         if (isset($server_info['useonlydefaultdb']) && $server_info['useonlydefaultdb']) {
             $currentdatabase = $server_info['defaultdb'];
-            $clause .= " AND pdb.datname = '{$currentdatabase}' ";
+            $clause .= \sprintf(
+                ' AND pdb.datname = \'%s\' ',
+                $currentdatabase
+            );
         }
 
         if (isset($server_info['hiddendbs']) && $server_info['hiddendbs']) {
             $hiddendbs = $server_info['hiddendbs'];
 
             $not_in = "('" . \implode("','", $hiddendbs) . "')";
-            $clause .= " AND pdb.datname NOT IN {$not_in} ";
+            $clause .= \sprintf(
+                ' AND pdb.datname NOT IN %s ',
+                $not_in
+            );
         }
 
         if (null !== $currentdatabase) {
             $this->clean($currentdatabase);
-            $orderby = "ORDER BY pdb.datname = '{$currentdatabase}' DESC, pdb.datname";
+            $orderby = \sprintf(
+                'ORDER BY pdb.datname = \'%s\' DESC, pdb.datname',
+                $currentdatabase
+            );
         } else {
             $orderby = 'ORDER BY pdb.datname';
         }
@@ -137,13 +161,14 @@ trait DatabaseTrait
             $where = ' AND pdb.datallowconn';
         }
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT pdb.datname AS datname,
                     pr.rolname AS datowner,
                     pg_encoding_to_char(encoding) AS datencoding,
-                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid='pg_database'::regclass) AS datcomment,
+                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pdb.oid=pd.objoid AND pd.classoid=\'pg_database\'::regclass) AS datcomment,
                     (SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=pdb.dattablespace) AS tablespace,
-                CASE WHEN pg_catalog.has_database_privilege(current_user, pdb.oid, 'CONNECT')
+                CASE WHEN pg_catalog.has_database_privilege(current_user, pdb.oid, \'CONNECT\')
                     THEN pg_catalog.pg_database_size(pdb.oid)
                     ELSE -1 -- set this magic value, which we will convert to no access later
                 END as dbsize,
@@ -152,9 +177,13 @@ trait DatabaseTrait
             FROM pg_catalog.pg_database pdb
             LEFT JOIN pg_catalog.pg_roles pr ON (pdb.datdba = pr.oid)
             WHERE true
-                {$where}
-                {$clause}
-            {$orderby}";
+                %s
+                %s
+            %s',
+            $where,
+            $clause,
+            $orderby
+        );
 
         return $this->selectSet($sql);
     }
@@ -164,16 +193,19 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDatabaseComment($database)
     {
         $this->clean($database);
-        $sql = "SELECT description
+        $sql = \sprintf(
+            'SELECT description
                 FROM pg_catalog.pg_database
                 JOIN pg_catalog.pg_shdescription
-                ON (oid=objoid AND classoid='pg_database'::regclass)
-                WHERE pg_database.datname = '{$database}' ";
+                ON (oid=objoid AND classoid=\'pg_database\'::regclass)
+                WHERE pg_database.datname = \'%s\' ',
+            $database
+        );
 
         return $this->selectSet($sql);
     }
@@ -183,12 +215,15 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getDatabaseOwner($database)
     {
         $this->clean($database);
-        $sql = "SELECT usename FROM pg_user, pg_database WHERE pg_user.usesysid = pg_database.datdba AND pg_database.datname = '{$database}' ";
+        $sql = \sprintf(
+            'SELECT usename FROM pg_user, pg_database WHERE pg_user.usesysid = pg_database.datdba AND pg_database.datname = \'%s\' ',
+            $database
+        );
 
         return $this->selectSet($sql);
     }
@@ -236,22 +271,38 @@ trait DatabaseTrait
         $this->clean($lc_collate);
         $this->clean($lc_ctype);
 
-        $sql = "CREATE DATABASE \"{$database}\" WITH TEMPLATE=\"{$template}\"";
+        $sql = \sprintf(
+            'CREATE DATABASE "%s" WITH TEMPLATE="%s"',
+            $database,
+            $template
+        );
 
         if ('' !== $encoding) {
-            $sql .= " ENCODING='{$encoding}'";
+            $sql .= \sprintf(
+                ' ENCODING=\'%s\'',
+                $encoding
+            );
         }
 
         if ('' !== $lc_collate) {
-            $sql .= " LC_COLLATE='{$lc_collate}'";
+            $sql .= \sprintf(
+                ' LC_COLLATE=\'%s\'',
+                $lc_collate
+            );
         }
 
         if ('' !== $lc_ctype) {
-            $sql .= " LC_CTYPE='{$lc_ctype}'";
+            $sql .= \sprintf(
+                ' LC_CTYPE=\'%s\'',
+                $lc_ctype
+            );
         }
 
         if ('' !== $tablespace && $this->hasTablespaces()) {
-            $sql .= " TABLESPACE \"{$tablespace}\"";
+            $sql .= \sprintf(
+                ' TABLESPACE "%s"',
+                $tablespace
+            );
         }
 
         $status = $this->execute($sql);
@@ -276,12 +327,15 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropDatabase($database)
     {
         $this->fieldClean($database);
-        $sql = "DROP DATABASE \"{$database}\"";
+        $sql = \sprintf(
+            'DROP DATABASE "%s"',
+            $database
+        );
 
         return $this->execute($sql);
     }
@@ -347,7 +401,7 @@ trait DatabaseTrait
      * @param string $oldName name of database to rename
      * @param string $newName new name of database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function alterDatabaseRename($oldName, $newName)
     {
@@ -355,7 +409,11 @@ trait DatabaseTrait
         $this->fieldClean($newName);
 
         if ($oldName !== $newName) {
-            $sql = "ALTER DATABASE \"{$oldName}\" RENAME TO \"{$newName}\"";
+            $sql = \sprintf(
+                'ALTER DATABASE "%s" RENAME TO "%s"',
+                $oldName,
+                $newName
+            );
 
             return $this->execute($sql);
         }
@@ -370,14 +428,18 @@ trait DatabaseTrait
      * @param string $dbName   database to change ownership of
      * @param string $newOwner user that will own the database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function alterDatabaseOwner($dbName, $newOwner)
     {
         $this->fieldClean($dbName);
         $this->fieldClean($newOwner);
 
-        $sql = "ALTER DATABASE \"{$dbName}\" OWNER TO \"{$newOwner}\"";
+        $sql = \sprintf(
+            'ALTER DATABASE "%s" OWNER TO "%s"',
+            $dbName,
+            $newOwner
+        );
 
         return $this->execute($sql);
     }
@@ -387,7 +449,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getPreparedXacts($database = null)
     {
@@ -395,8 +457,11 @@ trait DatabaseTrait
             $sql = 'SELECT * FROM pg_prepared_xacts';
         } else {
             $this->clean($database);
-            $sql = "SELECT transaction, gid, prepared, owner FROM pg_prepared_xacts
-                WHERE database='{$database}' ORDER BY owner";
+            $sql = \sprintf(
+                'SELECT transaction, gid, prepared, owner FROM pg_prepared_xacts
+                WHERE database=\'%s\' ORDER BY owner',
+                $database
+            );
         }
 
         return $this->selectSet($sql);
@@ -407,7 +472,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getProcesses($database = null)
     {
@@ -418,11 +483,14 @@ trait DatabaseTrait
                 ORDER BY datname, usename, pid";
         } else {
             $this->clean($database);
-            $sql = "SELECT datname, usename, pid, waiting, state_change as query_start,
-                  case when state='idle in transaction' then '<IDLE> in transaction' when state = 'idle' then '<IDLE>' else query end as query
+            $sql = \sprintf(
+                'SELECT datname, usename, pid, waiting, state_change as query_start,
+                  case when state=\'idle in transaction\' then \'<IDLE> in transaction\' when state = \'idle\' then \'<IDLE>\' else query end as query
                 FROM pg_catalog.pg_stat_activity
-                WHERE datname='{$database}'
-                ORDER BY usename, pid";
+                WHERE datname=\'%s\'
+                ORDER BY usename, pid',
+                $database
+            );
         }
 
         return $this->selectSet($sql);
@@ -433,7 +501,7 @@ trait DatabaseTrait
     /**
      * Returns table locks information in the current database.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getLocks()
     {
@@ -445,19 +513,22 @@ trait DatabaseTrait
             $where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
         }
 
-        $sql = "
+        $sql = \sprintf(
+            '
             SELECT
                 pn.nspname, pc.relname AS tablename, pl.pid, pl.mode, pl.granted, pl.virtualtransaction,
-                (select transactionid from pg_catalog.pg_locks l2 where l2.locktype='transactionid'
-                    and l2.mode='ExclusiveLock' and l2.virtualtransaction=pl.virtualtransaction) as transaction
+                (select transactionid from pg_catalog.pg_locks l2 where l2.locktype=\'transactionid\'
+                    and l2.mode=\'ExclusiveLock\' and l2.virtualtransaction=pl.virtualtransaction) as transaction
             FROM
                 pg_catalog.pg_locks pl,
                 pg_catalog.pg_class pc,
                 pg_catalog.pg_namespace pn
             WHERE
                 pl.relation = pc.oid AND pc.relnamespace=pn.oid
-            {$where}
-            ORDER BY pid,nspname,tablename";
+            %s
+            ORDER BY pid,nspname,tablename',
+            $where
+        );
 
         return $this->selectSet($sql);
     }
@@ -476,9 +547,15 @@ trait DatabaseTrait
         $pid = (int) $pid;
 
         if ('CANCEL' === $signal) {
-            $sql = "SELECT pg_catalog.pg_cancel_backend({$pid}) AS val";
+            $sql = \sprintf(
+                'SELECT pg_catalog.pg_cancel_backend(%s) AS val',
+                $pid
+            );
         } elseif ('KILL' === $signal) {
-            $sql = "SELECT pg_catalog.pg_terminate_backend({$pid}) AS val";
+            $sql = \sprintf(
+                'SELECT pg_catalog.pg_terminate_backend(%s) AS val',
+                $pid
+            );
         } else {
             return -1;
         }
@@ -527,7 +604,11 @@ trait DatabaseTrait
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
             $this->fieldClean($table);
-            $sql .= " \"{$f_schema}\".\"{$table}\"";
+            $sql .= \sprintf(
+                ' "%s"."%s"',
+                $f_schema,
+                $table
+            );
         }
 
         $status = $this->execute($sql);
@@ -571,7 +652,7 @@ trait DatabaseTrait
     /**
      * Returns all available variable information.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getVariables()
     {

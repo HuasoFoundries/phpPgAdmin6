@@ -45,7 +45,10 @@ class HelpController extends BaseController
             }
 
             if ($url) {
-                \header("Location: {$url}");
+                \header(\sprintf(
+                    'Location: %s',
+                    $url
+                ));
 
                 return;
             }
@@ -70,7 +73,10 @@ class HelpController extends BaseController
         $pages = $data->getHelpPages();
 
         foreach ($pages as $page => $dummy) {
-            echo "<dt>{$page}</dt>" . \PHP_EOL;
+            echo \sprintf(
+                '<dt>%s</dt>',
+                $page
+            ) . \PHP_EOL;
 
             $urls = $data->getHelp($page);
 
@@ -79,7 +85,11 @@ class HelpController extends BaseController
             }
 
             foreach ($urls as $url) {
-                echo "<dd><a href=\"{$url}\">{$url}</a></dd>" . \PHP_EOL;
+                echo \sprintf(
+                    '<dd><a href="%s">%s</a></dd>',
+                    $url,
+                    $url
+                ) . \PHP_EOL;
             }
         }
 
@@ -98,7 +108,11 @@ class HelpController extends BaseController
         echo '<ul>' . \PHP_EOL;
 
         foreach ($urls as $url) {
-            echo "<li><a href=\"{$url}\">{$url}</a></li>" . \PHP_EOL;
+            echo \sprintf(
+                '<li><a href="%s">%s</a></li>',
+                $url,
+                $url
+            ) . \PHP_EOL;
         }
         echo '</ul>' . \PHP_EOL;
 

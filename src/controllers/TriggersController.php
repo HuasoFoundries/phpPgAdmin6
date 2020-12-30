@@ -7,6 +7,8 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\XHtml\XHtmlOption;
+use PHPPgAdmin\XHtml\XHtmlSelect;
 
 /**
  * Base controller class.
@@ -136,7 +138,11 @@ class TriggersController extends BaseController
             'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => "functions?action=properties&amp;server={$_REQUEST['server']}&amp;database={$_REQUEST['database']}&amp;",
+                'url' => \sprintf(
+                    'functions?action=properties&amp;server=%s&amp;database=%s&amp;',
+                    $_REQUEST['server'],
+                    $_REQUEST['database']
+                ),
                 'vars' => [
                     'schema' => 'pronamespace',
                     'function' => 'proproto',
@@ -275,20 +281,40 @@ class TriggersController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<input name="name" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
             \htmlspecialchars($_POST['name']), '" />' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['strok']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['strok']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -313,12 +339,25 @@ class TriggersController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->dropTrigger($_POST['trigger'], $_POST['table'], isset($_POST['cascade']));
@@ -352,11 +391,21 @@ class TriggersController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="enable" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->enableTrigger($_POST['trigger'], $_POST['table']);
@@ -390,11 +439,21 @@ class TriggersController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="disable" />' . \PHP_EOL;
-            echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+            echo \sprintf(
+                '<input type="hidden" name="table" value="%s"  />%s',
+                \htmlspecialchars($_REQUEST['table']),
+                \PHP_EOL
+            );
             echo '<input type="hidden" name="trigger" value="', \htmlspecialchars($_REQUEST['trigger']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             $status = $data->disableTrigger($_POST['trigger'], $_POST['table']);
@@ -430,52 +489,81 @@ class TriggersController extends BaseController
         }
 
         // Populate functions
-        $sel0 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFunction');
+        $sel0 = new XHtmlSelect('formFunction');
 
         while (!$funcs->EOF) {
-            $sel0->add(new \PHPPgAdmin\XHtml\XHtmlOption($funcs->fields['proname']));
+            $sel0->add(new XHtmlOption($funcs->fields['proname']));
             $funcs->moveNext();
         }
 
         // Populate times
-        $sel1 = new \PHPPgAdmin\XHtml\XHtmlSelect('formExecTime');
+        $sel1 = new XHtmlSelect('formExecTime');
         $sel1->set_data($data->triggerExecTimes);
 
         // Populate events
-        $sel2 = new \PHPPgAdmin\XHtml\XHtmlSelect('formEvent');
+        $sel2 = new XHtmlSelect('formEvent');
         $sel2->set_data($data->triggerEvents);
 
         // Populate occurences
-        $sel3 = new \PHPPgAdmin\XHtml\XHtmlSelect('formFrequency');
+        $sel3 = new XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
-        echo "		<th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "		<th class=\"data\">{$this->lang['strwhen']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '		<th class="data">%s</th>',
+            $this->lang['strwhen']
+        ) . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo '		<td class="data1"> <input type="text" name="formTriggerName" size="32" /></td>' . \PHP_EOL;
         echo '		<td class="data1"> ', $sel1->fetch(), '</td>' . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
-        echo "    <th class=\"data\">{$this->lang['strevent']}</th>" . \PHP_EOL;
-        echo "    <th class=\"data\">{$this->lang['strforeach']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '    <th class="data">%s</th>',
+            $this->lang['strevent']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '    <th class="data">%s</th>',
+            $this->lang['strforeach']
+        ) . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo '     <td class="data1"> ', $sel2->fetch(), '</td>' . \PHP_EOL;
         echo '     <td class="data1"> ', $sel3->fetch(), '</td>' . \PHP_EOL;
         echo '</tr>' . \PHP_EOL;
-        echo "<tr><th class=\"data\"> {$this->lang['strfunction']}</th>" . \PHP_EOL;
-        echo "<th class=\"data\"> {$this->lang['strarguments']}</th></tr>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data"> %s</th>',
+            $this->lang['strfunction']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<th class="data"> %s</th></tr>',
+            $this->lang['strarguments']
+        ) . \PHP_EOL;
         echo '<tr><td class="data1">', $sel0->fetch(), '</td>' . \PHP_EOL;
         echo '<td class="data1">(<input type="text" name="formTriggerArgs" size="32" />)</td>' . \PHP_EOL;
         echo '</tr></table>' . \PHP_EOL;
-        echo "<p><input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<p><input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '<input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
-        echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
+        echo \sprintf(
+            '<input type="hidden" name="table" value="%s"  />%s',
+            \htmlspecialchars($_REQUEST['table']),
+            \PHP_EOL
+        );
         echo $this->view->form;
         echo '</form>' . \PHP_EOL;
     }

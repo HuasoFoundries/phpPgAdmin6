@@ -4,7 +4,15 @@
  * PHPPgAdmin 6.1.3
  */
 
-function getAppInstance(): \Slim\App
+use PHPPgAdmin\ContainerUtils;
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
+
+/**
+ * PHPPgAdmin 6.1.3.
+ */
+function getAppInstance(): App
 {
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
@@ -47,29 +55,29 @@ function getAppInstance(): \Slim\App
     $conf['IN_TEST'] = IN_TEST;
 
     // Fetch App and DI Container
-    $app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
+    $app = ContainerUtils::getAppInstance($conf);
 
     return $app;
 }
 
-function containerInstance(): \PHPPgAdmin\ContainerUtils
+function containerInstance(): ContainerUtils
 {
     $app = getAppInstance();
     $container = $app->getContainer();
 
-    if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
+    if (!$container instanceof ContainerUtils) {
         \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
     }
 
     return  $container;
 }
 
-function requestInstance(): \Slim\Http\Request
+function requestInstance(): Request
 {
     return  \containerInstance()->request;
 }
 
-function responseInstance(): \Slim\Http\Response
+function responseInstance(): Response
 {
     return \containerInstance()->response;
 }

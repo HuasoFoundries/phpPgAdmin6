@@ -38,7 +38,10 @@ trait AdminTrait
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                echo '<p>', \sprintf($this->lang['strconfclustertable'], $this->misc->printVal($a['table'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfclustertable'],
+                    $this->misc->printVal($a['table'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table[]" value="', \htmlspecialchars($a['table']), '" />' . \PHP_EOL;
             } //  END if multi cluster
         } else {
@@ -48,10 +51,16 @@ trait AdminTrait
             echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
-                echo '<p>', \sprintf($this->lang['strconfclustertable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfclustertable'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['object']), '" />' . \PHP_EOL;
             } else {
-                echo '<p>', \sprintf($this->lang['strconfclusterdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfclusterdatabase'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="" />' . \PHP_EOL;
             }
         }
@@ -90,7 +99,10 @@ trait AdminTrait
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                echo '<p>', \sprintf($this->lang['strconfreindextable'], $this->misc->printVal($a['table'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfreindextable'],
+                    $this->misc->printVal($a['table'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table[]" value="', \htmlspecialchars($a['table']), '" />' . \PHP_EOL;
             } //  END if multi reindex
         } else {
@@ -100,10 +112,16 @@ trait AdminTrait
             echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
-                echo '<p>', \sprintf($this->lang['strconfreindextable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfreindextable'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['object']), '" />' . \PHP_EOL;
             } else {
-                echo '<p>', \sprintf($this->lang['strconfreindexdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfreindexdatabase'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="" />' . \PHP_EOL;
             }
         }
@@ -145,7 +163,10 @@ trait AdminTrait
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($a['table'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfanalyzetable'],
+                    $this->misc->printVal($a['table'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table[]" value="', \htmlspecialchars($a['table']), '" />' . \PHP_EOL;
             } //  END if multi analyze
         } else {
@@ -155,10 +176,16 @@ trait AdminTrait
             echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
-                echo '<p>', \sprintf($this->lang['strconfanalyzetable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfanalyzetable'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['object']), '" />' . \PHP_EOL;
             } else {
-                echo '<p>', \sprintf($this->lang['strconfanalyzedatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfanalyzedatabase'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="" />' . \PHP_EOL;
             }
         }
@@ -193,7 +220,10 @@ trait AdminTrait
 
             foreach ($_REQUEST['ma'] as $v) {
                 $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                echo '<p>', \sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($a['table'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfvacuumtable'],
+                    $this->misc->printVal($a['table'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table[]" value="', \htmlspecialchars($a['table']), '" />' . \PHP_EOL;
             }
         } else {
@@ -204,10 +234,16 @@ trait AdminTrait
             echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$script}\" method=\"post\">" . \PHP_EOL;
 
             if ('table' === $type) {
-                echo '<p>', \sprintf($this->lang['strconfvacuumtable'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfvacuumtable'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="', \htmlspecialchars($_REQUEST['object']), '" />' . \PHP_EOL;
             } else {
-                echo '<p>', \sprintf($this->lang['strconfvacuumdatabase'], $this->misc->printVal($_REQUEST['object'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfvacuumdatabase'],
+                    $this->misc->printVal($_REQUEST['object'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="table" value="" />' . \PHP_EOL;
             }
         }
@@ -622,7 +658,10 @@ trait AdminTrait
         );
 
         if (0 === $status) {
-            $this->doAdmin($type, \sprintf($this->lang['strsetvacuumtablesaved'], $_REQUEST['table']));
+            $this->doAdmin($type, \sprintf(
+                $this->lang['strsetvacuumtablesaved'],
+                $_REQUEST['table']
+            ));
         } else {
             $this->confirmEditAutovacuum($type, $this->lang['strsetvacuumtablefail']);
         }
@@ -646,9 +685,15 @@ trait AdminTrait
         $status = $data->dropAutovacuum($_POST['table']);
 
         if (0 === $status) {
-            $this->doAdmin($type, \sprintf($this->lang['strvacuumtablereset'], $this->misc->printVal($_POST['table'])));
+            $this->doAdmin($type, \sprintf(
+                $this->lang['strvacuumtablereset'],
+                $this->misc->printVal($_POST['table'])
+            ));
         } else {
-            $this->doAdmin($type, \sprintf($this->lang['strdelvacuumtablefail'], $this->misc->printVal($_POST['table'])));
+            $this->doAdmin($type, \sprintf(
+                $this->lang['strdelvacuumtablefail'],
+                $this->misc->printVal($_POST['table'])
+            ));
         }
     }
 

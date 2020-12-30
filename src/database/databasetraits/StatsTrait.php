@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait to retrieve stats on database objects.
  */
@@ -16,13 +18,16 @@ trait StatsTrait
      *
      * @param string $database The database to fetch stats for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getStatsDatabase($database)
     {
         $this->clean($database);
 
-        $sql = "SELECT * FROM pg_stat_database WHERE datname='{$database}'";
+        $sql = \sprintf(
+            'SELECT * FROM pg_stat_database WHERE datname=\'%s\'',
+            $database
+        );
 
         return $this->selectSet($sql);
     }
@@ -32,7 +37,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch stats for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getStatsTableTuples($table)
     {
@@ -40,8 +45,12 @@ trait StatsTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT * FROM pg_stat_all_tables
-            WHERE schemaname='{$c_schema}' AND relname='{$table}'";
+        $sql = \sprintf(
+            'SELECT * FROM pg_stat_all_tables
+            WHERE schemaname=\'%s\' AND relname=\'%s\'',
+            $c_schema,
+            $table
+        );
 
         return $this->selectSet($sql);
     }
@@ -51,7 +60,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch stats for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getStatsTableIO($table)
     {
@@ -59,8 +68,12 @@ trait StatsTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT * FROM pg_statio_all_tables
-            WHERE schemaname='{$c_schema}' AND relname='{$table}'";
+        $sql = \sprintf(
+            'SELECT * FROM pg_statio_all_tables
+            WHERE schemaname=\'%s\' AND relname=\'%s\'',
+            $c_schema,
+            $table
+        );
 
         return $this->selectSet($sql);
     }
@@ -70,7 +83,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch index stats for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getStatsIndexTuples($table)
     {
@@ -78,8 +91,12 @@ trait StatsTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT * FROM pg_stat_all_indexes
-            WHERE schemaname='{$c_schema}' AND relname='{$table}' ORDER BY indexrelname";
+        $sql = \sprintf(
+            'SELECT * FROM pg_stat_all_indexes
+            WHERE schemaname=\'%s\' AND relname=\'%s\' ORDER BY indexrelname',
+            $c_schema,
+            $table
+        );
 
         return $this->selectSet($sql);
     }
@@ -89,7 +106,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch index stats for
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getStatsIndexIO($table)
     {
@@ -97,9 +114,13 @@ trait StatsTrait
         $this->clean($c_schema);
         $this->clean($table);
 
-        $sql = "SELECT * FROM pg_statio_all_indexes
-            WHERE schemaname='{$c_schema}' AND relname='{$table}'
-            ORDER BY indexrelname";
+        $sql = \sprintf(
+            'SELECT * FROM pg_statio_all_indexes
+            WHERE schemaname=\'%s\' AND relname=\'%s\'
+            ORDER BY indexrelname',
+            $c_schema,
+            $table
+        );
 
         return $this->selectSet($sql);
     }

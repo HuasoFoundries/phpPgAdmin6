@@ -7,13 +7,14 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\ViewsMatviewsTrait;
 
 /**
  * Base controller class.
  */
 class MaterializedviewsController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ViewsMatviewsTrait;
+    use ViewsMatviewsTrait;
 
     public $table_place = 'matviews-matviews';
 
@@ -124,7 +125,10 @@ class MaterializedviewsController extends BaseController
             $this->keystring => [
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->subFolder . "/redirect/matview?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . \sprintf(
+                    '/redirect/matview?%s&amp;',
+                    $this->misc->href
+                ),
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -287,20 +291,35 @@ class MaterializedviewsController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                    echo '<p>', \sprintf($this->lang['strconfdropview'], $this->misc->printVal($a['view'])), '</p>' . \PHP_EOL;
+                    echo '<p>', \sprintf(
+                        $this->lang['strconfdropview'],
+                        $this->misc->printVal($a['view'])
+                    ), '</p>' . \PHP_EOL;
                     echo '<input type="hidden" name="view[]" value="', \htmlspecialchars($a['view']), '" />' . \PHP_EOL;
                 }
             } else {
-                echo '<p>', \sprintf($this->lang['strconfdropview'], $this->misc->printVal($_REQUEST['matview'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfdropview'],
+                    $this->misc->printVal($_REQUEST['matview'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST['matview']), '" />' . \PHP_EOL;
             }
 
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
 
             echo $this->view->form;
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s" />',
+                $this->lang['strcancel']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['view'])) {
@@ -412,22 +431,47 @@ class MaterializedviewsController extends BaseController
         $this->printTitle($this->lang['strcreateview'], 'pg.matview.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . "/src/views/{$this->view_name}\" method=\"post\">" . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . \sprintf(
+            '/src/views/%s" method="post">',
+            $this->view_name
+        ) . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "\t<td class=\"data1\"><input name=\"formView\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '	<td class="data1"><input name="formView" size="32" maxlength="%s" value="',
+            $data->_maxNameLen
+        ),
         \htmlspecialchars($_REQUEST['formView']), "\" /></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strdefinition']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left required">%s</th>',
+            $this->lang['strdefinition']
+        ) . \PHP_EOL;
         echo "\t<td class=\"data1\"><textarea style=\"width:100%;\" rows=\"10\" cols=\"50\" name=\"formDefinition\">",
         \htmlspecialchars($_REQUEST['formDefinition']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
-        echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '	<tr>
+		<th class="data left">%s</th>',
+            $this->lang['strcomment']
+        ) . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><textarea name=\"formComment\" rows=\"3\" cols=\"32\">",
         \htmlspecialchars($_REQUEST['formComment']), "</textarea></td>\n\t</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 

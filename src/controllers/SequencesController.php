@@ -125,7 +125,10 @@ class SequencesController extends BaseController
             'sequence' => [
                 'title' => $this->lang['strsequence'],
                 'field' => Decorator::field('seqname'),
-                'url' => "sequences?action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \sprintf(
+                    'sequences?action=properties&amp;%s&amp;',
+                    $this->misc->href
+                ),
                 'vars' => ['sequence' => 'seqname'],
             ],
             'owner' => [
@@ -250,19 +253,49 @@ class SequencesController extends BaseController
             }
 
             echo '<table border="0">';
-            echo "<tr><th class=\"data\">{$this->lang['strname']}</th>";
+            echo \sprintf(
+                '<tr><th class="data">%s</th>',
+                $this->lang['strname']
+            );
 
             if ($data->hasAlterSequenceStart()) {
-                echo "<th class=\"data\">{$this->lang['strstartvalue']}</th>";
+                echo \sprintf(
+                    '<th class="data">%s</th>',
+                    $this->lang['strstartvalue']
+                );
             }
-            echo "<th class=\"data\">{$this->lang['strlastvalue']}</th>";
-            echo "<th class=\"data\">{$this->lang['strincrementby']}</th>";
-            echo "<th class=\"data\">{$this->lang['strmaxvalue']}</th>";
-            echo "<th class=\"data\">{$this->lang['strminvalue']}</th>";
-            echo "<th class=\"data\">{$this->lang['strcachevalue']}</th>";
-            echo "<th class=\"data\">{$this->lang['strlogcount']}</th>";
-            echo "<th class=\"data\">{$this->lang['strcancycle']}</th>";
-            echo "<th class=\"data\">{$this->lang['striscalled']}</th></tr>";
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strlastvalue']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strincrementby']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strmaxvalue']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strminvalue']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strcachevalue']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strlogcount']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th>',
+                $this->lang['strcancycle']
+            );
+            echo \sprintf(
+                '<th class="data">%s</th></tr>',
+                $this->lang['striscalled']
+            );
             echo '<tr>';
             echo '<td class="data1">', $this->misc->printVal($sequence->fields['seqname']), '</td>';
 
@@ -377,7 +410,10 @@ class SequencesController extends BaseController
 
             $this->printNavLinks($navlinks, 'sequences-properties', \get_defined_vars());
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -406,19 +442,35 @@ class SequencesController extends BaseController
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
-                    echo '<p>', \sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($a['sequence'])), '</p>' . \PHP_EOL;
+                    echo '<p>', \sprintf(
+                        $this->lang['strconfdropsequence'],
+                        $this->misc->printVal($a['sequence'])
+                    ), '</p>' . \PHP_EOL;
                     \printf('<input type="hidden" name="sequence[]" value="%s" />', \htmlspecialchars($a['sequence']));
                 }
             } else {
-                echo '<p>', \sprintf($this->lang['strconfdropsequence'], $this->misc->printVal($_REQUEST['sequence'])), '</p>' . \PHP_EOL;
+                echo '<p>', \sprintf(
+                    $this->lang['strconfdropsequence'],
+                    $this->misc->printVal($_REQUEST['sequence'])
+                ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
             }
 
-            echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
+                $this->lang['strcascade']
+            ) . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"drop\" value=\"{$this->lang['strdrop']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="drop" value="%s" />',
+                $this->lang['strdrop']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
             if (\is_array($_POST['sequence'])) {
@@ -497,37 +549,61 @@ class SequencesController extends BaseController
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
-        echo "<td class=\"data1\"><input name=\"formSequenceName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+        echo \sprintf(
+            '<tr><th class="data left required">%s</th>',
+            $this->lang['strname']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<td class="data1"><input name="formSequenceName" size="32" maxlength="%s" value="',
+            $data->_maxNameLen
+        ),
             \htmlspecialchars($_POST['formSequenceName']),
             '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strincrementby']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="formIncrement" size="5" value="',
             \htmlspecialchars($_POST['formIncrement']),
             '" /> </td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strminvalue']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="formMinValue" size="5" value="',
             \htmlspecialchars($_POST['formMinValue']),
             '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strmaxvalue']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="formMaxValue" size="5" value="',
             \htmlspecialchars($_POST['formMaxValue']),
             '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strstartvalue']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="formStartValue" size="5" value="',
             \htmlspecialchars($_POST['formStartValue']),
             '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left">%s</th>',
+            $this->lang['strcachevalue']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input name="formCacheValue" size="5" value="',
             \htmlspecialchars($_POST['formCacheValue']),
             '" /></td></tr>' . \PHP_EOL;
 
-        echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>" . \PHP_EOL;
+        echo \sprintf(
+            '<tr><th class="data left"><label for="formCycledValue">%s</label></th>',
+            $this->lang['strcancycle']
+        ) . \PHP_EOL;
         echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
             (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''),
             ' /></td></tr>' . \PHP_EOL;
@@ -535,8 +611,15 @@ class SequencesController extends BaseController
         echo '</table>' . \PHP_EOL;
         echo '<p><input type="hidden" name="action" value="save_create_sequence" />' . \PHP_EOL;
         echo $this->view->form;
-        echo "<input type=\"submit\" name=\"create\" value=\"{$this->lang['strcreate']}\" />" . \PHP_EOL;
-        echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo \sprintf(
+            '<input type="submit" name="create" value="%s" />',
+            $this->lang['strcreate']
+        ) . \PHP_EOL;
+        echo \sprintf(
+            '<input type="submit" name="cancel" value="%s"  /></p>%s',
+            $this->lang['strcancel'],
+            \PHP_EOL
+        );
         echo '</form>' . \PHP_EOL;
     }
 
@@ -652,20 +735,36 @@ class SequencesController extends BaseController
         if (\is_object($sequence) && 0 < $sequence->recordCount()) {
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table border="0">';
-            echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strlastvalue']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo "<input name=\"nextvalue\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<input name="nextvalue" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
                 $this->misc->printVal($sequence->fields['last_value']),
                 '" /></td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="setval" />' . \PHP_EOL;
             echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"setval\" value=\"{$this->lang['strsetval']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="setval" value="%s" />',
+                $this->lang['strsetval']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 
@@ -763,9 +862,15 @@ class SequencesController extends BaseController
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left required">%s</th>',
+                $this->lang['strname']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
-            echo "<input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
+            echo \sprintf(
+                '<input name="name" size="32" maxlength="%s" value="',
+                $data->_maxNameLen
+            ),
                 \htmlspecialchars($_POST['name']),
                 '" /></td></tr>' . \PHP_EOL;
 
@@ -773,7 +878,10 @@ class SequencesController extends BaseController
                 // Fetch all users
                 $users = $data->getUsers();
 
-                echo "<tr><th class=\"data left required\">{$this->lang['strowner']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strowner']
+                ) . \PHP_EOL;
                 echo '<td class="data1"><select name="owner">';
 
                 while (!$users->EOF) {
@@ -790,7 +898,10 @@ class SequencesController extends BaseController
 
             if ($data->hasAlterSequenceSchema()) {
                 $schemas = $data->getSchemas();
-                echo "<tr><th class=\"data left required\">{$this->lang['strschema']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left required">%s</th>',
+                    $this->lang['strschema']
+                ) . \PHP_EOL;
                 echo '<td class="data1"><select name="newschema">';
 
                 while (!$schemas->EOF) {
@@ -805,45 +916,69 @@ class SequencesController extends BaseController
                 echo '</select></td></tr>' . \PHP_EOL;
             }
 
-            echo "<tr><th class=\"data left\">{$this->lang['strcomment']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strcomment']
+            ) . \PHP_EOL;
             echo '<td class="data1">';
             echo '<textarea rows="3" cols="32" name="comment">',
                 \htmlspecialchars($_POST['comment']),
                 '</textarea></td></tr>' . \PHP_EOL;
 
             if ($data->hasAlterSequenceStart()) {
-                echo "<tr><th class=\"data left\">{$this->lang['strstartvalue']}</th>" . \PHP_EOL;
+                echo \sprintf(
+                    '<tr><th class="data left">%s</th>',
+                    $this->lang['strstartvalue']
+                ) . \PHP_EOL;
                 echo '<td class="data1"><input name="formStartValue" size="5" value="',
                     \htmlspecialchars($sequence->fields['start_value']),
                     '" /></td></tr>' . \PHP_EOL;
             }
 
-            echo "<tr><th class=\"data left\">{$this->lang['strrestartvalue']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strrestartvalue']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="formRestartValue" size="5" value="',
                 \htmlspecialchars($sequence->fields['last_value']),
                 '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strincrementby']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strincrementby']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="formIncrement" size="5" value="',
                 \htmlspecialchars($sequence->fields['increment_by']),
                 '" /> </td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strmaxvalue']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strmaxvalue']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="formMaxValue" size="5" value="',
                 \htmlspecialchars($sequence->fields['max_value']),
                 '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strminvalue']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strminvalue']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="formMinValue" size="5" value="',
                 \htmlspecialchars($sequence->fields['min_value']),
                 '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\">{$this->lang['strcachevalue']}</th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left">%s</th>',
+                $this->lang['strcachevalue']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input name="formCacheValue" size="5" value="',
                 \htmlspecialchars($sequence->fields['cache_value']),
                 '" /></td></tr>' . \PHP_EOL;
 
-            echo "<tr><th class=\"data left\"><label for=\"formCycledValue\">{$this->lang['strcancycle']}</label></th>" . \PHP_EOL;
+            echo \sprintf(
+                '<tr><th class="data left"><label for="formCycledValue">%s</label></th>',
+                $this->lang['strcancycle']
+            ) . \PHP_EOL;
             echo '<td class="data1"><input type="checkbox" id="formCycledValue" name="formCycledValue" ',
                 (isset($_POST['formCycledValue']) ? ' checked="checked"' : ''),
                 ' /></td></tr>' . \PHP_EOL;
@@ -852,11 +987,21 @@ class SequencesController extends BaseController
             echo '<p><input type="hidden" name="action" value="alter" />' . \PHP_EOL;
             echo $this->view->form;
             echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"alter\" value=\"{$this->lang['stralter']}\" />" . \PHP_EOL;
-            echo \sprintf('<input type="submit" name="cancel" value="%s"  /></p>%s', $this->lang['strcancel'], \PHP_EOL);
+            echo \sprintf(
+                '<input type="submit" name="alter" value="%s" />',
+                $this->lang['stralter']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="cancel" value="%s"  /></p>%s',
+                $this->lang['strcancel'],
+                \PHP_EOL
+            );
             echo '</form>' . \PHP_EOL;
         } else {
-            echo "<p>{$this->lang['strnodata']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodata']
+            ) . \PHP_EOL;
         }
     }
 }

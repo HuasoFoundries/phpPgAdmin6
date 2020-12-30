@@ -6,14 +6,16 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Traits\ServersTrait;
 
 /**
  * Base controller class.
  */
 class HistoryController extends BaseController
 {
-    use \PHPPgAdmin\Traits\ServersTrait;
+    use ServersTrait;
 
     public $EOF;
 
@@ -80,13 +82,16 @@ class HistoryController extends BaseController
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
-            echo "<p>{$this->lang['strnodatabaseselected']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnodatabaseselected']
+            ) . \PHP_EOL;
 
             return;
         }
 
         if (isset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']])) {
-            $history = new \PHPPgAdmin\ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
+            $history = new ArrayRecordSet($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
 
             $columns = [
                 'query' => [
@@ -135,7 +140,10 @@ class HistoryController extends BaseController
 
             echo $this->printTable($history, $columns, $actions, 'history-history', $this->lang['strnohistory']);
         } else {
-            echo "<p>{$this->lang['strnohistory']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strnohistory']
+            ) . \PHP_EOL;
         }
 
         $navlinks = [
@@ -195,16 +203,31 @@ class HistoryController extends BaseController
             // Bring to the front always
             echo '<body onload="window.focus();">' . \PHP_EOL;
 
-            echo "<h3>{$this->lang['strdelhistory']}</h3>" . \PHP_EOL;
-            echo "<p>{$this->lang['strconfdelhistory']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<h3>%s</h3>',
+                $this->lang['strdelhistory']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strconfdelhistory']
+            ) . \PHP_EOL;
 
             echo '<pre>', \htmlentities($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]['query'], \ENT_QUOTES, 'UTF-8'), '</pre>';
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="delhistory" />' . \PHP_EOL;
-            echo "<input type=\"hidden\" name=\"queryid\" value=\"{$qid}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="hidden" name="queryid" value="%s" />',
+                $qid
+            ) . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']][$qid]);
@@ -219,14 +242,26 @@ class HistoryController extends BaseController
             // Bring to the front always
             echo '<body onload="window.focus();">' . \PHP_EOL;
 
-            echo "<h3>{$this->lang['strclearhistory']}</h3>" . \PHP_EOL;
-            echo "<p>{$this->lang['strconfclearhistory']}</p>" . \PHP_EOL;
+            echo \sprintf(
+                '<h3>%s</h3>',
+                $this->lang['strclearhistory']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<p>%s</p>',
+                $this->lang['strconfclearhistory']
+            ) . \PHP_EOL;
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/history" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="clearhistory" />' . \PHP_EOL;
             echo $this->view->form;
-            echo "<input type=\"submit\" name=\"yes\" value=\"{$this->lang['stryes']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"no\" value=\"{$this->lang['strno']}\" />" . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="yes" value="%s" />',
+                $this->lang['stryes']
+            ) . \PHP_EOL;
+            echo \sprintf(
+                '<input type="submit" name="no" value="%s" />',
+                $this->lang['strno']
+            ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
         } else {
             unset($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']]);
@@ -237,7 +272,10 @@ class HistoryController extends BaseController
     {
         \header('Content-Type: application/download');
         $datetime = \date('YmdHis');
-        \header("Content-Disposition: attachment; filename=history{$datetime}.sql");
+        \header(\sprintf(
+            'Content-Disposition: attachment; filename=history%s.sql',
+            $datetime
+        ));
 
         foreach ($_SESSION['history'][$_REQUEST['server']][$_REQUEST['database']] as $queries) {
             $query = \rtrim($queries['query']);

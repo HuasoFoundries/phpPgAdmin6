@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use PHPPgAdmin\ADORecordSet;
+
 /**
  * Common trait for tablespaces manipulation.
  */
@@ -16,7 +18,7 @@ trait TablespaceTrait
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTablespaces($all = false)
     {
@@ -42,15 +44,15 @@ trait TablespaceTrait
      *
      * @param string $spcname
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function getTablespace($spcname)
     {
         $this->clean($spcname);
 
-        $sql = "SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, pg_catalog.pg_tablespace_location(oid) as spclocation,
-                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid='pg_tablespace'::regclass) AS spccomment
-                    FROM pg_catalog.pg_tablespace WHERE spcname='{$spcname}'";
+        $sql = \sprintf('SELECT spcname, pg_catalog.pg_get_userbyid(spcowner) AS spcowner, pg_catalog.pg_tablespace_location(oid) as spclocation,
+                    (SELECT description FROM pg_catalog.pg_shdescription pd WHERE pg_tablespace.oid=pd.objoid AND pd.classoid=\'pg_tablespace\'::regclass) AS spccomment
+                    FROM pg_catalog.pg_tablespace WHERE spcname=\'%s\'', $spcname);
 
         return $this->selectSet($sql);
     }
@@ -70,14 +72,14 @@ trait TablespaceTrait
         $this->fieldClean($spcname);
         $this->clean($spcloc);
 
-        $sql = "CREATE TABLESPACE \"{$spcname}\"";
+        $sql = \sprintf('CREATE TABLESPACE "%s"', $spcname);
 
         if ('' !== $spcowner) {
             $this->fieldClean($spcowner);
-            $sql .= " OWNER \"{$spcowner}\"";
+            $sql .= \sprintf(' OWNER "%s"', $spcowner);
         }
 
-        $sql .= " LOCATION '{$spcloc}'";
+        $sql .= \sprintf(' LOCATION \'%s\'', $spcloc);
 
         $status = $this->execute($sql);
 
@@ -120,7 +122,7 @@ trait TablespaceTrait
         }
 
         // Owner
-        $sql = "ALTER TABLESPACE \"{$spcname}\" OWNER TO \"{$owner}\"";
+        $sql = \sprintf('ALTER TABLESPACE "%s" OWNER TO "%s"', $spcname, $owner);
         $status = $this->execute($sql);
 
         if (0 !== $status) {
@@ -131,7 +133,7 @@ trait TablespaceTrait
 
         // Rename (only if name has changed)
         if ($name !== $spcname) {
-            $sql = "ALTER TABLESPACE \"{$spcname}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf('ALTER TABLESPACE "%s" RENAME TO "%s"', $spcname, $name);
             $status = $this->execute($sql);
 
             if (0 !== $status) {
@@ -160,13 +162,13 @@ trait TablespaceTrait
      *
      * @param string $spcname The name of the domain to drop
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return ADORecordSet|int
      */
     public function dropTablespace($spcname)
     {
         $this->fieldClean($spcname);
 
-        $sql = "DROP TABLESPACE \"{$spcname}\"";
+        $sql = \sprintf('DROP TABLESPACE "%s"', $spcname);
 
         return $this->execute($sql);
     }

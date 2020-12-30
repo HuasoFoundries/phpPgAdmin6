@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database\Traits;
 
+use ADORecordSet;
+
 /**
  * Common trait for sequence manipulation.
  */
@@ -16,7 +18,7 @@ trait SequenceTrait
      *
      * @param bool $all true to get all sequences of all schemas
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getSequences($all = false)
     {
@@ -31,11 +33,14 @@ trait SequenceTrait
         } else {
             $c_schema = $this->_schema;
             $this->clean($c_schema);
-            $sql = "SELECT c.relname AS seqname, u.usename AS seqowner, pg_catalog.obj_description(c.oid, 'pg_class') AS seqcomment,
+            $sql = \sprintf(
+                'SELECT c.relname AS seqname, u.usename AS seqowner, pg_catalog.obj_description(c.oid, \'pg_class\') AS seqcomment,
 				(SELECT spcname FROM pg_catalog.pg_tablespace pt WHERE pt.oid=c.reltablespace) AS tablespace
 				FROM pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 				WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
-				AND c.relkind = 'S' AND n.nspname='{$c_schema}' ORDER BY seqname";
+				AND c.relkind = \'S\' AND n.nspname=\'%s\' ORDER BY seqname',
+                $c_schema
+            );
         }
 
         return $this->selectSet($sql);
@@ -46,7 +51,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function nextvalSequence($sequence)
     {
@@ -57,7 +62,11 @@ trait SequenceTrait
         $this->fieldClean($sequence);
         $this->clean($sequence);
 
-        $sql = "SELECT pg_catalog.NEXTVAL('\"{$f_schema}\".\"{$sequence}\"')";
+        $sql = \sprintf(
+            'SELECT pg_catalog.NEXTVAL(\'"%s"."%s"\')',
+            $f_schema,
+            $sequence
+        );
 
         return $this->execute($sql);
     }
@@ -68,7 +77,7 @@ trait SequenceTrait
      * @param string $sequence  Sequence name
      * @param int    $nextvalue The next value
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -80,7 +89,12 @@ trait SequenceTrait
         $this->clean($sequence);
         $this->clean($nextvalue);
 
-        $sql = "SELECT pg_catalog.SETVAL('\"{$f_schema}\".\"{$sequence}\"', '{$nextvalue}')";
+        $sql = \sprintf(
+            'SELECT pg_catalog.SETVAL(\'"%s"."%s"\', \'%s\')',
+            $f_schema,
+            $sequence,
+            $nextvalue
+        );
 
         return $this->execute($sql);
     }
@@ -90,7 +104,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function restartSequence($sequence)
     {
@@ -98,7 +112,11 @@ trait SequenceTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($sequence);
 
-        $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$sequence}\" RESTART;";
+        $sql = \sprintf(
+            'ALTER SEQUENCE "%s"."%s" RESTART;',
+            $f_schema,
+            $sequence
+        );
 
         return $this->execute($sql);
     }
@@ -108,7 +126,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function resetSequence($sequence)
     {
@@ -127,7 +145,12 @@ trait SequenceTrait
         $this->fieldClean($sequence);
         $this->clean($sequence);
 
-        $sql = "SELECT pg_catalog.SETVAL('\"{$f_schema}\".\"{$sequence}\"', {$minvalue})";
+        $sql = \sprintf(
+            'SELECT pg_catalog.SETVAL(\'"%s"."%s"\', %s)',
+            $f_schema,
+            $sequence,
+            $minvalue
+        );
 
         return $this->execute($sql);
     }
@@ -137,7 +160,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function getSequence($sequence)
     {
@@ -147,14 +170,19 @@ trait SequenceTrait
         $this->fieldClean($sequence);
         $this->clean($c_sequence);
 
-        $sql = "
+        $sql = \sprintf(
+            '
 			SELECT c.relname AS seqname, s.*,
-				pg_catalog.obj_description(s.tableoid, 'pg_class') AS seqcomment,
+				pg_catalog.obj_description(s.tableoid, \'pg_class\') AS seqcomment,
 				u.usename AS seqowner, n.nspname
-			FROM \"{$sequence}\" AS s, pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
+			FROM "%s" AS s, pg_catalog.pg_class c, pg_catalog.pg_user u, pg_catalog.pg_namespace n
 			WHERE c.relowner=u.usesysid AND c.relnamespace=n.oid
-				AND c.relname = '{$c_sequence}' AND c.relkind = 'S' AND n.nspname='{$c_schema}'
-				AND n.oid = c.relnamespace";
+				AND c.relname = \'%s\' AND c.relkind = \'S\' AND n.nspname=\'%s\'
+				AND n.oid = c.relnamespace',
+            $sequence,
+            $c_sequence,
+            $c_schema
+        );
 
         return $this->selectSet($sql);
     }
@@ -170,7 +198,7 @@ trait SequenceTrait
      * @param int    $cachevalue  The cache value
      * @param bool   $cycledvalue True if cycled, false otherwise
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function createSequence(
         $sequence,
@@ -190,26 +218,45 @@ trait SequenceTrait
         $this->clean($startvalue);
         $this->clean($cachevalue);
 
-        $sql = "CREATE SEQUENCE \"{$f_schema}\".\"{$sequence}\"";
+        $sql = \sprintf(
+            'CREATE SEQUENCE "%s"."%s"',
+            $f_schema,
+            $sequence
+        );
 
         if ('' !== $increment) {
-            $sql .= " INCREMENT {$increment}";
+            $sql .= \sprintf(
+                ' INCREMENT %s',
+                $increment
+            );
         }
 
         if ('' !== $minvalue) {
-            $sql .= " MINVALUE {$minvalue}";
+            $sql .= \sprintf(
+                ' MINVALUE %s',
+                $minvalue
+            );
         }
 
         if ('' !== $maxvalue) {
-            $sql .= " MAXVALUE {$maxvalue}";
+            $sql .= \sprintf(
+                ' MAXVALUE %s',
+                $maxvalue
+            );
         }
 
         if ('' !== $startvalue) {
-            $sql .= " START {$startvalue}";
+            $sql .= \sprintf(
+                ' START %s',
+                $startvalue
+            );
         }
 
         if ('' !== $cachevalue) {
-            $sql .= " CACHE {$cachevalue}";
+            $sql .= \sprintf(
+                ' CACHE %s',
+                $cachevalue
+            );
         }
 
         if ($cycledvalue) {
@@ -296,10 +343,10 @@ trait SequenceTrait
     /**
      * Alter a sequence's owner.
      *
-     * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string        $owner the new owner of the sequence
+     * @param ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string       $owner the new owner of the sequence
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      *
      * @internal string $name new owner for the sequence
      */
@@ -312,7 +359,12 @@ trait SequenceTrait
         if (!empty($owner) && ($seqrs->fields['seqowner'] !== $owner)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" OWNER TO \"{$owner}\"";
+            $sql = \sprintf(
+                'ALTER SEQUENCE "%s"."%s" OWNER TO "%s"',
+                $f_schema,
+                $seqrs->fields['seqname'],
+                $owner
+            );
 
             return $this->execute($sql);
         }
@@ -323,16 +375,16 @@ trait SequenceTrait
     /**
      * Alter a sequence's properties.
      *
-     * @param \ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
-     * @param int           $increment    The sequence incremental value
-     * @param int           $minvalue     The sequence minimum value
-     * @param int           $maxvalue     The sequence maximum value
-     * @param int           $restartvalue The sequence current value
-     * @param int           $cachevalue   The sequence cache value
-     * @param null|bool     $cycledvalue  Sequence can cycle ?
-     * @param int           $startvalue   The sequence start value when issueing a restart
+     * @param ADORecordSet $seqrs        The sequence RecordSet returned by getSequence()
+     * @param int          $increment    The sequence incremental value
+     * @param int          $minvalue     The sequence minimum value
+     * @param int          $maxvalue     The sequence maximum value
+     * @param int          $restartvalue The sequence current value
+     * @param int          $cachevalue   The sequence cache value
+     * @param null|bool    $cycledvalue  Sequence can cycle ?
+     * @param int          $startvalue   The sequence start value when issueing a restart
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function alterSequenceProps(
         $seqrs,
@@ -347,27 +399,45 @@ trait SequenceTrait
         $sql = '';
         /* vars are cleaned in _alterSequence */
         if (!empty($increment) && ($increment !== $seqrs->fields['increment_by'])) {
-            $sql .= " INCREMENT {$increment}";
+            $sql .= \sprintf(
+                ' INCREMENT %s',
+                $increment
+            );
         }
 
         if (!empty($minvalue) && ($minvalue !== $seqrs->fields['min_value'])) {
-            $sql .= " MINVALUE {$minvalue}";
+            $sql .= \sprintf(
+                ' MINVALUE %s',
+                $minvalue
+            );
         }
 
         if (!empty($maxvalue) && ($maxvalue !== $seqrs->fields['max_value'])) {
-            $sql .= " MAXVALUE {$maxvalue}";
+            $sql .= \sprintf(
+                ' MAXVALUE %s',
+                $maxvalue
+            );
         }
 
         if (!empty($restartvalue) && ($restartvalue !== $seqrs->fields['last_value'])) {
-            $sql .= " RESTART {$restartvalue}";
+            $sql .= \sprintf(
+                ' RESTART %s',
+                $restartvalue
+            );
         }
 
         if (!empty($cachevalue) && ($cachevalue !== $seqrs->fields['cache_value'])) {
-            $sql .= " CACHE {$cachevalue}";
+            $sql .= \sprintf(
+                ' CACHE %s',
+                $cachevalue
+            );
         }
 
         if (!empty($startvalue) && ($startvalue !== $seqrs->fields['start_value'])) {
-            $sql .= " START {$startvalue}";
+            $sql .= \sprintf(
+                ' START %s',
+                $startvalue
+            );
         }
 
         // toggle cycle yes/no
@@ -378,7 +448,12 @@ trait SequenceTrait
         if ('' !== $sql) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" {$sql}";
+            $sql = \sprintf(
+                'ALTER SEQUENCE "%s"."%s" %s',
+                $f_schema,
+                $seqrs->fields['seqname'],
+                $sql
+            );
 
             return $this->execute($sql);
         }
@@ -389,10 +464,10 @@ trait SequenceTrait
     /**
      * Rename a sequence.
      *
-     * @param \ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
-     * @param string        $name  The new name for the sequence
+     * @param ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
+     * @param string       $name  The new name for the sequence
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -400,7 +475,12 @@ trait SequenceTrait
         if (!empty($name) && ($seqrs->fields['seqname'] !== $name)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" RENAME TO \"{$name}\"";
+            $sql = \sprintf(
+                'ALTER SEQUENCE "%s"."%s" RENAME TO "%s"',
+                $f_schema,
+                $seqrs->fields['seqname'],
+                $name
+            );
             $status = $this->execute($sql);
 
             if (0 === $status) {
@@ -416,10 +496,10 @@ trait SequenceTrait
     /**
      * Alter a sequence's schema.
      *
-     * @param \ADORecordSet $seqrs  The sequence RecordSet returned by getSequence()
-     * @param string        $schema
+     * @param ADORecordSet $seqrs  The sequence RecordSet returned by getSequence()
+     * @param string       $schema
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      *
      * @internal param The $name new schema for the sequence
      */
@@ -429,7 +509,12 @@ trait SequenceTrait
         if (!empty($schema) && ($seqrs->fields['nspname'] !== $schema)) {
             $f_schema = $this->_schema;
             $this->fieldClean($f_schema);
-            $sql = "ALTER SEQUENCE \"{$f_schema}\".\"{$seqrs->fields['seqname']}\" SET SCHEMA {$schema}";
+            $sql = \sprintf(
+                'ALTER SEQUENCE "%s"."%s" SET SCHEMA %s',
+                $f_schema,
+                $seqrs->fields['seqname'],
+                $schema
+            );
 
             return $this->execute($sql);
         }
@@ -443,7 +528,7 @@ trait SequenceTrait
      * @param string $sequence Sequence name
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return \ADORecordSet|int
+     * @return ADORecordSet|int
      */
     public function dropSequence($sequence, $cascade = false)
     {
@@ -451,7 +536,11 @@ trait SequenceTrait
         $this->fieldClean($f_schema);
         $this->fieldClean($sequence);
 
-        $sql = "DROP SEQUENCE \"{$f_schema}\".\"{$sequence}\"";
+        $sql = \sprintf(
+            'DROP SEQUENCE "%s"."%s"',
+            $f_schema,
+            $sequence
+        );
 
         if ($cascade) {
             $sql .= ' CASCADE';
@@ -482,18 +571,18 @@ trait SequenceTrait
      * Protected method which alter a sequence
      * SHOULDN'T BE CALLED OUTSIDE OF A TRANSACTION.
      *
-     * @param \ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
-     * @param string        $name         The new name for the sequence
-     * @param string        $comment      The comment on the sequence
-     * @param string        $owner        The new owner for the sequence
-     * @param string        $schema       The new schema for the sequence
-     * @param int           $increment    The increment
-     * @param int           $minvalue     The min value
-     * @param int           $maxvalue     The max value
-     * @param int           $restartvalue The starting value
-     * @param int           $cachevalue   The cache value
-     * @param null|bool     $cycledvalue  True if cycled, false otherwise
-     * @param int           $startvalue   The sequence start value when issueing a restart
+     * @param ADORecordSet $seqrs        The sequence recordSet returned by getSequence()
+     * @param string       $name         The new name for the sequence
+     * @param string       $comment      The comment on the sequence
+     * @param string       $owner        The new owner for the sequence
+     * @param string       $schema       The new schema for the sequence
+     * @param int          $increment    The increment
+     * @param int          $minvalue     The min value
+     * @param int          $maxvalue     The max value
+     * @param int          $restartvalue The starting value
+     * @param int          $cachevalue   The cache value
+     * @param null|bool    $cycledvalue  True if cycled, false otherwise
+     * @param int          $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
      */

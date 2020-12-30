@@ -6,17 +6,24 @@
 
 namespace PHPPgAdmin\Middleware;
 
+use PHPPgAdmin\ContainerUtils;
+use PHPPgAdmin\Traits\HelperTrait;
+use PHPPgAdmin\ViewManager;
+use Slim\Http\Request;
+use Slim\Http\Response;
+use Slim\Http\Uri;
+
 /**
  * Set the requestobj and responseobj properties of the container
  * as the value of $request and $response, which already contain the route.
  */
 class PopulateRequestResponse extends Middleware
 {
-    use \PHPPgAdmin\Traits\HelperTrait;
+    use HelperTrait;
 
     public function __invoke(
-        \Slim\Http\Request $request,
-        \Slim\Http\Response $response,
+        Request $request,
+        Response $response,
         $next
     ) {
         $container = $this->container;
@@ -88,12 +95,12 @@ class PopulateRequestResponse extends Middleware
         return $response;
     }
 
-    private function getUri(\Slim\Http\Request $request): \Slim\Http\Uri
+    private function getUri(Request $request): Uri
     {
         return $request->getUri();
     }
 
-    private function getViewManager(\PHPPgAdmin\ContainerUtils $container): \PHPPgAdmin\ViewManager
+    private function getViewManager(ContainerUtils $container): ViewManager
     {
         return $container->get('view');
     }

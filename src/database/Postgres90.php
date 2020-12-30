@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\Help\PostgresDoc90;
+
 /**
  * @file
  * PostgreSQL 9.0 support
@@ -22,5 +24,5 @@ class Postgres90 extends Postgres91
     /**
      * @var class-string
      */
-    public $help_classname = \PHPPgAdmin\Help\PostgresDoc90::class;
+    public $help_classname = PostgresDoc90::class;
 }
