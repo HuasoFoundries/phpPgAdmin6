@@ -261,7 +261,8 @@ class UsersController extends BaseController
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>" . \PHP_EOL;
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",
-            \htmlspecialchars($_POST['password']), "\" /></td>\n\t</tr>" . \PHP_EOL;
+                \htmlspecialchars($_POST['password']),
+                "\" /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strconfirm']}</th>" . \PHP_EOL;
             echo "\t\t<td><input type=\"password\" name=\"confirm\" size=\"32\" value=\"\" /></td>\n\t</tr>" . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
@@ -307,11 +308,11 @@ class UsersController extends BaseController
 
         $userdata = $data->getUser($_REQUEST['username']);
 
-        if (0 < $userdata->recordCount()) {
+        if (!\is_object($userdata) || 0 < $userdata->recordCount()) {
             $server_info = $this->misc->getServerInfo();
             $canRename = $data->hasUserRename() && ($_REQUEST['username'] !== $server_info['username']);
-            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
-            $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
+            $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper'] ?? false);
+            $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb'] ?? false);
 
             if (!isset($_POST['formExpires'])) {
                 if ($canRename) {
@@ -336,10 +337,12 @@ class UsersController extends BaseController
             echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"newname\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . \htmlspecialchars($_POST['newname']) . '" />' : $this->misc->printVal($userdata->fields['usename'])), "</td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-            (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+                (isset($_POST['formSuper'])) ? ' checked="checked"' : '',
+                " /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-            (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+                (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '',
+                " /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data1\"><input size=\"16\" name=\"formExpires\" value=\"", \htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strpassword']}</th>" . \PHP_EOL;
@@ -449,10 +452,12 @@ class UsersController extends BaseController
         echo "\t\t<td class=\"data1\"><input size=\"15\" type=\"password\" name=\"formConfirm\" value=\"", \htmlspecialchars($_POST['formConfirm']), "\" /></td>\n\t</tr>" . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formSuper\">{$this->lang['strsuper']}</label></th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+            (isset($_POST['formSuper'])) ? ' checked="checked"' : '',
+            " /></td>\n\t</tr>" . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left\"><label for=\"formCreateDB\">{$this->lang['strcreatedb']}</label></th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+            (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '',
+            " /></td>\n\t</tr>" . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left\">{$this->lang['strexpires']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"30\" name=\"formExpires\" value=\"", \htmlspecialchars($_POST['formExpires']), "\" /></td>\n\t</tr>" . \PHP_EOL;
         echo '</table>' . \PHP_EOL;

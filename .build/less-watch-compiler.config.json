@@ -1,0 +1,5 @@
+{
+    "watchFolder": "assets/themes",
+    "outputFolder": "assets/themes",
+    "mainFile": "global.less"
+}

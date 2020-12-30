@@ -173,7 +173,7 @@ dependency_analysis: vendor ## Runs a dependency analysis with maglnet/composer-
 	$(eval executable:=tools/composer-require-checker)
 	$(eval package_name:=composer-require-checker )
 	@${MAKE} check_executable_or_exit_with_phive executable=$(executable) package_name=$(package_name) --no-print-directory 
-	@$(executable) check --config-file=$(shell pwd)/composer-require-checker.json
+	@$(executable) check --config-file=$(shell pwd)/.build/composer-require-checker.json
 	tools/composer-unused --excludePackage=adodb/adodb-php
 
 

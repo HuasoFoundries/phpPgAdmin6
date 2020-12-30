@@ -30,30 +30,33 @@ class DbexportController extends BaseController
         $this->setNoOutput(true);
 
         \ini_set('memory_limit', '768M');
-
+        $request = requestInstance();
         // Are we doing a cluster-wide dump or just a per-database dump
-        $dumpall = ('server' === $_REQUEST['subject']);
+        $dumpall = ('server' === $request->getParam('subject'));
 
         // Check that database dumps are enabled.
         if (!$this->misc->isDumpEnabled($dumpall)) {
             return $response;
         }
         $server_info = $this->misc->getServerInfo();
+        $config_entry = $dumpall ? 'pg_dumpall_path' : 'pg_dump_path';
+        $dump_path = $server_info[$config_entry] ?? '';
 
+        if ('' === $dump_path) {
+            $this->halt(\sprintf("Your config file doesn\'t have an entry for '%s'", $config_entry));
+        }
         // Get the path of the pg_dump/pg_dumpall executable
-        $exe = $this->misc->escapeShellCmd($server_info[$dumpall ? 'pg_dumpall_path' : 'pg_dump_path']);
+        $exe = $this->misc->escapeShellCmd($dump_path);
 
         // Obtain the pg_dump version number and check if the path is good
         $version = [];
         \preg_match('/(\\d+(?:\\.\\d+)?)(?:\\.\\d+)?.*$/', \exec($exe . ' --version'), $version);
 
         if (empty($version)) {
-            $this->prtrace('$exe', $exe, 'version', $version[1]);
-
             if ($dumpall) {
-                \printf($this->lang['strbadpgdumpallpath'], $server_info['pg_dumpall_path']);
+                \printf($this->lang['strbadpgdumpallpath'], $server_info['pg_dumpall_path'] ?? '');
             } else {
-                \printf($this->lang['strbadpgdumppath'], $server_info['pg_dump_path']);
+                \printf($this->lang['strbadpgdumppath'], $server_info['pg_dump_path'] ?? '');
             }
 
             return;
@@ -62,9 +65,9 @@ class DbexportController extends BaseController
         $response = $response
             ->withHeader('Controller', $this->controller_name);
 
-        $this->prtrace('REQUEST[output]', $_REQUEST['output']);
+        $this->prtrace('REQUEST[output]', $request->getParam('output'));
         // Make it do a download, if necessary
-        switch ($_REQUEST['output']) {
+        switch ($request->getParam('output')) {
             case 'show':
                 \header('Content-Type: text/plain');
                 $response = $response
@@ -95,14 +98,14 @@ class DbexportController extends BaseController
         }
 
         // Set environmental variables that pg_dump uses
-        \putenv('PGPASSWORD=' . $server_info['password']);
-        \putenv('PGUSER=' . $server_info['username']);
-        $hostname = $server_info['host'];
+        \putenv('PGPASSWORD=' . ($server_info['password'] ?? ''));
+        \putenv('PGUSER=' . ($server_info['username'] ?? ''));
+        $hostname = $server_info['host'] ?? '';
 
         if (null !== $hostname && '' !== $hostname) {
             \putenv('PGHOST=' . $hostname);
         }
-        $port = $server_info['port'];
+        $port = $server_info['port'] ?? 5432;
 
         if (null !== $port && '' !== $port) {
             \putenv('PGPORT=' . $port);
@@ -119,13 +122,13 @@ class DbexportController extends BaseController
         }*/
 
         // we are PG 7.4+, so we always have a schema
-        if (isset($_REQUEST['schema'])) {
-            $f_schema = $_REQUEST['schema'];
+        if (null !== $request->getParam('schema')) {
+            $f_schema = $request->getParam('schema') ?? '';
             $data->fieldClean($f_schema);
         }
-
+        $subject = $request->getParam('subject');
         // Check for a specified table/view
-        switch ($_REQUEST['subject']) {
+        switch ($subject) {
             case 'schema':
                 // This currently works for 8.2+ (due to the orthoganl -t -n issue introduced then)
                 $cmd .= ' -n ' . $this->misc->escapeShellArg("\"{$f_schema}\"");
@@ -134,7 +137,7 @@ class DbexportController extends BaseController
             case 'table':
             case 'view':
             case 'matview':
-                $f_object = $_REQUEST[$_REQUEST['subject']];
+                $f_object = $request->getParam($subject);
                 $this->prtrace('f_object', $f_object);
                 $data->fieldClean($f_object);
 
@@ -147,22 +150,22 @@ class DbexportController extends BaseController
                     // set dump schema as well.  Also, mixed case dumping has been fixed
                     // then..
                     $cmd .= ' -t ' . $this->misc->escapeShellArg($f_object)
-                    . ' -n ' . $this->misc->escapeShellArg($f_schema);
+                        . ' -n ' . $this->misc->escapeShellArg($f_schema);
                 }
         }
 
         // Check for GZIP compression specified
-        if ('gzipped' === $_REQUEST['output'] && !$dumpall) {
+        if ('gzipped' === $request->getParam('output') && !$dumpall) {
             $cmd .= ' -Z 9';
         }
 
-        switch ($_REQUEST['what']) {
+        switch ($request->getParam('what')) {
             case 'dataonly':
                 $cmd .= ' -a';
 
-                if ('sql' === $_REQUEST['d_format']) {
+                if ('sql' === $request->getParam('d_format')) {
                     $cmd .= ' --inserts';
-                } elseif (isset($_REQUEST['d_oids'])) {
+                } elseif (null !== $request->getParam('d_oids')) {
                     $cmd .= ' -o';
                 }
 
@@ -170,19 +173,19 @@ class DbexportController extends BaseController
             case 'structureonly':
                 $cmd .= ' -s';
 
-                if (isset($_REQUEST['s_clean'])) {
+                if (null !== $request->getParam('s_clean')) {
                     $cmd .= ' -c';
                 }
 
                 break;
             case 'structureanddata':
-                if ('sql' === $_REQUEST['sd_format']) {
+                if ('sql' === $request->getParam('sd_format')) {
                     $cmd .= ' --inserts';
-                } elseif (isset($_REQUEST['sd_oids'])) {
+                } elseif (null !== $request->getParam('sd_oids')) {
                     $cmd .= ' -o';
                 }
 
-                if (isset($_REQUEST['sd_clean'])) {
+                if (null !== $request->getParam('sd_clean')) {
                     $cmd .= ' -c';
                 }
 
@@ -190,9 +193,9 @@ class DbexportController extends BaseController
         }
 
         if (!$dumpall) {
-            \putenv('PGDATABASE=' . $_REQUEST['database']);
+            \putenv('PGDATABASE=' . $request->getParam('database'));
         } else {
-            //$cmd .= ' --no-role-password';
+            $cmd .= $request->getParam('no_role_info') ? ' --no-role-password' : '';
             \putenv('PGDATABASE');
         }
 
@@ -206,7 +209,9 @@ class DbexportController extends BaseController
                 'PGDATABASE' => \getenv('PGDATABASE'),
             ]
         );*/
-
+        echo '/*';
+        \printf(' %s', $cmd);
+        \printf('*/');
         // Execute command and return the output to the screen
         \passthru($cmd);
 

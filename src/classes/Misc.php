@@ -25,7 +25,7 @@ class Misc
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Traits\MiscTrait;
 
-
+    /**
      * @var array
      */
     public $appLangFiles = [];
@@ -147,7 +147,7 @@ class Misc
         if (\version_compare(\PHP_VERSION, $this->phpMinVer, '<')) {
             $container->addError(\sprintf('Version of PHP not supported. Please upgrade to version %s or later.', $this->phpMinVer));
         }
-        //$this->dumpAndDie($this);
+        //$this->dumpAndDie($this->);
 
         $this->getServerId();
     }
@@ -207,7 +207,7 @@ class Misc
     }
 
     /**
-     * @return string
+     * @return null|string
      */
     public function getServerId()
     {
@@ -243,7 +243,7 @@ class Misc
         return $this;
     }
 
-    public function getContainer()
+    public function getContainer(): \PHPPgAdmin\ContainerUtils
     {
         return $this->container;
     }
@@ -373,8 +373,9 @@ class Misc
             }
         }
 
-        if (false !== $this->getNoDBConnection() ||
-        null === $this->getDatabase() ||
+        if (
+            false !== $this->getNoDBConnection() ||
+            null === $this->getDatabase() ||
             !isset($_REQUEST['schema'])
         ) {
             return $this->_data;
@@ -420,7 +421,8 @@ class Misc
                     'administrator' => 'administrator',
                 ];
 
-                if (isset($server_info['username']) &&
+                if (
+                    isset($server_info['username']) &&
                     \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -428,7 +430,8 @@ class Misc
                     throw new \Exception($msg);
                 }
 
-                if (!isset($server_info['password']) ||
+                if (
+                    !isset($server_info['password']) ||
                     '' === $server_info['password']
                 ) {
                     $msg = $lang['strlogindisallowed'];
@@ -480,7 +483,8 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha = \sha1($server_string);
 
-            if ($this->_server_id === $server_string ||
+            if (
+                $this->_server_id === $server_string ||
                 $this->_server_id === $server_sha
             ) {
                 if (isset($info['username'])) {
@@ -548,7 +552,8 @@ class Misc
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if (null !== $this->_server_id &&
+        if (
+            null !== $this->_server_id &&
             isset($server_info['useonlydefaultdb']) &&
             true === $server_info['useonlydefaultdb'] &&
             isset($server_info['defaultdb'])

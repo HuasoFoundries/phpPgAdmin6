@@ -34,12 +34,12 @@
     "filp/whoops": "^2.7",
     "friendsofphp/php-cs-fixer": "^2.16",
     "kint-php/kint": "~3.3",
-    "ocramius/package-versions": "~1.4.0",
     "php-parallel-lint/php-parallel-lint": "^1.2",
     "phpstan/phpstan": "^0.12.14",
     "rector/rector-prefixed": "^0.8.29",
+    "simpletest/simpletest": "^1.2",
     "staabm/annotate-pull-request-from-checkstyle": "^1.4",
-    "vimeo/psalm": "~3.9.3"
+    "vimeo/psalm": "^4"
   },
   "extra": {
     "version": "6.1.3"
@@ -58,6 +58,7 @@
       "PHPPgAdmin\\Translations\\": "src/translations"
     },
     "files": [
+      "src/lib.inc.php",
       "vendor/adodb/adodb-php/drivers/adodb-postgres9.inc.php",
       "vendor/adodb/adodb-php/drivers/adodb-pdo.inc.php",
       "vendor/adodb/adodb-php/drivers/adodb-pdo_pgsql.inc.php"

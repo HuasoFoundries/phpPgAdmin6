@@ -4,30 +4,11 @@
  * PHPPgAdmin 6.1.3
  */
 
-use Slim\App;
-
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
 \defined('THEME_PATH') || \define('THEME_PATH', \dirname(__DIR__) . '/assets/themes');
 // Enforce PHP environment
 \ini_set('arg_separator.output', '&amp;');
-
-if (!\is_writable(\dirname(__DIR__) . '/temp')) {
-    die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
-}
-
-require_once \dirname(__DIR__) . '/vendor/autoload.php';
-
-$shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
-    && !\headers_sent()
-    && !\ini_get('session.auto_start');
-
-if ($shouldSetSession && \PHP_SAPI !== 'cli') {
-    \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
-    \session_name('PPA_ID');
-    \session_start();
-}
-
 \defined('ADODB_ERROR_HANDLER_TYPE') || \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
 \defined('ADODB_ERROR_HANDLER') || \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 
@@ -36,23 +17,23 @@ function getAppInstance(): \Slim\App
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
     if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
-        die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+        die('Configuration error: Copy config.inc.example.php to config.inc.php and edit appropriately.');
     }
     $conf = [];
 
     include_once \dirname(__DIR__) . '/config.inc.php';
 
-if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
-    $subfolder = $conf['subfolder'];
-} elseif (\PHP_SAPI === 'cli-server') {
-    $subfolder = '/index.php';
-} elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
-    $subfolder = \str_replace(
-        $_SERVER['DOCUMENT_ROOT'],
-        '',
-        \dirname(__DIR__)
-    );
-}
+    if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
+        $subfolder = $conf['subfolder'];
+    } elseif (\PHP_SAPI === 'cli-server' || \PHP_SAPI === 'cli') {
+        $subfolder = '/index.php';
+    } elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
+        $subfolder = \str_replace(
+            $_SERVER['DOCUMENT_ROOT'],
+            '',
+            \dirname(__DIR__)
+        );
+    }
 
     $conf['subfolder'] = $subfolder;
 
@@ -72,9 +53,6 @@ if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
     $conf['theme_path'] = BASE_PATH . '/assets/themes';
     \defined('IN_TEST') || \define('IN_TEST', false);
     $conf['IN_TEST'] = IN_TEST;
-    \defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
-
-\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
 
     // Fetch App and DI Container
     $app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
@@ -88,10 +66,6 @@ function containerInstance(): \PHPPgAdmin\ContainerUtils
     $container = $app->getContainer();
 
     if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
-{
-    $app=getAppInstance();
-    $container = $app->getContainer();
-                if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
         \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
     }
 
@@ -107,5 +81,3 @@ function responseInstance(): \Slim\Http\Response
 {
     return \containerInstance()->response;
 }
-$app=getAppInstance();
-$container=$app->getContainer();

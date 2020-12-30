@@ -26,8 +26,8 @@
  "session_set_cookie_params",
  "session_start",
  "session_status",
- "Psr\\Container\\ContainerInterface"
-
+ "Psr\\Container\\ContainerInterface",
+ "Psr\\Http\\Message\\ResponseInterface"
   ],
   "scan-files" : ["src/lib.inc.php", "router.php"]
 

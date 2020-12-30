@@ -4,9 +4,28 @@
  * PHPPgAdmin 6.1.3
  */
 
-require_once __DIR__ . '/lib.inc.php';
+foreach (['logs', 'sessions', 'twigcache'] as $tempFolder) {
+    if (!\is_writable(\sprintf('%s/temp/%s', \dirname(__DIR__), $tempFolder))) {
+        die(\sprintf('The folder temp/%s must be writable', $tempFolder));
+    }
+}
+
+require_once \dirname(__DIR__) . '/vendor/autoload.php';
+
+$shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
+    && !\headers_sent()
+    && !\ini_get('session.auto_start');
+
+if ($shouldSetSession && \PHP_SAPI !== 'cli') {
+    \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
+    \session_name('PPA_ID');
+    \session_start();
+}
+
+\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
+
 $app = getAppInstance();
-$container = containerInstance();
+$container = $app->getContainer();
 
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route

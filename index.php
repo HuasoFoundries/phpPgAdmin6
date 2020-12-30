@@ -6,6 +6,12 @@ declare(strict_types=1);
  * PHPPgAdmin 6.1.3
  */
 
+\defined('BASE_PATH') || \define('BASE_PATH', __DIR__);
+
+/**
+ * PHPPgAdmin 6.1.3.
+ */
+
 // This section is made to be able to parse requests coming from PHP Builtin webserver
 if (\PHP_SAPI === 'cli-server') {
     $will_redirect = false;
@@ -16,7 +22,9 @@ if (\PHP_SAPI === 'cli-server') {
         $will_redirect = true;
         $req_uri = \mb_substr($req_uri, 10);
     }
-    $filePath = \realpath(\ltrim($req_uri, '/'));
+    $guessesPath = __DIR__ . $req_uri;
+    $filePath = \realpath($guessesPath);
+
     $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
     if ($filePath && // 1. check that filepath is set

@@ -12,7 +12,7 @@ class ViewTest extends \Codeception\Test\Unit
 {
     protected static $BASE_PATH;
 
-    protected $_container;
+    protected ?\PHPPgAdmin\ContainerUtils $container;
 
     /**
      * @var \UnitTester
@@ -46,24 +46,6 @@ class ViewTest extends \Codeception\Test\Unit
         require self::$BASE_PATH . '/tests/views/casts.php';
         $controller = castsFactory($_container);
         self::assertSame($controller->controller_name, 'CastsController', 'controller name should be CastsController');
-    }
-
-    public function testColpropertiesView(): void
-    {
-        $_container = $this->container;
-
-        require self::$BASE_PATH . '/tests/views/colproperties.php';
-        $controller = colpropertiesFactory($_container);
-        self::assertSame($controller->controller_name, 'ColpropertiesController', 'controller name should be ColpropertiesController');
-    }
-
-    public function testConstraintsView(): void
-    {
-        $_container = $this->container;
-
-        require self::$BASE_PATH . '/tests/views/constraints.php';
-        $controller = constraintsFactory($_container);
-        self::assertSame($controller->controller_name, 'ConstraintsController', 'controller name should be ConstraintsController');
     }
 
     public function testConversionsView(): void
@@ -102,15 +84,6 @@ class ViewTest extends \Codeception\Test\Unit
         self::assertSame($controller->controller_name, 'FunctionsController', 'controller name should be FunctionsController');
     }
 
-    public function testIndexesView(): void
-    {
-        $_container = $this->container;
-
-        require self::$BASE_PATH . '/tests/views/indexes.php';
-        $controller = indexesFactory($_container);
-        self::assertSame($controller->controller_name, 'IndexesController', 'controller name should be IndexesController');
-    }
-
     public function testLanguagesView(): void
     {
         $_container = $this->container;
@@ -147,15 +120,6 @@ class ViewTest extends \Codeception\Test\Unit
         self::assertSame($controller->controller_name, 'RulesController', 'controller name should be RulesController');
     }
 
-    public function testSequencesView(): void
-    {
-        $_container = $this->container;
-
-        require self::$BASE_PATH . '/tests/views/sequences.php';
-        $controller = sequencesFactory($_container);
-        self::assertSame($controller->controller_name, 'SequencesController', 'controller name should be SequencesController');
-    }
-
     public function testTriggersView(): void
     {
         $_container = $this->container;
@@ -176,11 +140,8 @@ class ViewTest extends \Codeception\Test\Unit
 
     protected function _before(): void
     {
-        $Helper = $this->getModule('\Helper\Unit');
-        $this->container = $Helper::getContainer();
-        self::$BASE_PATH = self::$BASE_PATH = $this->container->BASE_PATH;
+        $this->container = containerInstance();
+        self::$BASE_PATH = $this->container->BASE_PATH;
         $this->container->get('misc')->setNoDBConnection(true);
-        // Helper
-        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 }

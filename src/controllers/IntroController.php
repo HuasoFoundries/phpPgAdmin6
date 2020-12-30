@@ -87,7 +87,6 @@ class IntroController extends BaseController
         if (\requestInstance()->getQueryParam('language')) {
             $this->view->setReloadBrowser(true);
         }
-
         $intro_html .= $this->printFooter(false);
 
         return $intro_html;

@@ -40,6 +40,7 @@ config.yml
 sftp-config*
 config.*.php*
 !config.inc.php-dist
+!config.inc.example.php
 !tests/config*
 
 

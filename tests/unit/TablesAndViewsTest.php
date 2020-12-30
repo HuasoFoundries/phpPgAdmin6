@@ -17,7 +17,7 @@ class TablesAndViewsTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    protected $_container;
+    protected ?\PHPPgAdmin\ContainerUtils $container;
 
     public function testTablespacesView(): void
     {
@@ -55,6 +55,42 @@ class TablesAndViewsTest extends \Codeception\Test\Unit
         self::assertSame($controller->controller_name, 'TablesController', 'controller name should be TablesController');
     }
 
+    public function testColpropertiesView(): void
+    {
+        $_container = $this->container;
+
+        require self::$BASE_PATH . '/tests/views/colproperties.php';
+        $controller = colpropertiesFactory($_container);
+        self::assertSame($controller->controller_name, 'ColpropertiesController', 'controller name should be ColpropertiesController');
+    }
+
+    public function testConstraintsView(): void
+    {
+        $_container = $this->container;
+
+        require self::$BASE_PATH . '/tests/views/constraints.php';
+        $controller = constraintsFactory($_container);
+        self::assertSame($controller->controller_name, 'ConstraintsController', 'controller name should be ConstraintsController');
+    }
+
+    public function testSequencesView(): void
+    {
+        $_container = $this->container;
+
+        require self::$BASE_PATH . '/tests/views/sequences.php';
+        $controller = sequencesFactory($_container);
+        self::assertSame($controller->controller_name, 'SequencesController', 'controller name should be SequencesController');
+    }
+
+    public function testIndexesView(): void
+    {
+        $_container = $this->container;
+
+        require self::$BASE_PATH . '/tests/views/indexes.php';
+        $controller = indexesFactory($_container);
+        self::assertSame($controller->controller_name, 'IndexesController', 'controller name should be IndexesController');
+    }
+
     public function testTblpropertiesView(): void
     {
         $_container = $this->container;
@@ -84,11 +120,9 @@ class TablesAndViewsTest extends \Codeception\Test\Unit
 
     protected function _before(): void
     {
-        $Helper = $this->getModule('\Helper\Unit');
-        $this->container = $Helper::getContainer();
-        self::$BASE_PATH = self::$BASE_PATH = $this->container->BASE_PATH;
+        $this->container = containerInstance();
+        self::$BASE_PATH = $this->container->BASE_PATH;
         $this->container->get('misc')->setNoDBConnection(true);
-        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 
     protected function _after(): void

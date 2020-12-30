@@ -18,6 +18,7 @@ namespace PHPPgAdmin\Traits;
  */
 trait HelperTrait
 {
+    /**
      * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions.
      *
      * @param string $msg The message to show to the user

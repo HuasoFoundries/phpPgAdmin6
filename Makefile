@@ -10,6 +10,7 @@ HAS_PHPMD := $(shell command -v phpmd 2> /dev/null)
 HAS_CSFIXER:= $(shell command -v php-cs-fixer 2> /dev/null)
 XDSWI_STATUS:=$(shell command xd_swi stat 2> /dev/null)
 HAS_PHIVE:=$(shell command phive --version 2> /dev/null)
+CONTAINER_ID:=$(shell docker container ls | grep ppatests | cut -d' ' -f1 2> /dev/null)
 CURRENT_BRANCH:=$(shell command git rev-parse --abbrev-ref HEAD 2> /dev/null)
 DATENOW:=`date +'%Y-%m-%d'`
 YELLOW=\033[0;33m
@@ -28,7 +29,7 @@ version:
 	echo -e "$(WHITE) "
 
 
-install: fix_permissions composer_update
+install: fix_permissions
 install: 
 	@composer install --no-interaction --no-progress --no-suggest --prefer-dist ;\
 	${MAKE} composer_validate  --no-print-directory
@@ -103,12 +104,24 @@ var_dumper:
 
 
 create_testdb:
-	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_install.sql
+	@psql postgresql://postgres:phppga@localhost:5434/postgres -f tests/simpletest/data/ppatests_install.sql 
 
 destroy_testdb:
-	PGPASSWORD=scrutinizer psql   -U scrutinizer -h localhost -f tests/simpletest/data/ppatests_remove.sql	
+	@psql postgresql://postgres:phppga@localhost:5434/postgres -f tests/simpletest/data/ppatests_remove.sql 
 
 run_local:
 	${MAKE} fix_permissions
 	php -S localhost:8000 index.php	
+	exit 0
 
+start_pg:
+ifeq ($(CONTAINER_ID),)
+	@docker run  -d -p 5434:5432 --name ppatests -e POSTGRES_PASSWORD=phppga  postgres:12-alpine
+endif
+	@docker container ls | grep ppatests | cut -d' ' -f1
+
+stop_pg:
+ifneq ($(CONTAINER_ID),)
+	@docker container stop $(CONTAINER_ID) ;\
+	docker container rm $(CONTAINER_ID)  
+endif

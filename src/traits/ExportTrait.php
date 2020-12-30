@@ -148,12 +148,13 @@ trait ExportTrait
             $this->lang['strstructureonly'],
             \PHP_EOL
         );
+
         $content .= \sprintf(
-            '<td><label for="no_role_info">%s</label></td>',
+            '<tr><td><label for="sd_clean">%s</label></td>',
             $this->lang['strdrop']
         );
         $content .= \sprintf(
-            '<td><input type="checkbox" id="no_role_info" name="no_role_info" /></td>%s</tr>%s',
+            '<td><input type="checkbox" id="sd_clean" name="sd_clean" /></td>%s</tr>%s',
             \PHP_EOL,
             \PHP_EOL
         );

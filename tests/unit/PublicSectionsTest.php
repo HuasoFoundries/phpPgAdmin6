@@ -12,13 +12,8 @@ class PublicSectionsTest extends \Codeception\Test\Unit
 {
     protected static $BASE_PATH;
 
-    protected $_container;
+    protected ?\PHPPgAdmin\ContainerUtils $container;
 
-    //const BASE_PATH = self::BASE_PATH;
-
-    /**
-     * @var \UnitTester
-     */
     protected $tester;
 
     public function testAlldbView(): void
@@ -131,11 +126,8 @@ class PublicSectionsTest extends \Codeception\Test\Unit
 
     protected function _before(): void
     {
-        $Helper = $this->getModule('\Helper\Unit');
-        $this->container = $Helper::getContainer();
-        self::$BASE_PATH = self::$BASE_PATH = $this->container->BASE_PATH;
+        $this->container = containerInstance();
+        self::$BASE_PATH = $this->container->BASE_PATH;
         $this->container->get('misc')->setNoDBConnection(true);
-        // Helper
-        //\Codeception\Util\Debug::debug('BASE_PATH is ' . \BASE_PATH);
     }
 }

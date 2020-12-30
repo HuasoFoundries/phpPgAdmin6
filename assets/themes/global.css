@@ -18,43 +18,16 @@ html body.sql_edit #sqlform #queryedition {
 html body.sql_edit #sqlform #queryedition > .CodeMirror {
   min-height: 70px;
 }
-html
-  body.sql_edit
-  #sqlform
-  #queryedition
-  > .CodeMirror
-  .CodeMirror-scroll
-  .CodeMirror-sizer {
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-sizer {
   margin-left: 40px !important;
 }
-html
-  body.sql_edit
-  #sqlform
-  #queryedition
-  > .CodeMirror
-  .CodeMirror-scroll
-  .CodeMirror-sizer
-  .cm-m-sql.cm-keyword {
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-sizer .cm-m-sql.cm-keyword {
   text-transform: uppercase;
 }
-html
-  body.sql_edit
-  #sqlform
-  #queryedition
-  > .CodeMirror
-  .CodeMirror-scroll
-  .CodeMirror-gutters
-  .CodeMirror-linenumbers {
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-gutters .CodeMirror-linenumbers {
   min-width: 30px !important;
 }
-html
-  body.sql_edit
-  #sqlform
-  #queryedition
-  > .CodeMirror
-  .CodeMirror-scroll
-  .CodeMirror-gutters
-  .CodeMirror-foldgutter {
+html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .CodeMirror-gutters .CodeMirror-foldgutter {
   width: 0.7em !important;
 }
 html body.sql_edit #sqlform #queryedition #query {
@@ -215,11 +188,7 @@ html body.flexbox_body .flexbox_wrapper > #browser_container {
   float: left;
   flex: 0 0 300px;
 }
-html
-  body.flexbox_body
-  .flexbox_wrapper
-  > #browser_container
-  > .browser_container {
+html body.flexbox_body .flexbox_wrapper > #browser_container > .browser_container {
   height: 100%;
   margin: 0px;
   padding: 0px;
@@ -232,11 +201,7 @@ html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable {
   flex: unset;
   border-right: 8px solid #cfd8dc;
 }
-html
-  body.flexbox_body
-  .flexbox_wrapper
-  > #browser_container.ui-resizable
-  .ui-resizable-handle.ui-resizable-e {
+html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
   width: 8px;
   right: -8px;
   background: #84a0ad;
@@ -256,11 +221,7 @@ html body.flexbox_body.rtl .flexbox_wrapper > #browser_container.ui-resizable {
   border-right: 0 none;
   border-left: 8px solid #cfd8dc;
 }
-html
-  body.flexbox_body.rtl
-  .flexbox_wrapper
-  > #browser_container.ui-resizable
-  .ui-resizable-handle.ui-resizable-w {
+html body.flexbox_body.rtl .flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-w {
   width: 8px;
   left: -8px;
   background: #84a0ad;

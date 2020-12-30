@@ -1,5 +1,8 @@
-
 <?php
+
+/**
+ * PHPPgAdmin 6.1.3
+ */
 
 /**
  * PHPPgAdmin vv6.0.0-RC8-16-g13de173f.
@@ -16,7 +19,7 @@ class ContainerTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    protected $container;
+    protected ?\PHPPgAdmin\ContainerUtils $container;
 
     public function testContainerValidity(): void
     {
@@ -52,13 +55,8 @@ class ContainerTest extends \Codeception\Test\Unit
 
     protected function _before(): void
     {
-        $Helper = $this->getModule('\Helper\Unit');
-        $this->container = $Helper::getContainer();
+        $this->container = containerInstance();
         self::$BASE_PATH = $this->container->BASE_PATH;
-        $this->container->misc->setNoDBConnection(true);
-    }
-
-    protected function _after(): void
-    {
+        $this->container->get('misc')->setNoDBConnection(true);
     }
 }

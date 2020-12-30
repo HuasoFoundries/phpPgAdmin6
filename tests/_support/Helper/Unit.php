@@ -7,12 +7,7 @@
 namespace Helper;
 
 \defined('IN_TEST') || \define('IN_TEST', true);
-
-$bootstrapfile = \dirname(__DIR__, 3) . '/src/lib.inc.php';
-
-if (!\is_readable($bootstrapfile)) {
-    die('lib.inc.php is not readable');
-}
+$bootstrapfile = \dirname(__DIR__, 3) . '/vendor/autoload.php';
 
 require_once $bootstrapfile;
 // here you can define custom actions
@@ -20,7 +15,8 @@ require_once $bootstrapfile;
 
 class Unit extends \Codeception\Module
 {
-     * @var \PHPPgAdmin
+    /**
+     * @var \PHPPgAdmin\ContainerUtils
      */
     private static $_container;
 

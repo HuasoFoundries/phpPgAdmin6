@@ -22,6 +22,7 @@ class ViewManager extends \Slim\Views\Twig
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
+    /**
      * @var array
      */
     public $appLangFiles = [];
@@ -163,7 +164,9 @@ class ViewManager extends \Slim\Views\Twig
             // If there's no session theme, or cookie theme,
             // store the latest one we determined from request, session,cookie, conf or default
             /* save the selected theme in cookie for a year */
-            \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
+            if (!\headers_sent()) {
+                \setcookie('ppaTheme', $_theme, \time() + 31536000, '/');
+            }
             $_SESSION['ppaTheme'] = $_theme;
         }
         $this->misc->setConf('theme', $_theme);
@@ -191,7 +194,7 @@ class ViewManager extends \Slim\Views\Twig
         return $this->_reload_browser;
     }
 
-    public function maybeRenderIframes(\Slim\Http\Response $response, string $subject, string $query_string): \Slim\Http\Response
+    public function maybeRenderIframes(\Slim\Http\Response $response, string $subject, string $query_string): \Psr\Http\Message\ResponseInterface
     {
         $c = $this->getContainer();
 
@@ -231,7 +234,8 @@ class ViewManager extends \Slim\Views\Twig
 
         // Check if theme is in $_REQUEST, $_SESSION or $_COOKIE
         // 1.- First priority: $_REQUEST, this happens when you use the selector
-        if (\array_key_exists('theme', $_REQUEST) &&
+        if (
+            \array_key_exists('theme', $_REQUEST) &&
             \array_key_exists($_REQUEST['theme'], $themefolders)
         ) {
             $_theme = $_REQUEST['theme'];
@@ -242,12 +246,14 @@ class ViewManager extends \Slim\Views\Twig
             \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             $_theme = $_server_info['theme'];
-        } elseif (isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
+        } elseif (
+            isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
             \array_key_exists($_SESSION['ppaTheme'], $themefolders)
         ) {
             // otherwise check $_SESSION
             $_theme = $_SESSION['ppaTheme'];
-        } elseif (\array_key_exists('ppaTheme', $_COOKIE) &&
+        } elseif (
+            \array_key_exists('ppaTheme', $_COOKIE) &&
             \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             // oterwise check $_COOKIE
@@ -466,7 +472,8 @@ class ViewManager extends \Slim\Views\Twig
             $folderpath = \sprintf('%s%s%s', \containerInstance()->THEME_PATH, \DIRECTORY_SEPARATOR, $foldername);
             $stylesheet = \sprintf('%s%s%s', $folderpath, \DIRECTORY_SEPARATOR, 'global.css');
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
-            if (\is_dir($folderpath) &&
+            if (
+                \is_dir($folderpath) &&
                 \is_file($stylesheet)
             ) {
                 $themefolders[$foldername] = $folderpath;

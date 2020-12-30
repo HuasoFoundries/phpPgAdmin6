@@ -1,6 +1,5 @@
 <script type="text/javascript">
 var dir = '{{lang.applangdir}}';
-
 jQuery('#browser_container').resizable({
 	handles: (dir === 'ltr') ? "e" : "w",
 	start: function () {
@@ -9,12 +8,16 @@ jQuery('#browser_container').resizable({
 	stop: function () {
 		jQuery('#masking_overlay').css('display', 'none');
 	}
-
 });
-
 window.onpopstate = function (event) {
 	console.log('onpopstate', {
 		state: event.state
+	});
+	if (event.state && event.state.realurl) {
+		var ifr = document.getElementById('detail')
+		ifr.contentWindow.location.replace(event.state.realurl);
+	}
+};
 if('serviceWorker' in navigator) {
     navigator.serviceWorker.register('assets/sw.dev.js').then(function(registration) {
         console.log('Service Worker Registered');
