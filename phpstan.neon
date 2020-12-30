@@ -9,9 +9,9 @@ parameters:
 	tmpDir: ./.build/phpstan
 
 	# The level 8 is the highest level
-	level: 3
-
-	autoload_files:
+	level: 2
+	
+	scanFiles:
 		- vendor/adodb/adodb-php/adodb.inc.php
 		- .configs/debug.kint.php
 		- src/lib.inc.php
@@ -28,7 +28,3 @@ parameters:
 		- src/router.php
 
 	treatPhpDocTypesAsCertain: false
-
-	
-
-

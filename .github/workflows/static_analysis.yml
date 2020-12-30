@@ -13,7 +13,7 @@ env:
   MIN_MSI: 100
   PHP_EXTENSIONS: "mbstring, pgsql"
   GH_ACTIONS_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-  PHP_TOOLS: composer, prestissimo, composer-require-checker, composer-normalize
+  PHP_TOOLS: composer, prestissimo, composer-require-checker, composer-normalize, composer-unused, phpcs, cs2pr
   key: cache-v1 # can be any string, change to clear the extension cache.
 jobs:
   Static_Analysis:
@@ -33,6 +33,10 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v2.3.3"
 
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+
       - name: Setup cache for extensions
         id: extcache
         uses: shivammathur/cache-extensions@v1
@@ -49,7 +53,7 @@ jobs:
           restore-keys: ${{ steps.extcache.outputs.key }}
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2.5.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           extensions: "${{ env.PHP_EXTENSIONS }}"
@@ -66,11 +70,17 @@ jobs:
       - name: "Install locked dependencies from composer.lock"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
+      - name: "Create dummy config files"
+        run: "cp config.inc.php-dist config.inc.php"
+
       - name: "Run php-parallel-lint"
         run: "vendor/bin/parallel-lint  --exclude vendor --exclude .build ."
 
       - name: "Create cache directory for phpstan/phpstan"
         run: "mkdir -p .build/phpstan"
+
+      - name: "Create cache directory for vimeo/psalm"
+        run: "mkdir -p .build/psalm"
 
       - name: "Create cache entry for phpstan/phpstan"
         uses: "actions/cache@v2.1.1"
@@ -80,10 +90,8 @@ jobs:
           restore-keys: "php-7.3-phpstan-"
 
       - name: "Run phpstan/phpstan"
-        run: "vendor/bin/phpstan analyse --configuration=phpstan.neon --error-format=github"
+        run: "vendor/bin/phpstan analyse --configuration=phpstan.neon --error-format=checkstyle | cs2pr"
 
-      - name: "Create cache directory for vimeo/psalm"
-        run: "mkdir -p .build/psalm"
 
       - name: "Create cache entry for vimeo/psalm"
         uses: "actions/cache@v2.1.1"
@@ -93,10 +101,15 @@ jobs:
           restore-keys: "php-7.3-psalm-"
 
       - name: "Run vimeo/psalm"
-        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --stats --diff --diff-methods  --threads=4"
+        run: "vendor/bin/psalm --config=psalm.xml --shepherd --show-info=false --output-format=checkstyle --diff --diff-methods  --threads=4 | cs2pr"
 
-      - name: Run reviewdog
-        env:
-          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
-        run: |
-          reviewdog -conf=.reviewdog.yml -reporter=github-check
+      
+#      - uses: reviewdog/action-setup@v1
+#        with:
+#          reviewdog_version: latest # Optional. [latest,nightly,v.X.Y.Z]
+#
+#      - name: Run reviewdog
+#        env:
+#          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GH_ACTIONS_TOKEN }}
+#        run: |
+#          reviewdog -conf=.reviewdog.yml -reporter=github-check

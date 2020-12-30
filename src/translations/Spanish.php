@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Spanish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Spanish extends AbstractLang
 {

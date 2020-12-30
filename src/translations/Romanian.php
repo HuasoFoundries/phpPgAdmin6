@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Romanian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Romanian extends AbstractLang
 {

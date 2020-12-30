@@ -19,29 +19,6 @@ namespace PHPPgAdmin\Traits;
 trait HelperTrait
 {
     /**
-     * static reference to subfolder in which the app is running.
-     *
-     * @var null|string
-     */
-    public static $subFolder = null;
-
-    /**
-     * Gets the subfolder.
-     *
-     * @param string $path The path
-     *
-     * @return string the subfolder
-     */
-    public function getSubfolder(string $path = ''): string
-    {
-        if (null === self::$subFolder) {
-            self::$subFolder = $this->container->subfolder;
-        }
-
-        return \implode(\DIRECTORY_SEPARATOR, [self::$subFolder, $path]);
-    }
-
-    /**
      * Halts the execution of the program. It's like calling exit() but using builtin Slim Exceptions.
      *
      * @param string $msg The message to show to the user
@@ -170,18 +147,6 @@ trait HelperTrait
         }
 
         return $bytes;
-    }
-
-    /**
-     * Returns a string with html <br> variant replaced with a new line.
-     *
-     * @param string $msg message to parse (<br> separated)
-     *
-     * @return string parsed message (linebreak separated)
-     */
-    public static function br2ln($msg)
-    {
-        return \str_replace(['<br>', '<br/>', '<br />'], \PHP_EOL, $msg);
     }
 
     /**

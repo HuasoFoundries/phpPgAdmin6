@@ -46,8 +46,6 @@ class HTMLNavbarController extends HTMLController
         ];
         $viewVars = $this->_getSearchPathsCrumbs($crumbs, $viewVars);
 
-        //\Kint::dump($viewVars);
-
         $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
 
         if ($do_print) {
@@ -57,6 +55,29 @@ class HTMLNavbarController extends HTMLController
         }
 
         return $trail_html;
+    }
+
+    /**
+     * Get the URL for the last active tab of a particular tab bar.
+     *
+     * @param string $section
+     *
+     * @return null|mixed
+     */
+    public function getLastTabURL($section)
+    {
+        //$data = $this->getDatabaseAccessor();
+
+        $tabs = $this->misc->getNavTabs($section);
+
+        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
+            $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
+        } else {
+            $tab = \reset($tabs);
+        }
+        // $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
+
+        return isset($tab['url']) ? $tab : null;
     }
 
     /**
@@ -73,6 +94,11 @@ class HTMLNavbarController extends HTMLController
         $from = $from ? $from : __METHOD__;
 
         $this->misc = $this->misc;
+        $_SESSION['webdbLastTab'] = $_SESSION['webdbLastTab'] ?? [];
+
+        if (!\is_array($_SESSION['webdbLastTab'])) {
+            $_SESSION['webdbLastTab'] = [$alltabs => $activetab];
+        }
 
         if (\is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
@@ -166,7 +192,7 @@ class HTMLNavbarController extends HTMLController
 
             foreach ($search_paths as $schema) {
                 $url = \str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl . '&schema=' . $schema);
-                $destination = $this->container->utils->getDestinationWithLastTab('database');
+                $destination = $this->container->getDestinationWithLastTab('database');
                 //$this->dump(['url' => $url, 'destination' => $destination]);
                 $search_path_crumbs[$schema] = [
                     'title' => $lang['strschema'],
@@ -222,7 +248,7 @@ class HTMLNavbarController extends HTMLController
                 'sql' => [
                     'attr' => [
                         'href' => [
-                            'url' => self::SUBFOLDER . '/src/views/sqledit',
+                            'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'sql',
                             ]),
@@ -236,7 +262,7 @@ class HTMLNavbarController extends HTMLController
                 'history' => [
                     'attr' => [
                         'href' => [
-                            'url' => self::SUBFOLDER . '/src/views/history',
+                            'url' => \containerInstance()->subFolder . '/src/views/history',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'pophistory',
                             ]),
@@ -249,7 +275,7 @@ class HTMLNavbarController extends HTMLController
                 'find' => [
                     'attr' => [
                         'href' => [
-                            'url' => self::SUBFOLDER . '/src/views/sqledit',
+                            'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
                                 'action' => 'find',
                             ]),
@@ -263,7 +289,7 @@ class HTMLNavbarController extends HTMLController
                 'logout' => [
                     'attr' => [
                         'href' => [
-                            'url' => self::SUBFOLDER . '/src/views/servers',
+                            'url' => \containerInstance()->subFolder . '/src/views/servers',
                             'urlvars' => [
                                 'action' => 'logout',
                                 'logoutServer' => \sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
@@ -325,7 +351,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail['root'] = [
             'text' => $appName,
-            'url' => self::SUBFOLDER . '/src/views/servers',
+            'url' => \containerInstance()->subFolder . '/src/views/servers',
             'icon' => 'Introduction',
         ];
 

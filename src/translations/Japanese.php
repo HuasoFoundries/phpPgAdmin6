@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Japanese language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Japanese extends AbstractLang
 {

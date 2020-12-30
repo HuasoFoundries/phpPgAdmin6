@@ -38,8 +38,9 @@ install:
 fix_permissions:
 	@sudo chmod 777 temp -R ;\
 	sudo chown -R $$USER:www-data temp/sessions ;\
+	sudo rm -R --force temp/twigcache ;\
+	git checkout HEAD temp/twigcache ;\
 	sudo chown -R $$USER:www-data temp/twigcache ;\
-	sudo rm -R --force temp/twigcache/*
 
 composer_update:
 	@echo -e "updating composer with params ${YELLOW}--lock --root-reqs --prefer-dist --prefer-stable --no-suggest -a${WHITE}" ;\
@@ -76,7 +77,12 @@ tag_and_push:
 
 
 
-tag: test update_version csfixer lint tag_and_push	
+tag: test update_version csfixer fixers	
+tag:
+	@yarn prettier --write ;\
+	yarn build ;\
+	${MAKE}	 tag_and_push --no-print-directory
+	
 
 test:
 ifeq ("$(wildcard config.inc.php)","")

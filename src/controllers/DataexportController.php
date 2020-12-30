@@ -109,7 +109,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/dataexport" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataexport" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "<tr><th class=\"data\">{$this->lang['strformat']}:</th><td><select name=\"d_format\">" . \PHP_EOL;
         // COPY and SQL require a table
@@ -243,7 +243,7 @@ class DataexportController extends BaseController
     {
         $response = $this
             ->container
-            ->responseobj;
+            ->response;
 
         // Make it do a download, if necessary
         if ('download' !== $_REQUEST['output']) {

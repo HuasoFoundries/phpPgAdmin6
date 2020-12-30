@@ -157,8 +157,6 @@ class TablesController extends BaseController
 
         $actions = $this->_getActions();
 
-        //\Kint::dump($tables);
-
         echo $this->printTable($tables, $columns, $actions, $this->table_place, $this->lang['strnotables']);
         $attr = [
             'href' => [
@@ -197,7 +195,7 @@ class TablesController extends BaseController
 
         return $this
             ->container
-            ->responseobj
+            ->response
             ->withStatus(200)
             ->withJson($all_tables);
     }
@@ -262,7 +260,7 @@ class TablesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = '')
+    public function doCreate($msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -296,7 +294,7 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/' . $this->script . '" method="post">';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post">';
                 echo \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
@@ -368,8 +366,8 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -427,6 +425,7 @@ class TablesController extends BaseController
                         // only define js types array once
                         $predefined_size_types = \array_intersect($data->predefined_size_types, \array_keys($types_for_js));
                         $escaped_predef_types = []; // the JS escaped array elements
+
                         foreach ($predefined_size_types as $value) {
                             $escaped_predef_types[] = "'{$value}'";
                         }
@@ -524,9 +523,11 @@ class TablesController extends BaseController
                 );
 
                 if (0 === $status) {
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
 
-                    return $this->doDefault($this->lang['strtablecreated']);
+                    $this->doDefault($this->lang['strtablecreated']);
+
+                    return;
                 }
 
                 if (-1 === $status) {
@@ -555,7 +556,7 @@ class TablesController extends BaseController
      * @param mixed $confirm
      * @param mixed $msg
      */
-    public function doCreateLike($confirm, $msg = '')
+    public function doCreateLike($confirm, $msg = ''): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -588,7 +589,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
             echo "<table>\n\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "\t\t<td class=\"data\"><input name=\"name\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"", \htmlspecialchars($_REQUEST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strcreatetablelikeparent']}</th>" . \PHP_EOL;
@@ -662,9 +663,11 @@ class TablesController extends BaseController
             );
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
 
-                return $this->doDefault($this->lang['strtablecreated']);
+                $this->doDefault($this->lang['strtablecreated']);
+
+                return;
             }
             $this->doCreateLike(false, $this->lang['strtablecreatedbad']);
 
@@ -689,7 +692,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
 
             if (0 < $attrs->recordCount()) {
                 // JavaScript for select all feature
@@ -827,7 +830,7 @@ class TablesController extends BaseController
         $this->coalesceArr($_REQUEST, 'nulls', []);
         $this->coalesceArr($_REQUEST, 'format', []);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
 
         if (0 < $attrs->recordCount()) {
             echo '<table>' . \PHP_EOL;
@@ -937,7 +940,6 @@ class TablesController extends BaseController
             echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
             echo "<p><input type=\"submit\" name=\"insert\" value=\"{$this->lang['strinsert']}\" />" . \PHP_EOL;
             echo "<input type=\"submit\" name=\"insertandrepeat\" accesskey=\"r\" value=\"{$this->lang['strinsertandrepeat']}\" />" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
 
             if (false !== $fksprops) {
                 if ('default off' !== $this->conf['autocomplete']) {
@@ -949,11 +951,11 @@ class TablesController extends BaseController
             echo '</p>' . \PHP_EOL;
         } else {
             echo "<p>{$this->lang['strnofieldsforinsert']}</p>" . \PHP_EOL;
-            echo "<input type=\"submit\" name=\"cancel\" value=\"{$this->lang['strcancel']}\" />" . \PHP_EOL;
         }
         echo $this->view->form;
         echo '</form>' . \PHP_EOL;
-        echo '<script src="' . self::SUBFOLDER . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo \sprintf('<button class="btn btn-mini btn_back" style="float: right;        margin-right: 4em;        margin-top: -3em;">%s</button>%s', $this->lang['strcancel'], \PHP_EOL);
+        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
     /**
@@ -974,7 +976,9 @@ class TablesController extends BaseController
 
             if (0 === $status) {
                 if (isset($_POST['insert'])) {
-                    return $this->doDefault($this->lang['strrowinserted']);
+                    $this->doDefault($this->lang['strrowinserted']);
+
+                    return;
                 }
                 $_REQUEST['values'] = [];
                 $_REQUEST['nulls'] = [];
@@ -993,12 +997,14 @@ class TablesController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doEmpty($confirm)
+    public function doEmpty($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
-            return $this->doDefault($this->lang['strspecifytabletoempty']);
+            $this->doDefault($this->lang['strspecifytabletoempty']);
+
+            return;
         }
 
         if ($confirm) {
@@ -1006,7 +1012,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1021,7 +1027,7 @@ class TablesController extends BaseController
 
                 echo '<p>', \sprintf($this->lang['strconfemptytable'], $this->misc->printVal($_REQUEST['table'])), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END not mutli empty
@@ -1041,9 +1047,18 @@ class TablesController extends BaseController
 
                     if (0 === $status) {
                         $msg .= \sprintf('%s<br />', $sql);
-                        $msg .= \sprintf('%s: %s<br />', \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strtableemptied']);
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strtableemptied']
+                        );
                     } else {
-                        $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strtableemptiedbad']));
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strtableemptiedbad']
+                        ));
 
                         return;
                     }
@@ -1054,12 +1069,16 @@ class TablesController extends BaseController
 
                 if (0 === $status) {
                     $msg .= \sprintf('%s<br />', $sql);
-                    $msg .= \sprintf('%s: %s<br />', \htmlentities($_POST['table'], \ENT_QUOTES, 'UTF-8'), $this->lang['strtableemptied']);
+                    $msg .= \sprintf(
+                        '%s: %s<br />',
+                        \htmlentities($_POST['table'], \ENT_QUOTES, 'UTF-8'),
+                        $this->lang['strtableemptied']
+                    );
 
-                    return $this->doDefault($msg);
+                    $this->doDefault($msg);
                 }
 
-                return $this->doDefault($sql . '<br>' . $this->lang['strtableemptiedbad']);
+                $this->doDefault($sql . '<br>' . $this->lang['strtableemptiedbad']);
                 // END not mutli empty
             }
             // END do Empty
@@ -1071,12 +1090,14 @@ class TablesController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDrop($confirm)
+    public function doDrop($confirm): void
     {
         $data = $this->misc->getDatabaseAccessor();
 
         if (empty($_REQUEST['table']) && empty($_REQUEST['ma'])) {
-            return $this->doDefault($this->lang['strspecifytabletodrop']);
+            $this->doDefault($this->lang['strspecifytabletodrop']);
+
+            return;
         }
 
         if ($confirm) {
@@ -1085,7 +1106,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1098,7 +1119,7 @@ class TablesController extends BaseController
 
                 echo '<p>', \sprintf($this->lang['strconfdroptable'], $this->misc->printVal($_REQUEST['table'])), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
                 echo \sprintf('<input type="hidden" name="table" value="%s"  />%s', \htmlspecialchars($_REQUEST['table']), \PHP_EOL);
                 // END if multi drop
             }
@@ -1120,33 +1141,52 @@ class TablesController extends BaseController
                         $status = $data->dropTable($t, isset($_POST['cascade']));
 
                         if (0 === $status) {
-                            $msg .= \sprintf('%s: %s<br />', \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strtabledropped']);
+                            $msg .= \sprintf(
+                                '%s: %s<br />',
+                                \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strtabledropped']
+                            );
                         } else {
                             $data->endTransaction();
 
-                            return $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($t, \ENT_QUOTES, 'UTF-8'), $this->lang['strtabledroppedbad']));
+                            $this->doDefault(\sprintf(
+                                '%s%s: %s<br />',
+                                $msg,
+                                \htmlentities($t, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strtabledroppedbad']
+                            ));
+
+                            return;
                         }
                     }
                 }
 
                 if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
 
-                    return $this->doDefault($msg);
+                    $this->doDefault($msg);
+
+                    return;
                 }
 
-                return $this->doDefault($this->lang['strtabledroppedbad']);
+                $this->doDefault($this->lang['strtabledroppedbad']);
+
+                return;
             }
             $status = $data->dropTable($_POST['table'], isset($_POST['cascade']));
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
 
-                return $this->doDefault($this->lang['strtabledropped']);
+                $this->doDefault($this->lang['strtabledropped']);
+
+                return;
             }
 
-            return $this->doDefault($this->lang['strtabledroppedbad']);
+            $this->doDefault($this->lang['strtabledroppedbad']);
+
+            return;
             // END DROP
         }
     }
@@ -1157,7 +1197,7 @@ class TablesController extends BaseController
             'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => self::SUBFOLDER . "/redirect/table?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/table?{$this->misc->href}&amp;",
                 'vars' => ['table' => 'relname'],
             ],
             'owner' => [

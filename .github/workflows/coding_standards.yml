@@ -35,6 +35,10 @@ jobs:
       - name: "Checkout"
         uses: "actions/checkout@v2.3.3"
 
+      - uses: n1hility/cancel-previous-runs@v2
+        with:
+          token: ${{ secrets.GH_ACTIONS_TOKEN }}
+
       - name: Setup cache environment
         id: extcache
         uses: shivammathur/cache-extensions@v1
@@ -51,12 +55,12 @@ jobs:
           restore-keys: ${{ steps.extcache.outputs.key }}
 
       - name: "Install PHP with extensions"
-        uses: "shivammathur/setup-php@v2.5.0"
+        uses: "shivammathur/setup-php@v2"
         with:
           coverage: "none"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php_version }}"
-          tools: composer
+          tools: composer, phpcs, cs2pr
 
       - name: Cache Composer
         uses: "actions/cache@v2.1.1"
@@ -68,18 +72,29 @@ jobs:
       - name: "Install locked dependencies from composer.lock"
         run: "composer install --no-interaction --no-progress --no-suggest"
 
+      - name: "Create dummy config files"
+        run: "cp config.inc.php-dist config.inc.php"
+
       - name: "Run ergebnis/composer-normalize"
         run: "composer normalize --dry-run"
 
-      - name: "Create cache directory for friendsofphp/php-cs-fixer"
-        run: "mkdir -p .build/php-cs-fixer"
+      - name: "Create cache directories and files for friendsofphp/php-cs-fixer"
+        run: "mkdir -p .build/phpcs"
+      - run: touch .build/phpcs/php-cs.cache 
+      - run: touch .build/phpcs/csfixer.cache 
 
-      - name: "Cache cache directory for friendsofphp/php-cs-fixer"
+        
+ 
+      - name: "Cache cache directory for phpcs and friendsofphp/php-cs-fixer"
         uses: "actions/cache@v2.1.1"
         with:
-          path: ".build/php-cs-fixer"
-          key: "php-${{ matrix.php_version }}-php-cs-fixer-${{ hashFiles('composer.lock') }}"
-          restore-keys: "php-${{ matrix.php_version }}-php-cs-fixer-"
-
+          path: ".build/phpcs"
+          key: "php-${{ matrix.php_version }}-phpcs-${{ github.sha }}"
+          restore-keys: "php-${{ matrix.php_version }}-phpcs-"
+          
+#      - name: "Run CodeShiffer"
+#        run: phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=checkstyle src/* | cs2pr
+                    
+            
       - name: "Run friendsofphp/php-cs-fixer"
-        run: "vendor/bin/php-cs-fixer fix --config=.php_cs.php --diff --diff-format=udiff --dry-run --verbose"
+        run: "vendor/bin/php-cs-fixer fix --config=.php_cs.php --diff --diff-format=udiff --cache-file=.build/phpcs/csfixer.cache --dry-run --format=checkstyle | cs2pr"

@@ -34,6 +34,7 @@ filter:
     paths: [src/*]
     excluded_paths:
         - "tests/*"
+        - "router.php"
         - "*.min.js"
         - "assets/js/"
 
@@ -56,6 +57,5 @@ build:
             - "php-scrutinizer-run"
             - "phpcs-run ./src/"
             - "make test"
-            - "make psalm"
     nodes:
         tests: true

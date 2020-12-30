@@ -27,7 +27,7 @@ playground
 *.log
 tests/_output
 temp/*.output.txt
-*baseline.*
+
 
 ###> Vendor files
 node_modules
@@ -51,3 +51,12 @@ config.*.php*
 tools/reviewdog
 tools/composer-require-checker
 .vscode/*
+
+### Linter's reports
+temp/*.checkstyle.xml
+temp/*.junit.xml
+temp/*.report.json
+temp/*.report.xml
+tools/composer*
+tools/phpcbf
+tools/phpmd_checkstyle

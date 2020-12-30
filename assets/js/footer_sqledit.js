@@ -1,4 +1,4 @@
-$(document).ready(function () {
+$(function () {
   if (window.inPopUp) {
     jQuery('table.tabs').prependTo('body');
     jQuery('table.printconnection').prependTo('.sqlform');

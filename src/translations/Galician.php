@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Galician language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Galician extends AbstractLang
 {

@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for PortuguesePt language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class PortuguesePt extends AbstractLang
 {

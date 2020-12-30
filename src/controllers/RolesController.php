@@ -116,7 +116,7 @@ class RolesController extends BaseController
             'role' => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url' => self::SUBFOLDER . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
+                'url' => \containerInstance()->subFolder . "/redirect/role?action=properties&amp;{$this->misc->href}&amp;",
                 'vars' => ['rolename' => 'rolname'],
             ],
             'group' => [
@@ -240,7 +240,7 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/roles" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\" style=\"width: 130px\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input size=\"15\" maxlength=\"{$data->_maxNameLen}\" name=\"formRolename\" value=\"", \htmlspecialchars($_POST['formRolename']), "\" /></td>\n\t</tr>" . \PHP_EOL;
@@ -393,7 +393,7 @@ class RolesController extends BaseController
 
         $this->_adjustPostVars($roledata, $canRename);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/roles" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left\" style=\"width: 130px\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\">", ($canRename ? "<input name=\"formNewRoleName\" size=\"15\" maxlength=\"{$data->_maxNameLen}\" value=\"" . \htmlspecialchars($_POST['formNewRoleName']) . '" />' : $this->misc->printVal($roledata->fields['rolname'])), "</td>\n\t</tr>" . \PHP_EOL;
@@ -535,7 +535,7 @@ class RolesController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdroprole'], $this->misc->printVal($_REQUEST['rolename'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/roles" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="rolename" value="', \htmlspecialchars($_REQUEST['rolename']), '" />' . \PHP_EOL;
             echo $this->view->form;
@@ -762,7 +762,7 @@ class RolesController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/roles" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strpassword']}</th>" . \PHP_EOL;
             echo "\t\t<td><input type=\"password\" name=\"password\" size=\"32\" value=\"",

@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Lithuanian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Lithuanian extends AbstractLang
 {

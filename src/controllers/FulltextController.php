@@ -308,7 +308,7 @@ class FulltextController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropftsconfig'], $this->misc->printVal($_REQUEST['ftscfg'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="dropconfig" />' . \PHP_EOL;
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
@@ -321,7 +321,7 @@ class FulltextController extends BaseController
             $status = $data->dropFtsConfiguration($_POST['ftscfg'], isset($_POST['cascade']));
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doDefault($this->lang['strftsconfigdropped']);
             } else {
                 $this->doDefault($this->lang['strftsconfigdroppedbad']);
@@ -339,7 +339,7 @@ class FulltextController extends BaseController
 
             echo '<p>', \sprintf($this->lang['strconfdropftsdict'], $this->misc->printVal($_REQUEST['ftsdict'])), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
             echo "<p><input type=\"checkbox\" id=\"cascade\" name=\"cascade\" /> <label for=\"cascade\">{$this->lang['strcascade']}</label></p>" . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="dropdict" />' . \PHP_EOL;
             echo '<input type="hidden" name="database" value="', \htmlspecialchars($_REQUEST['database']), '" />' . \PHP_EOL;
@@ -354,7 +354,7 @@ class FulltextController extends BaseController
             $status = $data->dropFtsDictionary($_POST['ftsdict'], isset($_POST['cascade']));
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doViewDicts($this->lang['strftsdictdropped']);
             } else {
                 $this->doViewDicts($this->lang['strftsdictdroppedbad']);
@@ -390,7 +390,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         // conf name
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
@@ -497,7 +497,7 @@ class FulltextController extends BaseController
         $status = $data->createFtsConfiguration($_POST['formName'], $formParser, $formTemplate, $_POST['formComment']);
 
         if (0 === $status) {
-            $this->misc->setReloadBrowser(true);
+            $this->view->setReloadBrowser(true);
             $this->doDefault($this->lang['strftsconfigcreated']);
         } else {
             $this->doCreateConfig($this->lang['strftsconfigcreatedbad']);
@@ -531,7 +531,7 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -822,7 +822,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo "\t<tr>\n\t\t<th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
         echo "\t\t<td class=\"data1\"><input name=\"formName\" size=\"32\" maxlength=\"{$data->_maxNameLen}\" value=\"",
@@ -936,7 +936,7 @@ class FulltextController extends BaseController
             );
 
             if (0 === $status) {
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
                 $this->doViewDicts($this->lang['strftsdictcreated']);
             } else {
                 $this->doCreateDict($this->lang['strftsdictcreatedbad']);
@@ -966,7 +966,7 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'formName', $_REQUEST['ftsdict']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -1036,7 +1036,7 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
@@ -1096,7 +1096,7 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
 
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>" . \PHP_EOL;
@@ -1199,7 +1199,7 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>" . \PHP_EOL;
             echo "\t\t<th class=\"data left required\">{$this->lang['strftsmapping']}</th>" . \PHP_EOL;

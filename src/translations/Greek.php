@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Greek language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Greek extends AbstractLang
 {

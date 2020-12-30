@@ -16,6 +16,7 @@ class ADOdbBase
 {
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Database\Traits\HasTrait;
+    use \PHPPgAdmin\Database\Traits\DatabaseTrait;
 
     /**
      * @var array
@@ -65,6 +66,53 @@ class ADOdbBase
         $this->prtrace('instanced connection class');
         $this->lastExecutedSql = '';
         $this->conn = $conn;
+    }
+
+    /**
+     * Given an array of attnums and a relation, returns an array mapping
+     * attribute number to attribute name.
+     *
+     * @param string $table The table to get attributes for
+     * @param array  $atts  An array of attribute numbers
+     *
+     * @return array|int An array mapping attnum to attname or error code
+     *                   - -1 $atts must be an array
+     *                   - -2 wrong number of attributes found
+     */
+    public function getAttributeNames($table, $atts)
+    {
+        $c_schema = $this->_schema;
+        $this->clean($c_schema);
+        $this->clean($table);
+        $this->arrayClean($atts);
+
+        if (!\is_array($atts)) {
+            return -1;
+        }
+
+        if (0 === \count($atts)) {
+            return [];
+        }
+
+        $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
+			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
+			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
+			AND attnum IN ('" . \implode("','", $atts) . "')";
+
+        $rs = $this->selectSet($sql);
+
+        if ($rs->recordCount() !== \count($atts)) {
+            return -2;
+        }
+
+        $temp = [];
+
+        while (!$rs->EOF) {
+            $temp[$rs->fields['attnum']] = $rs->fields['attname'];
+            $rs->moveNext();
+        }
+
+        return $temp;
     }
 
     /**

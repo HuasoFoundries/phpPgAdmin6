@@ -15,6 +15,8 @@ class HTMLHeaderController extends HTMLController
 
     private $_no_output = false;
 
+    private $_reload_drop_database = false;
+
     /**
      * Sets the value of private member variable $_no_output.
      *
@@ -42,8 +44,6 @@ class HTMLHeaderController extends HTMLController
      */
     public function printHeader($title = '', $script = null, $do_print = true, $template = 'header.twig')
     {
-
-
         $lang = $this->lang;
 
         $viewVars = [];
@@ -51,8 +51,16 @@ class HTMLHeaderController extends HTMLController
         $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
         $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
+        $viewVars['lang'] = $lang;
         $viewVars['appName'] = \htmlspecialchars($this->appName);
+        $reload_param = 'none';
 
+        if ($this->view->getReloadBrowser()) {
+            $reload_param = 'other';
+        } elseif ($this->_reload_drop_database) {
+            $reload_param = 'database';
+        }
+        $viewVars['reload'] = $reload_param;
         $viewVars['script'] = $script;
         $header_html = $this->view->fetch($template, $viewVars);
 

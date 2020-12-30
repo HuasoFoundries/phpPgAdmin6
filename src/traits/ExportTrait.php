@@ -172,7 +172,7 @@ trait ExportTrait
     {
         $content = \sprintf(
             '<form id="export_form" action="%s/%s" method="post">%s',
-            self::SUBFOLDER . '/src/views',
+            \containerInstance()->subFolder . '/src/views',
             $endpoint,
             \PHP_EOL
         );

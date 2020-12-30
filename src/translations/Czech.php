@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Czech language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Czech extends AbstractLang
 {

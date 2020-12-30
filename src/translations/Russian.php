@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Russian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Russian extends AbstractLang
 {

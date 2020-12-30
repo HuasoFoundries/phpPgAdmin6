@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for ChineseUtf8ZhTw language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class ChineseUtf8ZhTw extends AbstractLang
 {

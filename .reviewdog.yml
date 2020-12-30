@@ -1,13 +1,23 @@
 runner:
   phpstan:
-    cmd: vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon --error-format=raw
-    level: info
-
-  eslint:
-    cmd: node_modules/.bin/eslint --ext js --ignore-path .eslintignore assets
+    cmd: vendor/bin/phpstan analyse --memory-limit=2G   --configuration phpstan.neon --error-format=checkstyle
     level: info
 
   psalm:
-    cmd: vendor/bin/psalm --config=psalm.xml  --ignore-baseline --output-format=checkstyle
+    cmd: vendor/bin/psalm --config=psalm.xml  --diff --diff-methods   --output-format=checkstyle
     level: info
     name: checkstyle
+
+  csfixer:
+      cmd:  vendor/bin/php-cs-fixer fix --config=.php_cs.php --cache-file=.build/phpcs/csfixer.cache --format=checkstyle --dry-run  --diff
+      level: info
+      name: checkstyle
+
+  phpcs:
+    cmd:  phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=checkstyle src/*
+    level: info
+    name: checkstyle
+    
+  eslint:
+    cmd: node_modules/.bin/eslint --ext js --ignore-path .eslintignore assets
+    level: info

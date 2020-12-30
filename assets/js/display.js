@@ -1,45 +1,47 @@
-$(document).ready(function () {
+$(function () {
   /* init some needed tags and values */
 
   $('table#data').wrap('<div id="fkcontainer" class="fk" />');
   $('#fkcontainer').append('<div id="root" />');
 
-  jQuery.ppa = {
+  jQuery.ppa = jQuery.ppa || {
     root: $('#root'),
   };
 
   $('a.fk').on('click', function (event) {
     /* make the cursor being a waiting cursor */
     $('body').css('cursor', 'wait');
-
-    query = $.ajax({
+    let $this = $(this);
+    $.ajax({
       type: 'GET',
       dataType: 'html',
       data: {
         action: 'dobrowsefk',
       },
-      url: $(this).attr('href'),
+      url: String($(this).attr('href')),
       cache: false,
       context: $(this),
       contentType: 'application/x-www-form-urlencoded',
-      success: function (answer) {
-        pdiv = this.closest('div.fk');
-        divclass = this.attr('class').split(' ')[1];
+    })
+      .done((answer) => {
+        let pdiv = $this.closest('div.fk'),
+          divclass = $this.attr('class').split(' ')[1];
 
         /* if we are clicking on a FK from the original table
                 (level 0), we are using the #root div as parent-div */
         if (pdiv[0].id == 'fkcontainer') {
           /* computing top position, which is the topid as well */
-          var top = this.position().top + 2 + this.height();
+          var top = $this.position().top + 2 + $this.height();
           /* if the requested top position is different than
                      the previous topid position of #root, empty and position it */
-          if (top != jQuery.ppa.root.topid)
-            /* this "topid" allows to track if we are 
+          if (top != jQuery.ppa.root.topid) {
+            /* this "topid" allows to track if we are
                         opening a FK from the same line in the original table */
             jQuery.ppa.root.empty().css({
               left: pdiv.position().left + 'px',
               top: top + 'px',
             }).topid = top;
+          }
 
           pdiv = jQuery.ppa.root;
 
@@ -51,13 +53,14 @@ $(document).ready(function () {
         }
 
         /* creating the data div */
-        newdiv = $('<div class="fk ' + divclass + '">').html(answer);
+        let newdiv = $('<div class="fk ' + divclass + '">').html(answer);
 
         /* highlight referencing fields */
         newdiv
-          .data('ref', this)
-          .data('refclass', $(this).attr('class').split(' ')[1])
-          .mouseenter(function (event) {
+          .data('ref', $this)
+          .data('refclass', $(this).attr('class').split(' ')[1]);
+        newdiv
+          .on('mouseenter', function (event) {
             $(this)
               .data('ref')
               .closest('tr')
@@ -65,7 +68,7 @@ $(document).ready(function () {
               .closest('div')
               .addClass('highlight');
           })
-          .mouseleave(function (event) {
+          .on('mouseleave', function (event) {
             $(this)
               .data('ref')
               .closest('tr')
@@ -79,27 +82,24 @@ $(document).ready(function () {
 
         newdiv.on('click', '.fk_delete', function (event) {
           console.log('clicked .fk_delete', jQuery(this));
-          with ($(this).closest('div')) {
-            data('ref')
-              .closest('tr')
-              .find('a.' + data('refclass'))
-              .closest('div')
-              .removeClass('highlight');
-            remove();
-          }
+          let closestDiv = $(this).closest('div');
+          closestDiv
+            .data('ref')
+            .closest('tr')
+            .find('a.' + closestDiv.data('refclass'))
+            .closest('div')
+            .removeClass('highlight');
+          closestDiv.remove();
         });
-      },
-
-      error: function () {
-        this.closest('div.fk').append(
-          '<p class="errmsg">' + Display.errmsg + '</p>'
-        );
-      },
-
-      complete: function () {
+      })
+      .fail((err) => {
+        $this
+          .closest('div.fk')
+          .append('<p class="errmsg">' + Display.errmsg + '</p>');
+      })
+      .always(() => {
         $('body').css('cursor', 'auto');
-      },
-    });
+      });
 
     return false; // do not refresh the page
   });

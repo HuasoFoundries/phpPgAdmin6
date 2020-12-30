@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Mongol language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Mongol extends AbstractLang
 {

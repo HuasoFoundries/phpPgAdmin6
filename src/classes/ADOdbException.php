@@ -31,20 +31,42 @@ class ADOdbException extends \Exception
 
     public $fn;
 
+    /**
+     * Undocumented variable.
+     *
+     * @var string
+     */
     public $sql = '';
 
+    /**
+     * Undocumented variable.
+     *
+     * @var string
+     */
     public $params = '';
 
+    /**
+     * Undocumented variable.
+     *
+     * @var string
+     */
     public $host = '';
 
     public $database = '';
+
+    /**
+     * Undocumented variable.
+     *
+     * @var string
+     */
+    public $msg = '';
 
     /**
      * Default Error Handler. This will be called with the following params.
      *
      * @param string $dbms           the RDBMS you are connecting to
      * @param string $fn             the name of the calling function (in uppercase)
-     * @param int  $errno          the native error number from the database
+     * @param int    $errno          the native error number from the database
      * @param string $errmsg         the native error msg from the database
      * @param string $p1             $fn specific parameter - see below
      * @param string $p2             parameter 2
@@ -95,7 +117,7 @@ class ADOdbException extends \Exception
      *
      * @param string $dbms           the RDBMS you are connecting to
      * @param string $fn             the name of the calling function (in uppercase)
-     * @param int  $errno          the native error number from the database
+     * @param int    $errno          the native error number from the database
      * @param string $errmsg         the native error msg from the database
      * @param string $p1             $fn specific parameter - see below
      * @param string $p2             parameter 2
@@ -121,49 +143,18 @@ class ADOdbException extends \Exception
             'spacer' => ' ',
             'line' => $backtrace[0]['line'],
         ];
-
-        $errmsg = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($errmsg), \ENT_NOQUOTES);
-        $p1 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p1), \ENT_NOQUOTES);
-        $p2 = \htmlentities(\PHPPgAdmin\Traits\HelperTrait::br2ln($p2), \ENT_NOQUOTES);
-
-        switch ($fn) {
-            case 'EXECUTE':
-                $sql = \str_replace(
-                    [
-                        'SELECT',
-                        'WHERE',
-                        'GROUP BY',
-                        'FROM',
-                        'HAVING',
-                        'LIMIT',
-                    ],
-                    ["\nSELECT", "\nWHERE", "\nGROUP BY", "\nFROM", "\nHAVING", "\nLIMIT"],
-                    $p1
-                );
-
-                $inputparams = $p2;
-
-                $error_msg = '<p><b>strsqlerror</b><br />' . \nl2br($errmsg) . '</p> <p><b>SQL:</b><br />' . \nl2br($sql) . '</p> ';
-
-                echo '<table class="error" cellpadding="5"><tr><td>' . \nl2br($error_msg) . '</td></tr></table><br />' . "\n";
-
-                break;
-            case 'PCONNECT':
-            case 'CONNECT':
-                // do nothing;
-                break;
-
-            default:
-                $s = "{$dbms} error: [{$errno}: {$errmsg}] in {$fn}({$p1}, {$p2})\n";
-                echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$s}</td></tr></table><br />\n";
-
-                break;
-        }
+        $errmsg = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($errmsg), \ENT_NOQUOTES);
+        $p1 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p1), \ENT_NOQUOTES);
+        $p2 = \htmlentities(\PHPPgAdmin\ContainerUtils::br2ln($p2), \ENT_NOQUOTES);
 
         $tag = \implode('', $btarray0);
 
         //\PC::debug(['errno' => $errno, 'fn' => $fn, 'errmsg' => $errmsg], $tag);
 
-        throw new self($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
+        $adoException = new self($dbms, $fn, $errno, $errmsg, $p1, $p2, $thisConnection);
+        echo "<table class=\"error\" cellpadding=\"5\"><tr><td>{$adoException->msg}</td></tr></table><br />\n";
+
+        // adodb_backtrace($adoException->getTrace());
+        throw $adoException;
     }
 }

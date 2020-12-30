@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Dutch language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Dutch extends AbstractLang
 {

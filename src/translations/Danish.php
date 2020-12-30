@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Danish language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Danish extends AbstractLang
 {

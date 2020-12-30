@@ -101,6 +101,7 @@ class Postgres extends ADOdbBase
      * Gets the help pages.
      * get help page by instancing the corresponding help class
      * if $this->help_page and $this->help_base are set, this function is a noop.
+     *
      * @return array<array-key, string>|null|string
      */
     public function getHelpPages()
@@ -293,8 +294,6 @@ class Postgres extends ADOdbBase
 				WHERE c.relkind='v' AND r.rulename != '_RETURN' AND r.rulename ILIKE {$term} {$where}
 		";
 
-        //\Kint::dump($sql);
-
         // Add advanced objects if show_advanced is set
         if ($conf['show_advanced']) {
             $sql .= "
@@ -342,53 +341,6 @@ class Postgres extends ADOdbBase
         $sql .= 'ORDER BY type, schemaname, relname, name';
 
         return $this->selectSet($sql);
-    }
-
-    /**
-     * Given an array of attnums and a relation, returns an array mapping
-     * attribute number to attribute name.
-     *
-     * @param string $table The table to get attributes for
-     * @param array  $atts  An array of attribute numbers
-     *
-     * @return array|int An array mapping attnum to attname or error code
-     *                   - -1 $atts must be an array
-     *                   - -2 wrong number of attributes found
-     */
-    public function getAttributeNames($table, $atts)
-    {
-        $c_schema = $this->_schema;
-        $this->clean($c_schema);
-        $this->clean($table);
-        $this->arrayClean($atts);
-
-        if (!\is_array($atts)) {
-            return -1;
-        }
-
-        if (0 === \count($atts)) {
-            return [];
-        }
-
-        $sql = "SELECT attnum, attname FROM pg_catalog.pg_attribute WHERE
-			attrelid=(SELECT oid FROM pg_catalog.pg_class WHERE relname='{$table}' AND
-			relnamespace=(SELECT oid FROM pg_catalog.pg_namespace WHERE nspname='{$c_schema}'))
-			AND attnum IN ('" . \implode("','", $atts) . "')";
-
-        $rs = $this->selectSet($sql);
-
-        if ($rs->recordCount() !== \count($atts)) {
-            return -2;
-        }
-
-        $temp = [];
-
-        while (!$rs->EOF) {
-            $temp[$rs->fields['attnum']] = $rs->fields['attname'];
-            $rs->moveNext();
-        }
-
-        return $temp;
     }
 
     /**
@@ -533,6 +485,7 @@ class Postgres extends ADOdbBase
 
                         if (false === $finishpos) {
                             $line = \mb_substr($line, 0, $i); /* remove comment */
+
                             break;
                         }
                         $pre = \mb_substr($line, 0, $i);
@@ -581,6 +534,7 @@ class Postgres extends ADOdbBase
                 } else {
                     if ('--' === \mb_substr($line, $i, 2)) {
                         $line = \mb_substr($line, 0, $i); /* remove comment */
+
                         break;
                     } /* count nested parentheses */
 

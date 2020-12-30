@@ -8,6 +8,8 @@ namespace PHPPgAdmin\Translations;
 
 /**
  * Class providing translation for Italian language.
+ *
+ * @SuppressWarnings(PHPMD)
  */
 class Italian extends AbstractLang
 {

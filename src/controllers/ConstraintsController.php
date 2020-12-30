@@ -26,7 +26,7 @@ class ConstraintsController extends BaseController
 
         $this->printHeader(
             $this->lang['strtables'] . ' - ' . $_REQUEST['table'] . ' - ' . $this->lang['strconstraints'],
-            '<script src="' . self::SUBFOLDER . '/assets/js/indexes.js" type="text/javascript"></script>',
+            '<script src="' . \containerInstance()->subFolder . '/assets/js/indexes.js" type="text/javascript"></script>',
             true,
             'header_select2.twig'
         );
@@ -540,7 +540,7 @@ class ConstraintsController extends BaseController
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/constraints" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/constraints" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "<tr><th class=\"data\">{$this->lang['strname']}</th>" . \PHP_EOL;
             echo "<th class=\"data required\">{$this->lang['strdefinition']}</th></tr>" . \PHP_EOL;

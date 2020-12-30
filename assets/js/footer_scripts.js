@@ -1,3 +1,6 @@
+function historyApiBack() {
+  window.history && window.history.back();
+}
 function redirectToIframesView() {
   if (
     window.inPopUp ||
@@ -26,11 +29,13 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       amIDetailFrame && window.parent.document.querySelector('#detail'),
     toplink_logout =
       amIDetailFrame &&
-      parentHandle.contentDocument.querySelector('#toplink_logout');
+      (parentHandle.contentDocument || document).querySelector(
+        '#toplink_logout'
+      );
 
   parentHandle &&
     [
-      ...parentHandle.contentDocument.querySelectorAll(
+      ...(parentHandle.contentDocument || document).querySelectorAll(
         '.toplink a.toplink_popup'
       ),
     ].forEach((element) => {
@@ -67,6 +72,13 @@ if (
 ) {
   redirectToIframesView();
 }
+let {
+  frames: { browser },
+} = window.parent;
+if (browser && browser.jsTree && stateObj.reload) {
+  browser.jsTree.jstree('refresh');
+}
+
 $.ready
   .then(() => {
     let amIDetailFrame = document.body.classList.contains('detailbody');

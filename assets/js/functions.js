@@ -1,5 +1,5 @@
-var g_args = 0;
-var g_no_args = new Boolean(false);
+let g_args = 0,
+  g_no_args = false;
 /*
 function for adding arguments
 */

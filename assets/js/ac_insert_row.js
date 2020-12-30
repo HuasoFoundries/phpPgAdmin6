@@ -1,16 +1,55 @@
 /** globals jQuery */
 var fkl_hasnext = false;
 var fkl_hasprev = false;
+jQuery.ppa = jQuery.ppa || {
+  root: $('#root'),
+};
 
 /* hide the value list */
 function hideAc() {
   jQuery.ppa.o = 0;
-  with (jQuery.ppa) {
-    fklist.hide();
-    fkbg.hide();
-  }
+  let { fklist, fkbg } = jQuery.ppa || {};
+  fklist.hide();
+  fkbg.hide();
 }
+/* open/update the value list */
+function autocomplete(event) {
+  /* if pressing enter, fire a click on the selected line */
+  if (event.keyCode == 13) {
+    if (jQuery.ppa.i > 0) {
+      jQuery.ppa.fklist.find('tr').eq(jQuery.ppa.i).click();
+    }
+    return false;
+  } else if (event.keyCode == 38 || event.keyCode == 40) {
+    /* ignoring 38:up and 40:down */
+    return false;
+  } else if (
+    /* ignoring 9:tab, 37:left, 39:right, 16:shift, ctrl: 17, alt:18, 20:lockmaj */
+    event.keyCode == 9 ||
+    event.keyCode == 37 ||
+    event.keyCode == 39 ||
+    event.keyCode == 16 ||
+    event.keyCode == 17 ||
+    event.keyCode == 18 ||
+    event.keyCode == 20
+  ) {
+    return true;
+  } else if (event.keyCode == 27) {
+    /* esc */
+    hideAc();
+  } else {
+    /* request the list of possible values asynchronously */
+    /* if we refresh because of a value update,
+     * we reset back to offset 0 so we catch values
+     * if list is smaller than 11 values */
+    if (event.type == 'keyup') {
+      jQuery.ppa.o = 0;
+    }
+    openlist(this);
+  }
 
+  return true;
+}
 /* enable/disable auto-complete feature */
 function triggerAc(ac) {
   if (ac) {
@@ -26,17 +65,20 @@ function triggerAc(ac) {
 
 /* select the given index value and highlight it */
 function selectVal(index) {
-  if (index == jQuery.ppa.i) return;
+  if (index == jQuery.ppa.i) {
+    return;
+  }
 
   // we catch the header as well so it takes th index 0
   var trs = jQuery.ppa.fklist.find('tr');
 
   // change colors for unselected
-  if (jQuery.ppa.i > 0)
+  if (jQuery.ppa.i > 0) {
     trs.eq(jQuery.ppa.i).find('*').css({
       'background-color': '#fff',
       color: '',
     });
+  }
 
   // change colors for newly selected
   trs.eq(index).find('*').css({
@@ -56,7 +98,7 @@ function openlist(e) {
   var constr = constrs['constr_' + conid];
 
   // get the changed attribute position in the arrays
-  for (i = 0; constr.pattnums[i] != attnum; i++);
+  for (i = 0; constr.pattnums[i] != attnum; i++) {}
 
   var datas = {
     fattpos: i,
@@ -80,13 +122,13 @@ function openlist(e) {
     success: function (ret) {
       jQuery.ppa.i = 0;
       jQuery.ppa.fkbg.show();
-      with (jQuery.ppa.fklist) {
-        html(ret);
-        appendTo('#row_att_' + attnum);
-        css('width', elt.css('width'));
-        show();
-        jQuery.ppa.numrow = find('tr').length;
-      }
+
+      jQuery.ppa.fklist
+        .html(ret)
+        .appendTo('#row_att_' + attnum)
+        .css('width', elt.css('width'))
+        .show();
+      jQuery.ppa.numrow = jQuery.ppa.fklist.find('tr').length;
     },
   });
 }
@@ -120,20 +162,6 @@ function move(event) {
   }
 }
 
-/* open/update the value list */
-function autocomplete(event) {
-  /* if pressing enter, fire a click on the selected line */
-  if (event.keyCode == 13) {
-    if (jQuery.ppa.i > 0) {
-      jQuery.ppa.fklist.find('tr').eq(jQuery.ppa.i).click();
-    }
-    return false;
-  } else if (event.keyCode == 38 || event.keyCode == 40) {
-    /* ignoring 38:up and 40:down */
-    return false;
-  } else if (
-    /* ignoring 9:tab, 37:left, 39:right, 16:shift, ctrl: 17, alt:18, 20:lockmaj */
-    event.keyCode == 9 ||
     event.keyCode == 37 ||
     event.keyCode == 39 ||
     event.keyCode == 16 ||
@@ -141,22 +169,6 @@ function autocomplete(event) {
     event.keyCode == 18 ||
     event.keyCode == 20
   ) {
-    return true;
-  } else if (event.keyCode == 27) {
-    /* esc */
-    hideAc();
-  } else {
-    /* request the list of possible values asynchronously */
-    /* if we refresh because of a value update,
-     * we reset back to offset 0 so we catch values
-     * if list is smaller than 11 values */
-    if (event.type == 'keyup') jQuery.ppa.o = 0;
-    openlist(this);
-  }
-
-  return true;
-}
-
 /* bind actions on values lines: hover for style change, click for select */
 
 jQuery('tr.acline').on('mouseover', function () {
@@ -205,8 +217,9 @@ jQuery(document).ready(function () {
 
   /* do not submit the form when selecting a value by pressing enter */
   jQuery.ppa.attrs.keydown(function (e) {
-    if (e.keyCode == 13 && jQuery.ppa.fklist[0].style.display == 'block')
+    if (e.keyCode == 13 && jQuery.ppa.fklist[0].style.display == 'block') {
       return false;
+    }
   });
 
   /* enable/disable auto-complete according to the checkbox */

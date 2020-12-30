@@ -1,6 +1,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		
-		<link rel="stylesheet" href="{{subfolder}}/assets/themes/global.css" type="text/css" id="csstheme" />
+		{% set development_assets=true %}
+		{% if development_assets==true %}
+		<script src="{{subfolder}}/assets/vendor/less.min.js" type="text/javascript"></script>
+		{% else %}
+		<link rel="stylesheet" href="{{subfolder}}/assets/themes/global.css" type="text/css" id="cssmain" />
+		{% endif %}
 		<link rel="stylesheet" href="{{subfolder}}/assets/themes/{{theme}}/global.css" type="text/css" id="csstheme" />
 		<link rel="stylesheet" href="{{subfolder}}/assets/vendor/jquery/jquery-ui.min.css" type="text/css" />
 		<link rel="shortcut icon" href="{{Favicon}}" type="image/vnd.microsoft.icon" />
@@ -23,11 +27,13 @@
 					subfolder:'{{subfolder}}',
 					path:"{{path}}",
 					query_string:"{{query_string}}",
-					strconfdropcred:"{{strconfdropcred}}",
+					strconfdropcred:"{{lang.strconfdropcred}}",
 				};
 			if (stateObj.reload !== "none" && window.jsTree) {
   			window.jsTree.jstree('refresh')
 			}
+		
+		
 		</script>
 
 

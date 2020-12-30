@@ -407,7 +407,7 @@ class SequencesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -437,10 +437,19 @@ class SequencesController extends BaseController
                         $status = $data->dropSequence($s, isset($_POST['cascade']));
 
                         if (0 === $status) {
-                            $msg .= \sprintf('%s: %s<br />', \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedropped']);
+                            $msg .= \sprintf(
+                                '%s: %s<br />',
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strsequencedropped']
+                            );
                         } else {
                             $data->endTransaction();
-                            $this->doDefault(\sprintf('%s%s: %s<br />', $msg, \htmlentities($s, \ENT_QUOTES, 'UTF-8'), $this->lang['strsequencedroppedbad']));
+                            $this->doDefault(\sprintf(
+                                '%s%s: %s<br />',
+                                $msg,
+                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                                $this->lang['strsequencedroppedbad']
+                            ));
 
                             return;
                         }
@@ -449,7 +458,7 @@ class SequencesController extends BaseController
 
                 if (0 === $data->endTransaction()) {
                     // Everything went fine, back to the Default page....
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($msg);
                 } else {
                     $this->doDefault($this->lang['strsequencedroppedbad']);
@@ -458,7 +467,7 @@ class SequencesController extends BaseController
                 $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
 
                 if (0 === $status) {
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                     $this->doDefault($this->lang['strsequencedropped']);
                 } else {
                     $this->doDrop(true, $this->lang['strsequencedroppedbad']);
@@ -492,7 +501,7 @@ class SequencesController extends BaseController
         $this->printTitle($this->lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
 
         echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
@@ -648,7 +657,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (\is_object($sequence) && 0 < $sequence->recordCount()) {
-            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table border="0">';
             echo "<tr><th class=\"data left required\">{$this->lang['strlastvalue']}</th>" . \PHP_EOL;
             echo '<td class="data1">';
@@ -712,13 +721,13 @@ class SequencesController extends BaseController
                 // Jump them to the new view name
                 $_REQUEST['sequence'] = $_POST['name'];
                 // Force a browser reload
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
             }
 
             if (!empty($_POST['newschema']) && ($_POST['newschema'] !== $data->_schema)) {
                 // Jump them to the new sequence schema
                 $this->misc->setCurrentSchema($_POST['newschema']);
-                $this->misc->setReloadBrowser(true);
+                $this->view->setReloadBrowser(true);
             }
             $this->doProperties($this->lang['strsequencealtered']);
         } else {
@@ -758,7 +767,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="' . self::SUBFOLDER . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;

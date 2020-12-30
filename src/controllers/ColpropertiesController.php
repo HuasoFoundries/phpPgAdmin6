@@ -89,7 +89,6 @@ class ColpropertiesController extends BaseController
         if (!empty($_REQUEST['column'])) {
             // Get table
             $tdata = $data->getTable($this->tableName);
-            //\Kint::dump($tdata);
             // Get columns
             $attrs = $data->getTableAttributes($this->tableName, $_REQUEST['column']);
 
@@ -238,8 +237,8 @@ class ColpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<script src="' . self::SUBFOLDER . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . self::SUBFOLDER . '/src/views/colproperties" method="post">' . \PHP_EOL;
+                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/colproperties" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -293,6 +292,7 @@ class ColpropertiesController extends BaseController
 
                 // Column type
                 $escaped_predef_types = []; // the JS escaped array elements
+
                 if ($data->hasAlterColumnType()) {
                     // Fetch all available types
                     $types = $data->getTypes(true, false, true);
@@ -386,7 +386,7 @@ class ColpropertiesController extends BaseController
                 if (0 === $status) {
                     if ($_REQUEST['column'] !== $_REQUEST['field']) {
                         $_REQUEST['column'] = $_REQUEST['field'];
-                        $this->misc->setReloadBrowser(true);
+                        $this->view->setReloadBrowser(true);
                     }
                     $this->doDefault($sql . "<br/>{$this->lang['strcolumnaltered']}");
                 } else {

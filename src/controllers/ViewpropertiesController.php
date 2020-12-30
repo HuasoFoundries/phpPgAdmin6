@@ -141,7 +141,7 @@ class ViewpropertiesController extends BaseController
             }
 
             $variables = (object) [
-                'subfolder' => self::SUBFOLDER . '/src/views/viewproperties',
+                'subfolder' => \containerInstance()->subFolder . '/src/views/viewproperties',
 
                 'formDefinition' => \htmlspecialchars($_POST['formDefinition']),
 
@@ -201,7 +201,7 @@ EOT;
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
 
                 // Output view header
                 echo '<table>' . \PHP_EOL;
@@ -299,7 +299,7 @@ EOT;
 
                 $this->coalesceArr($_POST, 'comment', $view->fields['relcomment']);
 
-                echo '<form action="' . self::SUBFOLDER . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo "<tr><th class=\"data left required\">{$this->lang['strname']}</th>" . \PHP_EOL;
                 echo '<td class="data1">';
@@ -365,13 +365,13 @@ EOT;
                     // Jump them to the new view name
                     $_REQUEST[$this->subject] = $_POST['name'];
                     // Force a browser reload
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                 }
                 // If schema has changed, need to change to the new schema and reload the browser
                 if (!empty($_POST['newschema']) && ($_POST['newschema'] !== $data->_schema)) {
                     // Jump them to the new sequence schema
                     $this->misc->setCurrentSchema($_POST['newschema']);
-                    $this->misc->setReloadBrowser(true);
+                    $this->view->setReloadBrowser(true);
                 }
                 $this->doDefault($this->lang['strviewaltered']);
             } else {

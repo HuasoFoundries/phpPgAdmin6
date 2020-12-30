@@ -6,10 +6,11 @@
   "author": "ffflabs <amenadiel@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "build": "npm run compile_less && workbox injectManifest workbox-config.js",
+    "build": "npm run compile_less && workbox injectManifest workbox-config.js && yarn disable_development_mode",
+    "disable_development_mode":"sed -i 's/development_assets=true/development_assets=false/' assets/templates/components/common_head.twig ",
     "compile_less": "lessc assets/themes/global.less assets/themes/global.css",
     "eslint": "eslint --fix --ext js --ignore-path .eslintignore assets",
-    "prettier": "node_modules/.bin/prettier -c --config .prettierrc.js  assets/{js,themes,templates}/*"
+    "prettier": "prettier -c --config .prettierrc  assets/{js,themes}/*"
   },
   "devDependencies": {
     "@types/jquery": "^3.5.1",

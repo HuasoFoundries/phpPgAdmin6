@@ -10,4 +10,25 @@
   window.onpopstate = function (event) { console.log('onpopstate', { state: event.state }); if (event.state &&
   event.state.realurl) { var ifr = document.getElementById('detail')
   ifr.contentWindow.location.replace(event.state.realurl); } };
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('assets/sw.dev.js').then(function(registration) {
+        console.log('Service Worker Registered');
+    }).catch(warn=>{
+		console.warn(warn);
+	})
+}
+window.addEventListener("message", (event) => {
+ const {origin,isTrusted,data}=event,browserIframe= document.getElementById('browser');
+ if(!isTrusted||origin!==location.origin) {
+	 return;
+ }
+ if(data.reload_browser && browserIframe) {
+	 try {
+	  browserIframe.contentWindow.jsTree.jstree('refresh')
+	 }catch(err){
+		 console.warn(err);
+	 }
+ }
+ console.log(event);
+}, false);
 </script>

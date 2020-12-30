@@ -7,32 +7,19 @@
 namespace Helper;
 
 \defined('IN_TEST') || \define('IN_TEST', true);
-use PHPPgAdmin\ContainerUtils;
 
-if (!\is_readable(ContainerUtils::BASE_PATH . '/src/lib.inc.php')) {
+$bootstrapfile = \dirname(__DIR__, 3) . '/src/lib.inc.php';
+
+if (!\is_readable($bootstrapfile)) {
     die('lib.inc.php is not readable');
 }
-\defined('IN_TEST') || \define('IN_TEST', true);
 
-require_once ContainerUtils::BASE_PATH . '/src/lib.inc.php';
+require_once $bootstrapfile;
 // here you can define custom actions
 // all public methods declared in helper class will be available in $I
 
 class Unit extends \Codeception\Module
 {
-    /**
-     * @var string
-     */
-    const BASE_PATH = ContainerUtils::BASE_PATH;
-    /**
-     * @var string
-     */
-    const SUBFOLDER = ContainerUtils::SUBFOLDER;
-    /**
-     * @var string
-     */
-    const DEBUGMODE = ContainerUtils::DEBUGMODE;
-
     /**
      * @var \PHPPgAdmin
      */
@@ -40,16 +27,11 @@ class Unit extends \Codeception\Module
 
     private static $_conf;
 
-    public static function getDir()
-    {
-        return self::DIRNAME;
-    }
-
     public static function getContainer()
     {
         //$conf = self::getConf();
         if (!static::$_container) {
-            self::$_container = ContainerUtils::getContainerInstance();
+            self::$_container = containerInstance();
         }
 
         //dump(PHP_SAPI);
