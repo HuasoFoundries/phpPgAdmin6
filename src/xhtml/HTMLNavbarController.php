@@ -56,7 +56,28 @@ class HTMLNavbarController extends HTMLController
 
         return $trail_html;
     }
+    /**
+     * Get the URL for the last active tab of a particular tab bar.
+     *
+     * @param string $section
+     *
+     * @return null|mixed
+     */
+    public function getLastTabURL($section)
+    {
+        //$data = $this->getDatabaseAccessor();
 
+        $tabs = $this->misc->getNavTabs($section);
+
+        if (isset($_SESSION['webdbLastTab'][$section], $tabs[$_SESSION['webdbLastTab'][$section]])) {
+            $tab = $tabs[$_SESSION['webdbLastTab'][$section]];
+        } else {
+            $tab = \reset($tabs);
+        }
+        // $this->prtrace(['section' => $section, 'tabs' => $tabs, 'tab' => $tab]);
+
+        return isset($tab['url']) ? $tab : null;
+    }
     /**
      * Get the URL for the last active tab of a particular tab bar.
      *
@@ -99,7 +120,6 @@ class HTMLNavbarController extends HTMLController
         if (!\is_array($_SESSION['webdbLastTab'])) {
             $_SESSION['webdbLastTab'] = [$alltabs => $activetab];
         }
-
         if (\is_string($alltabs)) {
             $_SESSION['webdbLastTab'][$alltabs] = $activetab;
             $alltabs = $this->misc->getNavTabs($alltabs);

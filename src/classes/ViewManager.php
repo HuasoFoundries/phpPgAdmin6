@@ -22,7 +22,6 @@ class ViewManager extends \Slim\Views\Twig
 {
     use \PHPPgAdmin\Traits\HelperTrait;
 
-    /**
      * @var array
      */
     public $appLangFiles = [];

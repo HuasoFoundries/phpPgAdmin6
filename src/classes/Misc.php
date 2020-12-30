@@ -25,7 +25,7 @@ class Misc
     use \PHPPgAdmin\Traits\HelperTrait;
     use \PHPPgAdmin\Traits\MiscTrait;
 
-    /**
+
      * @var array
      */
     public $appLangFiles = [];

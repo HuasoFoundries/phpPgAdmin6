@@ -82,11 +82,11 @@ class Connection
         $this->conn = 'pdo' === $this->adodb_driver ?
                 $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
                 $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
-
+                $this->conn->setFetchMode($fetchMode);
         //$this->prtrace($this->conn);
     }
-
-    public function getVersion(): string
+ 
+    public function getVersion():string
     {
         return $this->pgVersion;
     }
@@ -105,7 +105,7 @@ class Connection
             return null;
         }
         $serverInfo = $this->conn->ServerInfo();
-        $this->dump($serverInfo);
+        dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
         $description = "PostgreSQL {$this->pgVersion}";
 

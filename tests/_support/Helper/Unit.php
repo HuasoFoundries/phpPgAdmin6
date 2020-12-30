@@ -20,7 +20,6 @@ require_once $bootstrapfile;
 
 class Unit extends \Codeception\Module
 {
-    /**
      * @var \PHPPgAdmin
      */
     private static $_container;

@@ -7,7 +7,9 @@
 namespace PHPPgAdmin\Controller;
 
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\ContainerUtils;
 
+use \containerInstance;
 /**
  * Base controller class.
  */

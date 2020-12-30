@@ -123,6 +123,8 @@ psalm:
 	@vendor/bin/psalm --show-info=false --long-progress --threads=2 --config=psalm.xml 
 
 
+		echo -e "Install it with $(GREEN)composer require --dev$(package_name)$(WHITE)" ;\
+		exit 1 ;\
 
 phpstan:
 	$(eval executable:=vendor/bin/phpstan)

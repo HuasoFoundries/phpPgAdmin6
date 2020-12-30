@@ -42,17 +42,17 @@ function getAppInstance(): \Slim\App
 
     include_once \dirname(__DIR__) . '/config.inc.php';
 
-    if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
-        $subfolder = $conf['subfolder'];
-    } elseif (\PHP_SAPI === 'cli-server') {
-        $subfolder = '/index.php';
-    } elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
-        $subfolder = \str_replace(
-            $_SERVER['DOCUMENT_ROOT'],
-            '',
-            \dirname(__DIR__)
-        );
-    }
+if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
+    $subfolder = $conf['subfolder'];
+} elseif (\PHP_SAPI === 'cli-server') {
+    $subfolder = '/index.php';
+} elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
+    $subfolder = \str_replace(
+        $_SERVER['DOCUMENT_ROOT'],
+        '',
+        \dirname(__DIR__)
+    );
+}
 
     $conf['subfolder'] = $subfolder;
 
@@ -74,6 +74,8 @@ function getAppInstance(): \Slim\App
     $conf['IN_TEST'] = IN_TEST;
     \defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
 
+\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
+
     // Fetch App and DI Container
     $app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
 
@@ -86,6 +88,10 @@ function containerInstance(): \PHPPgAdmin\ContainerUtils
     $container = $app->getContainer();
 
     if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
+{
+    $app=getAppInstance();
+    $container = $app->getContainer();
+                if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
         \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
     }
 
@@ -101,3 +107,5 @@ function responseInstance(): \Slim\Http\Response
 {
     return \containerInstance()->response;
 }
+$app=getAppInstance();
+$container=$app->getContainer();

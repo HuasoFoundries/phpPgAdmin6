@@ -147,7 +147,7 @@ class BaseController
             $this->misc->setNoDBConnection(true);
         }
         $this->renderInitialPageIfNotLogged();
-    }
+
 
     /**
      * Default method to render the controller according to the action parameter. It should return with a PSR
