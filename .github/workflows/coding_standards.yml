@@ -60,7 +60,7 @@ jobs:
           coverage: "none"
           extensions: "${{ env.PHP_EXTENSIONS }}"
           php-version: "${{ matrix.php_version }}"
-          tools: composer, phpcs, cs2pr
+          tools: composer, phpcs, cs2pr, phive
 
       - name: Cache Composer
         uses: "actions/cache@v2.1.1"

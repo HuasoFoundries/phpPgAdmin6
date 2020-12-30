@@ -5,11 +5,11 @@
  */
 
 namespace PHPPgAdmin;
-
+use ADORecordSet as ADODBRecordsetClass;
 /**
  * Extends ADORecordSet to let correct inference on PHPDoc params.
  */
-class ADORecordSet extends \ADORecordSet implements \Countable
+class ADORecordSet extends  ADODBRecordsetClass implements \Countable
 {
     /**
      * Returns the recordCount.
