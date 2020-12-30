@@ -65,10 +65,12 @@ phpmd: package_name:=phpmd
 phpmd: executable:= $(shell command -v phpmd 2> /dev/null)
 phpmd: 
 	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
-	@phpmd src text .phpmd.xml --exclude=src/help/*,src/translations/*
+	@$(executable) src text .phpmd.xml --exclude=src/help/*,src/translations/*
 
+phpmd_checkstyle: package_name:=phpmd
+phpmd_checkstyle: executable:=$(shell command -v phpmd 2> /dev/null)
 phpmd_checkstyle:
-	@${MAKE} phpmd   > temp/phpmd.report.json  ;\
+	@$(executable) src json .phpmd.xml --exclude=src/help/*,src/translations/*   > temp/phpmd.report.json  ;\
 	echo -e "$(GREEN)Finished PHPMD$(WHITE): waiting 1s"
 	@sleep 1 ;\
 	php tools/phpmd_checkstyle.php ;\
@@ -102,7 +104,7 @@ ifeq (,$(reportformat))
 endif	
 	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
 	@mkdir -p .build/phpcs && touch .build/phpcs/php-cs.cache ;\
-	phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=$(reportformat) src/*
+	$(executable)  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=$(reportformat) src/*
 
 
 
@@ -158,11 +160,11 @@ install_dev_deps:
 		echo -e "$(GREEN)phive$(WHITE) is $(RED)NOT$(WHITE) installed. " ;\
 		echo -e "Visit $(GREEN)https://github.com/phar-io/phive$(WHITE) and follow install procedure" ;\
 	else \
-		phive install phpmd ;\
-		phive install phpcpd ;\
-		phive install phpcs ;\
-		phive install composer-unused ;\
-		phive install composer-require-checker ;\
+		 phive install -g --trust-gpg-keys phpmd ;\
+		 phive install -g --trust-gpg-keys phpcpd ;\
+		 phive install -g --trust-gpg-keys phpcs ;\
+		 phive install -g --trust-gpg-keys composer-unused ;\
+		 phive install -g --trust-gpg-keys composer-require-checker ;\
 		curl -sfL https://raw.githubusercontent.com/reviewdog/reviewdog/master/install.sh | sh -s -- -b tools ;\
 	fi ;\
 	echo ""
