@@ -40,7 +40,7 @@ abort_suggesting_composer:
 	fi
 
 check_executable_or_exit_with_phive:
-	@if [ ! -f "$(executable)" ]; then \
+	@if [ ! -e "$(executable)" ]; then \
 		echo -e "$(GREEN)$(package_name)$(WHITE) $(RED)NOT FOUND$(WHITE) on $(CYAN)$(executable)$(WHITE). " ;\
 		echo -e "Install it with $(GREEN)phive install $(package_name)$(WHITE)" ;\
 		echo ;\
@@ -62,10 +62,11 @@ update_baselines:
 .PHONY:abort_suggesting_composer check_executable_or_exit_with_phive update_baselines
 
 phpmd: package_name:=phpmd
-phpmd: executable:= $(shell command -v phpmd 2> /dev/null)
+phpmd: executable:=tools/phpmd
 phpmd: 
 	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
 	@$(executable) src text .phpmd.xml --exclude=src/help/*,src/translations/*
+
 
 phpmd_checkstyle: package_name:=phpmd
 phpmd_checkstyle: executable:=$(shell command -v phpmd 2> /dev/null)
@@ -73,7 +74,7 @@ phpmd_checkstyle:
 	@$(executable) src json .phpmd.xml --exclude=src/help/*,src/translations/*   > temp/phpmd.report.json  ;\
 	echo -e "$(GREEN)Finished PHPMD$(WHITE): waiting 1s"
 	@sleep 1 ;\
-	php tools/phpmd_checkstyle.php ;\
+	php tools/phpmd_checkstyle ;\
 	echo -e "$(GREEN)Formatted PHPMD$(WHITE): as checkStyle"
 	cat temp/phpmd.checkstyle.xml | vendor/bin/cs2pr 
 
@@ -143,6 +144,12 @@ phpstan_checkstyle:
 	cat temp/phpstan.checkstyle.xml | vendor/bin/cs2pr ;\
 	echo ""
 
+
+rector:
+	$(eval executable:=vendor/bin/rector)
+	$(eval package_name:=rector/rector)
+	@${MAKE} abort_suggesting_composer executable=$(executable) package_name=$(package_name) --no-print-directory 
+	@$(executable) process  --ansi --dry-run
 lint:
 	$(eval executable:=vendor/bin/parallel-lint )
 	$(eval package_name:=php-parallel-lint/php-parallel-lint )

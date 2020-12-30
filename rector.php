@@ -2,7 +2,13 @@
 
 declare(strict_types=1);
 
+use PhpParser\Node\Scalar\EncapsedStringPart;
+use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
+use Rector\CodingStyle\Rector\FuncCall\VersionCompareFuncCallToConstantRector;
+use Rector\CodingStyle\Rector\Property\AddFalseDefaultToBoolPropertyRector;
+use Rector\CodingStyle\Rector\Switch_\BinarySwitchToIfElseRector;
 use Rector\Core\Configuration\Option;
+use Rector\Core\ValueObject\PhpVersion;
 use Rector\Php70\Rector\StaticCall\StaticCallOnNonStaticToInstanceCallRector;
 use Rector\Set\ValueObject\SetList;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
@@ -13,6 +19,7 @@ return static function (ContainerConfigurator $containerConfigurator): void {
     $parameters->set(Option::AUTO_IMPORT_NAMES, true);
 
     $parameters->set(Option::SETS, [
+        SetList::CODING_STYLE,
         SetList::ACTION_INJECTION_TO_CONSTRUCTOR_INJECTION,
         SetList::ARRAY_STR_FUNCTIONS_TO_STATIC_CALL,
         SetList::CODE_QUALITY,
@@ -22,12 +29,19 @@ return static function (ContainerConfigurator $containerConfigurator): void {
         SetList::PHP_70,
         SetList::PHP_71,
         SetList::PHP_72,
-        SetList::PHPSTAN,
-        SetList::PHPUNIT_CODE_QUALITY,
-        SetList::SOLID,
+         SetList::PHPUNIT_CODE_QUALITY,
+        
     ]);
+//  
+
     $parameters->set(Option::SKIP, [
-        Rector\SOLID\Rector\Property\AddFalseDefaultToBoolPropertyRector::class  => [
+        VersionCompareFuncCallToConstantRector::class=>[  __DIR__ . '/src',],
+
+        BinarySwitchToIfElseRector::class=>[  __DIR__ . '/src',],
+        StaticCallOnNonStaticToInstanceCallRector::class=>[
+            __DIR__ . '/src',
+        ],
+        AddFalseDefaultToBoolPropertyRector::class  => [
             // single file
             __DIR__ . '/src/classes/Connection.php',
             // or directory
@@ -35,14 +49,21 @@ return static function (ContainerConfigurator $containerConfigurator): void {
             
         ] 
     ]);
-    $parameters->set(Option::PHP_VERSION_FEATURES, '7.2');
+    $parameters->set(Option::PHPSTAN_FOR_RECTOR_PATH, __DIR__ . '/phpstan.neon');
+    $parameters->set(Option::PHP_VERSION_FEATURES, PhpVersion::PHP_72);
     $parameters->set(Option::ENABLE_CACHE, true);
     $parameters->set(Option::CACHE_DIR, __DIR__ . '/.build/rector');
     $parameters->set(Option::PATHS, [
-        __DIR__ . '/src',
+        __DIR__ . '/src/classes',
+        __DIR__ . '/src/controllers',
+        //__DIR__ . '/src/database',
+        //__DIR__ . '/src/decorators',
+        //__DIR__ . '/src/middleware',
+        //__DIR__ . '/src/traits',
          //__DIR__ . '/tests'
          ]);
-    $parameters->set(Option::EXCLUDE_RECTORS, [
-       StaticCallOnNonStaticToInstanceCallRector::class,
-    ]);
+ 
+        // register single rule
+        $services = $containerConfigurator->services();
+        $services->set(EncapsedStringsToSprintfRector::class);
 };
