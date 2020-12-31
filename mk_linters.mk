@@ -104,7 +104,7 @@ ifeq (,$(reportformat))
 	$(eval reportformat='diff')
 endif	
 	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
-	@mkdir -p .build/phpcs && touch .build/phpcs/php-cs.cache ;\
+	@mkdir -p .build/phpcs && touch .build/phpcs/php-cs.cache 
 	$(executable)  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=$(reportformat) src/*
 
 

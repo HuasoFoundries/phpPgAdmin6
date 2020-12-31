@@ -92,8 +92,8 @@ jobs:
           key: "php-${{ matrix.php_version }}-phpcs-${{ github.sha }}"
           restore-keys: "php-${{ matrix.php_version }}-phpcs-"
           
-#      - name: "Run CodeShiffer"
-#        run: phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=checkstyle src/* | cs2pr
+      - name: "Run CodeShiffer"
+        run: phpcs  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=checkstyle src/* | cs2pr
                     
             
       - name: "Run friendsofphp/php-cs-fixer"

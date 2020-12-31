@@ -19,7 +19,7 @@ function getAppInstance(): App
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
     if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
-        die('Configuration error: Copy config.inc.example.php to config.inc.php and edit appropriately.');
+        die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
     }
     $conf = [];
 

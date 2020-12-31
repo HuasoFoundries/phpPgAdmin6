@@ -53,7 +53,7 @@ composer install --no-dev
 
 ## Configuration
 
-You can set the config options either in a `config.inc.php` (refer to [config.inc.php-dist](config.inc.php-dist) for an example)
+You can set the config options either in a `config.inc.php` (refer to [config.inc.example.php](config.inc.example.php) for an example)
 AND/OR a [config.yml](config.yml). The use of the latter is complely optional. Keep in mind the config entries are merged giving
 precedence to the ones in the YAML file.
 

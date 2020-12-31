@@ -61,3 +61,6 @@ temp/*.report.xml
 tools/composer*
 tools/phpcbf
 tools/phpmd_checkstyle
+.phive
+tools/reviewdog
+
