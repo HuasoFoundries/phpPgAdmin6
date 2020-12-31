@@ -190,6 +190,9 @@ class SqlController extends BaseController
         return $data->executeScript('script', $sqlCallback);
     }
 
+    /**
+     * @return ADORecordSet|null
+     */
     private function execute_query()
     {
         $data = $this->misc->getDatabaseAccessor();

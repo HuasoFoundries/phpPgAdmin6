@@ -81,6 +81,9 @@ class ConversionsController extends BaseController
         echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $this->lang['strnoconversions']);
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $data = $this->misc->getDatabaseAccessor();

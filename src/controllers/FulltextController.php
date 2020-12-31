@@ -220,6 +220,8 @@ class FulltextController extends BaseController
 
     /**
      * Generate XML for the browser tree.
+     *
+     * @return \Slim\Http\Response|string
      */
     public function doTree()
     {
@@ -249,6 +251,9 @@ class FulltextController extends BaseController
         return $this->printTree($items, $attrs, 'fts');
     }
 
+    /**
+     * @return \Slim\Http\Response|null|string
+     */
     public function doSubTree($what)
     {
         $data = $this->misc->getDatabaseAccessor();

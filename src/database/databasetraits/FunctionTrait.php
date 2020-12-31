@@ -73,7 +73,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return ADORecordSet Functions that can be used in a trigger
+     * @return int|\PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
     {

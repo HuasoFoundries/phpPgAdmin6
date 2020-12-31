@@ -55,6 +55,8 @@ class SqleditController extends BaseController
 
     /**
      * Allow execution of arbitrary SQL statements on a database.
+     *
+     * @return string
      */
     public function doDefault()
     {
@@ -133,6 +135,8 @@ class SqleditController extends BaseController
 
     /**
      * Searches for a named database object.
+     *
+     * @return string
      */
     public function doFind()
     {
@@ -208,6 +212,11 @@ class SqleditController extends BaseController
         return $default_html;
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{SCHEMA: array{langkey: string, selected: string}, TABLE: array{langkey: string, selected: string}, VIEW: array{langkey: string, selected: string}, SEQUENCE: array{langkey: string, selected: string}, COLUMN: array{langkey: string, selected: string}, RULE: array{langkey: string, selected: string}, INDEX: array{langkey: string, selected: string}, TRIGGER: array{langkey: string, selected: string}, CONSTRAINT: array{langkey: string, selected: string}, FUNCTION: array{langkey: string, selected: string}, DOMAIN: array{langkey: string, selected: string}}
+     */
     private function _getFilters()
     {
         return [
@@ -225,6 +234,11 @@ class SqleditController extends BaseController
         ];
     }
 
+    /**
+     * @return string[][]
+     *
+     * @psalm-return array{AGGREGATE: array{langkey: string, selected: string}, TYPE: array{langkey: string, selected: string}, OPERATOR: array{langkey: string, selected: string}, OPCLASS: array{langkey: string, selected: string}, CONVERSION: array{langkey: string, selected: string}, LANGUAGE: array{langkey: string, selected: string}}
+     */
     private function _getAdvancedFilters()
     {
         return [

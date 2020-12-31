@@ -236,6 +236,9 @@ class TblpropertiesController extends BaseController
         $this->printNavLinks($navlinks, 'tblproperties-tblproperties', \get_defined_vars());
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $misc = $this->misc;
@@ -854,6 +857,11 @@ class TblpropertiesController extends BaseController
         }
     }
 
+    /**
+     * @return \Closure
+     *
+     * @psalm-return \Closure(mixed, mixed):mixed
+     */
     private function _getAttPre($data)
     {
         $attPre = static function (&$rowdata, $actions) use ($data) {
@@ -878,6 +886,11 @@ class TblpropertiesController extends BaseController
         return $attPre;
     }
 
+    /**
+     * @return \Closure
+     *
+     * @psalm-return \Closure(mixed, mixed):string
+     */
     private function _getCstrRender($misc, $data)
     {
         $view = $this->view;

@@ -157,6 +157,9 @@ class ServersController extends BaseController
         echo $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $nodes = [];

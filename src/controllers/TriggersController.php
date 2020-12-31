@@ -231,6 +231,9 @@ class TriggersController extends BaseController
         ]], 'triggers-triggers', \get_defined_vars());
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $data = $this->misc->getDatabaseAccessor();

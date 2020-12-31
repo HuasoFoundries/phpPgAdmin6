@@ -169,7 +169,7 @@ trait TriggerTrait
      * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param string $action  The action to take
      *
-     * @return int 0 if operation was successful
+     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
      */
     public function setRule($name, $event, $table, $where, $instead, $type, $action)
     {

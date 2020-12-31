@@ -131,6 +131,9 @@ class RulesController extends BaseController
         ]], 'rules-rules', \get_defined_vars());
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $data = $this->misc->getDatabaseAccessor();

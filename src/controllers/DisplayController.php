@@ -277,6 +277,11 @@ class DisplayController extends BaseController
         $this->printNavLinks($navlinks, 'display-browse', \get_defined_vars());
     }
 
+    /**
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{0: mixed, 1: string, 2: string}
+     */
     public function getQueryTitleAndType($data, $object)
     {
         $fkey = $this->coalesceArr($_REQUEST, 'fkey')['fkey'];
@@ -317,6 +322,10 @@ class DisplayController extends BaseController
      * @param string $subject
      * @param mixed  $object
      * @param mixed  $resultset
+     *
+     * @return ((array|mixed|string)[][]|mixed)[][]
+     *
+     * @psalm-return array{back?: array{attr: array{href: array{url: mixed, urlvars: mixed}}, content: mixed}, edit?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, paginate: string}}}, content: mixed}, collapse: array{attr: array{href: array{url: string, urlvars: array{strings: string, page: mixed}}}, content: mixed}, createview?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, formDefinition: mixed}}}, content: mixed}, download?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed}}}, content: mixed}, insert?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, table: mixed}}}, content: mixed}, refresh: array{attr: array{href: array{url: string, urlvars: array{strings: mixed, page: mixed}}}, content: mixed}}
      */
     public function getBrowseNavLinks($type, array $_gets, $page, string $subject, $object, $resultset)
     {
@@ -1098,6 +1107,11 @@ class DisplayController extends BaseController
         echo '</div>';
     }
 
+    /**
+     * @return (((((mixed|string)[]|string)[][]|mixed)[][]|string)[]|iterable)[]
+     *
+     * @psalm-return array{0: array{actionbuttons: array{edit: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}, delete: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}}, place: string}, 1: array<empty, empty>|iterable}
+     */
     private function _getKeyAndActions(object $resultset, $object, $data, $page, array $_gets)
     {
         $key = [];
@@ -1286,6 +1300,11 @@ class DisplayController extends BaseController
         return \unserialize(\urldecode($the_array[$key]));
     }
 
+    /**
+     * @return int[]
+     *
+     * @psalm-return array{0: int, 1: int}
+     */
     private function _getMinMaxPages(int $page, int $pages)
     {
         $window = 10;

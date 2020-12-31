@@ -83,7 +83,9 @@ class TreeController extends BaseController
      * @param string         $section   The section where the branch is linked in the tree
      * @param bool           $print     either to return or echo the result
      *
-     * @return Response|string the json rendered tree
+     * @return (array|bool|string)[] the json rendered tree
+     *
+     * @psalm-return array<int|string, array<string, mixed>|bool|string>
      */
     public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {

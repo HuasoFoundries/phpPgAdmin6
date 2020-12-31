@@ -225,6 +225,8 @@ class TablesController extends BaseController
 
     /**
      * Generate XML for the browser tree.
+     *
+     * @return \Slim\Http\Response|string
      */
     public function doTree()
     {
@@ -246,6 +248,9 @@ class TablesController extends BaseController
         return $this->printTree($tables, $attrs, 'tables');
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doSubTree()
     {
         $tabs = $this->misc->getNavTabs('table');
@@ -858,6 +863,8 @@ class TablesController extends BaseController
      *
      * @param mixed $confirm
      * @param mixed $msg
+     *
+     * @return null|string
      */
     public function doSelectRows($confirm, $msg = '')
     {
@@ -1503,6 +1510,11 @@ class TablesController extends BaseController
         }
     }
 
+    /**
+     * @return (mixed|string|string[])[][]
+     *
+     * @psalm-return array{table: array{title: mixed, field: mixed, url: string, vars: array{table: string}}, owner: array{title: mixed, field: mixed}, tablespace: array{title: mixed, field: mixed}, tuples: array{title: mixed, field: mixed, type: string}, table_size: array{title: mixed, field: mixed}, actions: array{title: mixed}, comment: array{title: mixed, field: mixed}}
+     */
     private function _getColumns()
     {
         return [
@@ -1542,6 +1554,11 @@ class TablesController extends BaseController
         ];
     }
 
+    /**
+     * @return ((((mixed|string)[]|string)[]|string)[]|mixed|string)[][]
+     *
+     * @psalm-return array{multiactions: array{keycols: array{table: string}, url: string, default: string}, browse: array{content: mixed, attr: array{href: array{url: string, urlvars: array{subject: string, return: string, table: mixed}}}}, select: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, insert: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, empty: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, alter: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, drop: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, vacuum: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, analyze: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, reindex: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}}
+     */
     private function _getActions()
     {
         return [

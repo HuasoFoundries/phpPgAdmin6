@@ -296,7 +296,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return ADORecordSet|int A recordset or an error code
+     * @return int|string A recordset or an error code
      */
     public function execute($sql)
     {
@@ -324,7 +324,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL statement to be executed
      *
-     * @return ADORecordSet|int A recordset or an error number
+     * @return int|\RecordSet|string A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -336,11 +336,17 @@ class ADOdbBase
         }
     }
 
+    /**
+     * @return \the
+     */
     public function ErrorNo(): int
     {
         return $this->conn->ErrorNo();
     }
 
+    /**
+     * @return \the
+     */
     public function ErrorMsg(): string
     {
         return $this->conn->ErrorMsg();

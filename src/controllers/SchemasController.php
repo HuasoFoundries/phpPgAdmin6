@@ -197,6 +197,8 @@ class SchemasController extends BaseController
 
     /**
      * Generate XML for the browser tree.
+     *
+     * @return \Slim\Http\Response|string
      */
     public function doTree()
     {
@@ -231,6 +233,9 @@ class SchemasController extends BaseController
         return $this->printTree($schemas, $attrs, 'schemas');
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doSubTree()
     {
         $tabs = $this->misc->getNavTabs('schema');

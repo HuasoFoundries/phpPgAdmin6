@@ -89,7 +89,6 @@ class ContainerUtils extends Container implements ContainerInterface
 
         $userSettings = $values['settings'] ?? [];
         $this->registerDefaultServices($userSettings);
-        $this->container = $this;
         self::$instance = $this;
     }
 

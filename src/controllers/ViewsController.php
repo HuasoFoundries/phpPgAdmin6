@@ -247,6 +247,8 @@ class ViewsController extends BaseController
 
     /**
      * Generate XML for the browser tree.
+     *
+     * @return \Slim\Http\Response|string
      */
     public function doTree()
     {

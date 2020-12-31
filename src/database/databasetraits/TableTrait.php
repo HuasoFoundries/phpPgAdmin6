@@ -301,7 +301,7 @@ trait TableTrait
      * @param string $table The name of the table
      * @param string $field (optional) The name of a field to return
      *
-     * @return ADORecordSet All attributes in order
+     * @return int|\PHPPgAdmin\ADORecordSet All attributes in order
      */
     public function getTableAttributes($table, $field = '')
     {
@@ -1220,7 +1220,7 @@ trait TableTrait
     /**
      * Ends the data object for a dump.
      *
-     * @return bool 0 success
+     * @return int 0 success
      */
     public function endDump()
     {

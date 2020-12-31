@@ -28,6 +28,8 @@ class IntroController extends BaseController
      * Intro screen.
      *
      * Release: intro,v 1.19 2007/07/12 19:26:22 xzilla Exp $
+     *
+     * @return string
      */
     public function doDefault()
     {

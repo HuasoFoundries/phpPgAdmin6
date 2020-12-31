@@ -904,6 +904,15 @@ trait RoleTrait
 
     abstract public function fieldArrayClean(&$arr);
 
+    /**
+     * @psalm-return -1|0
+     *
+     * @param mixed $original_parent_roles
+     * @param mixed $new_roles_to_add
+     * @param mixed $rolename
+     *
+     * @return int
+     */
     private function _dealWithOldParentRoles($original_parent_roles, $new_roles_to_add, $rolename)
     {
         $old = \explode(',', $original_parent_roles);
@@ -934,6 +943,15 @@ trait RoleTrait
         return 0;
     }
 
+    /**
+     * @psalm-return -1|0
+     *
+     * @param mixed $original_members
+     * @param mixed $new_members_of_role
+     * @param mixed $rolename
+     *
+     * @return int
+     */
     private function _dealWithOriginalMembers($original_members, $new_members_of_role, $rolename)
     {
         //members
@@ -964,6 +982,15 @@ trait RoleTrait
         return 0;
     }
 
+    /**
+     * @psalm-return -1|0
+     *
+     * @param mixed $original_admins
+     * @param mixed $new_admins_of_role
+     * @param mixed $rolename
+     *
+     * @return int
+     */
     private function _dealWithOriginalAdmins($original_admins, $new_admins_of_role, $rolename)
     {
         $old = \explode(',', $original_admins);
@@ -991,6 +1018,19 @@ trait RoleTrait
         return 0;
     }
 
+    /**
+     * @param mixed $rolename
+     * @param mixed $password
+     * @param mixed $connlimit
+     * @param mixed $expiry
+     * @param mixed $superuser
+     * @param mixed $createdb
+     * @param mixed $createrole
+     * @param mixed $inherits
+     * @param mixed $login
+     *
+     * @return int|\PHPPgAdmin\ADORecordSet
+     */
     private function _alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login)
     {
         $enc = $this->_encryptPassword($rolename, $password);

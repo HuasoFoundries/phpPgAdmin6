@@ -199,6 +199,8 @@ class FunctionsController extends BaseController
 
     /**
      * Generate XML for the browser tree.
+     *
+     * @return \Slim\Http\Response|string
      */
     public function doTree()
     {
@@ -1436,6 +1438,9 @@ class FunctionsController extends BaseController
         $this->printNavLinks($navlinks, $place, \get_defined_vars());
     }
 
+    /**
+     * @return string
+     */
     private function _getNamedParamsArgs($data, $fndata)
     {
         if (isset($fndata->fields['proallarguments'])) {
@@ -1514,6 +1519,8 @@ class FunctionsController extends BaseController
      * Build out JS to re-create table rows for arguments.
      *
      * @param string $szArgs args to parse
+     *
+     * @return string
      */
     private function _buildJSRows($szArgs)
     {
@@ -1558,6 +1565,9 @@ class FunctionsController extends BaseController
         return $szReturn;
     }
 
+    /**
+     * @return string
+     */
     private function _buildJSData()
     {
         $data = $this->misc->getDatabaseAccessor();

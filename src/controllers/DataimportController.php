@@ -314,6 +314,11 @@ class DataimportController extends BaseController
         return $this->printFooter();
     }
 
+    /**
+     * @return array
+     *
+     * @psalm-return list<mixed>
+     */
     public static function loadNULLArray()
     {
         $array = [];
@@ -330,6 +335,8 @@ class DataimportController extends BaseController
     /**
      * @param null|string $field
      * @param mixed       $null_array
+     *
+     * @return bool
      */
     public static function determineNull(?string $field, $null_array)
     {

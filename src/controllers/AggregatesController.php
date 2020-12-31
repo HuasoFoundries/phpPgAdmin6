@@ -182,6 +182,9 @@ class AggregatesController extends BaseController
         $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $this->data = $this->misc->getDatabaseAccessor();

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a5a3bd937ae867ecdf1ed23dd129092f",
+    "content-hash": "481ffafa3136ff0e1e2b1372ef20f300",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -3371,16 +3371,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.50",
+            "version": "0.12.64",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "b8248f9c81265af75d6d969ca3252aaf3e998f3a"
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/b8248f9c81265af75d6d969ca3252aaf3e998f3a",
-                "reference": "b8248f9c81265af75d6d969ca3252aaf3e998f3a",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
+                "reference": "23eb1cb7ae125f45f1d0e48051bcf67a9a9b08aa",
                 "shasum": ""
             },
             "require": {
@@ -3411,7 +3411,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.50"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.64"
             },
             "funding": [
                 {
@@ -3427,7 +3427,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-10-16T12:22:23+00:00"
+            "time": "2020-12-21T11:59:02+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -3996,45 +3996,35 @@
         },
         {
             "name": "rector/rector-prefixed",
-            "version": "0.8.30",
+            "version": "0.9.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector-prefixed.git",
-                "reference": "90910ccc8c97daefa16d2501e35843cfcd395919"
+                "reference": "31b49acefe7240cba59f94b01f7ee47325322d8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/90910ccc8c97daefa16d2501e35843cfcd395919",
-                "reference": "90910ccc8c97daefa16d2501e35843cfcd395919",
+                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/31b49acefe7240cba59f94b01f7ee47325322d8b",
+                "reference": "31b49acefe7240cba59f94b01f7ee47325322d8b",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.2"
-            },
-            "conflict": {
-                "nikic/php-parser": "<4.7",
-                "phpstan/phpstan": "<0.12"
-            },
-            "replace": {
-                "rector/rector": "self.version"
-            },
-            "require-dev": {
-                "doctrine/orm": "^2.7"
+                "php": "^7.3|^8.0",
+                "phpstan/phpstan": "^0.12.64"
             },
             "bin": [
-                "rector",
-                "rector.phar"
+                "bin/rector"
             ],
             "type": "library",
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "Prefixed version of Rector compiled in PHAR",
+            "description": "Prefixed scoped version of rector/rector package",
             "support": {
-                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.8.30"
+                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.9.3"
             },
-            "time": "2020-10-18T09:05:00+00:00"
+            "time": "2020-12-29T16:24:44+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -6708,7 +6698,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
-    "prefer-stable": true,
+    "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": ">=7.2",

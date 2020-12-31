@@ -167,7 +167,7 @@ class BaseController
      * Default method to render the controller according to the action parameter. It should return with a PSR
      * responseObject but it prints texts whatsoeever.
      *
-     * @return string|void
+     * @return void
      */
     public function render()
     {
@@ -186,6 +186,9 @@ class BaseController
         $this->printFooter();
     }
 
+    /**
+     * @return string
+     */
     public function doDefault()
     {
         $html = '<div><h2>Section title</h2> <p>Main content</p></div>';
@@ -210,6 +213,9 @@ class BaseController
         return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
     }
 
+    /**
+     * @return ContainerUtils
+     */
     public function getContainer()
     {
         return $this->container;
@@ -508,7 +514,7 @@ class BaseController
                         $_server_info['desc']
                     );
 
-                    $servers_controller = new ServersController($container);
+                    $servers_controller = new ServersController($this->container);
 
                     $servers_controller->render();
                 }
@@ -516,6 +522,9 @@ class BaseController
         }
     }
 
+    /**
+     * @return HTMLTableController
+     */
     private function _getTableController()
     {
         if (null === $this->_table_controller) {
@@ -525,6 +534,9 @@ class BaseController
         return $this->_table_controller;
     }
 
+    /**
+     * @return HTMLFooterController
+     */
     private function _getFooterController()
     {
         if (null === $this->_footer_controller) {
@@ -534,6 +546,9 @@ class BaseController
         return $this->_footer_controller;
     }
 
+    /**
+     * @return HTMLHeaderController
+     */
     private function _getHeaderController()
     {
         if (null === $this->_header_controller) {
@@ -543,6 +558,9 @@ class BaseController
         return $this->_header_controller;
     }
 
+    /**
+     * @return HTMLNavbarController
+     */
     private function _getNavbarController()
     {
         if (null === $this->_trail_controller) {
@@ -552,6 +570,9 @@ class BaseController
         return $this->_trail_controller;
     }
 
+    /**
+     * @return TreeController
+     */
     private function _getTreeController()
     {
         if (null === $this->_tree_controller) {

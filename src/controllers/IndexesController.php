@@ -217,6 +217,9 @@ class IndexesController extends BaseController
         ], 'indexes-indexes', \get_defined_vars());
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree()
     {
         $data = $this->misc->getDatabaseAccessor();

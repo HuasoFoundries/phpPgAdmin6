@@ -289,8 +289,10 @@ class Postgres extends ADOdbBase
         }
 
         $term = \sprintf(
-            '$_PATERN_$%%s%$_PATERN_$',
-            $term
+            '$_PATERN_$%s%s%s$_PATERN_$',
+            '%',
+            $term,
+            '%'
         );
 
         $sql .= \sprintf(

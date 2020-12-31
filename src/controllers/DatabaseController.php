@@ -143,6 +143,9 @@ class DatabaseController extends BaseController
         $this->printFooter(true, $footer_template);
     }
 
+    /**
+     * @return \Slim\Http\Response|string
+     */
     public function doTree($print = true)
     {
         $reqvars = $this->misc->getRequestVars('database');
@@ -655,6 +658,9 @@ class DatabaseController extends BaseController
         return $msg;
     }
 
+    /**
+     * @return string
+     */
     private function _highlight($string, $term)
     {
         return \str_replace($term, \sprintf(
@@ -663,6 +669,9 @@ class DatabaseController extends BaseController
         ), $string);
     }
 
+    /**
+     * @return string
+     */
     private function _printTypeOption(string $curr)
     {
         $filter = $_REQUEST['filter'];

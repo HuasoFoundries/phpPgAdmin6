@@ -35,8 +35,8 @@
     "friendsofphp/php-cs-fixer": "^2.16",
     "kint-php/kint": "~3.3",
     "php-parallel-lint/php-parallel-lint": "^1.2",
-    "phpstan/phpstan": "^0.12.14",
-    "rector/rector-prefixed": "^0.8.29",
+    "phpstan/phpstan": "^0.12.64",
+    "rector/rector-prefixed": "^0.9",
     "simpletest/simpletest": "^1.2",
     "staabm/annotate-pull-request-from-checkstyle": "^1.4",
     "vimeo/psalm": "^4"
