@@ -8,6 +8,7 @@ use PHPPgAdmin\ContainerUtils;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
 /**
  * PHPPgAdmin 6.1.3.
