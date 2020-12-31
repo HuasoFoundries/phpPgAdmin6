@@ -269,7 +269,7 @@ class DatabaseController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
         $rs = $data->findObject($_REQUEST['term'], $_REQUEST['filter']);
 
-        if (0 < $rs->recordCount()) {
+        if (0 < $rs->RecordCount()) {
             $curr = '';
 
             while (!$rs->EOF) {
@@ -297,11 +297,11 @@ class DatabaseController extends BaseController
                 }
 
                 $this->_printHtmlForType($curr, $rs);
-                $rs->moveNext();
+                $rs->MoveNext();
             }
             echo '</ul>' . \PHP_EOL;
 
-            echo '<p>', $rs->recordCount(), ' ', $this->lang['strobjects'], '</p>' . \PHP_EOL;
+            echo '<p>', $rs->RecordCount(), ' ', $this->lang['strobjects'], '</p>' . \PHP_EOL;
         } else {
             echo \sprintf(
                 '<p>%s</p>',

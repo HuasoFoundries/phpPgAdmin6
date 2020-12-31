@@ -113,7 +113,7 @@ class ADOdbBase
 
         $rs = $this->selectSet($sql);
 
-        if ($rs->recordCount() !== \count($atts)) {
+        if ($rs->RecordCount() !== \count($atts)) {
             return -2;
         }
 
@@ -121,7 +121,7 @@ class ADOdbBase
 
         while (!$rs->EOF) {
             $temp[$rs->fields['attnum']] = $rs->fields['attname'];
-            $rs->moveNext();
+            $rs->MoveNext();
         }
 
         return $temp;
@@ -372,7 +372,7 @@ class ADOdbBase
             return $this->ErrorNo();
         }
 
-        if (0 === $rs->recordCount()) {
+        if (0 === $rs->RecordCount()) {
             return -1;
         }
 

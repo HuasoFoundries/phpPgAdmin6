@@ -59,46 +59,46 @@ class InfoController extends BaseController
         $indexstatsio = $data->getStatsIndexIO($_REQUEST['table']);
 
         // Check that there is some info
-        if ((-99 === $referrers || (-99 !== $referrers && 0 === $referrers->recordCount()))
-            && 0 === $parents->recordCount() && 0 === $children->recordCount()
-            && (0 === $tablestatstups->recordCount() && 0 === $tablestatsio->recordCount()
-                && 0 === $indexstatstups->recordCount() && 0 === $indexstatsio->recordCount())) {
+        if ((-99 === $referrers || (-99 !== $referrers && 0 === $referrers->RecordCount()))
+            && 0 === $parents->RecordCount() && 0 === $children->RecordCount()
+            && (0 === $tablestatstups->RecordCount() && 0 === $tablestatsio->RecordCount()
+                && 0 === $indexstatstups->RecordCount() && 0 === $indexstatsio->RecordCount())) {
             $this->printMsg($this->lang['strnoinfo']);
 
             return;
         }
         // Referring foreign tables
-        if (-99 !== $referrers && 0 < $referrers->recordCount()) {
+        if (-99 !== $referrers && 0 < $referrers->RecordCount()) {
             $this->_printReferring($referrers);
         }
 
         // Parent tables
-        if (0 < $parents->recordCount()) {
+        if (0 < $parents->RecordCount()) {
             $this->_printParents($parents);
         }
 
         // Child tables
-        if (0 < $children->recordCount()) {
+        if (0 < $children->RecordCount()) {
             $this->_printChildren($children);
         }
 
         // Row performance
-        if (0 < $tablestatstups->recordCount()) {
+        if (0 < $tablestatstups->RecordCount()) {
             $this->_printTablestatstups($tablestatstups);
         }
 
         // I/O performance
-        if (0 < $tablestatsio->recordCount()) {
+        if (0 < $tablestatsio->RecordCount()) {
             $this->_printTablestatsio($tablestatsio);
         }
 
         // Index row performance
-        if (0 < $indexstatstups->recordCount()) {
+        if (0 < $indexstatstups->RecordCount()) {
             $this->_printIndexstatstups($indexstatstups);
         }
 
         // Index I/0 performance
-        if (0 < $indexstatsio->recordCount()) {
+        if (0 < $indexstatsio->RecordCount()) {
             $this->_printIndexstatsio($indexstatsio);
         }
     }
@@ -210,7 +210,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_upd'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatstups->fields['n_tup_del'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
-            $tablestatstups->movenext();
+            $tablestatstups->MoveNext();
             ++$i;
         }
 
@@ -366,7 +366,7 @@ class InfoController extends BaseController
                 $this->lang['strpercent']
             ) . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
-            $tablestatsio->movenext();
+            $tablestatsio->MoveNext();
             ++$i;
         }
 
@@ -412,7 +412,7 @@ class InfoController extends BaseController
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatstups->fields['idx_tup_fetch'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
-            $indexstatstups->movenext();
+            $indexstatstups->MoveNext();
             ++$i;
         }
 
@@ -470,7 +470,7 @@ class InfoController extends BaseController
                 $this->lang['strpercent']
             ) . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
-            $indexstatsio->movenext();
+            $indexstatsio->MoveNext();
             ++$i;
         }
 

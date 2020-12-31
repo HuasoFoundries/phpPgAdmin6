@@ -300,7 +300,7 @@ class FunctionsController extends BaseController
 
         $fndata = $data->getFunction($_REQUEST['function_oid']);
 
-        if (0 >= $fndata->recordCount()) {
+        if (0 >= $fndata->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strnodata']
@@ -377,7 +377,7 @@ class FunctionsController extends BaseController
                 $schema = $schemas->fields['nspname'];
                 echo '<option value="', \htmlspecialchars($schema), '"',
                 ($schema === $_POST['formFuncSchema']) ? ' selected="selected"' : '', '>', \htmlspecialchars($schema), '</option>' . \PHP_EOL;
-                $schemas->moveNext();
+                $schemas->MoveNext();
             }
             echo '</select>' . \PHP_EOL;
         } else {
@@ -517,7 +517,7 @@ class FunctionsController extends BaseController
                 $uname = $users->fields['usename'];
                 echo '<option value="', \htmlspecialchars($uname), '"',
                 ($uname === $_POST['formFuncOwn']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                $users->moveNext();
+                $users->MoveNext();
             }
             echo '</select>' . \PHP_EOL;
             echo '<input type="hidden" name="original_owner" value="', \htmlspecialchars($fndata->fields['proowner']), '" />' . \PHP_EOL;
@@ -560,7 +560,7 @@ class FunctionsController extends BaseController
         $funcdata = $data->getFunctionDef($function_oid);
         $func_full = '';
 
-        if (0 >= $funcdata->recordCount()) {
+        if (0 >= $funcdata->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strnodata']
@@ -662,7 +662,7 @@ class FunctionsController extends BaseController
         $funcdata = $data->getFunction($_REQUEST['function_oid']);
         $func_full = '';
 
-        if (0 >= $funcdata->recordCount()) {
+        if (0 >= $funcdata->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strnodata']
@@ -964,7 +964,7 @@ class FunctionsController extends BaseController
                 $szSelected
             );
             $szTypes .= \htmlspecialchars($types->fields['typname'], \ENT_QUOTES) . '</option>';
-            $types->moveNext();
+            $types->MoveNext();
         }
 
         $szFunctionName = \sprintf(
@@ -1048,7 +1048,7 @@ class FunctionsController extends BaseController
                     $this->misc->printVal($langs->fields['lanname']) . '</option>';
                 }
 
-                $langs->moveNext();
+                $langs->MoveNext();
             }
             $szLanguage .= '</select>' . \PHP_EOL;
         }
@@ -1582,7 +1582,7 @@ class FunctionsController extends BaseController
 
         while (!$arrayTypes->EOF) {
             $arrayPTypes[] = "'" . $arrayTypes->fields['typname'] . "'";
-            $arrayTypes->moveNext();
+            $arrayTypes->MoveNext();
         }
 
         foreach ($arrayModes as $pV) {

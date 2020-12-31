@@ -319,7 +319,7 @@ class SchemasController extends BaseController
                 '>%s</option>',
                 $uname
             ) . \PHP_EOL;
-            $users->moveNext();
+            $users->MoveNext();
         }
         echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
@@ -385,7 +385,7 @@ class SchemasController extends BaseController
 
         $schema = $data->getSchemaByName($_REQUEST['schema']);
 
-        if (0 < $schema->recordCount()) {
+        if (0 < $schema->RecordCount()) {
             $this->coalesceArr($_POST, 'comment', $schema->fields['nspcomment']);
 
             $this->coalesceArr($_POST, 'schema', $_REQUEST['schema']);
@@ -423,7 +423,7 @@ class SchemasController extends BaseController
                     $uname = $users->fields['usename'];
                     echo '<option value="', \htmlspecialchars($uname), '"',
                     ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                    $users->moveNext();
+                    $users->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             } else {

@@ -40,28 +40,43 @@ html {
         }
       }
     }
-
+    #detail.detail_container,
     &.detailbody {
       padding-top: 90px; //margin-bottom: -90px;
       margin-left: 10px !important;
       padding-bottom: 20px;
+      div.tabs {
+        display: flex;
+          /* margin-top: 58px; */
+          /* width: 100%; */
+          flex: 2 1 1500px;
+          flex-direction: row;
+          position: relative;
+          right: 0;
+          top: 60px;
+          .tab {
+            flex: 1 1 auto;
+            flex-direction: column;
+          }
+      }
+ & >     table.tabs {
+        position: fixed;
+        top: 58px;
+        z-index: 50;
+        margin-left: -10px;
+        z-index: 50;
 
-      table {
-        &.tabs {
-          position: fixed;
-          top: 58px;
-          z-index: 50;
-          margin-left: -10px;
-          z-index: 50;
-
-          tbody {
-            tr {
-              td {
-                white-space: nowrap;
-              }
+        tbody {
+          tr {
+            td {
+              white-space: nowrap;
             }
           }
         }
+      }
+      table {
+        min-width: calc(100vw - 370px);
+
 
         &#data {
           td {
@@ -138,8 +153,34 @@ html {
           color: #fff !important;
         }
       }
-    }
 
+    }
+    #detail.detail_container {
+      padding-top: 0 !important;
+      .clearfix {
+        height: 61px;
+        clear: both;
+        display: block;
+        width: 40px;
+      }
+      table {
+        &.tabs {
+          position: relative;
+          margin-right: -10px;
+        }
+      }
+        .topbar {
+          position: fixed;
+          .toplink {
+            width: 160px;
+    margin-right: 110px;
+          }
+        }
+        .trail {
+          position: fixed;
+        }
+      
+    }
     .navlink {
       li {
         a {
@@ -192,22 +233,58 @@ html {
       margin: 0;
 
       .flexbox_wrapper {
-        display: flex;
-        height: 100%;
+         height: 100%;
         margin: 0;
 
-        .ui-resizable-helper {
-          border: 2px dotted #00f;
-        }
+        
+          display: flex;
+          flex-direction: row;
+          border: 1px solid silver;
+          overflow: hidden;
 
-        #masking_overlay {
-          position: fixed;
-          top: 0;
-          width: 100%;
-          bottom: 0;
-          z-index: 80;
-          display: none;
+          /* avoid browser level touch actions */
+          xtouch-action: none;
+
+          #browser_container {
+            flex: 0 0 auto;
+            /* only manually resize */
+            //padding: 10px;
+            width: 250px;
+            min-height: 200px;
+            min-width: 150px;
+            white-space: nowrap;
+           // background: #838383;
+            color: white;
+
+            .refreshTree {
+              position: absolute;
+    left: 200px;
+    z-index: 1000;
+    padding: 5px;
+    width: 40px;
+
+            }
+          }
+
+          .splitter {
+            flex: 0 0 auto;
+            width: 8px;
+ 
+            min-height: 200px;
+            cursor: col-resize;
+          }
+
+          #detail_container {
+            flex: 1 1 auto;
+            /* resizable */
+            padding: 10px;
+            width: 100%;
+            min-height: 200px;
+            min-width: 200px;
+            background: #eee;
+          }
         }
+       /*
 
         & > .detail_container {
           height: 100%;
@@ -216,16 +293,16 @@ html {
           padding: 0px;
           text-align: left;
           float: left;
-          flex: 1 1;
-        }
-
+          flex: 1 1 1300px;
+        }*/
+/*
         & > #browser_container {
           height: 100%;
           margin: 0px;
           padding: 0px;
           text-align: left;
           float: left;
-          flex: 0 0 300px;
+          flex: 1 2 300px;
 
           & > .browser_container {
             height: 100%;
@@ -238,7 +315,7 @@ html {
 
           &.ui-resizable {
             width: 300px;
-            flex: unset;
+            //flex: unset;
             border-right: 8px solid #cfd8dc;
 
             .ui-resizable-handle.ui-resizable-e {
@@ -250,7 +327,8 @@ html {
             }
           }
         }
-      }
+        */
+     
 
       &.rtl {
         .flexbox_wrapper {
@@ -261,6 +339,7 @@ html {
 
           & > #browser_container {
             float: right;
+
             flex: 0 0 300px;
 
             &.ui-resizable {
@@ -291,6 +370,7 @@ html {
       .refreshTree {
         float: right;
         text-align: right;
+        margin: 10px;
         padding: 0 3px;
       }
 
@@ -345,9 +425,15 @@ html {
       padding-right: 5pt;
       padding-left: 5pt;
     }
-
-    .topbar {
+    .fixed-top {
+      display: flex;
       position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+    }
+    .topbar {
+      position: sticky;
       z-index: 100;
       width: 100%;
       top: 0;
@@ -355,7 +441,7 @@ html {
     }
 
     .trail {
-      position: fixed;
+      position: sticky;
       z-index: 100;
       width: 100%;
       top: 27px;

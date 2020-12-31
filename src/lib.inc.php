@@ -57,7 +57,7 @@ function getAppInstance(): App
     $conf['IN_TEST'] = IN_TEST;
 
     // Fetch App and DI Container
-    $app = ContainerUtils::getAppInstance($conf);
+     $app = ContainerUtils::getAppInstance($conf);
 
     return $app;
 }

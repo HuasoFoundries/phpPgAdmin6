@@ -264,7 +264,7 @@ trait ViewsMatViewsPropertiesTrait
         $this->printTabs($this->subject, 'definition');
         $this->printMsg($msg);
 
-        if (0 < $vdata->recordCount()) {
+        if (0 < $vdata->RecordCount()) {
             // Show comment if any
             if (null !== $vdata->fields['relcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($vdata->fields['relcomment']), '</p>' . \PHP_EOL;

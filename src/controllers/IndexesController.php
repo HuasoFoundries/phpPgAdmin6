@@ -366,11 +366,11 @@ class IndexesController extends BaseController
         $selColumns = new XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 14em;');
 
-        if (0 < $attrs->recordCount()) {
+        if (0 < $attrs->RecordCount()) {
             while (!$attrs->EOF) {
                 $attname = new XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($attname);
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
         }
 
@@ -431,7 +431,7 @@ class IndexesController extends BaseController
         echo '</tr>';
 
         // Tablespace (if there are any)
-        if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+        if ($data->hasTablespaces() && 0 < $tablespaces->RecordCount()) {
             echo '<tr>' . \PHP_EOL;
             echo \sprintf(
                 '<th class="data left">%s</th>',
@@ -453,7 +453,7 @@ class IndexesController extends BaseController
                     '>%s</option>',
                     $spcname
                 ) . \PHP_EOL;
-                $tablespaces->moveNext();
+                $tablespaces->MoveNext();
             }
             echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
         }

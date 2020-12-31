@@ -84,7 +84,7 @@ class AlldbController extends BaseController
         $output = \ob_get_clean();
 
         $this->printHeader($this->headerTitle(), null, true, $header_template);
-        $this->printBody();
+        $this->printBody(true,'flexbox_body',false,true);
         echo $output;
 
         return $this->printFooter();
@@ -113,7 +113,7 @@ class AlldbController extends BaseController
             'database' => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url' => \containerInstance()->subFolder . $redirecturl . '&amp;',
+                'url' =>   $redirecturl . '&amp;',
                 'vars' => ['database' => 'datname'],
             ],
             'owner' => [
@@ -254,7 +254,6 @@ class AlldbController extends BaseController
             'action' => Decorator::redirecturl('redirect', $reqvars, ['subject' => 'database', 'database' => Decorator::field('datname')]),
             'branch' => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
-
         return $this->printTree($databases, $attrs, 'databases');
     }
 
@@ -301,7 +300,7 @@ class AlldbController extends BaseController
                     $uname = $users->fields['usename'];
                     echo '<option value="', \htmlspecialchars($uname), '"',
                     ($uname === $owner) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                    $users->moveNext();
+                    $users->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             }
@@ -510,7 +509,7 @@ class AlldbController extends BaseController
                     $dbname
                 ) . \PHP_EOL;
             }
-            $templatedbs->moveNext();
+            $templatedbs->MoveNext();
         }
         echo "\t\t\t</select>" . \PHP_EOL;
         echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -560,7 +559,7 @@ class AlldbController extends BaseController
         }
 
         // Tablespace (if there are any)
-        if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+        if ($data->hasTablespaces() && 0 < $tablespaces->RecordCount()) {
             echo \sprintf(
                 '	<tr>
 		<th class="data left">%s</th>',
@@ -581,7 +580,7 @@ class AlldbController extends BaseController
                     '>%s</option>',
                     $spcname
                 ) . \PHP_EOL;
-                $tablespaces->moveNext();
+                $tablespaces->MoveNext();
             }
             echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
         }

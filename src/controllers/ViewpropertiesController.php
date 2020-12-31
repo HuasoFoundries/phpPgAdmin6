@@ -137,7 +137,7 @@ class ViewpropertiesController extends BaseController
         $viewdata = $data->getView($_REQUEST[$this->subject]);
         $this->printHeader($this->headerTitle(), null, true, 'header_sqledit.twig');
 
-        if (0 < $viewdata->recordCount()) {
+        if (0 < $viewdata->RecordCount()) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
                 $_POST['formComment'] = $viewdata->fields['relcomment'];
@@ -323,7 +323,7 @@ class ViewpropertiesController extends BaseController
             // Fetch view info
             $view = $data->getView($_REQUEST[$this->subject]);
 
-            if (0 < $view->recordCount()) {
+            if (0 < $view->RecordCount()) {
                 $this->coalesceArr($_POST, 'name', $view->fields['relname']);
 
                 $this->coalesceArr($_POST, 'owner', $view->fields['relowner']);
@@ -359,7 +359,7 @@ class ViewpropertiesController extends BaseController
                         $uname = $users->fields['usename'];
                         echo '<option value="', \htmlspecialchars($uname), '"',
                         ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                        $users->moveNext();
+                        $users->MoveNext();
                     }
                     echo '</select></td></tr>' . \PHP_EOL;
                 }
@@ -376,7 +376,7 @@ class ViewpropertiesController extends BaseController
                         $schema = $schemas->fields['nspname'];
                         echo '<option value="', \htmlspecialchars($schema), '"',
                         ($schema === $_POST['newschema']) ? ' selected="selected"' : '', '>', \htmlspecialchars($schema), '</option>' . \PHP_EOL;
-                        $schemas->moveNext();
+                        $schemas->MoveNext();
                     }
                     echo '</select></td></tr>' . \PHP_EOL;
                 }

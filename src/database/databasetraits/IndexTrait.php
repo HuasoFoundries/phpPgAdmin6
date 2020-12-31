@@ -40,7 +40,7 @@ trait IndexTrait
 
         $v = $this->selectSet($sql);
 
-        return !(0 === $v->recordCount());
+        return !(0 === $v->RecordCount());
     }
 
     /**

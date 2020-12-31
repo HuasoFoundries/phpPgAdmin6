@@ -348,7 +348,7 @@ class TblpropertiesController extends BaseController
             $tablespaces = $data->getTablespaces(true);
         }
 
-        if (0 < $table->recordCount()) {
+        if (0 < $table->RecordCount()) {
             $this->coalesceArr($_POST, 'name', $table->fields['relname']);
 
             $this->coalesceArr($_POST, 'owner', $table->fields['relowner']);
@@ -389,7 +389,7 @@ class TblpropertiesController extends BaseController
                         '>',
                         \htmlspecialchars($uname),
                         '</option>' . \PHP_EOL;
-                    $users->moveNext();
+                    $users->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             }
@@ -409,13 +409,13 @@ class TblpropertiesController extends BaseController
                         '>',
                         \htmlspecialchars($schema),
                         '</option>' . \PHP_EOL;
-                    $schemas->moveNext();
+                    $schemas->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             }
 
             // Tablespace (if there are any)
-            if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+            if ($data->hasTablespaces() && 0 < $tablespaces->RecordCount()) {
                 echo \sprintf(
                     '	<tr>
 		<th class="data left">%s</th>',
@@ -438,7 +438,7 @@ class TblpropertiesController extends BaseController
                             '>%s</option>',
                             $spcname
                         ) . \PHP_EOL;
-                    $tablespaces->moveNext();
+                    $tablespaces->MoveNext();
                 }
                 echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
             }
@@ -692,7 +692,7 @@ class TblpropertiesController extends BaseController
                     echo "\t<option value=\"", \htmlspecialchars($typname), '"', ($typname === $_POST['type']) ? ' selected="selected"' : '', '>',
                         $misc->printVal($typname),
                         '</option>' . \PHP_EOL;
-                    $types->moveNext();
+                    $types->MoveNext();
                 }
                 echo '</select></td>' . \PHP_EOL;
 

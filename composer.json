@@ -23,6 +23,7 @@
     "slim/flash": "^0.4.0",
     "slim/slim": "^3.6",
     "slim/twig-view": "~2.5.1",
+    "symfony/polyfill-php74": "^1.20",
     "symfony/yaml": "^5.1",
     "twig/twig": "~3"
   },
@@ -56,7 +57,8 @@
       "PHPPgAdmin\\Traits\\": "src/traits",
       "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
       "PHPPgAdmin\\Help\\": "src/help",
-      "PHPPgAdmin\\Translations\\": "src/translations"
+      "PHPPgAdmin\\Translations\\": "src/translations",
+      "PHPPgAdmin\\Interfaces\\": "src/interfaces"
     },
     "files": [
       "src/lib.inc.php",

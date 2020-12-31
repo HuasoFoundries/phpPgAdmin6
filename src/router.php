@@ -117,9 +117,27 @@ $app->get('/redirect[/{subject}]', function (
 ) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->getDestinationWithLastTab($subject);
-
-    return $response->withStatus(302)->withHeader('Location', $destinationurl);
+     return $response->withStatus(302)->withHeader('Location', $destinationurl);
 });
+
+ini_set('display_errors','on');
+$app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
+    \Slim\Http\Request $request,
+    \Slim\Http\Response $response,
+    array $args
+) {
+    $subject = $args['subject'] ?? 'intro';
+    $this->view->offsetSet('includeJsTree',true);
+    $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    $controller = new $className($this);
+    return $controller->render();
+
+    //$query_string = $request->getUri()->getQuery();
+  //return $this->view->maybeRenderIframes($response, $subject, $query_string,'intro_view.twig');
+
+    
+});
+
 
 $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     \Slim\Http\Request $request,
@@ -171,6 +189,7 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
         $subject = 'servers';
     }
     $query_string = $request->getUri()->getQuery();
+    $this->view->offsetSet('includeJsTree',true);
 
     return $this->view->maybeRenderIframes($response, $subject, $query_string);
 });

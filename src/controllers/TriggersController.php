@@ -279,7 +279,7 @@ class TriggersController extends BaseController
 
         $triggerdata = $data->getTrigger($_REQUEST['table'], $_REQUEST['trigger']);
 
-        if (0 < $triggerdata->recordCount()) {
+        if (0 < $triggerdata->RecordCount()) {
             $this->coalesceArr($_POST, 'name', $triggerdata->fields['tgname']);
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
@@ -485,7 +485,7 @@ class TriggersController extends BaseController
         // Get all the functions that can be used in triggers
         $funcs = $data->getTriggerFunctions();
 
-        if (0 === $funcs->recordCount()) {
+        if (0 === $funcs->RecordCount()) {
             $this->doDefault($this->lang['strnofunctions']);
 
             return;
@@ -496,7 +496,7 @@ class TriggersController extends BaseController
 
         while (!$funcs->EOF) {
             $sel0->add(new XHtmlOption($funcs->fields['proname']));
-            $funcs->moveNext();
+            $funcs->MoveNext();
         }
 
         // Populate times

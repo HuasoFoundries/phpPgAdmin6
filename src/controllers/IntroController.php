@@ -34,7 +34,7 @@ class IntroController extends BaseController
     public function doDefault()
     {
         $intro_html = $this->printHeader('Intro', $this->scripts, false);
-        $intro_html .= $this->printBody(false);
+        $intro_html .= $this->printBody(false,'flexbox_body',false,true);
 
         $intro_html .= $this->printTrail('root', false);
 

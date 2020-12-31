@@ -189,7 +189,7 @@ class TablesController extends BaseController
             ],
         ];
 
-        if ((0 < $tables->recordCount()) && $data->hasCreateTableLike()) {
+        if ((0 < $tables->RecordCount()) && $data->hasCreateTableLike()) {
             $navlinks['createlike'] = [
                 'attr' => [
                     'href' => [
@@ -355,7 +355,7 @@ class TablesController extends BaseController
                 echo "\t\t<td class=\"data\"><label for=\"withoutoids\"><input type=\"checkbox\" id=\"withoutoids\" name=\"withoutoids\"", isset($_REQUEST['withoutoids']) ? ' checked="checked"' : '', " />WITHOUT OIDS</label></td>\n\t</tr>" . \PHP_EOL;
 
                 // Tablespace (if there are any)
-                if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+                if ($data->hasTablespaces() && 0 < $tablespaces->RecordCount()) {
                     echo \sprintf(
                         '	<tr>
 		<th class="data left">%s</th>',
@@ -378,7 +378,7 @@ class TablesController extends BaseController
                                 '>%s</option>',
                                 $spcname
                             ) . \PHP_EOL;
-                        $tablespaces->moveNext();
+                        $tablespaces->MoveNext();
                     }
                     echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
                 }
@@ -510,7 +510,7 @@ class TablesController extends BaseController
                             '>',
                             $this->misc->printVal($typname),
                             '</option>' . \PHP_EOL;
-                        $types->moveNext();
+                        $types->MoveNext();
                     }
                     echo "\t\t\t</select>\n\t\t\n";
 
@@ -758,7 +758,7 @@ class TablesController extends BaseController
             if ($data->hasTablespaces()) {
                 $tblsp_ = $data->getTablespaces();
 
-                if (0 < $tblsp_->recordCount()) {
+                if (0 < $tblsp_->RecordCount()) {
                     $tblsp_ = $tblsp_->getArray();
                     $tblsp = [];
 
@@ -879,7 +879,7 @@ class TablesController extends BaseController
 
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
 
-            if (0 < $attrs->recordCount()) {
+            if (0 < $attrs->RecordCount()) {
                 // JavaScript for select all feature
                 echo '<script type="text/javascript">' . \PHP_EOL;
                 echo "//<![CDATA[\n";
@@ -958,7 +958,7 @@ class TablesController extends BaseController
                     ), '</td>';
                     echo '</tr>' . \PHP_EOL;
                     ++$i;
-                    $attrs->moveNext();
+                    $attrs->MoveNext();
                 }
                 // Select all checkbox
                 echo \sprintf(
@@ -1054,7 +1054,7 @@ class TablesController extends BaseController
 
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
 
-        if (0 < $attrs->recordCount()) {
+        if (0 < $attrs->RecordCount()) {
             echo '<table>' . \PHP_EOL;
 
             // Output table header
@@ -1180,7 +1180,7 @@ class TablesController extends BaseController
                 echo '</td>' . \PHP_EOL;
                 echo '</tr>' . \PHP_EOL;
                 ++$i;
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
             echo '</table>' . \PHP_EOL;
 

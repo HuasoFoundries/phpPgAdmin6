@@ -354,7 +354,7 @@ class PrivilegesController extends BaseController
             '<tr><th class="data left">%s</th>',
             $this->lang['strusers']
         ) . \PHP_EOL;
-        echo '<td class="data1"><select name="username[]" multiple="multiple" size="', \min(6, $users->recordCount()), '">' . \PHP_EOL;
+        echo '<td class="data1"><select name="username[]" multiple="multiple" size="', \min(6, $users->RecordCount()), '">' . \PHP_EOL;
 
         while (!$users->EOF) {
             $uname = \htmlspecialchars($users->fields['usename']);
@@ -366,7 +366,7 @@ class PrivilegesController extends BaseController
                 '>%s</option>',
                 $uname
             ) . \PHP_EOL;
-            $users->moveNext();
+            $users->MoveNext();
         }
         echo '</select></td></tr>' . \PHP_EOL;
         echo \sprintf(
@@ -376,8 +376,8 @@ class PrivilegesController extends BaseController
         echo '<td class="data1">' . \PHP_EOL;
         echo '<input type="checkbox" id="public" name="public"', (isset($_REQUEST['public']) ? ' checked="checked"' : ''), ' /><label for="public">PUBLIC</label>' . \PHP_EOL;
         // Only show groups if there are groups!
-        if (0 < $groups->recordCount()) {
-            echo '<br /><select name="groupname[]" multiple="multiple" size="', \min(6, $groups->recordCount()), '">' . \PHP_EOL;
+        if (0 < $groups->RecordCount()) {
+            echo '<br /><select name="groupname[]" multiple="multiple" size="', \min(6, $groups->RecordCount()), '">' . \PHP_EOL;
 
             while (!$groups->EOF) {
                 $gname = \htmlspecialchars($groups->fields['groname']);
@@ -389,7 +389,7 @@ class PrivilegesController extends BaseController
                     '>%s</option>',
                     $gname
                 ) . \PHP_EOL;
-                $groups->moveNext();
+                $groups->MoveNext();
             }
             echo '</select>' . \PHP_EOL;
         }

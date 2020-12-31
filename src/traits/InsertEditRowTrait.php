@@ -82,7 +82,7 @@ trait InsertEditRowTrait
 
                     $fksprops['byfield'][$constrs->fields['p_attnum']][] = $constrs->fields['conid'];
                 }
-                $constrs->moveNext();
+                $constrs->MoveNext();
             }
 
             $fksprops['code'] = '<script type="text/javascript">' . \PHP_EOL;

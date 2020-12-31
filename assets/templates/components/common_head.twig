@@ -1,5 +1,6 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 {% set development_assets = true %}
+ <link rel="stylesheet" href="{{subfolder}}/assets/vendor/jstree/themes/phppgadmin/style.css" />
 <link rel="stylesheet" href="{{ subfolder }}/assets/themes/global.css" type="text/css" id="cssmain" />
 <link rel="stylesheet" href="{{ subfolder }}/assets/themes/{{ theme }}/global.css" type="text/css" id="csstheme" />
 <link rel="stylesheet" href="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.css" type="text/css" />
@@ -8,14 +9,22 @@
 
 <script src="{{ subfolder }}/assets/vendor/jquery/jquery-3.4.1.min.js"></script>
 <script src="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.js"></script>
+<script src="{{ subfolder }}/assets/vendor/jquery-resizable.js"></script>
+  <script src="{{ subfolder }}/assets/vendor/jstree/jstree.min.js"></script>
+  <style type="text/css">
+    .refreshTree { position: absolute; right: 0; z-index: 1000; }
+	.splitter {
+		            background: url("{{subfolder}}/assets/images/vsizegrip.png") center center no-repeat #b0bec5 !important
 
+	}
+  </style>
 {{
   script|raw
 }}<!-- prettier-ignore-start -->
 
 		<script>
 
-				window.stateObj = {
+				globalThis.stateObj = {
 					{%	for key, value in params %}
 					'{{key}}': "{{value}}",
 					{% endfor %}
@@ -27,10 +36,13 @@
 					path:"{{path}}",
 					query_string:"{{query_string}}",
 					strconfdropcred:"{{lang.strconfdropcred}}",
+					origin:globalThis.location.origin,
+					url:"{{url}}",
+					href:globalThis.location.href,
+					guessedSubfolder:(''+globalThis.location.pathname).replace("/{{path}}",''),
+					pathname:globalThis.location.pathname
 				};
-			if (stateObj.reload !== "none" && window.jsTree) {
-  			window.jsTree.jstree('refresh')
-			}
+	
 		
 		
 		</script>

@@ -343,7 +343,7 @@ class DataexportController extends BaseController
                 }
             }
             echo \PHP_EOL;
-            $rs->moveNext();
+            $rs->MoveNext();
         }
         echo "\\.\n";
     }
@@ -365,7 +365,7 @@ class DataexportController extends BaseController
             $j = 0;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($j++);
+                $finfo = $rs->FetchField($j++);
 
                 if ($finfo->name === $data->id && !$oids) {
                     continue;
@@ -381,7 +381,7 @@ class DataexportController extends BaseController
             $j = 0;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($j++);
+                $finfo = $rs->FetchField($j++);
 
                 if ($finfo->name === $data->id && !$oids) {
                     continue;
@@ -390,7 +390,7 @@ class DataexportController extends BaseController
                 echo "\t\t<td>", $this->misc->printVal($v, 'verbatim', $finfo->type), "</td>\r\n";
             }
             echo "\t</tr>\r\n";
-            $rs->moveNext();
+            $rs->MoveNext();
         }
         echo "</table>\r\n";
         echo "</body>\r\n";
@@ -408,7 +408,7 @@ class DataexportController extends BaseController
             echo "\t<header>" . \PHP_EOL;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($j++);
+                $finfo = $rs->FetchField($j++);
                 $name = \htmlspecialchars($finfo->name);
                 $type = \htmlspecialchars($finfo->type);
                 echo \sprintf(
@@ -426,7 +426,7 @@ class DataexportController extends BaseController
             echo "\t\t<row>" . \PHP_EOL;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($j++);
+                $finfo = $rs->FetchField($j++);
                 $name = \htmlspecialchars($finfo->name);
 
                 if (null !== $v) {
@@ -442,7 +442,7 @@ class DataexportController extends BaseController
                 ) . \PHP_EOL;
             }
             echo "\t\t</row>" . \PHP_EOL;
-            $rs->moveNext();
+            $rs->MoveNext();
         }
         echo "\t</records>" . \PHP_EOL;
         echo '</data>' . \PHP_EOL;
@@ -462,7 +462,7 @@ class DataexportController extends BaseController
             $j = 0;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($j++);
+                $finfo = $rs->FetchField($j++);
                 $k = $finfo->name;
                 // SQL (INSERT) format cannot handle oids
                 //                        if ($k == $data->id) continue;
@@ -510,7 +510,7 @@ class DataexportController extends BaseController
 ',
                 $values
             );
-            $rs->moveNext();
+            $rs->MoveNext();
         }
     }
 
@@ -533,7 +533,7 @@ class DataexportController extends BaseController
             $first = true;
 
             foreach ($rs->fields as $k => $v) {
-                $finfo = $rs->fetchField($k);
+                $finfo = $rs->FetchField($k);
                 $v = $finfo->name;
 
                 if (null !== $v) {
@@ -583,7 +583,7 @@ class DataexportController extends BaseController
                 }
             }
             echo "\r\n";
-            $rs->moveNext();
+            $rs->MoveNext();
         }
     }
 }

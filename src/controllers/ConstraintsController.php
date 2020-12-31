@@ -257,11 +257,11 @@ class ConstraintsController extends BaseController
         $selColumns = new XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');
 
-        if (0 < $attrs->recordCount()) {
+        if (0 < $attrs->RecordCount()) {
             while (!$attrs->EOF) {
                 $xmloption = new XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($xmloption);
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
         }
 
@@ -311,7 +311,7 @@ class ConstraintsController extends BaseController
                 echo \htmlspecialchars($tables->fields['nspname']), '.';
             }
             echo \htmlspecialchars($tables->fields['relname']), '</option>' . \PHP_EOL;
-            $tables->moveNext();
+            $tables->MoveNext();
         }
         echo '</select>' . \PHP_EOL;
         echo '</td></tr>';
@@ -428,11 +428,11 @@ class ConstraintsController extends BaseController
         $selColumns = new XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');
 
-        if (0 < $attrs->recordCount()) {
+        if (0 < $attrs->RecordCount()) {
             while (!$attrs->EOF) {
                 $new_option = new XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($new_option);
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
         }
 
@@ -470,7 +470,7 @@ class ConstraintsController extends BaseController
         echo '<td class=data1>' . $selIndex->fetch() . '</td></tr>' . \PHP_EOL;
 
         // Tablespace (if there are any)
-        if ($data->hasTablespaces() && 0 < $tablespaces->recordCount()) {
+        if ($data->hasTablespaces() && 0 < $tablespaces->RecordCount()) {
             echo \sprintf(
                 '<tr><th class="data" colspan="3">%s</th></tr>',
                 $this->lang['strtablespace']
@@ -490,7 +490,7 @@ class ConstraintsController extends BaseController
                     '>%s</option>',
                     $spcname
                 ) . \PHP_EOL;
-                $tablespaces->moveNext();
+                $tablespaces->MoveNext();
             }
             echo '</select></td></tr>' . \PHP_EOL;
         }
@@ -745,11 +745,11 @@ class ConstraintsController extends BaseController
         $selColumns = new XHtmlSelect('TableColumnList', true, 10);
         $selColumns->set_style('width: 15em;');
 
-        if (0 < $attrs->recordCount()) {
+        if (0 < $attrs->RecordCount()) {
             while (!$attrs->EOF) {
                 $xmloption = new XHtmlOption($attrs->fields['attname']);
                 $selColumns->add($xmloption);
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
         }
 

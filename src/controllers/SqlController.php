@@ -224,11 +224,11 @@ class SqlController extends BaseController
             // Now, depending on what happened do various things
 
             // First, if rows returned, then display the results
-            if (0 < $rs->recordCount()) {
+            if (0 < $rs->RecordCount()) {
                 echo "<table>\n<tr>";
 
                 foreach ($rs->fields as $k => $v) {
-                    $finfo = $rs->fetchField($k);
+                    $finfo = $rs->FetchField($k);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
                 echo '</tr>' . \PHP_EOL;
@@ -242,15 +242,15 @@ class SqlController extends BaseController
                     ) . \PHP_EOL;
 
                     foreach ($rs->fields as $k => $v) {
-                        $finfo = $rs->fetchField($k);
+                        $finfo = $rs->FetchField($k);
                         echo '<td style="white-space:nowrap;">', $this->misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
                     }
                     echo '</tr>' . \PHP_EOL;
-                    $rs->moveNext();
+                    $rs->MoveNext();
                     ++$i;
                 }
                 echo '</table>' . \PHP_EOL;
-                echo '<p>', $rs->recordCount(), \sprintf(
+                echo '<p>', $rs->RecordCount(), \sprintf(
                     ' %s</p>',
                     $this->lang['strrows']
                 ) . \PHP_EOL;
@@ -340,7 +340,7 @@ class SqlController extends BaseController
         ];
 
         // Create view and download
-        if ('' !== $this->query && isset($rs) && \is_object($rs) && 0 < $rs->recordCount()) {
+        if ('' !== $this->query && isset($rs) && \is_object($rs) && 0 < $rs->RecordCount()) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [

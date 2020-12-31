@@ -18,6 +18,7 @@ use PHPPgAdmin\XHtml\HTMLHeaderController;
 use PHPPgAdmin\XHtml\HTMLNavbarController;
 use PHPPgAdmin\XHtml\HTMLTableController;
 use Slim\Http\Response;
+use ADORecordSet as ADODBRecordsetClass;
 
 /**
  * Base controller class.
@@ -257,14 +258,14 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param ADORecordSet|ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param \PHPPgAdmin\Interfaces\Recordset|\ADORecordSet
      * @param array                       $attrs     Attributes for tree items
      * @param string                      $section   The section where the branch is linked in the tree
      * @param bool                        $print     either to return or echo the result
      *
      * @return Response|string the json rendered tree
      */
-    public function printTree(&$_treedata, &$attrs, $section, $print = true)
+    public function printTree(  &$_treedata, &$attrs, $section, $print = true)
     {
         $tree = $this->_getTreeController();
 
@@ -409,11 +410,20 @@ class BaseController
         return $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
-    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false)
+    /**
+     * Undocumented function
+     *
+     * @param boolean $doBody
+     * @param string $bodyClass
+     * @param boolean $onloadInit
+     * @param boolean $includeJsTree either to add the jsTree in the root body. By default is inserted using an iframe
+     * @return void
+     */
+    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false,bool $includeJsTree=false)
     {
         $header_controller = $this->_getHeaderController();
 
-        return $header_controller->printBody($doBody, $bodyClass, $onloadInit);
+        return $header_controller->printBody($doBody, $bodyClass, $onloadInit,$includeJsTree);
     }
 
     /**

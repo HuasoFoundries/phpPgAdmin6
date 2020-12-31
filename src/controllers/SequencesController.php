@@ -245,7 +245,7 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
+        if (\is_object($sequence) && 0 < $sequence->RecordCount()) {
             $sequence->fields['is_cycled'] = $data->phpBool($sequence->fields['is_cycled']);
             $sequence->fields['is_called'] = $data->phpBool($sequence->fields['is_called']);
 
@@ -734,7 +734,7 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
+        if (\is_object($sequence) && 0 < $sequence->RecordCount()) {
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
             echo '<table border="0">';
             echo \sprintf(
@@ -845,7 +845,7 @@ class SequencesController extends BaseController
         // Fetch the sequence information
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
-        if (\is_object($sequence) && 0 < $sequence->recordCount()) {
+        if (\is_object($sequence) && 0 < $sequence->RecordCount()) {
             $this->coalesceArr($_POST, 'name', $_REQUEST['sequence']);
 
             $this->coalesceArr($_POST, 'comment', $sequence->fields['seqcomment']);
@@ -893,7 +893,7 @@ class SequencesController extends BaseController
                         '>',
                         \htmlspecialchars($uname),
                         '</option>' . \PHP_EOL;
-                    $users->moveNext();
+                    $users->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             }
@@ -913,7 +913,7 @@ class SequencesController extends BaseController
                         '>',
                         \htmlspecialchars($schema),
                         '</option>' . \PHP_EOL;
-                    $schemas->moveNext();
+                    $schemas->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
             }

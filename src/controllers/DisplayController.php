@@ -410,7 +410,7 @@ class DisplayController extends BaseController
         }
 
         // Create view and download
-        if (isset($_REQUEST['query'], $resultset) && \is_object($resultset) && 0 < $resultset->recordCount()) {
+        if (isset($_REQUEST['query'], $resultset) && \is_object($resultset) && 0 < $resultset->RecordCount()) {
             // Report views don't set a schema, so we need to disable create view in that case
             if (isset($_REQUEST['schema'])) {
                 $navlinks['createview'] = [
@@ -493,7 +493,7 @@ class DisplayController extends BaseController
      */
     public function printResultsTable($resultset, $page, $max_pages, array $_gets, $object): void
     {
-        if (!\is_object($resultset) || 0 >= $resultset->recordCount()) {
+        if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strnodata']
@@ -550,11 +550,11 @@ class DisplayController extends BaseController
             $this->printTableRowCells($resultset, $fkey_information, isset($object));
 
             echo '</tr>' . \PHP_EOL;
-            $resultset->moveNext();
+            $resultset->MoveNext();
         }
         echo '</table>' . \PHP_EOL;
 
-        echo '<p>', $resultset->recordCount(), \sprintf(
+        echo '<p>', $resultset->RecordCount(), \sprintf(
             ' %s</p>',
             $this->lang['strrows']
         ) . \PHP_EOL;
@@ -573,7 +573,7 @@ class DisplayController extends BaseController
     {
         $data = $this->misc->getDatabaseAccessor();
 
-        if (!\is_object($resultset) || 0 >= $resultset->recordCount()) {
+        if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             return;
         }
 
@@ -581,7 +581,7 @@ class DisplayController extends BaseController
             if (($key === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
-            $finfo = $resultset->fetchField($index);
+            $finfo = $resultset->FetchField($index);
 
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>' . \PHP_EOL;
@@ -630,7 +630,7 @@ class DisplayController extends BaseController
         $this->coalesceArr($_REQUEST, 'strings', 'collapsed');
 
         foreach ($resultset->fields as $k => $v) {
-            $finfo = $resultset->fetchField($j++);
+            $finfo = $resultset->FetchField($j++);
 
             if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
@@ -677,7 +677,7 @@ class DisplayController extends BaseController
         $elements = 0;
         $error = true;
 
-        if (1 === $resultset->recordCount() && 0 < $attrs->recordCount()) {
+        if (1 === $resultset->RecordCount() && 0 < $attrs->RecordCount()) {
             echo '<table>' . \PHP_EOL;
 
             // Output table header
@@ -781,12 +781,12 @@ class DisplayController extends BaseController
                 ++$elements;
                 echo '</tr>' . \PHP_EOL;
                 ++$i;
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
             echo '</table>' . \PHP_EOL;
 
             $error = false;
-        } elseif (1 !== $resultset->recordCount()) {
+        } elseif (1 !== $resultset->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strrownotunique']
@@ -925,7 +925,7 @@ class DisplayController extends BaseController
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post">' . \PHP_EOL;
             echo $this->view->form;
 
-            if (1 === $resultset->recordCount()) {
+            if (1 === $resultset->RecordCount()) {
                 echo \sprintf(
                     '<p>%s</p>',
                     $this->lang['strconfdeleterow']
@@ -950,7 +950,7 @@ class DisplayController extends BaseController
                     '<input type="submit" name="no" value="%s" />',
                     $this->lang['strno']
                 ) . \PHP_EOL;
-            } elseif (1 !== $resultset->recordCount()) {
+            } elseif (1 !== $resultset->RecordCount()) {
                 echo \sprintf(
                     '<p>%s</p>',
                     $this->lang['strrownotunique']
@@ -1029,7 +1029,7 @@ class DisplayController extends BaseController
         if (isset($_REQUEST['table'])) {
             $constraints = $data->getConstraintsWithFields($_REQUEST['table']);
 
-            if (0 < $constraints->recordCount()) {
+            if (0 < $constraints->RecordCount()) {
                 $fkey_information['common_url'] = $this->misc->getHREF('schema') . '&amp;subject=table';
 
                 // build the FK constraints data structure
@@ -1053,7 +1053,7 @@ class DisplayController extends BaseController
 
                         $fkey_information['byfield'][$constr['p_field']][] = $constr['conid'];
                     }
-                    $constraints->moveNext();
+                    $constraints->MoveNext();
                 }
             }
         }
@@ -1092,7 +1092,7 @@ class DisplayController extends BaseController
         echo '<a href="javascript:void(0);" style="display:table-cell;" class="fk_delete"><img alt="[delete]" src="' . $this->view->icon('Delete') . '" /></a>' . \PHP_EOL;
         echo '<div style="display:table-cell;">';
 
-        if (\is_object($resultset) && 0 < $resultset->recordCount()) {
+        if (\is_object($resultset) && 0 < $resultset->RecordCount()) {
             /* we are browsing a referenced table here
              * we should show OID if show_oids is true
              * so we give true to withOid in functions bellow

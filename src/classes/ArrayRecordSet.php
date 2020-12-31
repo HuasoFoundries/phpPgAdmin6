@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin;
 
+use ADOFieldObject;
 use Countable;
 
 /**
@@ -21,7 +22,7 @@ use Countable;
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
  */
-class ArrayRecordSet implements Countable
+class ArrayRecordSet implements Countable , Interfaces\RecordSet
 {
     public $EOF = false;
 
@@ -51,13 +52,25 @@ class ArrayRecordSet implements Countable
     {
         return \count($this->_array);
     }
+	function FetchField($off = 0): ADOFieldObject
+	{
+		// offsets begin at 0
+        
+		$o= new ADOFieldObject();
+		
+        $o->name= array_keys($this->fields)[$off]??null;
+        $value = $this->fields[$o->name??random_bytes(64)]??null;
+        $o->type= get_debug_type($value);
+		$o->max_length = 1024;
+		return $o;
+	}
 
     /**
      * Counts the records in the instance array.
      *
      * @return int number of records in the instance array
      */
-    public function recordCount()
+    public function RecordCount():int
     {
         return $this->count();
     }
@@ -66,7 +79,7 @@ class ArrayRecordSet implements Countable
      * Advance the internal pointer of the instance array
      * if no more fields are left, marks the instance variable $EOF as true.
      */
-    public function moveNext(): void
+    public function MoveNext(): void
     {
         $this->fields = \next($this->_array);
 

@@ -67,7 +67,7 @@ trait ViewsMatviewsTrait
             echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post" id="selectform">';
             echo \PHP_EOL;
 
-            if (0 < $attrs->recordCount()) {
+            if (0 < $attrs->RecordCount()) {
                 // JavaScript for select all feature
                 echo '<script type="text/javascript">' . \PHP_EOL;
                 echo "//<![CDATA[\n";
@@ -126,7 +126,7 @@ trait ViewsMatviewsTrait
                     );
                     echo '</td></tr>' . \PHP_EOL;
                     ++$i;
-                    $attrs->moveNext();
+                    $attrs->MoveNext();
                 }
                 // Select all checkbox
                 echo "<tr><td colspan=\"5\"><input type=\"checkbox\" id=\"selectall\" name=\"selectall\" accesskey=\"a\" onclick=\"javascript:selectAll()\" /><label for=\"selectall\">{$this->lang['strselectallfields']}</label></td></tr>";
@@ -198,7 +198,7 @@ trait ViewsMatviewsTrait
             $arrTmp['tablename'] = $tables->fields['relname'];
             $schema_and_name = $tables->fields['nspname'] . '.' . $tables->fields['relname'];
             $arrTables[$schema_and_name] = \serialize($arrTmp);
-            $tables->moveNext();
+            $tables->MoveNext();
         }
         echo \PHPPgAdmin\XHtml\HTMLController::printCombo($arrTables, 'formTables[]', false, '', true);
 
@@ -347,7 +347,7 @@ trait ViewsMatviewsTrait
 
         //get linking keys
         $rsLinkKeys = $data->getLinkingKeys($arrSelTables);
-        $linkCount = $rsLinkKeys->recordCount() > $tblCount ? $rsLinkKeys->recordCount() : $tblCount;
+        $linkCount = $rsLinkKeys->RecordCount() > $tblCount ? $rsLinkKeys->RecordCount() : $tblCount;
 
         $arrFields = []; //array that will hold all our table/field names
 
@@ -369,7 +369,7 @@ trait ViewsMatviewsTrait
                         'tablename' => $arrSelTables[$i]['tablename'],
                         'fieldname' => $attrs->fields['attname'], ]
                 );
-                $attrs->moveNext();
+                $attrs->MoveNext();
             }
 
             $data->setSchema($curSchema);
@@ -418,7 +418,7 @@ trait ViewsMatviewsTrait
             if (!$rsLinkKeys->EOF) {
                 $curLeftLink = \htmlspecialchars(\serialize(['schemaname' => $rsLinkKeys->fields['p_schema'], 'tablename' => $rsLinkKeys->fields['p_table'], 'fieldname' => $rsLinkKeys->fields['p_field']]));
                 $curRightLink = \htmlspecialchars(\serialize(['schemaname' => $rsLinkKeys->fields['f_schema'], 'tablename' => $rsLinkKeys->fields['f_table'], 'fieldname' => $rsLinkKeys->fields['f_field']]));
-                $rsLinkKeys->moveNext();
+                $rsLinkKeys->MoveNext();
             } else {
                 $curLeftLink = '';
                 $curRightLink = '';

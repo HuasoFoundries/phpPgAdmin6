@@ -33,57 +33,98 @@ html body.sql_edit #sqlform #queryedition > .CodeMirror .CodeMirror-scroll .Code
 html body.sql_edit #sqlform #queryedition #query {
   min-height: 70px;
 }
+html body #detail.detail_container,
 html body.detailbody {
   padding-top: 90px;
   margin-left: 10px !important;
   padding-bottom: 20px;
 }
-html body.detailbody table.tabs {
+html body #detail.detail_container div.tabs,
+html body.detailbody div.tabs {
+  display: flex;
+  /* margin-top: 58px; */
+  /* width: 100%; */
+  flex: 2 1 1500px;
+  flex-direction: row;
+  position: relative;
+  right: 0;
+  top: 60px;
+}
+html body #detail.detail_container div.tabs .tab,
+html body.detailbody div.tabs .tab {
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+html body #detail.detail_container > table.tabs,
+html body.detailbody > table.tabs {
   position: fixed;
   top: 58px;
   margin-left: -10px;
   z-index: 50;
 }
-html body.detailbody table.tabs tbody tr td {
+html body #detail.detail_container > table.tabs tbody tr td,
+html body.detailbody > table.tabs tbody tr td {
   white-space: nowrap;
 }
+html body #detail.detail_container table,
+html body.detailbody table {
+  min-width: calc(100vw - 370px);
+}
+html body #detail.detail_container table#data td,
 html body.detailbody table#data td {
   white-space: nowrap;
 }
+html body #detail.detail_container table#data td.opbutton1,
 html body.detailbody table#data td.opbutton1,
+html body #detail.detail_container table#data td.opbutton2,
 html body.detailbody table#data td.opbutton2,
+html body #detail.detail_container table#data td.opbutton3,
 html body.detailbody table#data td.opbutton3 {
   border: 0 none;
   padding-left: 1px;
   padding-right: 1px;
 }
+html body #detail.detail_container table#data td.opbutton1 a,
 html body.detailbody table#data td.opbutton1 a,
+html body #detail.detail_container table#data td.opbutton2 a,
 html body.detailbody table#data td.opbutton2 a,
+html body #detail.detail_container table#data td.opbutton3 a,
 html body.detailbody table#data td.opbutton3 a {
   margin-left: 2px;
   margin-right: 2px;
 }
+html body #detail.detail_container table.will_be_datatable td,
 html body.detailbody table.will_be_datatable td {
   white-space: nowrap;
 }
+html body #detail.detail_container table.will_be_datatable td.opbutton1,
 html body.detailbody table.will_be_datatable td.opbutton1,
+html body #detail.detail_container table.will_be_datatable td.opbutton2,
 html body.detailbody table.will_be_datatable td.opbutton2,
+html body #detail.detail_container table.will_be_datatable td.opbutton3,
 html body.detailbody table.will_be_datatable td.opbutton3 {
   border: 0 none;
   padding-left: 1px;
   padding-right: 1px;
 }
+html body #detail.detail_container table.will_be_datatable td.opbutton1 a,
 html body.detailbody table.will_be_datatable td.opbutton1 a,
+html body #detail.detail_container table.will_be_datatable td.opbutton2 a,
 html body.detailbody table.will_be_datatable td.opbutton2 a,
+html body #detail.detail_container table.will_be_datatable td.opbutton3 a,
 html body.detailbody table.will_be_datatable td.opbutton3 a {
   margin-left: 2px;
   margin-right: 2px;
 }
+html body #detail.detail_container table.will_be_datatable td.comment,
 html body.detailbody table.will_be_datatable td.comment {
   white-space: normal;
 }
+html body #detail.detail_container table tr.data1 td.opbutton1 a,
 html body.detailbody table tr.data1 td.opbutton1 a,
+html body #detail.detail_container table tr.data2 td.opbutton2 a,
 html body.detailbody table tr.data2 td.opbutton2 a,
+html body #detail.detail_container table tr.data3 td.opbutton3 a,
 html body.detailbody table tr.data3 td.opbutton3 a {
   -webkit-background-clip: border-box;
   -webkit-background-origin: padding-box;
@@ -113,6 +154,29 @@ html body.detailbody table tr.data3 td.opbutton3 a {
   vertical-align: middle;
   white-space: nowrap;
   color: #fff !important;
+}
+html body #detail.detail_container {
+  padding-top: 0 !important;
+}
+html body #detail.detail_container .clearfix {
+  height: 61px;
+  clear: both;
+  display: block;
+  width: 40px;
+}
+html body #detail.detail_container table.tabs {
+  position: relative;
+  margin-right: -10px;
+}
+html body #detail.detail_container .topbar {
+  position: fixed;
+}
+html body #detail.detail_container .topbar .toplink {
+  width: 160px;
+  margin-right: 110px;
+}
+html body #detail.detail_container .trail {
+  position: fixed;
 }
 html body .navlink li a {
   -webkit-background-clip: border-box;
@@ -154,59 +218,91 @@ html body.sql_edit table.tabs {
 html body.flexbox_body {
   height: 100%;
   margin: 0;
+  /*
+
+        & > .detail_container {
+          height: 100%;
+          width: 100%;
+          margin: 0px;
+          padding: 0px;
+          text-align: left;
+          float: left;
+          flex: 1 1 1300px;
+        }*/
+  /*
+        & > #browser_container {
+          height: 100%;
+          margin: 0px;
+          padding: 0px;
+          text-align: left;
+          float: left;
+          flex: 1 2 300px;
+
+          & > .browser_container {
+            height: 100%;
+            margin: 0px;
+            padding: 0px;
+            text-align: left;
+            float: left;
+            width: 100%;
+          }
+
+          &.ui-resizable {
+            width: 300px;
+            //flex: unset;
+            border-right: 8px solid #cfd8dc;
+
+            .ui-resizable-handle.ui-resizable-e {
+              width: 8px;
+              right: -8px;
+              background: #84a0ad;
+              top: 45%;
+              height: 50px;
+            }
+          }
+        }
+        */
 }
 html body.flexbox_body .flexbox_wrapper {
-  display: flex;
   height: 100%;
   margin: 0;
+  display: flex;
+  flex-direction: row;
+  border: 1px solid silver;
+  overflow: hidden;
+  /* avoid browser level touch actions */
+  xtouch-action: none;
 }
-html body.flexbox_body .flexbox_wrapper .ui-resizable-helper {
-  border: 2px dotted #00f;
+html body.flexbox_body .flexbox_wrapper #browser_container {
+  flex: 0 0 auto;
+  /* only manually resize */
+  width: 250px;
+  min-height: 200px;
+  min-width: 150px;
+  white-space: nowrap;
+  color: white;
 }
-html body.flexbox_body .flexbox_wrapper #masking_overlay {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  bottom: 0;
-  z-index: 80;
-  display: none;
+html body.flexbox_body .flexbox_wrapper #browser_container .refreshTree {
+  position: absolute;
+  left: 200px;
+  z-index: 1000;
+  padding: 5px;
+  width: 40px;
 }
-html body.flexbox_body .flexbox_wrapper > .detail_container {
-  height: 100%;
-  width: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  flex: 1 1;
-}
-html body.flexbox_body .flexbox_wrapper > #browser_container {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  flex: 0 0 300px;
-}
-html body.flexbox_body .flexbox_wrapper > #browser_container > .browser_container {
-  height: 100%;
-  margin: 0px;
-  padding: 0px;
-  text-align: left;
-  float: left;
-  width: 100%;
-}
-html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable {
-  width: 300px;
-  flex: unset;
-  border-right: 8px solid #cfd8dc;
-}
-html body.flexbox_body .flexbox_wrapper > #browser_container.ui-resizable .ui-resizable-handle.ui-resizable-e {
+html body.flexbox_body .flexbox_wrapper .splitter {
+  flex: 0 0 auto;
   width: 8px;
-  right: -8px;
-  background: #84a0ad;
-  top: 45%;
-  height: 50px;
+  min-height: 200px;
+  cursor: col-resize;
+}
+html body.flexbox_body .flexbox_wrapper #detail_container {
+  flex: 1 1 auto;
+  /* resizable */
+  padding: 10px;
+  width: 100%;
+  min-height: 200px;
+  min-width: 200px;
+  background: #eee;
 }
 html body.flexbox_body.rtl .flexbox_wrapper > .detail_container {
   float: right;
@@ -237,6 +333,7 @@ html body.browser {
 html body.browser .refreshTree {
   float: right;
   text-align: right;
+  margin: 10px;
   padding: 0 3px;
 }
 html body.browser .webfx-tree-row {
@@ -278,15 +375,22 @@ html body .arg_icon {
   padding-right: 5pt;
   padding-left: 5pt;
 }
-html body .topbar {
+html body .fixed-top {
+  display: flex;
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+html body .topbar {
+  position: sticky;
   z-index: 100;
   width: 100%;
   top: 0;
   margin-left: -10px !important;
 }
 html body .trail {
-  position: fixed;
+  position: sticky;
   z-index: 100;
   width: 100%;
   top: 27px;

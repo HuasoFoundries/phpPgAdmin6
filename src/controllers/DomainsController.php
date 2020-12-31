@@ -275,7 +275,7 @@ class DomainsController extends BaseController
         // Fetch all users
         $users = $data->getUsers();
 
-        if (0 < $domaindata->recordCount()) {
+        if (0 < $domaindata->RecordCount()) {
             if (!isset($_POST['domname'])) {
                 $_POST['domtype'] = $domaindata->fields['domtype'];
                 $_POST['domdefault'] = $domaindata->fields['domdef'];
@@ -322,7 +322,7 @@ class DomainsController extends BaseController
                 $uname = $users->fields['usename'];
                 echo '<option value="', \htmlspecialchars($uname), '"',
                 ($uname === $_POST['domowner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                $users->moveNext();
+                $users->MoveNext();
             }
             echo '</select></td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
@@ -483,7 +483,7 @@ class DomainsController extends BaseController
 
         $domaindata = $data->getDomain($_REQUEST['domain']);
 
-        if (0 < $domaindata->recordCount()) {
+        if (0 < $domaindata->RecordCount()) {
             // Show comment if any
             if (null !== $domaindata->fields['domcomment']) {
                 echo '<p class="comment">', $this->misc->printVal($domaindata->fields['domcomment']), '</p>' . \PHP_EOL;
@@ -718,7 +718,7 @@ class DomainsController extends BaseController
             echo '<option value="', \htmlspecialchars($types->fields['typname']), '"',
             ($types->fields['typname'] === $_POST['domtype']) ? ' selected="selected"' : '', '>',
             $this->misc->printVal($types->fields['typname']), '</option>' . \PHP_EOL;
-            $types->moveNext();
+            $types->MoveNext();
         }
         echo '</select>' . \PHP_EOL;
 

@@ -68,13 +68,13 @@ trait HelperTrait
     {
         $result = [];
 
-        if (0 >= $set->recordCount()) {
+        if (0 >= $set->RecordCount()) {
             return $result;
         }
 
         while (!$set->EOF) {
             $result[] = $field ? $set->fields[$field] : $set;
-            $set->moveNext();
+            $set->MoveNext();
         }
 
         return $result;

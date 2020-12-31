@@ -428,7 +428,7 @@ class AggregatesController extends BaseController
         echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
         $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
-        if (0 < $aggrdata->recordCount()) {
+        if (0 < $aggrdata->RecordCount()) {
             // Output table header
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -551,7 +551,7 @@ class AggregatesController extends BaseController
 
         $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
-        if (0 < $aggrdata->recordCount()) {
+        if (0 < $aggrdata->RecordCount()) {
             // Display aggregate's info
             echo '<table>' . \PHP_EOL;
             echo \sprintf(

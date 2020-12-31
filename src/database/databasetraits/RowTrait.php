@@ -91,7 +91,7 @@ trait RowTrait
 
         // If none, check for an OID column.  Even though OIDs can be duplicated, the edit and delete row
         // functions check that they're only modiying a single row.  Otherwise, return empty array.
-        if (0 === $rs->recordCount()) {
+        if (0 === $rs->RecordCount()) {
             // Check for OID column
             $temp = [];
 

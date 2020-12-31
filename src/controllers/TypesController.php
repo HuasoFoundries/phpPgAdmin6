@@ -255,7 +255,7 @@ class TypesController extends BaseController
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
         };
 
-        if (0 < $typedata->recordCount()) {
+        if (0 < $typedata->RecordCount()) {
             $vals = false;
 
             switch ($typedata->fields['typtype']) {
@@ -549,7 +549,7 @@ class TypesController extends BaseController
                         echo "\t\t\t\t<option value=\"", \htmlspecialchars($typname), '"',
                         (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] === $typname) ? ' selected="selected"' : '', '>',
                         $this->misc->printVal($typname), '</option>' . \PHP_EOL;
-                        $types->moveNext();
+                        $types->MoveNext();
                     }
                     echo "\t\t\t</select>\n\t\t</td>" . \PHP_EOL;
 
@@ -885,7 +885,7 @@ class TypesController extends BaseController
                 '>%s</option>',
                 $proname
             ) . \PHP_EOL;
-            $funcs->moveNext();
+            $funcs->MoveNext();
         }
         echo '</select></td></tr>' . \PHP_EOL;
         echo \sprintf(
@@ -905,7 +905,7 @@ class TypesController extends BaseController
                 '>%s</option>',
                 $proname
             ) . \PHP_EOL;
-            $funcs->moveNext();
+            $funcs->MoveNext();
         }
         echo '</select></td></tr>' . \PHP_EOL;
         echo '<tr><th class="data left' . (\version_compare($data->major_version, '7.4', '<') ? ' required' : '') . \sprintf(
@@ -937,7 +937,7 @@ class TypesController extends BaseController
                 '>%s</option>',
                 $currname
             ) . \PHP_EOL;
-            $types->moveNext();
+            $types->MoveNext();
         }
         echo '</select></td></tr>' . \PHP_EOL;
         echo \sprintf(

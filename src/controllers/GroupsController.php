@@ -230,7 +230,7 @@ class GroupsController extends BaseController
         $groupdata = $data->getGroup($_REQUEST['group']);
         $users = $data->getUsers();
 
-        if (0 < $groupdata->recordCount()) {
+        if (0 < $groupdata->RecordCount()) {
             $columns = [
                 'members' => [
                     'title' => $this->lang['strmembers'],
@@ -274,7 +274,7 @@ class GroupsController extends BaseController
                 '>%s</option>',
                 $uname
             ) . \PHP_EOL;
-            $users->moveNext();
+            $users->MoveNext();
         }
         echo '</select>' . \PHP_EOL;
         echo \sprintf(
@@ -373,7 +373,7 @@ class GroupsController extends BaseController
             $data->_maxNameLen
         ), \htmlspecialchars($_POST['name']), "\" /></td>\n\t</tr>" . \PHP_EOL;
 
-        if (0 < $users->recordCount()) {
+        if (0 < $users->RecordCount()) {
             echo \sprintf(
                 '	<tr>
 		<th class="data left">%s</th>',
@@ -381,7 +381,7 @@ class GroupsController extends BaseController
             ) . \PHP_EOL;
 
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(40, $users->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(40, $users->RecordCount()), '">' . \PHP_EOL;
 
             while (!$users->EOF) {
                 $username = $users->fields['usename'];
@@ -390,7 +390,7 @@ class GroupsController extends BaseController
                     $username
                 ),
                 (\in_array($username, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($username), '</option>' . \PHP_EOL;
-                $users->moveNext();
+                $users->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;

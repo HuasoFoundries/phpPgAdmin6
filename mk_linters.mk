@@ -164,7 +164,7 @@ lint:
 	$(executable) --ignore-fails --exclude vendor  src 
 
 
-fixers: dependency_analysis lint csfixer_dry psalm phpstan phpcs  
+fixers: lint csfixer dependency_analysis phpcs psalm phpstan 
 
 
 

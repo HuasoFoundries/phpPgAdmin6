@@ -154,6 +154,11 @@ class ViewManager extends Twig
 
         $this->offsetSet('applangdir', $this->lang['applangdir']);
 
+        $this->offsetSet('icon', [
+            'Refresh' => $this->icon('Refresh'),
+            'Servers' => $this->icon('Servers'),
+        ]);
+
         $this->offsetSet('appName', $c->get('settings')['appName']);
 
         $_theme = $this->getTheme($this->conf, $this->misc->getServerInfo());
@@ -199,13 +204,23 @@ class ViewManager extends Twig
         return $this->_reload_browser;
     }
 
-    public function maybeRenderIframes(Response $response, string $subject, string $query_string): ResponseInterface
+/**
+ * Undocumented function
+ *
+ * @param Response $response
+ * @param string $subject
+ * @param string $query_string
+ * @param string $template
+ * @return ResponseInterface
+ */
+    public function maybeRenderIframes(Response $response, string $subject, string $query_string,string $template='intro_view.twig')
     {
         $c = $this->getContainer();
 
         $in_test = $this->offsetGet('in_test');
+        $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):true;
 
-        if ('1' === $in_test) {
+        if ('1' === $in_test||$includeJsTree) {
             $className = self::getControllerClassName($subject);
             $controller = new $className($c);
 
@@ -217,7 +232,7 @@ class ViewManager extends Twig
             'headertemplate' => 'header.twig',
         ];
 
-        return $this->render($response, 'iframe_view.twig', $viewVars);
+        return $this->render($response, $template, $viewVars);
     }
 
     /**

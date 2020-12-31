@@ -186,7 +186,7 @@ class OperatorsController extends BaseController
         $oprdata = $data->getOperator($_REQUEST['operator_oid']);
         $oprdata->fields['oprcanhash'] = $data->phpBool($oprdata->fields['oprcanhash']);
 
-        if (0 < $oprdata->recordCount()) {
+        if (0 < $oprdata->RecordCount()) {
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '<tr><th class="data left">%s</th>',

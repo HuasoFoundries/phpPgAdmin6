@@ -204,7 +204,7 @@ class UsersController extends BaseController
         $this->printTabs('server', 'account');
         $this->printMsg($msg);
 
-        if (0 < $userdata->recordCount()) {
+        if (0 < $userdata->RecordCount()) {
             $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper']);
             $userdata->fields['usecreatedb'] = $data->phpBool($userdata->fields['usecreatedb']);
             echo '<table>' . \PHP_EOL;
@@ -334,7 +334,7 @@ class UsersController extends BaseController
 
         $userdata = $data->getUser($_REQUEST['username']);
 
-        if (!\is_object($userdata) || 0 < $userdata->recordCount()) {
+        if (!\is_object($userdata) || 0 < $userdata->RecordCount()) {
             $server_info = $this->misc->getServerInfo();
             $canRename = $data->hasUserRename() && ($_REQUEST['username'] !== $server_info['username']);
             $userdata->fields['usesuper'] = $data->phpBool($userdata->fields['usesuper'] ?? false);

@@ -1,151 +1,99 @@
 function historyApiBack() {
   window.history && window.history.back();
 }
+
 function redirectToIframesView() {
-  if (
-    window.inPopUp ||
-    parent.frames.length ||
-    stateObj.reload === 'other' ||
-    stateObj.in_test !== '0'
-  ) {
-    return false;
-  }
   var redirect_to,
-    subject = location.pathname
-      .replace(stateObj.subfolder, '')
-      .replace('/src/views/', '')
+    subject = stateObj.pathname
+      //.replace(stateObj.subfolder, '')
+      .replace(`/src/views`, '')
       .replace('.php', '');
 
-  if (subject === '/redirect/server') {
-    subject = '/servers';
+  if (subject.includes('/redirect/server')) {
+    subject = subject.replace('/redirect/server', '/servers');
   }
-  redirect_to = `${stateObj.subfolder}/${subject}${location.search}`;
+  subject += location.search;
+  redirect_to = `${subject}`;
   var redirection_msg =
-    'location subject ' + subject + ' will redirect_to ' + redirect_to;
+    'location subject is ' + subject + ' will redirect_to ' + redirect_to;
+  console.log(
+    `redirect: ${stateObj.pathname}${location.search} -> ${redirect_to}`
+  );
   return redirect_to;
-}
-function addBehaviorToTopLinks(amIDetailFrame) {
-  const parentHandle =
-      amIDetailFrame && window.parent.document.querySelector('#detail'),
-    toplink_logout =
-      amIDetailFrame &&
-      (parentHandle.contentDocument || document).querySelector(
-        '#toplink_logout'
-      );
-
-  parentHandle &&
-    [
-      ...(parentHandle.contentDocument || document).querySelectorAll(
-        '.toplink a.toplink_popup'
-      ),
-    ].forEach((element) => {
-      let href = element.href;
-      element.addEventListener('click', (e) => {
-        e.preventDefault();
-        window
-          .open(
-            `${href}`,
-            `sqledit:${stateObj.server}`,
-            'toolbar=no,width=750,height=520,resizable=yes,scrollbars=yes'
-          )
-          .focus();
-      });
-      element.setAttribute('rel', href);
-
-      element.href = 'javascript:void(this.click())'; // eslint-disable-line
-    });
-  toplink_logout &&
-    toplink_logout.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (confirm(stateObj.strconfdropcred)) {
-        window.location.href = e.target.href;
-      }
-    });
-
-  return;
-}
-if (
-  !window.inPopUp &&
-  stateObj.reload !== 'other' &&
-  !parent.frames.length &&
-  stateObj.in_test === '0'
-) {
-  redirectToIframesView();
-}
-let {
-  frames: { browser },
-} = window.parent;
-if (browser && browser.jsTree && stateObj.reload) {
-  browser.jsTree.jstree('refresh');
 }
 
 $.ready
   .then(() => {
-    let amIDetailFrame = document.body.classList.contains('detailbody');
     // Need to open popup from parent document
+    stateObj.basePath =
+      window.parent.location.origin + (stateObj.subfolder || '');
 
     let redirect_to = redirectToIframesView();
-    if (redirect_to === false) {
-      return addBehaviorToTopLinks(amIDetailFrame);
-    }
-    window.location.replace(redirect_to);
-  })
-  .then(() => {
-    if (window.parent.frames.length === 0) {
-      return;
-    }
     window.parent.document.title = window.document.title;
 
     /* beautify preserve:start */
-    stateObj.realurl = location.href.replace(location.origin, '');
+    stateObj.realurl = location.href; //.replace(location.origin, '');
     //path will only be defined inside a route
 
     /* beautify preserve:end */
-    stateObj.newurl =
-      stateObj.subfolder +
-      stateObj.realurl
-        .replace(stateObj.subfolder, '')
-        .replace('src/views/', '')
-        .replace('.php', '');
-    stateObj.parenturl = window.parent.location.href.replace(
-      window.parent.location.origin,
-      ''
-    );
-    return;
-  })
-  .then(() => {
+    stateObj.redirect_to = redirect_to;
+    stateObj.parenturl = window.parent.location.href;
     if (window.location.href.indexOf('servers?action=logout') !== -1) {
       window.setTimeout(function () {
-        window.parent.location.replace(`${stateObj.subfolder}/servers`);
+        window.parent.location.replace(`${stateObj.basePath}/servers`);
       }, 3000);
-    } else if (
-      stateObj.method === 'GET' &&
-      stateObj.newurl !== stateObj.parenturl
+      return { jqFn: {}, hljsFn: {} };
+    }
+    if (window.jsTree) {
+      return { jqFn: jQuery.fn || {}, hljsFn: globalThis.hljs || {} };
+    }
+    if (
+      shouldSkipRedirection() ||
+      window.parent.frames.length === 0 ||
+      stateObj.redirect_to === stateObj.parenturl
     ) {
-      //console.log('will pushState', stateObj);
-      window.parent.history.pushState(
-        stateObj,
-        document.title,
-        stateObj.newurl
-      );
+      if (
+        stateObj.method === 'GET' &&
+        stateObj.redirect_to !== stateObj.parenturl
+      ) {
+        let { reload } = stateObj || {};
+        console.log('will pushState. Reload is ' + reload, stateObj);
+        window.parent.history.pushState(
+          stateObj,
+          document.title,
+          stateObj.redirect_to
+        );
+      }
+      return { jqFn: jQuery.fn || {}, hljsFn: globalThis.hljs || {} };
+    } else {
+      //console.log({ stateObj });
+      window.parent.location.replace(redirect_to);
     }
+    return { jqFn: {}, hljsFn: {} };
   })
-  .then(() => {
-    if (jQuery.fn) {
-      if (jQuery.fn.select2) {
-        jQuery('.select2').select2();
-      }
-      if (jQuery.fn.DataTable) {
-        $('.will_be_datatable').DataTable({
-          pageLength: 100,
-        });
-      }
+  .then(({ jqFn, hljsFn }) => {
+    if (jqFn.select2) {
+      jQuery('.select2').select2();
     }
-    if (typeof hljs !== 'undefined') {
-      $('pre code.hljs').each(function (i, block) {
-        hljs.highlightBlock(block);
+    if (jqFn.DataTable) {
+      $('.will_be_datatable').DataTable({
+        pageLength: 100,
       });
     }
+
+    if (hljsFn.highlightBlock) {
+      $('pre code.hljs').each(function (i, block) {
+        hljsFn.highlightBlock(block);
+      });
+    }
+    let { reload } = stateObj || {};
+    if (reload && reload !== 'none') {
+      globalThis.postMessage(
+        { reload_browser: true },
+        window.parent.location.origin
+      );
+    }
+
     return;
   })
   .catch((err) => {

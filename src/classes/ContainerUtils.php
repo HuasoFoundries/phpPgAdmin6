@@ -127,6 +127,7 @@ class ContainerUtils extends Container implements ContainerInterface
                 'gotar' => 'Blue/Green',
                 'bootstrap' => 'Bootstrap3',
             ],
+            'display_sizes' => ['schemas' => false, 'tables' => false],
             'BASE_PATH' => $config['BASE_PATH'] ?? \dirname(__DIR__, 2),
             'subFolder' => $config['subfolder'] ?? '',
             'debug' => $config['debugmode'] ?? false,
@@ -136,12 +137,12 @@ class ContainerUtils extends Container implements ContainerInterface
         ];
 
         self::$envConfig = \array_merge(self::$envConfig, $config);
-
         if (!self::$instance) {
             self::$instance = new static(self::$envConfig);
 
             self::$instance
                 ->withConf(self::$envConfig);
+             
 
             $handlers = new ContainerHandlers(self::$instance);
             $handlers->setExtra()
@@ -150,6 +151,7 @@ class ContainerUtils extends Container implements ContainerInterface
                 ->storeMainRequestParams()
                 ->setHaltHandler();
         }
+
         //ddd($container->subfolder);
         return self::$instance;
     }
@@ -162,15 +164,14 @@ class ContainerUtils extends Container implements ContainerInterface
     public function getRedirectUrl()
     {
         $container = self::getContainerInstance();
-        $container = self::getContainerInstance();
         $query_string = $container->request->getUri()->getQuery();
 
         // if server_id isn't set, then you will be redirected to intro
         if (null === $container->request->getQueryParam('server')) {
-            $destinationurl = self::$envConfig['subFolder'] . '/src/views/intro';
+            $destinationurl = $this->subFolder. '/src/views/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = self::$envConfig['subFolder'] . '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = $this->subFolder. '/src/views/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -237,7 +238,7 @@ class ContainerUtils extends Container implements ContainerInterface
         $actionurl = Decorator::actionurl($url['url'], $_GET);
         $destinationurl = $actionurl->value($_GET);
 
-        return \str_replace('views/?', \sprintf(
+        return $this->subFolder.\str_replace('views/?', \sprintf(
             'views/%s?',
             $subject
         ), $destinationurl);
@@ -296,7 +297,7 @@ class ContainerUtils extends Container implements ContainerInterface
         $conf['plugins'] = [];
 
         $container->BASE_PATH = $conf['BASE_PATH'];
-        $container->subFolder = $conf['subfolder'];
+        $container->subFolder = $conf['subfolder']??$conf['subFolder'];
         $container->debug = $conf['debugmode'];
         $container->THEME_PATH = $conf['theme_path'];
         $container->IN_TEST = $conf['IN_TEST'];

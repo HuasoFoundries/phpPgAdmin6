@@ -45,7 +45,7 @@ class ServersController extends BaseController
         $msg = $this->msg;
 
         $server_html = $this->printHeader($this->headerTitle(), null, false);
-        $server_html .= $this->printBody(false);
+        $server_html .= $this->printBody(false,'flexbox_body',false,true);
         $server_html .= $this->printTrail('root', false);
 
         \ob_start();
@@ -95,7 +95,7 @@ class ServersController extends BaseController
 
         if ((false !== $group) &&
             (isset($this->conf['srv_groups'][$group])) &&
-            (0 < $groups->recordCount())
+            (0 < $groups->RecordCount())
         ) {
             $this->printTitle(\sprintf($this->lang['strgroupgroups'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')));
             echo $this->printTable($groups, $columns, $actions, $this->table_place);

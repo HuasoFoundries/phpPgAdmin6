@@ -465,7 +465,7 @@ class FulltextController extends BaseController
             if ($_POST['formTemplate'] === $tpls[$tplname]) {
                 $tplsel = \htmlspecialchars($tpls[$tplname]);
             }
-            $ftscfgs->moveNext();
+            $ftscfgs->MoveNext();
         }
         echo HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
         echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -493,7 +493,7 @@ class FulltextController extends BaseController
             if ($_POST['formParser'] === $ftsparsers_[$parsername]) {
                 $ftsparsel = \htmlspecialchars($ftsparsers_[$parsername]);
             }
-            $ftsparsers->moveNext();
+            $ftsparsers->MoveNext();
         }
         echo HTMLController::printCombo($ftsparsers_, 'formParser', true, $ftsparsel, false);
         echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -589,7 +589,7 @@ class FulltextController extends BaseController
 
         $ftscfg = $data->getFtsConfigurationByName($_REQUEST['ftscfg']);
 
-        if (0 < $ftscfg->recordCount()) {
+        if (0 < $ftscfg->RecordCount()) {
             $this->coalesceArr($_POST, 'formComment', $ftscfg->fields['comment']);
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
@@ -959,7 +959,7 @@ class FulltextController extends BaseController
             if ($_POST['formTemplate'] === $tpls[$tplname]) {
                 $tplsel = \htmlspecialchars($tpls[$tplname]);
             }
-            $ftstpls->moveNext();
+            $ftstpls->MoveNext();
         }
         echo HTMLController::printCombo($tpls, 'formTemplate', true, $tplsel, false);
         echo "\n\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -1098,7 +1098,7 @@ class FulltextController extends BaseController
 
         $ftsdict = $data->getFtsDictionaryByName($_REQUEST['ftsdict']);
 
-        if (0 < $ftsdict->recordCount()) {
+        if (0 < $ftsdict->RecordCount()) {
             $this->coalesceArr($_POST, 'formComment', $ftsdict->fields['comment']);
 
             $this->coalesceArr($_POST, 'ftsdict', $_REQUEST['ftsdict']);
@@ -1265,7 +1265,7 @@ class FulltextController extends BaseController
 
         $ftsdicts = $data->getFtsDictionaries();
 
-        if (0 < $ftsdicts->recordCount()) {
+        if (0 < $ftsdicts->RecordCount()) {
             $this->coalesceArr($_POST, 'formMapping', $_REQUEST['mapping']);
 
             $this->coalesceArr($_POST, 'formDictionary', '');
@@ -1325,7 +1325,7 @@ class FulltextController extends BaseController
                         '>%s</option>',
                         $ftsdict
                     ) . \PHP_EOL;
-                $ftsdicts->moveNext();
+                $ftsdicts->MoveNext();
             }
 
             echo "\t\t</td>" . \PHP_EOL;
@@ -1387,7 +1387,7 @@ class FulltextController extends BaseController
 
         $ftsdicts = $data->getFtsDictionaries();
 
-        if (0 < $ftsdicts->recordCount()) {
+        if (0 < $ftsdicts->RecordCount()) {
             $this->coalesceArr($_POST, 'formMapping', '');
 
             $this->coalesceArr($_POST, 'formDictionary', '');
@@ -1423,7 +1423,7 @@ class FulltextController extends BaseController
                         $mapping_desc
                     ) : '',
                     '</option>' . \PHP_EOL;
-                $mappings->moveNext();
+                $mappings->MoveNext();
             }
             echo "\t\t</td>" . \PHP_EOL;
             echo "\t</tr>" . \PHP_EOL;
@@ -1448,7 +1448,7 @@ class FulltextController extends BaseController
                         '>%s</option>',
                         $ftsdict
                     ) . \PHP_EOL;
-                $ftsdicts->moveNext();
+                $ftsdicts->MoveNext();
             }
 
             echo "\t\t</td>" . \PHP_EOL;

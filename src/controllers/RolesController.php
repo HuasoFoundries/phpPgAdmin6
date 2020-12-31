@@ -317,14 +317,14 @@ class RolesController extends BaseController
 
         $roles = $data->getRoles();
 
-        if (0 < $roles->recordCount()) {
+        if (0 < $roles->RecordCount()) {
             echo \sprintf(
                 '	<tr>
 		<th class="data left">%s</th>',
                 $this->lang['strmemberof']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -333,7 +333,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -345,7 +345,7 @@ class RolesController extends BaseController
                 $this->lang['strmembers']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -354,7 +354,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -366,7 +366,7 @@ class RolesController extends BaseController
                 $this->lang['stradminmembers']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -375,7 +375,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -453,7 +453,7 @@ class RolesController extends BaseController
 
         $roledata = $data->getRole($_REQUEST['rolename']);
 
-        if (0 >= $roledata->recordCount()) {
+        if (0 >= $roledata->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
                 $this->lang['strnodata']
@@ -553,14 +553,14 @@ class RolesController extends BaseController
 
         $roles = $data->getRoles($_REQUEST['rolename']);
 
-        if (0 < $roles->recordCount()) {
+        if (0 < $roles->RecordCount()) {
             echo \sprintf(
                 '	<tr>
 		<th class="data left">%s</th>',
                 $this->lang['strmemberof']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"memberof[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -569,7 +569,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -581,7 +581,7 @@ class RolesController extends BaseController
                 $this->lang['strmembers']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"members[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -590,7 +590,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -602,7 +602,7 @@ class RolesController extends BaseController
                 $this->lang['stradminmembers']
             ) . \PHP_EOL;
             echo "\t\t<td class=\"data\">" . \PHP_EOL;
-            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", \min(20, $roles->recordCount()), '">' . \PHP_EOL;
+            echo "\t\t\t<select name=\"adminmembers[]\" multiple=\"multiple\" size=\"", \min(20, $roles->RecordCount()), '">' . \PHP_EOL;
 
             while (!$roles->EOF) {
                 $rolename = $roles->fields['rolname'];
@@ -611,7 +611,7 @@ class RolesController extends BaseController
                     $rolename
                 ),
                 (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
-                $roles->moveNext();
+                $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
             echo "\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -727,7 +727,7 @@ class RolesController extends BaseController
 
         $roledata = $data->getRole($_REQUEST['rolename']);
 
-        if (0 < $roledata->recordCount()) {
+        if (0 < $roledata->RecordCount()) {
             $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
             $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
@@ -799,10 +799,10 @@ class RolesController extends BaseController
             echo "\t\t<td class=\"data2\">";
             $memberof = $data->getMemberOf($_REQUEST['rolename']);
 
-            if (0 < $memberof->recordCount()) {
+            if (0 < $memberof->RecordCount()) {
                 while (!$memberof->EOF) {
                     echo $this->misc->printVal($memberof->fields['rolname']), '<br />' . \PHP_EOL;
-                    $memberof->moveNext();
+                    $memberof->MoveNext();
                 }
             }
             echo "</td>\n\t</tr>" . \PHP_EOL;
@@ -814,10 +814,10 @@ class RolesController extends BaseController
             echo "\t\t<td class=\"data1\">";
             $members = $data->getMembers($_REQUEST['rolename']);
 
-            if (0 < $members->recordCount()) {
+            if (0 < $members->RecordCount()) {
                 while (!$members->EOF) {
                     echo $this->misc->printVal($members->fields['rolname']), '<br />' . \PHP_EOL;
-                    $members->moveNext();
+                    $members->MoveNext();
                 }
             }
             echo "</td>\n\t</tr>" . \PHP_EOL;
@@ -829,10 +829,10 @@ class RolesController extends BaseController
             echo "\t\t<td class=\"data2\">";
             $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
 
-            if (0 < $adminmembers->recordCount()) {
+            if (0 < $adminmembers->RecordCount()) {
                 while (!$adminmembers->EOF) {
                     echo $this->misc->printVal($adminmembers->fields['rolname']), '<br />' . \PHP_EOL;
-                    $adminmembers->moveNext();
+                    $adminmembers->MoveNext();
                 }
             }
             echo "</td>\n\t</tr>" . \PHP_EOL;
@@ -908,7 +908,7 @@ class RolesController extends BaseController
         $this->printTabs('server', 'account');
         $this->printMsg($msg);
 
-        if (0 < $roledata->recordCount()) {
+        if (0 < $roledata->RecordCount()) {
             $roledata->fields['rolsuper'] = $data->phpBool($roledata->fields['rolsuper']);
             $roledata->fields['rolcreatedb'] = $data->phpBool($roledata->fields['rolcreatedb']);
             $roledata->fields['rolcreaterole'] = $data->phpBool($roledata->fields['rolcreaterole']);
@@ -1092,12 +1092,12 @@ class RolesController extends BaseController
         if (!isset($_POST['memberof'])) {
             $memberof = $data->getMemberOf($_REQUEST['rolename']);
 
-            if (0 < $memberof->recordCount()) {
+            if (0 < $memberof->RecordCount()) {
                 $i = 0;
 
                 while (!$memberof->EOF) {
                     $_POST['memberof'][$i++] = $memberof->fields['rolname'];
-                    $memberof->moveNext();
+                    $memberof->MoveNext();
                 }
             } else {
                 $_POST['memberof'] = [];
@@ -1110,12 +1110,12 @@ class RolesController extends BaseController
         if (!isset($_POST['members'])) {
             $members = $data->getMembers($_REQUEST['rolename']);
 
-            if (0 < $members->recordCount()) {
+            if (0 < $members->RecordCount()) {
                 $i = 0;
 
                 while (!$members->EOF) {
                     $_POST['members'][$i++] = $members->fields['rolname'];
-                    $members->moveNext();
+                    $members->MoveNext();
                 }
             } else {
                 $_POST['members'] = [];
@@ -1128,12 +1128,12 @@ class RolesController extends BaseController
         if (!isset($_POST['adminmembers'])) {
             $adminmembers = $data->getMembers($_REQUEST['rolename'], 't');
 
-            if (0 < $adminmembers->recordCount()) {
+            if (0 < $adminmembers->RecordCount()) {
                 $i = 0;
 
                 while (!$adminmembers->EOF) {
                     $_POST['adminmembers'][$i++] = $adminmembers->fields['rolname'];
-                    $adminmembers->moveNext();
+                    $adminmembers->MoveNext();
                 }
             } else {
                 $_POST['adminmembers'] = [];

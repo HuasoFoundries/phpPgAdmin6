@@ -154,7 +154,7 @@ trait TableTrait
         // Fetch table
         $t = $this->getTable($table);
 
-        if (!\is_object($t) || 1 !== $t->recordCount()) {
+        if (!\is_object($t) || 1 !== $t->RecordCount()) {
             $this->rollbackTransaction();
 
             return null;
@@ -187,7 +187,7 @@ trait TableTrait
 
         // Output all table columns
         $col_comments_sql = ''; // Accumulate comments on columns
-        $num = $atts->recordCount() + $cons->recordCount();
+        $num = $atts->RecordCount() + $cons->RecordCount();
         $i = 1;
 
         $sql = $this->_dumpSerials($atts, $t, $sql, $col_comments_sql, $i, $num);
@@ -393,7 +393,7 @@ trait TableTrait
 
         $rs = $this->selectSet($sql);
 
-        if (1 !== $rs->recordCount()) {
+        if (1 !== $rs->RecordCount()) {
             return false;
         }
 
@@ -421,13 +421,13 @@ trait TableTrait
             return null;
         }
 
-        if (0 < $indexes->recordCount()) {
+        if (0 < $indexes->RecordCount()) {
             $sql .= "\n-- Indexes\n\n";
 
             while (!$indexes->EOF) {
                 $sql .= $indexes->fields['inddef'] . ";\n";
 
-                $indexes->moveNext();
+                $indexes->MoveNext();
             }
         }
 
@@ -440,14 +440,14 @@ trait TableTrait
             return null;
         }
 
-        if (0 < $triggers->recordCount()) {
+        if (0 < $triggers->RecordCount()) {
             $sql .= "\n-- Triggers\n\n";
 
             while (!$triggers->EOF) {
                 $sql .= $triggers->fields['tgdef'];
                 $sql .= ";\n";
 
-                $triggers->moveNext();
+                $triggers->MoveNext();
             }
         }
 
@@ -460,13 +460,13 @@ trait TableTrait
             return null;
         }
 
-        if (0 < $rules->recordCount()) {
+        if (0 < $rules->RecordCount()) {
             $sql .= "\n-- Rules\n\n";
 
             while (!$rules->EOF) {
                 $sql .= $rules->fields['definition'] . "\n";
 
-                $rules->moveNext();
+                $rules->MoveNext();
             }
         }
 
@@ -893,7 +893,7 @@ trait TableTrait
     {
         $tblrs = $this->getTable($table);
 
-        if (1 !== $tblrs->recordCount()) {
+        if (1 !== $tblrs->RecordCount()) {
             return -2;
         }
 
@@ -1312,7 +1312,7 @@ trait TableTrait
 
             $autovacs[] = $_;
 
-            $_autovacs->moveNext();
+            $_autovacs->MoveNext();
         }
 
         return new ArrayRecordSet($autovacs);
@@ -1667,7 +1667,7 @@ trait TableTrait
                 );
             }
 
-            $atts->moveNext();
+            $atts->MoveNext();
             ++$i;
         }
 
@@ -1725,7 +1725,7 @@ trait TableTrait
                 $sql .= "\n";
             }
 
-            $cons->moveNext();
+            $cons->MoveNext();
             ++$i;
         }
 
@@ -1798,7 +1798,7 @@ trait TableTrait
                 );
             }
 
-            $atts->moveNext();
+            $atts->MoveNext();
         }
 
         return $sql;

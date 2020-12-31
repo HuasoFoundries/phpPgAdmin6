@@ -1,7 +1,31 @@
 {{script_footer|raw}} {% if print_bottom_link == true %}
 <a data-footertemplate="{{footer_template}}" href="#" class="bottom_link">{{lang.strgotoppage}}</a> {% endif %}
+<script src="{{subfolder}}/assets/js/toplinks_behavior.js" type="text/javascript"></script>
 <script src="{{subfolder}}/assets/js/footer_scripts.js" type="text/javascript"></script>
 
+<script type="text/javascript">
+var dir = '{{lang.applangdir}}';
+
+window.onpopstate = function (event) {
+	console.log('onpopstate', {
+		state: event.state
+	});
+	if (event.state && event.state.realurl) {
+		let ifr = document.getElementById('detail'),
+		realUrl=event.state.realurl,
+		 detailLocation=ifr.contentWindow.location.href;
+		//console.log({detailLocation,realUrl});
+		ifr.contentWindow.location.replace(event.state.realurl);
+	}
+};
+if('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('{{subfolder}}/assets/sw.dev.js').then(function(registration) {
+        console.log('Service Worker Registered');
+    }).catch(warn=>{
+		console.warn(warn);
+	})
+}
+</script>
 </body>
 
 </html>

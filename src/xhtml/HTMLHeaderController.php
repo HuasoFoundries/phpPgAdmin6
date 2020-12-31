@@ -90,13 +90,18 @@ class HTMLHeaderController extends HTMLController
      *
      * @return string the parsed template
      */
-    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false)
+    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false,$includeJsTree=false)
     {
-        $bodyClass = $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass);
-        $onload = ($onloadInit ? 'onload="init();" ' : '');
-
-        $bodyHtml = \sprintf('<body data-controller="%s" class="%s" %s >', $this->controller_name, $bodyClass, $onload);
-        $bodyHtml .= \PHP_EOL;
+        
+       $includeJsTree=$includeJsTree||(       $this->view->offsetExists('includeJsTree')?$this->view->offsetGet('includeJsTree'):false);
+        $viewVars=[
+            'bodyClass'=> $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass).' '.$includeJsTree?'flexbox_body':'',
+            'onload'=>($onloadInit ? 'onload="init();" ' : ''),
+            'controller_name'=>$this->controller_name,
+            'includeJsTree'=>$includeJsTree
+        ];
+   
+        $bodyHtml = $this->view->fetch('components/common_body.twig', $viewVars);
 
         if (!$this->_no_output && $doBody) {
             echo $bodyHtml;

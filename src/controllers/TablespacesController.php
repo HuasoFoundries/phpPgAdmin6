@@ -183,7 +183,7 @@ class TablespacesController extends BaseController
         // Fetch all users
         $users = $data->getUsers();
 
-        if (0 < $tablespace->recordCount()) {
+        if (0 < $tablespace->RecordCount()) {
             $this->coalesceArr($_POST, 'name', $tablespace->fields['spcname']);
 
             $this->coalesceArr($_POST, 'owner', $tablespace->fields['spcowner']);
@@ -213,7 +213,7 @@ class TablespacesController extends BaseController
                 $uname = $users->fields['usename'];
                 echo '<option value="', \htmlspecialchars($uname), '"',
                 ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                $users->moveNext();
+                $users->MoveNext();
             }
             echo '</select></td></tr>' . \PHP_EOL;
 
@@ -364,7 +364,7 @@ class TablespacesController extends BaseController
             $uname = $users->fields['usename'];
             echo "\t\t\t<option value=\"", \htmlspecialchars($uname), '"',
             ($uname === $_POST['formOwner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-            $users->moveNext();
+            $users->MoveNext();
         }
         echo "\t\t</select></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(

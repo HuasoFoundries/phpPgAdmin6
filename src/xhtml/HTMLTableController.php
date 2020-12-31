@@ -97,7 +97,7 @@ class HTMLTableController extends HTMLController
 
     public function printTable($turn_into_datatable = true, $with_body = true)
     {
-        if (0 >= $this->tabledata->recordCount()) {
+        if (0 >= $this->tabledata->RecordCount()) {
             return "<p>{$this->nodata}</p>" . \PHP_EOL;
         }
 
@@ -330,6 +330,7 @@ class HTMLTableController extends HTMLController
 
                         if (null !== $val) {
                             if (isset($column['url'])) {
+                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder,$column['url']??'');
                                 $tbody_html .= "<a href=\"{$column['url']}";
                                 $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
                                 $tbody_html .= '">';
@@ -350,7 +351,7 @@ class HTMLTableController extends HTMLController
             }
             $tbody_html .= '</tr>' . \PHP_EOL;
 
-            $tabledata->moveNext();
+            $tabledata->MoveNext();
             ++$i;
         }
 

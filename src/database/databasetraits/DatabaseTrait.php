@@ -643,7 +643,7 @@ trait DatabaseTrait
 
         while (!$_defaults->EOF) {
             $ret[$_defaults->fields['name']] = $_defaults->fields['setting'];
-            $_defaults->moveNext();
+            $_defaults->MoveNext();
         }
 
         return $ret;

@@ -146,7 +146,7 @@ trait ServersTrait
             $data = $this->misc->getDatabaseAccessor();
             $databases = $data->getDatabases();
 
-            if (0 < $databases->recordCount()) {
+            if (0 < $databases->RecordCount()) {
                 $connection_html .= '<label>';
                 $connection_html .= $this->view->printHelp($this->lang['strdatabase'], 'pg.database', false);
                 $connection_html .= ": <select  id='selectdb'  name=\"database\" >" . \PHP_EOL;
@@ -161,7 +161,7 @@ trait ServersTrait
                     $dbselected = isset($_REQUEST['database']) && $dbname === $_REQUEST['database'] ? ' selected="selected"' : '';
                     $connection_html .= '<option value="' . \htmlspecialchars($dbname) . '" ' . $dbselected . '>' . \htmlspecialchars($dbname) . '</option>' . \PHP_EOL;
 
-                    $databases->moveNext();
+                    $databases->MoveNext();
                 }
                 $connection_html .= '</select></label>' . \PHP_EOL;
             } else {

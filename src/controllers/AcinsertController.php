@@ -79,7 +79,7 @@ class AcinsertController extends BaseController
                 echo '<tr class="acline">';
 
                 foreach ($res->fields as $n => $v) {
-                    $finfo = $res->fetchField($j++);
+                    $finfo = $res->FetchField($j++);
 
                     if (\in_array($n, $fkeynames, true)) {
                         echo \sprintf(
@@ -96,7 +96,7 @@ class AcinsertController extends BaseController
                 }
                 echo '</tr>' . \PHP_EOL;
                 ++$i;
-                $res->moveNext();
+                $res->MoveNext();
             }
             echo '</table>' . \PHP_EOL;
 
@@ -109,7 +109,7 @@ class AcinsertController extends BaseController
                 $js .= "fkl_hasprev=false;\n";
             }
 
-            if (12 === $res->recordCount()) {
+            if (12 === $res->RecordCount()) {
                 $js .= "fkl_hasnext=true;\n";
                 echo '&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" id="fknext">Next &gt;&gt;</a>';
             } else {

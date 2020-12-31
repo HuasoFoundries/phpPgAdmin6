@@ -13,7 +13,7 @@ use Countable;
 /**
  * Extends ADORecordSet to let correct inference on PHPDoc params.
  */
-class ADORecordSet extends ADODBRecordsetClass implements Countable
+class ADORecordSet extends ADODBRecordsetClass implements Countable, Interfaces\RecordSet
 {
     /**
      * Returns the recordCount.
@@ -28,7 +28,7 @@ class ADORecordSet extends ADODBRecordsetClass implements Countable
      *
      * @return int number of rows or -1 if this is not supported
      */
-    public function recordCount()
+    public function RecordCount()
     {
         return $this->count();
     }
@@ -40,8 +40,12 @@ class ADORecordSet extends ADODBRecordsetClass implements Countable
      *
      * @return ADOFieldObject the field
      */
-    public function fetchField($fieldoffset = -1): ADOFieldObject
+    public function FetchField($fieldoffset = -1): ADOFieldObject
     {
-        return parent::fetchField();
+        return parent::FetchField();
+    }
+
+    public function MoveNext():void {
+parent::MoveNext();
     }
 }

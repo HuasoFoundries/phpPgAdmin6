@@ -330,7 +330,7 @@ class ColpropertiesController extends BaseController
                         $types_for_js[] = $typname;
                         echo "\t<option value=\"", \htmlspecialchars($typname), '"', ($typname === $_REQUEST['type']) ? ' selected="selected"' : '', '>',
                         $this->misc->printVal($typname), '</option>' . \PHP_EOL;
-                        $types->moveNext();
+                        $types->MoveNext();
                     }
                     echo '</select>' . \PHP_EOL;
                     echo '</td>' . \PHP_EOL;

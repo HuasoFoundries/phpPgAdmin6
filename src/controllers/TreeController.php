@@ -9,6 +9,7 @@ namespace PHPPgAdmin\Controller;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
+use PHPPgAdmin\Interfaces\RecordSet;
 use PHPPgAdmin\Traits\HelperTrait;
 
 /**
@@ -68,7 +69,7 @@ class TreeController extends BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param ArrayRecordSet $_treedata a set of records to populate the tree
+     * @param \PHPPgAdmin\Interfaces\Recordset|\ADORecordSet $_treedata a set of records to populate the tree
      * @param array          $attrs     Attributes for tree items
      *                                  'text' - the text for the tree node
      *                                  'icon' - an icon for node
@@ -86,17 +87,18 @@ class TreeController extends BaseController
      *
      * @psalm-return array<int|string, array<string, mixed>|bool|string>
      */
-    public function printTree(&$_treedata, &$attrs, $section, $print = true)
+    public function printTree(  &$_treedata, &$attrs, $section, $print = true)
     {
         $treedata = [];
 
-        if (0 < $_treedata->recordCount()) {
+        if (0 < $_treedata->RecordCount()) {
             while (!$_treedata->EOF) {
-                $treedata[] = $_treedata->fields;
-                $_treedata->moveNext();
+                 $treedata[] = $_treedata->fields;
+                $_treedata->MoveNext();
             }
-        }
 
+        }
+        
         $tree_params = [
             'treedata' => &$treedata,
             'attrs' => &$attrs,
@@ -163,7 +165,11 @@ class TreeController extends BaseController
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->view->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
-
+                $href=Decorator::get_sanitized_value($attrs['action'], $rec);
+                if ($href) {
+                    $href = \str_replace('//', '/', \containerInstance()->subFolder . $href);
+                }
+ 
                 $tree = [
                     'text' => Decorator::get_sanitized_value($attrs['text'], $rec),
                     'id' => \sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
@@ -171,7 +177,7 @@ class TreeController extends BaseController
                     'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
                     'openicon' => Decorator::get_sanitized_value($icon, $rec),
                     'tooltip' => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
-                    'a_attr' => ['href' => Decorator::get_sanitized_value($attrs['action'], $rec)],
+                    'a_attr' => ['href' => $href],
                     'children' => false,
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);

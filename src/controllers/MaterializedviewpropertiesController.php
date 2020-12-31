@@ -147,7 +147,7 @@ class MaterializedviewpropertiesController extends BaseController
 
         $viewdata = $data->getView($_REQUEST[$this->subject]);
 
-        if (0 < $viewdata->recordCount()) {
+        if (0 < $viewdata->RecordCount()) {
             if (!isset($_POST['formDefinition'])) {
                 $_POST['formDefinition'] = $viewdata->fields['vwdefinition'];
                 $_POST['formComment'] = $viewdata->fields['relcomment'];
@@ -315,7 +315,7 @@ class MaterializedviewpropertiesController extends BaseController
             // Fetch matview info
             $matview = $data->getView($_REQUEST[$this->subject]);
 
-            if (0 < $matview->recordCount()) {
+            if (0 < $matview->RecordCount()) {
                 $this->coalesceArr($_POST, 'name', $matview->fields['relname']);
 
                 $this->coalesceArr($_POST, 'owner', $matview->fields['relowner']);
@@ -351,7 +351,7 @@ class MaterializedviewpropertiesController extends BaseController
                         $uname = $users->fields['usename'];
                         echo '<option value="', \htmlspecialchars($uname), '"',
                         ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
-                        $users->moveNext();
+                        $users->MoveNext();
                     }
                     echo '</select></td></tr>' . \PHP_EOL;
                 }
@@ -368,7 +368,7 @@ class MaterializedviewpropertiesController extends BaseController
                         $schema = $schemas->fields['nspname'];
                         echo '<option value="', \htmlspecialchars($schema), '"',
                         ($schema === $_POST['newschema']) ? ' selected="selected"' : '', '>', \htmlspecialchars($schema), '</option>' . \PHP_EOL;
-                        $schemas->moveNext();
+                        $schemas->MoveNext();
                     }
                     echo '</select></td></tr>' . \PHP_EOL;
                 }
