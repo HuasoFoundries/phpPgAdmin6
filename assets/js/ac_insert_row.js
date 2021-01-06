@@ -113,7 +113,7 @@ function openlist(e) {
   };
 
   jQuery.ajax({
-    url: subfolder + '/src/views/acinsert.php?server=' + server,
+    url: subfolder + '/acinsert?server=' + server,
     type: 'post',
     data: datas,
     dataType: 'html',

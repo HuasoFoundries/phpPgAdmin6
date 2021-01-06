@@ -109,10 +109,10 @@ class Decorator
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
-            \array_shift($v);
+            $urlvalue = \func_get_args();
+            \array_shift($urlvalue );
 
-            return new BranchUrlDecorator($base, new ArrayMergeDecorator($v));
+            return new BranchUrlDecorator($base, new ArrayMergeDecorator($urlvalue));
         }
 
         return new BranchUrlDecorator($base, $vars);
@@ -128,10 +128,10 @@ class Decorator
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
-            \array_shift($v);
+            $urlvalue = \func_get_args();
+            \array_shift($urlvalue);
 
-            return new ActionUrlDecorator($base, new ArrayMergeDecorator($v));
+            return new ActionUrlDecorator($base, new ArrayMergeDecorator($urlvalue));
         }
 
         return new ActionUrlDecorator($base, $vars);
@@ -147,10 +147,10 @@ class Decorator
         // use an ArrayMergeDecorator to have them merged
         // at value evaluation time.
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
-            \array_shift($v);
+            $urlvalue = \func_get_args();
+            \array_shift($urlvalue);
 
-            return new RedirectUrlDecorator($base, new ArrayMergeDecorator($v));
+            return new RedirectUrlDecorator($base, new ArrayMergeDecorator($urlvalue));
         }
 
         return new RedirectUrlDecorator($base, $vars);
@@ -167,10 +167,10 @@ class Decorator
         // at value evaluation time.
 
         if (2 < \func_num_args()) {
-            $v = \func_get_args();
-            $base = \array_shift($v);
+            $urlvalue = \func_get_args();
+            $base = \array_shift($urlvalue );
 
-            return new UrlDecorator($base, new ArrayMergeDecorator($v));
+            return new UrlDecorator($base, new ArrayMergeDecorator($urlvalue ));
         }
 
         return new UrlDecorator($base, $vars);

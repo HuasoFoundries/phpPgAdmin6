@@ -117,7 +117,9 @@ $app->get('/redirect[/{subject}]', function (
 ) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
     $destinationurl = $this->getDestinationWithLastTab($subject);
-     return $response->withStatus(302)->withHeader('Location', $destinationurl);
+    $cleanDestination=($this->subFolder.'/'. $destinationurl);
+    
+     return $response->withStatus(302)->withHeader('Location',$cleanDestination);
 });
 
 ini_set('display_errors','on');
@@ -142,28 +144,9 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     array $args
 ) {
     $subject = $args['subject'];
-
-    if ('server' === $subject) {
-        $subject = 'servers';
-    }
-    $_server_info = $this->misc->getServerInfo();
-
-    $safe_subjects = ('servers' === $subject || 'intro' === $subject || 'browser' === $subject);
-
-    if (null === $this->misc->getServerId() && !$safe_subjects) {
-        return $response->withStatus(302)->withHeader('Location', $this->subFolder . '/src/views/servers');
-    }
-
-    if (!isset($_server_info['username']) && 'login' !== $subject && !$safe_subjects) {
-        $destinationurl = $this->subFolder . '/src/views/login?server=' . $this->misc->getServerId();
-
-        return $response->withStatus(302)->withHeader('Location', $destinationurl);
-    }
-
-    $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
-    $controller = new $className($this);
-
-    return $controller->render();
+    $nextPath=$this->subFolder.'/'. $subject;
+    
+return $response->withStatus(302)->withHeader('Location',$nextPath); 
 });
 
 $app->get('/{subject:\w+}[/{server_id}]', function (
@@ -173,7 +156,8 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
 ) {
     $subject = $args['subject'] ?? 'intro';
     $server_id = $args['server_id'] ?? $request->getQueryParam('server');
-    //ddd($subject, $server_id);
+    $query_params=$request->getQueryParams();
+   
     $_server_info = $this->misc->getServerInfo();
 
     //$this->utils->prtrace($_server_info);

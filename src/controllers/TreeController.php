@@ -154,8 +154,8 @@ class TreeController extends BaseController
                 'children' => true,
                 'icon' => \containerInstance()->subFolder . '/assets/images/themes/default/Servers.png',
                 'state' => ['opened' => true],
-                'a_attr' => ['href' => \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/servers')],
-                'url' => \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/servers?action=tree'),
+                'a_attr' => ['href' =>'servers'],
+                'url' => \containerInstance()->subFolder . ('/servers?action=tree'),
                 'text' => 'Servers',
             ];
         } elseif (0 < \count($treedata)) {
@@ -167,7 +167,7 @@ class TreeController extends BaseController
                 }
                 $href=Decorator::get_sanitized_value($attrs['action'], $rec);
                 if ($href) {
-                    $href = \str_replace('//', '/', \containerInstance()->subFolder . $href);
+                    $href = \str_replace('//', '/',   $href);
                 }
  
                 $tree = [
@@ -182,9 +182,9 @@ class TreeController extends BaseController
                 ];
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
 
-                if ($url && false === \mb_strpos($url, '/src/views')) {
-                    $url = \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/' . $url);
-                }
+                
+                    $url = \str_replace('/src/views/', '/',    $url);
+                
 
                 if ($url) {
                     $tree['url'] = $url;

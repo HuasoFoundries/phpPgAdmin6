@@ -1,70 +1,53 @@
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 {% set development_assets = true %}
- <link rel="stylesheet" href="{{subfolder}}/assets/vendor/jstree/themes/phppgadmin/style.css" />
-<link rel="stylesheet" href="{{ subfolder }}/assets/themes/global.css" type="text/css" id="cssmain" />
-<link rel="stylesheet" href="{{ subfolder }}/assets/themes/{{ theme }}/global.css" type="text/css" id="csstheme" />
-<link rel="stylesheet" href="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.css" type="text/css" />
-<link rel="shortcut icon" href="{{ Favicon }}" type="image/vnd.microsoft.icon" />
-<link rel="icon" href="{{ Introduction }}" type="image/png" />
+<link rel="stylesheet" href="{{subfolder}}/assets/vendor/jstree/themes/phppgadmin/style.css"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/themes/global.css" type="text/css" id="cssmain"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/themes/{{ theme }}/global.css" type="text/css" id="csstheme"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.css" type="text/css"/>
+<link rel="shortcut icon" href="{{ Favicon }}" type="image/vnd.microsoft.icon"/>
+<link rel="icon" href="{{ Introduction }}" type="image/png"/>
 
 <script src="{{ subfolder }}/assets/vendor/jquery/jquery-3.4.1.min.js"></script>
 <script src="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.js"></script>
-<script src="{{ subfolder }}/assets/vendor/jquery-resizable.js"></script>
-  <script src="{{ subfolder }}/assets/vendor/jstree/jstree.min.js"></script>
-      <meta name="header_template" value="{{headertemplate}}"/>
-{% if headertemplate == 'header_datatables.twig' %}
-         <link rel="stylesheet" href="{{subfolder}}/assets/vendor/datatables/datatables.min.css" type="text/css" />
-        <script src="{{subfolder}}/assets/vendor/datatables/datatables.min.js"></script>
- 
- 
-  {% endif %}
-  {% if headertemplate == 'header_select2.twig' %}
-     <link rel="stylesheet" href="{{subfolder}}/assets/vendor/select2/css/select2.css" type="text/css" />
-        <script src="{{subfolder}}/assets/vendor/select2/js/select2.full.min.js"></script>
-        <script src="{{subfolder}}/assets/vendor/select2/js/i18n/{{lang.isolang}}.js"></script>
-  {% endif %}
-    {% if headertemplate == 'header_highlight.twig' %}
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" type="text/css" />
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
-		  {% endif %}
-  <style type="text/css">
-    .refreshTree { position: absolute; right: 0; z-index: 1000; }
-	.splitter {
-		            background: url("{{subfolder}}/assets/images/vsizegrip.png") center center no-repeat #b0bec5 !important
-
+<style type="text/css">
+	.refreshTree {
+		position: absolute;
+		right: 0;
+		z-index: 1000;
 	}
-  </style>
+	.splitter {
+		background: url("{{subfolder}}/assets/images/vsizegrip.png") center center no-repeat #b0bec5 !important
+	}
+</style>
 {{
   script|raw
-}}<!-- prettier-ignore-start -->
+}}
+<!-- prettier-ignore-start -->
 
-		<script>
+<script>
 
-				globalThis.stateObj = {
-					{%	for key, value in params %}
-					'{{key}}': "{{value}}",
-					{% endfor %}
- 					dir: '{{lang.applangdir}}',
- 					in_test: '{{in_test}}',
- 					reload: '{{reload}}',
-					method: '{{METHOD}}',
-					subfolder:'{{subfolder}}',
-					path:"{{path}}",
-					query_string:"{{query_string}}",
-					strconfdropcred:"{{lang.strconfdropcred}}",
-					origin:globalThis.location.origin,
-					url:"{{url}}",
-					href:globalThis.location.href,
-					guessedSubfolder:(''+globalThis.location.pathname).replace("/{{path}}",''),
-					pathname:globalThis.location.pathname
-				};
-	
-		
-		
-		</script>
+	globalThis.stateObj = {
+{% for key, value in params %}
+'{{ key }}' : "{{ value }}",
+{% endfor %}
+dir: '{{ lang.applangdir }}',
+in_test: '{{ in_test }}',
+reload: '{{ reload }}',
+method: '{{ METHOD }}',
+subfolder:'{{ subfolder }}',
+path:"{{ path }}",
+query_string:"{{ query_string }}",
+strconfdropcred:"{{ lang.strconfdropcred }}",
+origin: globalThis.location.origin,
+url:"{{ url }}",
+href: globalThis.location.href,
+guessedSubfolder: ('' + globalThis.location.pathname).replace("/ {{ path }}", ''),
+pathname: globalThis.location.pathname
+};
+</script>
 <!-- prettier-ignore-end -->
 
 <title data-headertemplate="{{ headertemplate }}" data-subfolder="{{ subfolder }}">
-  {{ appName }}{{ title }}
+	{{ appName }}{{ title }}
 </title>

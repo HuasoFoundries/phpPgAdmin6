@@ -330,7 +330,7 @@ class HTMLTableController extends HTMLController
 
                         if (null !== $val) {
                             if (isset($column['url'])) {
-                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder,$column['url']??'');
+                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder.'/',$column['url']??'');
                                 $tbody_html .= "<a href=\"{$column['url']}";
                                 $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
                                 $tbody_html .= '">';

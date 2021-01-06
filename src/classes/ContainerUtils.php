@@ -168,10 +168,10 @@ class ContainerUtils extends Container implements ContainerInterface
 
         // if server_id isn't set, then you will be redirected to intro
         if (null === $container->request->getQueryParam('server')) {
-            $destinationurl = $this->subFolder. '/src/views/intro';
+            $destinationurl = $this->subFolder. '/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = $this->subFolder. '/src/views/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = $this->subFolder. '/login' . ($query_string ? '?' . $query_string : '');
         }
 
         return $destinationurl;
@@ -216,13 +216,10 @@ class ContainerUtils extends Container implements ContainerInterface
         $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
         $destinationurl = $this->getRedirectUrl();
 
-        if (!isset($_server_info['username'])) {
+        if (!isset($_server_info['username'])||!\is_array($url)) {
             return $destinationurl;
         }
 
-        if (!\is_array($url)) {
-            return $this->getRedirectUrl($subject);
-        }
         $this->addFlash($url, 'getLastTabURL for ' . $subject);
         // Load query vars into superglobal arrays
         if (isset($url['urlvars'])) {
@@ -236,12 +233,11 @@ class ContainerUtils extends Container implements ContainerInterface
             $_GET = \array_merge($_GET, $urlvars);
         }
         $actionurl = Decorator::actionurl($url['url'], $_GET);
-        $destinationurl = $actionurl->value($_GET);
-
-        return $this->subFolder.\str_replace('views/?', \sprintf(
-            'views/%s?',
-            $subject
-        ), $destinationurl);
+        $destinationurl =str_replace($this->subFolder,'', $actionurl->value($_GET));
+if(strpos($destinationurl,$subject)===0) {
+    $destinationurl=$this->subFolder.'/'.$destinationurl;
+}
+        return $destinationurl;
     }
 
     /**

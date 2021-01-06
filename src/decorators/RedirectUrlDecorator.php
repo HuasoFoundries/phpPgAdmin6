@@ -44,10 +44,8 @@ class RedirectUrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-
-        if ('' !== containerInstance()->subFolder && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, \containerInstance()->subFolder))) {
-            //    $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
-        }
+ 
+        $url = \str_replace('//', '/', containerInstance()->subFolder.  '/' . $url);
 
         return \str_replace('.php', '', $url);
     }

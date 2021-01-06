@@ -8,19 +8,19 @@ namespace PHPPgAdmin\Decorators;
 
 class FieldDecorator extends Decorator
 {
-    public function __construct($fieldName, $default = null)
+    public function __construct($fieldName, $defaultValue = null)
     {
-        $this->f = $fieldName;
+        $this->fieldName = $fieldName;
 
-        $this->d = $default;
+        $this->defaultValue = $defaultValue;
     }
 
     public function value($fields)
     {
-        if (isset($fields[$this->f])) {
-            return Decorator::get_sanitized_value($fields[$this->f], $fields);
+        if (isset($fields[$this->fieldName])) {
+            return Decorator::get_sanitized_value($fields[$this->fieldName], $fields);
         }
 
-        return $this->d;
+        return $this->defaultValue;
     }
 }

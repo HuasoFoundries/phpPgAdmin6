@@ -39,14 +39,13 @@ class BranchUrlDecorator extends Decorator
             }
         }
 
-        if (false === \mb_strpos($url, '/src/views')) {
-            $url = \str_replace('//', '/', '/src/views/' . $url);
-        }
+            $url = \str_replace('/src/views/', '/', $url);
+  
 
-        if ('' !== containerInstance()->subFolder && (0 === \mb_strpos($url, '/')) && (0 !== \mb_strpos($url, \containerInstance()->subFolder))) {
-            $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
-        }
+        //if ('' !== containerInstance()->subFolder && (0 === \mb_strpos($url, '/')) && (0 !== \mb_strpos($url, \containerInstance()->subFolder))) {
+        //    $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
+        //}
 
-        return \str_replace('.php', '', $url);
+        return   \str_replace('.php', '', containerInstance()->subFolder.'/'.$url);
     }
 }

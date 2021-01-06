@@ -6,17 +6,24 @@ window.jsTree = $('#lazy').jstree({
   core: {
     data: {
       url: function (node) {
+        let leafs_url;
         if (node.id === '#') {
-          return stateObj.subfolder + '/src/views/browser?action=tree';
+          leafs_url = stateObj.subfolder + '/browser?action=tree';
         } else {
-          return node.original.url;
+          leafs_url = node.original.url;
         }
+        console.log({ leafs_url });
+        return leafs_url;
       },
     },
   },
 });
 $('#refreshTree').on('click', () => {
-  window.jsTree.jstree('refresh');
+  if (window.jsTree.jstree) {
+    window.jsTree.jstree('refresh');
+  } else if (window.jsTree.refresh) {
+    window.jsTree.refresh();
+  }
 });
 
 if (parent.frames && parent.frames.detail) {
@@ -93,7 +100,11 @@ window.addEventListener(
 
     if (data.reload_browser && globalThis.jsTree) {
       try {
-        jsTree.jstree('refresh');
+        if (window.jsTree.jstree) {
+          window.jsTree.jstree('refresh');
+        } else if (window.jsTree.refresh) {
+          window.jsTree.refresh();
+        }
       } catch (err) {
         console.warn(err);
       }

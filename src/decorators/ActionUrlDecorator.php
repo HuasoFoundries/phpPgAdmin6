@@ -41,6 +41,6 @@ class ActionUrlDecorator extends Decorator
             }
         }
 
-        return /*\containerInstance()->subFolder . '/*/'/src/views/' . \str_replace('.php', '', $url);
+        return   \str_replace('.php', '', containerInstance()->subFolder.'/'.$url);
     }
 }

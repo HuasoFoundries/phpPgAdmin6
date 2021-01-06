@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}" dir="{{lang.applangdir}}">
 
-    <head data-headertemplate="{{headertemplate}}">
-        {% include 'components/common_head.twig' %}
+	<head data-headertemplate="{{headertemplate}}">
+		{% include 'components/common_head.twig' %}
 
-        <script src="{{subfolder}}/assets/vendor/jstree/jstree.min.js"></script>
-        <style type="text/css">
-        .refreshTree {
-            position: absolute;
-            right: 0;
-            z-index: 1000;
-        }
-        </style>
-    </head>
+		<script src="{{subfolder}}/assets/vendor/jstree/jstree.min.js"></script>
+		<style type="text/css">
+			.refreshTree {
+				position: absolute;
+				right: 0;
+				z-index: 1000;
+			}
+		</style>
+	</head>
 
-    <body class="browser">
-{% include 'components/browser_body.twig' %}
-        <script src="{{subfolder}}/assets/js/jstree_events.js">       
-        </script>
+	<body class="browser">
+		{% include 'components/browser_body.twig' %}
+		<script src="{{subfolder}}/assets/js/jstree_events.js"></script>
 
-    </body>
+	</body>
 
 </html>

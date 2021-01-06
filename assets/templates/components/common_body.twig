@@ -1,23 +1,16 @@
 <body data-controller="{{ controller_name }}" class="{{ bodyClass }}" {{ onload }}>
-  {% if includeJsTree %}
-    <div class="flexbox_wrapper">
-      <div id="masking_overlay"></div>
-      <div id="browser_container">
+ 		<div class="flexbox_wrapper">
+			<div id="masking_overlay"></div>
+			<div id="browser_container">
 
-      <div class="browser_container">
-        <div class="browser" name="browser" id="browser">
-          {% include 'components/browser_body.twig' %}
-          <script src="{{ subfolder }}/assets/js/jstree_events.js"></script>
-        </div>
-      </div></div>
-      <div class="splitter">
-            </div>
-      <div id="detail" class="detail_container" >
-    
+				<div class="browser_container">
+					<div class="browser" name="browser" id="browser">
+						{% include 'components/browser_body.twig' %}
+						<script src="{{ subfolder }}/assets/js/jstree_events.js"></script>
+					</div>
+				</div>
+			</div>
+			<div class="splitter"></div>
+			<div id="detail" class="detail_container">
+
  
-  {% else %}
-    {#<iframe src="{{subfolder}}/src/views/browser" name="browser" id="browser" class="browser_container" frameborder="0" />
-            <p>Your browser does not support iframes.</p>
-            </iframe>#}
-  {% endif %}
-  

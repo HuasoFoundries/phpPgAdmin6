@@ -37,9 +37,9 @@ class UrlDecorator extends Decorator
             }
         }
 
-        if ('' !== containerInstance()->subFolder && (0 === \mb_strpos($url, '/')) && (false === \mb_strpos($url, \containerInstance()->subFolder))) {
+        
             $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
-        }
+        
 
         return $url;
     }

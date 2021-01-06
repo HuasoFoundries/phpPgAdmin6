@@ -1,8 +1,30 @@
 <!DOCTYPE html>
-<html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}"  dir="{{lang.applangdir}}">
+<html xml:lang="{{lang.applocale}}" lang="{{lang.applocale}}" dir="{{lang.applangdir}}">
 
-    <head data-headertemplate="{{headertemplate}}">
-        {% include 'components/common_head.twig' %}
+	<head data-headertemplate="{{headertemplate}}">
+		{% include 'components/common_head.twig' %}
 
-    </head>
-    
+
+<script src="{{ subfolder }}/assets/vendor/jquery-resizable.js"></script>
+<script src="{{ subfolder }}/assets/vendor/jstree/jstree.min.js"></script>
+<meta name="header_template" value="{{headertemplate}}"/>
+{% if headertemplate == 'header_datatables.twig' %}
+	<link rel="stylesheet" href="{{subfolder}}/assets/vendor/datatables/datatables.min.css" type="text/css"/>
+	<script src="{{subfolder}}/assets/vendor/datatables/datatables.min.js"></script>
+
+
+{% endif %}
+{% if headertemplate == 'header_select2.twig' %}
+	<link rel="stylesheet" href="{{subfolder}}/assets/vendor/select2/css/select2.css" type="text/css"/>
+	<script src="{{subfolder}}/assets/vendor/select2/js/select2.full.min.js"></script>
+	<script src="{{subfolder}}/assets/vendor/select2/js/i18n/{{lang.isolang}}.js"></script>
+{% endif %}
+{% if headertemplate == 'header_highlight.twig' %}
+
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css" type="text/css"/>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+{% endif %}
+<script defer src="{{subfolder}}/assets/js/jstree_events.js"></script>
+
+	</head>
+</html>
