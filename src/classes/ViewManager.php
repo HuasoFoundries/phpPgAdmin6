@@ -204,36 +204,7 @@ class ViewManager extends Twig
         return $this->_reload_browser;
     }
 
-/**
- * Undocumented function
- *
- * @param Response $response
- * @param string $subject
- * @param string $query_string
- * @param string $template
- * @return ResponseInterface
- */
-    public function maybeRenderIframes(Response $response, string $subject, string $query_string,string $template='intro_view.twig')
-    {
-        $c = $this->getContainer();
-
-        $in_test = $this->offsetGet('in_test');
-        $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):true;
-
-        if ('1' === $in_test||$includeJsTree) {
-            $className = self::getControllerClassName($subject);
-            $controller = new $className($c);
-
-            return $controller->render();
-        }
-ddd('DEFAULTING TO '.$template);
-        $viewVars = [
-            'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
-            'headertemplate' => 'header.twig',
-        ];
-
-        return $this->render($response, $template, $viewVars);
-    }
+ 
 
     /**
      * Gets the theme from
@@ -511,7 +482,35 @@ ddd('DEFAULTING TO '.$template);
             $_SESSION['ppaTheme'] = $_theme;
         }
     }
+/**
+ * Undocumented function
+ * @deprecated v6.2.0 we won't use iframes anymore.
+ * @param Response $response
+ * @param string $subject
+ * @param string $query_string
+ * @param string $template
+ * @return ResponseInterface
+ */
+public function maybeRenderIframes(Response $response, string $subject, string $query_string,string $template='intro_view.twig')
+{
+    $c = $this->getContainer();
 
+    $in_test = $this->offsetGet('in_test');
+    $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):true;
+
+    if ('1' === $in_test||$includeJsTree) {
+        $className = self::getControllerClassName($subject);
+        $controller = new $className($c);
+
+        return $controller->render();
+    }
+    $viewVars = [
+        'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+        'headertemplate' => 'header.twig',
+    ];
+
+    return $this->render($response, $template, $viewVars);
+}
     /**
      * Undocumented function.
      *
@@ -521,7 +520,7 @@ ddd('DEFAULTING TO '.$template);
      *
      * @return class-string
      */
-    private static function getControllerClassName(string $subject): string
+    public function getControllerClassName(string $subject): string
     {
         return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     }

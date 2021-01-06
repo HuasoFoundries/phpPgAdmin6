@@ -35,6 +35,14 @@ if ($shouldSetSession && \PHP_SAPI !== 'cli') {
 $app = getAppInstance();
 $container = $app->getContainer();
 
+// If no dump function has been globally declared at this point
+// we fill the gap with an empty one to avoid errors 
+if(!function_exists('dump')) {
+    function dump(...$args):void {
+        // do nothing
+    }
+}
+
 // Set the requestobj and responseobj properties of the container
 // as the value of $request and $response, which already contain the route
 $app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
@@ -145,8 +153,8 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
 ) {
     $subject = $args['subject'];
     $nextPath=$this->subFolder.'/'. $subject;
-    
-return $response->withStatus(302)->withHeader('Location',$nextPath); 
+    $query_string = $request->getUri()->getQuery();
+return $response->withStatus(302)->withHeader('Location',$nextPath.($query_string? '?'.$query_string:'')); 
 });
 
 $app->get('/{subject:\w+}[/{server_id}]', function (
@@ -156,12 +164,7 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
 ) {
     $subject = $args['subject'] ?? 'intro';
     $server_id = $args['server_id'] ?? $request->getQueryParam('server');
-    $query_params=$request->getQueryParams();
-   
     $_server_info = $this->misc->getServerInfo();
-
-    //$this->utils->prtrace($_server_info);
-
     if (!isset($_server_info['username'])) {
         $subject = 'login';
     }
@@ -171,8 +174,10 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
     }
     $query_string = $request->getUri()->getQuery();
     $this->view->offsetSet('includeJsTree',true);
+    $className = $this->view->getControllerClassName($subject);
+    $controller = new $className($this);
+    return $controller->render();
 
-    return $this->view->maybeRenderIframes($response, $subject, $query_string);
 });
 
 $app->get('/', function (
@@ -181,8 +186,8 @@ $app->get('/', function (
     array $args
 ) {
     $subject = 'intro';
-
     $query_string = $request->getUri()->getQuery();
+    return $response->withStatus(302)->withHeader('Location',$nextPath); 
 
     return $this->view->maybeRenderIframes($response, $subject, $query_string);
 });
@@ -192,14 +197,7 @@ $app->get('[/{path:.*}]', function (
     \Slim\Http\Response $response,
     array $args
 ) {
-    $filepath = \dirname(__DIR__) . '/' . $args['path'];
-    $query_string = $request->getUri()->getQuery();
-
-    //d($this->subfolder, $args, $query_string, $filepath);
-
-    $this->prtrace($request->getAttribute('route'));
-
-    return $response->write($args['path'] ? $args['path'] : 'index');
+    return $response->write(sprintf("We couldn't find a route matching %s", $args['path'] ? $args['path'] : 'index'));
 });
 
 // Run app
