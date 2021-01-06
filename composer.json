@@ -35,6 +35,7 @@
     "friendsofphp/php-cs-fixer": "^2.16",
     "kint-php/kint": "~3.3",
     "php-parallel-lint/php-parallel-lint": "^1.2",
+    "phpmd/phpmd": "^2.9",
     "phpstan/phpstan": "^0.12.64",
     "rector/rector-prefixed": "^0.9",
     "simpletest/simpletest": "^1.2",

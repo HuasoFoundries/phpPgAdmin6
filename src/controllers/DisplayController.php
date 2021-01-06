@@ -278,9 +278,12 @@ class DisplayController extends BaseController
     }
 
     /**
-     * @return (mixed|string)[]
-     *
      * @psalm-return array{0: mixed, 1: string, 2: string}
+     *
+     * @param mixed $data
+     * @param mixed $object
+     *
+     * @return (mixed|string)[]
      */
     public function getQueryTitleAndType($data, $object)
     {
@@ -1108,9 +1111,15 @@ class DisplayController extends BaseController
     }
 
     /**
-     * @return (((((mixed|string)[]|string)[][]|mixed)[][]|string)[]|iterable)[]
-     *
      * @psalm-return array{0: array{actionbuttons: array{edit: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}, delete: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}}, place: string}, 1: array<empty, empty>|iterable}
+     *
+     * @param object $resultset
+     * @param mixed  $object
+     * @param mixed  $data
+     * @param mixed  $page
+     * @param array  $_gets
+     *
+     * @return (((((mixed|string)[]|string)[][]|mixed)[][]|string)[]|iterable)[]
      */
     private function _getKeyAndActions(object $resultset, $object, $data, $page, array $_gets)
     {
@@ -1301,9 +1310,12 @@ class DisplayController extends BaseController
     }
 
     /**
-     * @return int[]
-     *
      * @psalm-return array{0: int, 1: int}
+     *
+     * @param int $page
+     * @param int $pages
+     *
+     * @return int[]
      */
     private function _getMinMaxPages(int $page, int $pages)
     {

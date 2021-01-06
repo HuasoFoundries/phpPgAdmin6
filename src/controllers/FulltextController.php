@@ -252,7 +252,9 @@ class FulltextController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|null|string
+     * @param mixed $what
+     *
+     * @return null|\Slim\Http\Response|string
      */
     public function doSubTree($what)
     {

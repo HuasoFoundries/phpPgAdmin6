@@ -64,3 +64,6 @@ tools/phpmd_checkstyle
 .phive
 tools/reviewdog
 
+
+temp/*.checkstyle*
+

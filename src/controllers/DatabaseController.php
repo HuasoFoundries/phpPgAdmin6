@@ -144,6 +144,8 @@ class DatabaseController extends BaseController
     }
 
     /**
+     * @param mixed $print
+     *
      * @return \Slim\Http\Response|string
      */
     public function doTree($print = true)
@@ -659,6 +661,9 @@ class DatabaseController extends BaseController
     }
 
     /**
+     * @param mixed $string
+     * @param mixed $term
+     *
      * @return string
      */
     private function _highlight($string, $term)
@@ -670,6 +675,8 @@ class DatabaseController extends BaseController
     }
 
     /**
+     * @param string $curr
+     *
      * @return string
      */
     private function _printTypeOption(string $curr)

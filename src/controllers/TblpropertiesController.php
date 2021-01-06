@@ -858,9 +858,11 @@ class TblpropertiesController extends BaseController
     }
 
     /**
-     * @return \Closure
-     *
      * @psalm-return \Closure(mixed, mixed):mixed
+     *
+     * @param mixed $data
+     *
+     * @return \Closure
      */
     private function _getAttPre($data)
     {
@@ -887,9 +889,12 @@ class TblpropertiesController extends BaseController
     }
 
     /**
-     * @return \Closure
-     *
      * @psalm-return \Closure(mixed, mixed):string
+     *
+     * @param mixed $misc
+     * @param mixed $data
+     *
+     * @return \Closure
      */
     private function _getCstrRender($misc, $data)
     {

@@ -14,7 +14,7 @@ class DbexportController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render()
+    public function render()  
     {
         $data = $this->misc->getDatabaseAccessor();
 

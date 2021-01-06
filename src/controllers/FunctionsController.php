@@ -1439,6 +1439,9 @@ class FunctionsController extends BaseController
     }
 
     /**
+     * @param mixed $data
+     * @param mixed $fndata
+     *
      * @return string
      */
     private function _getNamedParamsArgs($data, $fndata)

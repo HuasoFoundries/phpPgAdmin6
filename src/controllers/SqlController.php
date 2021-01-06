@@ -191,7 +191,7 @@ class SqlController extends BaseController
     }
 
     /**
-     * @return ADORecordSet|null
+     * @return null|ADORecordSet
      */
     private function execute_query()
     {

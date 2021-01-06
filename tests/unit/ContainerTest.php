@@ -19,7 +19,12 @@ class ContainerTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
-    protected ?\PHPPgAdmin\ContainerUtils $container;
+    /**
+     * Undocumented variable.
+     *
+     * @var null|\PHPPgAdmin\ContainerUtils
+     */
+    protected $container;
 
     public function testContainerValidity(): void
     {

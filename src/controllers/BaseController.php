@@ -166,8 +166,6 @@ class BaseController
     /**
      * Default method to render the controller according to the action parameter. It should return with a PSR
      * responseObject but it prints texts whatsoeever.
-     *
-     * @return void
      */
     public function render()
     {

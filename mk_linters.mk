@@ -61,26 +61,29 @@ update_baselines:
 
 .PHONY:abort_suggesting_composer check_executable_or_exit_with_phive update_baselines
 
-phpmd: package_name:=phpmd
-phpmd: executable:=tools/phpmd
-phpmd: 
-	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
-	@$(executable) src text .phpmd.xml --exclude=src/help/*,src/translations/*
+phpmd:
+	$(eval executable:=vendor/bin/phpmd)
+	$(eval package_name:=phpmd/phpmd)
+ifeq (,$(reportformat))
+	$(eval reportformat='ansi')
+endif
+	@${MAKE} abort_suggesting_composer  executable=$(executable) package_name=$(package_name) --no-print-directory 
+	@$(executable) src $(reportformat) .phpmd.xml --exclude=src/help/*,src/translations/*
 
-
-phpmd_checkstyle: package_name:=phpmd
-phpmd_checkstyle: executable:=$(shell command -v phpmd 2> /dev/null)
 phpmd_checkstyle:
-	@$(executable) src json .phpmd.xml --exclude=src/help/*,src/translations/*   > temp/phpmd.report.json  ;\
-	echo -e "$(GREEN)Finished PHPMD$(WHITE): waiting 1s"
-	@sleep 1 ;\
-	php tools/phpmd_checkstyle ;\
+	$(eval executable:=vendor/bin/phpmd)
+	$(eval package_name:=phpmd/phpmd)
+ifeq (,$(reportformat))
+	$(eval reportformat='ansi')
+endif
+	@${MAKE} abort_suggesting_composer  executable=$(executable) package_name=$(package_name) --no-print-directory 
+	@$(executable) src  PHPPgAdmin\\\CheckStyleRenderer .phpmd.xml --exclude=src/help/*,src/translations/* | vendor/bin/cs2pr --colorize ;\
 	echo -e "$(GREEN)Formatted PHPMD$(WHITE): as checkStyle"
-	cat temp/phpmd.checkstyle.xml | vendor/bin/cs2pr 
+	
 
-csfixer: package_name:=friendsofphp/php-cs-fixer
-csfixer: executable:=vendor/bin/php-cs-fixer
 csfixer:
+	$(eval executable:=vendor/bin/php-cs-fixer)
+	$(eval package_name:=friendsofphp/php-cs-fixer)
 ifeq (,$(reportformat))
 	$(eval reportformat='txt')
 endif
@@ -96,24 +99,27 @@ csfixer_checkstyle:
 csfixer_dry:
 	@${MAKE} csfixer   dry_run='--dry-run' --no-print-directory
 
-	
-phpcs: package_name=phpcs
-phpcs: executable:= $(shell command -v phpcs 2> /dev/null)
+PHPCS_SENTENCE:=--standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache  src
+
+phpcs_reqs:
+	$(eval executable:=tools/phpcs)
+	$(eval package_name:=phpcs)
+	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
+
+phpcs: phpcs_reqs
 phpcs:
 ifeq (,$(reportformat))
 	$(eval reportformat='diff')
 endif	
-	@${MAKE} check_executable_or_exit_with_phive  executable=$(executable) package_name=$(package_name) --no-print-directory 
-	@mkdir -p .build/phpcs && touch .build/phpcs/php-cs.cache 
-	$(executable)  --standard=.phpcs.xml  --parallel=2 --cache=.build/phpcs/php-cs.cache --report=$(reportformat) src/*
+	@mkdir -p .build/phpcs && touch .build/phpcs/php-cs.cache ;\
+	echo wait... ;\
+	$(executable) --report=$(reportformat)  $(PHPCS_SENTENCE)
 
 
-
+phpcs_checkstyle: phpcs_reqs
 phpcs_checkstyle:
-	@${MAKE} phpcs reportformat=checkstyle --no-print-directory  > temp/phpcs.checkstyle.xml ;\
-	echo -e "Finished $(GREEN)phpcs$(WHITE): waiting 1s"
-	@sleep 1 ;\
-	cat temp/phpcs.checkstyle.xml | vendor/bin/cs2pr 
+	$(eval reportformat='checkstyle')
+	@$(executable) --report=$(reportformat) $(PHPCS_SENTENCE) | grep '<' > temp/phpcs.checkstyle.xml 2>&1; vendor/bin/cs2pr < temp/phpcs.checkstyle.xml
 
 
 psalm:

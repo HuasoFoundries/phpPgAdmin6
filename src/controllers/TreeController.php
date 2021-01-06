@@ -10,7 +10,6 @@ use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\HelperTrait;
-use Slim\Http\Response;
 
 /**
  * Base TreeController controller class.
