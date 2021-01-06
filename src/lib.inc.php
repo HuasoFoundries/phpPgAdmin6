@@ -1,168 +1,85 @@
 <?php
 
 /**
- * PHPPgAdmin 6.0.0
+ * PHPPgAdmin 6.1.3
  */
+
+use PHPPgAdmin\ContainerUtils;
+use Slim\App;
+use Slim\Http\Request;
+use Slim\Http\Response;
 
 \defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
 
-\defined('THEME_PATH') || \define('THEME_PATH', \dirname(__DIR__) . '/assets/themes');
-// Enforce PHP environment
-\ini_set('arg_separator.output', '&amp;');
-
-if (!\is_writable(\dirname(__DIR__) . '/temp')) {
-    die('Your temp folder must have write permissions (use chmod 777 temp -R on linux)');
-}
-
-require_once \dirname(__DIR__) . '/vendor/autoload.php';
-if(function_exists('getAppInstance')) {
-    \Kint\Kint::trace();
-
-}
-
-$shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
-    && !\headers_sent()
-    && !\ini_get('session.auto_start');
-
-if ($shouldSetSession && \PHP_SAPI !== 'cli') {
-    \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
-    \session_name('PPA_ID');
-    \session_start();
-}
-if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
-    \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
-}
-
-if (!\defined('ADODB_ERROR_HANDLER')) {
-    \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
-}
-if(!function_exists('getappInstance')) {
-function getAppInstance() {
+/**
+ * PHPPgAdmin 6.1.3.
+ */
+function getAppInstance(): App
+{
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
     if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
         die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
     }
-$conf = [];
+    $conf = [];
 
-include_once \dirname(__DIR__) . '/config.inc.php';
+    include_once \dirname(__DIR__) . '/config.inc.php';
 
-if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
-    $subfolder = $conf['subfolder'];
-} elseif (\PHP_SAPI === 'cli-server') {
-    $subfolder = '/index.php';
-} elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
-    $subfolder = \str_replace(
-        $_SERVER['DOCUMENT_ROOT'],
-        '',
-        \dirname(__DIR__)
-    );
-}
-
-$conf['subfolder'] = $subfolder;
-
-
-$conf['debugmode'] = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
-
-
-
-if ($conf['debugmode']) {
-    \ini_set('display_errors', 'On');
-
-    \ini_set('display_startup_errors', 'On');
-    \ini_set('opcache.revalidate_freq', '0');
-    \error_reporting(\E_ALL);
-
-    if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {
-        $conf['register_debuggers']();
+    if (isset($conf['subfolder']) && \is_string($conf['subfolder'])) {
+        $subfolder = $conf['subfolder'];
+    } elseif (\PHP_SAPI === 'cli-server' || \PHP_SAPI === 'cli') {
+        $subfolder = '/index.php';
+    } elseif (isset($_SERVER['DOCUMENT_ROOT'])) {
+        $subfolder = \str_replace(
+            $_SERVER['DOCUMENT_ROOT'],
+            '',
+            \dirname(__DIR__)
+        );
     }
+
+    $conf['subfolder'] = $subfolder;
+
+    $conf['debugmode'] = (!isset($conf['debugmode'])) ? false : (bool) ($conf['debugmode']);
+
+    if ($conf['debugmode']) {
+        \ini_set('display_startup_errors', 'On');
+        \ini_set('opcache.revalidate_freq', '0');
+        \error_reporting(\E_ALL);
+
+        if (\array_key_exists('register_debuggers', $conf) && \is_callable($conf['register_debuggers'])) {
+            $conf['register_debuggers']();
+        }
+    }
+
+    $conf['BASE_PATH'] = BASE_PATH;
+    $conf['theme_path'] = BASE_PATH . '/assets/themes';
+    \defined('IN_TEST') || \define('IN_TEST', false);
+    $conf['IN_TEST'] = IN_TEST;
+
+    // Fetch App and DI Container
+     $app = ContainerUtils::getAppInstance($conf);
+
+    return $app;
 }
 
-
-$conf['BASE_PATH'] = BASE_PATH;
-$conf['theme_path'] = BASE_PATH . '/assets/themes';
-\defined('IN_TEST') || \define('IN_TEST', false);
-$conf['IN_TEST'] = IN_TEST;
-\ini_set('display_errors', strval($conf['debugmode']));
-\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
-
-// Fetch App and DI Container
-$app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
-return $app;
-};
-}
-if(!function_exists('containerInstance')) {
-
-function containerInstance(): \PHPPgAdmin\ContainerUtils
+function containerInstance(): ContainerUtils
 {
-    $app=getAppInstance();
+    $app = getAppInstance();
     $container = $app->getContainer();
-                if (!$container instanceof \PHPPgAdmin\ContainerUtils) {
-                    \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
-                }
+
+    if (!$container instanceof ContainerUtils) {
+        \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
+    }
+
     return  $container;
 }
-}
-if(!function_exists('requestInstance')) {
 
-function requestInstance(): \Slim\Http\Request
+function requestInstance(): Request
 {
     return  \containerInstance()->request;
 }
-}
-if(!function_exists('responseInstance')) {
 
-function responseInstance(): \Slim\Http\Response
+function responseInstance(): Response
 {
     return \containerInstance()->response;
 }
-}
-$app=getAppInstance();
-$container=$app->getContainer();
-
-// This should be deprecated once we're sure no php scripts are required directly
-$container->offsetSet('server', $_REQUEST['server'] ?? null);
-$container->offsetSet('database', $_REQUEST['database'] ?? null);
-$container->offsetSet('schema', $_REQUEST['schema'] ?? null);
-
-$container['haltHandler'] = static function (\PHPPgAdmin\ContainerUtils $c) {
-    return static function ($request, $response, $exits, $status = 500) use ($c) {
-        $title = 'PHPPgAdmin Error';
-
-        $html = '<p>The application could not run because of the following error:</p>';
-
-        $output = \sprintf(
-            "<html><head><meta http-equiv='Content-Type' content='text/html; charset=utf-8'>" .
-                '<title>%s</title><style>' .
-                'body{margin:0;padding:30px;font:12px/1.5 Helvetica,Arial,Verdana,sans-serif;}' .
-                'h3{margin:0;font-size:28px;font-weight:normal;line-height:30px;}' .
-                'span{display:inline-block;font-size:16px;}' .
-                '</style></head><body><h3>%s</h3><p>%s</p><span>%s</span></body></html>',
-            $title,
-            $title,
-            $html,
-            \implode('<br>', $exits)
-        );
-
-        $body = $response->getBody(); //new \Slim\Http\Body(fopen('php://temp', 'r+'));
-        $body->write($output);
-
-        return $response
-            ->withStatus($status)
-            ->withHeader('Content-type', 'text/html')
-            ->withBody($body);
-    };
-};
-
-// Set the requestobj and responseobj properties of the container
-// as the value of $request and $response, which already contain the route
-$app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
-
-$container['action'] = $_REQUEST['action'] ?? '';
-
-if (!isset($msg)) {
-    $msg = '';
-}
-
-$container['msg'] = $msg;
-//ddd($container->misc);

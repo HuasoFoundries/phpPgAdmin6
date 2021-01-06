@@ -3,8 +3,57 @@
 /**
  * PHPPgAdmin 6.0.0
  */
+
+use PHPPgAdmin\ContainerUtils;
+
+foreach (['logs', 'sessions', 'twigcache'] as $tempFolder) {
+    if (!\is_writable(\sprintf('%s/temp/%s', \dirname(__DIR__), $tempFolder))) {
+        die(\sprintf('The folder temp/%s must be writable', $tempFolder));
+    }
+}
+
+require_once \dirname(__DIR__) . '/vendor/autoload.php';
 ini_set('display_errors','on');
-require_once __DIR__ . '/lib.inc.php';
+\defined('BASE_PATH') || \define('BASE_PATH', \dirname(__DIR__));
+
+\defined('THEME_PATH') || \define('THEME_PATH', \dirname(__DIR__) . '/assets/themes');
+// Enforce PHP environment
+\ini_set('arg_separator.output', '&amp;');
+\defined('ADODB_ERROR_HANDLER_TYPE') || \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
+\defined('ADODB_ERROR_HANDLER') || \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
+
+$shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
+    && !\headers_sent()
+    && !\ini_get('session.auto_start');
+
+if ($shouldSetSession && \PHP_SAPI !== 'cli') {
+    \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
+    \session_name('PPA_ID');
+    \session_start();
+}
+
+\defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
+
+$app = getAppInstance();
+$container = $app->getContainer();
+
+// If no dump function has been globally declared at this point
+// we fill the gap with an empty one to avoid errors 
+if(!function_exists('dump')) {
+    function dump(...$args):void {
+        // do nothing
+    }
+}
+
+// Set the requestobj and responseobj properties of the container
+// as the value of $request and $response, which already contain the route
+$app->add(new \PHPPgAdmin\Middleware\PopulateRequestResponse($container));
+
+if (!isset($msg)) {
+    $msg = '';
+}
+$container['msg'] = $msg;
+
 $app->get('/status', function (
     /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
@@ -135,10 +184,7 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
 ) {
     $subject = $args['subject'] ?? 'intro';
     $server_id = $args['server_id'] ?? $request->getQueryParam('server');
-    //ddd($subject, $server_id);
     $_server_info = $this->misc->getServerInfo();
-
-    //$this->utils->prtrace($_server_info);
 
     if (!isset($_server_info['username'])) {
         $subject = 'login';
