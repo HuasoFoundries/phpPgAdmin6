@@ -15,6 +15,10 @@ if (!\is_writable(\dirname(__DIR__) . '/temp')) {
 }
 
 require_once \dirname(__DIR__) . '/vendor/autoload.php';
+if(function_exists('getAppInstance')) {
+    \Kint\Kint::trace();
+
+}
 
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
     && !\headers_sent()
@@ -32,6 +36,7 @@ if (!\defined('ADODB_ERROR_HANDLER_TYPE')) {
 if (!\defined('ADODB_ERROR_HANDLER')) {
     \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
 }
+if(!function_exists('getappInstance')) {
 function getAppInstance() {
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
@@ -85,6 +90,8 @@ $conf['IN_TEST'] = IN_TEST;
 $app = \PHPPgAdmin\ContainerUtils::getAppInstance($conf);
 return $app;
 };
+}
+if(!function_exists('containerInstance')) {
 
 function containerInstance(): \PHPPgAdmin\ContainerUtils
 {
@@ -95,15 +102,20 @@ function containerInstance(): \PHPPgAdmin\ContainerUtils
                 }
     return  $container;
 }
+}
+if(!function_exists('requestInstance')) {
 
 function requestInstance(): \Slim\Http\Request
 {
     return  \containerInstance()->request;
 }
+}
+if(!function_exists('responseInstance')) {
 
 function responseInstance(): \Slim\Http\Response
 {
     return \containerInstance()->response;
+}
 }
 $app=getAppInstance();
 $container=$app->getContainer();

@@ -3,7 +3,7 @@
 /**
  * PHPPgAdmin 6.0.0
  */
-
+ini_set('display_errors','on');
 require_once __DIR__ . '/lib.inc.php';
 $app->get('/status', function (
     /* @scrutinizer ignore-unused */
