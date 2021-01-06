@@ -50,9 +50,11 @@ class HTMLHeaderController extends HTMLController
 
         $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
+        $viewVars['headerFlags'][str_replace('.twig','',basename($template))]=1;
         $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
         $viewVars['lang'] = $lang;
         $viewVars['appName'] = \htmlspecialchars($this->appName);
+        
         $reload_param = 'none';
 
         if ($this->view->getReloadBrowser()) {
@@ -62,7 +64,7 @@ class HTMLHeaderController extends HTMLController
         }
         $viewVars['reload'] = $reload_param;
         $viewVars['script'] = $script;
-        $header_html = $this->view->fetch($template, $viewVars);
+        $header_html = $this->view->fetch( 'header.twig'/*$template*/, $viewVars);
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];

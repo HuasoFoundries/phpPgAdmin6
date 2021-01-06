@@ -25,7 +25,10 @@ if (parent.frames && parent.frames.detail) {
 
 $('#lazy').on('activate_node.jstree', function (e, data) {
   if (window.parent.frames.detail) {
-    window.parent.frames.detail.location.replace(data.node.a_attr.href);
+    let { frameLocation } = window.parent.frames.detail,
+      nextLocation = data.node.a_attr.href;
+    console.log({ nextLocation });
+    (frameLocation || globalThis.location).replace(nextLocation);
   }
 });
 $('#lazy').on('state_ready.jstree', function (e, data) {

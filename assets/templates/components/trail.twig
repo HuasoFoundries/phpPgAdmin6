@@ -1,5 +1,6 @@
 <div class="trail" data-controller="{{controller_name}}">
-    <table style="float:left">
+
+    <table style="float:left" class="trail_table">
         <tbody>
             <tr>
                 {% for crumb in crumbs %}
@@ -18,7 +19,7 @@
         </tbody>
     </table>
     {% if search_paths %}
-    <table style="float:right">
+    <table style="float:right" class="search_path">
         <tbody>
             <tr>
                 <td class="crumb" style="    vertical-align: inherit;">
@@ -44,4 +45,5 @@
         </tbody>
     </table>
     {% endif %}
+
 </div>

@@ -131,10 +131,7 @@ $app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
     $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
     return $controller->render();
-
-    //$query_string = $request->getUri()->getQuery();
-  //return $this->view->maybeRenderIframes($response, $subject, $query_string,'intro_view.twig');
-
+ 
     
 });
 

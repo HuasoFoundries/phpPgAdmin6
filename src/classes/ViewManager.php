@@ -226,7 +226,7 @@ class ViewManager extends Twig
 
             return $controller->render();
         }
-
+ddd('DEFAULTING TO '.$template);
         $viewVars = [
             'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',

@@ -11,12 +11,14 @@ registerRoute(
     request.destination === 'image' || url.includes('assets/vendor'),
   new CacheFirst()
 );
-/*registerRoute(
-  ({ request }) =>
-    request.destination === 'script' || request.destination === 'style',
+registerRoute(
+  ({ request }) => request.destination === 'style',
   new StaleWhileRevalidate()
-);*/
-
+);
+registerRoute(
+  ({ request }) => request.destination === 'script',
+  new StaleWhileRevalidate()
+);
 registerRoute(
   ({ url }) =>
     url.origin === 'https://fonts.googleapis.com' ||
