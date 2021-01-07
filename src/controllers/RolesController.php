@@ -117,7 +117,7 @@ class RolesController extends BaseController
             'role' => [
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
-                'url' => \containerInstance()->subFolder . \sprintf(
+                'url' => \containerInstance()->getDestinationWithLastTab('role'),
                     '/redirect/role?action=properties&amp;%s&amp;',
                     $this->misc->href
                 ),

@@ -125,7 +125,7 @@ class MaterializedviewsController extends BaseController
             $this->keystring => [
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->subFolder . \sprintf(
+                'url' => \containerInstance()->getDestinationWithLastTab('matview'),
                     '/redirect/matview?%s&amp;',
                     $this->misc->href
                 ),

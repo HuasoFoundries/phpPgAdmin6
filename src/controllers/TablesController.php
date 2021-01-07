@@ -1521,7 +1521,7 @@ class TablesController extends BaseController
             'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->subFolder . \sprintf(
+                'url' => \containerInstance()->getDestinationWithLastTab('table'),
                     '/redirect/table?%s&amp;',
                     $this->misc->href
                 ),
