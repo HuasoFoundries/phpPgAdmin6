@@ -65,7 +65,7 @@ $app->get('/status', function (
         );
 });
 
-$app->post('/redirect/server', function (
+$app->post('/login', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
     array $args
