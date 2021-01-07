@@ -167,9 +167,15 @@ class TreeController extends BaseController
                     'openicon' => Decorator::get_sanitized_value($icon, $rec),
                     'tooltip' => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
                     'a_attr' => ['href' => Decorator::get_sanitized_value($attrs['action'], $rec)],
+                    //'url'=>strtolower(),
                     'children' => false,
                 ];
+
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
+                $urlparts=parse_url('https://dummy.domain'.$tree['a_attr']['href']);
+                $path_arr=explode('/',$urlparts['path']??'');
+                $tree['url']=containerInstance()->getDestinationWithLastTab(array_pop($path_arr));
+
 
                 if ($url && false === \mb_strpos($url, '/src/views')) {
                     $url = \str_replace('//', '/', \containerInstance()->subFolder . '/src/views/' . $url);
@@ -184,7 +190,7 @@ class TreeController extends BaseController
 
                 $parent[] = $tree;
             }
-        } else {
+         } else {
             $parent = ['children' => false];
         }
 

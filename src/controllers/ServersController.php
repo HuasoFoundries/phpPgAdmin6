@@ -105,7 +105,7 @@ class ServersController extends BaseController
             'server' => [
                 'title' => $this->lang['strserver'],
                 'field' => Decorator::field('desc'),
-                'url' => \containerInstance()->subFolder . '/redirect/server?',
+                'url' => \containerInstance()->getDestinationWithLastTab('server'),
                 'vars' => ['server' => 'sha'],
             ],
             'host' => [

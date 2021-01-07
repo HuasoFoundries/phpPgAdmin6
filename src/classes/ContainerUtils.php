@@ -188,7 +188,6 @@ class ContainerUtils extends Container implements ContainerInterface
             $key = self::getBackTrace();
         }
         $container = self::getContainerInstance();
-        $container = self::getContainerInstance();
         // $this->dump(__METHOD__ . ': addMessage ' . $key . '  ' . json_encode($content));
         if ($container->flash) {
             $container->flash->addMessage($key, $content);
@@ -205,7 +204,6 @@ class ContainerUtils extends Container implements ContainerInterface
      */
     public function getDestinationWithLastTab($subject)
     {
-        $container = self::getContainerInstance();
         $container = self::getContainerInstance();
         $_server_info = $container->misc->getServerInfo();
         $this->addFlash($subject, 'getDestinationWithLastTab');

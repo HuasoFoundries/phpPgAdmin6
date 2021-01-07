@@ -117,7 +117,7 @@ class FunctionsController extends BaseController
             'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url' => \containerInstance()->subFolder . "/redirect/function?action=properties&amp;{$this->misc->href}&amp;",
+                'url'=>containerInstance()->getDestinationWithLastTab('function'),
                 'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
@@ -140,8 +140,7 @@ class FunctionsController extends BaseController
                 'field' => Decorator::field('procomment'),
             ],
         ];
-
-        $actions = [
+         $actions = [
             'multiactions' => [
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
                 'url' => 'functions',
@@ -220,7 +219,7 @@ class FunctionsController extends BaseController
                 ]
             ),
         ];
-
+ 
         return $this->printTree($funcs, $attrs, 'functions');
     }
 

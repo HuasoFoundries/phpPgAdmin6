@@ -56,7 +56,7 @@ trait ServersTrait
                 $srvs[$server_sha]['id'] = $server_id;
                 $srvs[$server_sha]['sha'] = $server_sha;
                 $srvs[$server_sha]['action'] = Decorator::url(
-                    '/redirect/server',
+                    '/src/views/alldb',
                     [
                         'server' => Decorator::field('sha'),
                     ]
@@ -78,7 +78,6 @@ trait ServersTrait
                 }
             }
         }
-
         \uasort($srvs, static function ($a, $b) {
             return \strcmp($a['desc'], $b['desc']);
         });

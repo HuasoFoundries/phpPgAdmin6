@@ -124,7 +124,7 @@ class ViewsController extends BaseController
             $this->keystring => [
                 'title' => $this->lang['strview'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->subFolder . "/redirect/view?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->getDestinationWithLastTab('view'),
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [

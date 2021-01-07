@@ -165,7 +165,7 @@ trait MiscTrait
         }
 
         if (containerInstance()->subFolder . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
-            $vars['url'] = \containerInstance()->subFolder . '/redirect/' . $vars['params']['subject'];
+            $vars['url'] = \containerInstance()->getDestinationWithLastTab( $vars['params']['subject']);
             unset($vars['params']['subject']);
         }
 

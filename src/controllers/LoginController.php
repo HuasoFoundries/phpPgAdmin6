@@ -96,7 +96,7 @@ class LoginController extends BaseController
             $login_html .= $this->printMsg($msg, false);
         }
 
-        $login_html .= '<form id="login_form"    method="post" name="login_form" action="' . \containerInstance()->subFolder . '/redirect/server?server=' . \htmlspecialchars($server_id) . '">';
+        $login_html .= '<form id="login_form"    method="post" name="login_form" action="' . \containerInstance()->subFolder . '/login?server=' . \htmlspecialchars($server_id) . '">';
 
         $md5_server = \md5($server_id);
         // Pass request vars through form (is this a security risk???)

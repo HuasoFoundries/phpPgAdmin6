@@ -178,7 +178,6 @@ class ViewManager extends \Slim\Views\Twig
             'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
             'headertemplate' => 'header.twig',
         ];
-
         return $this->render($response, 'iframe_view.twig', $viewVars);
     }
 

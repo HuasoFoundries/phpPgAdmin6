@@ -854,13 +854,13 @@ trait AdminTrait
             'namespace' => [
                 'title' => $this->lang['strschema'],
                 'field' => Decorator::field('nspname'),
-                'url' => \containerInstance()->subFolder . "/redirect/schema?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->getDestinationWithLastTab('schema'),
                 'vars' => ['schema' => 'nspname'],
             ],
             'relname' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->subFolder . "/redirect/table?{$this->misc->href}&amp;",
+                'url' => \containerInstance()->getDestinationWithLastTab('table'),
                 'vars' => ['table' => 'relname', 'schema' => 'nspname'],
             ],
             'autovacuum_enabled' => [

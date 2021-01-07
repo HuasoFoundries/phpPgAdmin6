@@ -189,15 +189,13 @@ if(!is_array($_SESSION['webdbLastTab'])) {
             $search_paths = $data->getSearchPath();
 
             foreach ($search_paths as $schema) {
-                $url = \str_replace(['&amp;', 'redirect/database'], ['&', 'redirect/schema'], $dburl . '&schema=' . $schema);
-                $destination = $this->container->getDestinationWithLastTab('database');
-                //$this->dump(['url' => $url, 'destination' => $destination]);
-                $search_path_crumbs[$schema] = [
+                 $destination = $this->container->getDestinationWithLastTab('database');
+                 $search_path_crumbs[$schema] = [
                     'title' => $lang['strschema'],
                     'text' => $schema,
                     'icon' => $this->view->icon('Schema'),
                     'iconalt' => $lang['strschema'],
-                    'url' => $url,
+                    'url' => $destination,
                 ];
             }
             $viewVars['search_paths'] = $search_path_crumbs;
