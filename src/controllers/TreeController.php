@@ -204,6 +204,7 @@ class TreeController extends BaseController
          } else {
             $parent = ['children' => false];
         }
+        //ddd($parent);
 
         if (true === $print) {
             if (isset($_REQUEST['children'])) {

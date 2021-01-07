@@ -187,9 +187,9 @@ $app->get('/', function (
 ) {
     $subject = 'intro';
     $query_string = $request->getUri()->getQuery();
-    return $response->withStatus(302)->withHeader('Location',$nextPath); 
-
-    return $this->view->maybeRenderIframes($response, $subject, $query_string);
+    $className = $this->view->getControllerClassName($subject);
+    $controller = new $className($this);
+    return $controller->render();
 });
 
 $app->get('[/{path:.*}]', function (

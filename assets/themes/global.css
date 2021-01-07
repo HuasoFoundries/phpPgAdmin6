@@ -70,26 +70,40 @@ html body #detail.detail_container table,
 html body.detailbody table {
   min-width: calc(100vw - 370px);
 }
-html body #detail.detail_container table#data td,
-html body.detailbody table#data td {
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td,
+html body.detailbody table.searchpath html body.detailbody table#data td {
   white-space: nowrap;
 }
-html body #detail.detail_container table#data td.opbutton1,
-html body.detailbody table#data td.opbutton1,
-html body #detail.detail_container table#data td.opbutton2,
-html body.detailbody table#data td.opbutton2,
-html body #detail.detail_container table#data td.opbutton3,
-html body.detailbody table#data td.opbutton3 {
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton1,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton1,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton1,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton1,
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton2,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton2,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton2,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton2,
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton3,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton3,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton3,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton3 {
   border: 0 none;
   padding-left: 1px;
   padding-right: 1px;
 }
-html body #detail.detail_container table#data td.opbutton1 a,
-html body.detailbody table#data td.opbutton1 a,
-html body #detail.detail_container table#data td.opbutton2 a,
-html body.detailbody table#data td.opbutton2 a,
-html body #detail.detail_container table#data td.opbutton3 a,
-html body.detailbody table#data td.opbutton3 a {
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton1 a,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton1 a,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton1 a,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton1 a,
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton2 a,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton2 a,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton2 a,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton2 a,
+html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td.opbutton3 a,
+html body #detail.detail_container table.searchpath html body.detailbody table#data td.opbutton3 a,
+html body.detailbody table.searchpath html body #detail.detail_container table#data td.opbutton3 a,
+html body.detailbody table.searchpath html body.detailbody table#data td.opbutton3 a {
   margin-left: 2px;
   margin-right: 2px;
 }
@@ -176,7 +190,17 @@ html body #detail.detail_container .topbar .toplink {
   margin-right: 110px;
 }
 html body #detail.detail_container .trail {
+  height: 24px;
   position: fixed;
+}
+html body #detail.detail_container .trail .trail_table {
+  min-width: unset;
+}
+html body #detail.detail_container .trail .searchpath {
+  min-width: unset;
+  right: 0;
+  position: fixed;
+  top: 25px;
 }
 html body .navlink li a {
   -webkit-background-clip: border-box;
@@ -501,6 +525,8 @@ html body form.sqlform .sqledit_bottom_inputs p label #paginate {
 html body .searchpath {
   padding: 5px;
   clear: both;
+  min-width: unset;
+  float: left;
 }
 html body .CodeMirror {
   border: 1px solid #aaa;

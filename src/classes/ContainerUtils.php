@@ -215,6 +215,8 @@ class ContainerUtils extends Container implements ContainerInterface
         $destinationurl = $this->getRedirectUrl();
 
         if (!isset($_server_info['username'])||!\is_array($url)) {
+            $destinationurl= (strpos($destinationurl,$container->subFolder)===0?'': $container->subFolder).$destinationurl;
+            
             return $destinationurl;
         }
 
@@ -232,9 +234,8 @@ class ContainerUtils extends Container implements ContainerInterface
         }
         $actionurl = Decorator::actionurl($url['url'], $_GET);
         $destinationurl =str_replace($this->subFolder,'', $actionurl->value($_GET));
-if(strpos($destinationurl,$subject)===0) {
-    $destinationurl=$this->subFolder.'/'.$destinationurl;
-}
+        $destinationurl= (strpos($destinationurl,$container->subFolder)===0?'': $container->subFolder).$destinationurl;
+
         return $destinationurl;
     }
 
