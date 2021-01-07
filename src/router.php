@@ -73,7 +73,7 @@ $app->get('/status', function (
         );
 });
 
-$app->post('/redirect/server', function (
+$app->post('/login', function (
     /* @scrutinizer ignore-unused */
     \Slim\Http\Request $request,
     /* @scrutinizer ignore-unused */
