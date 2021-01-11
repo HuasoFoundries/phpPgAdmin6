@@ -329,15 +329,20 @@ class HTMLTableController extends HTMLController
                         $val = Decorator::get_sanitized_value($column['field'], $tabledata->fields);
 
                         if (null !== $val) {
-                            if (isset($column['url'])) {
-                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder.'/',$column['url']??'');
-                                $tbody_html .= "<a href=\"{$column['url']}";
-                                $tbody_html .= $this->printUrlVars($column['vars'], $tabledata->fields, false);
-                                $tbody_html .= '">';
-                            }
                             $type = $column['type'] ?? null;
                             $params = $column['params'] ?? [];
-                            $tbody_html .= $this->misc->printVal($val, $type, $params);
+                            $parsedValue= $this->misc->printVal($val, $type, $params);
+                            if (isset($column['url'])) {
+                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder.'/',$column['url']??'');
+                                $parsedurl=parse_url($column['url']);
+                                $parsedVars=implode('&',[$parsedurl['query']??null,$this->printUrlVars($column['vars'], $tabledata->fields, false)]);
+                                $column['url']=$parsedurl['path']??'/';
+                                $tbody_html .= "<a href=\"{$column['url']}?";
+                                $tbody_html .= $parsedVars;
+                                $tbody_html .= '">';
+                             //   d($parsedurl,$parsedVars,$parsedValue);
+                            }
+                            $tbody_html .=$parsedValue;
 
                             if (isset($column['url'])) {
                                 $tbody_html .= '</a>';

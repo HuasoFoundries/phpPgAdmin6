@@ -41,16 +41,19 @@ class SqleditController extends BaseController
 
                 break;
         }
-
+        
         $this->setWindowName('sqledit');
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
 
-        $this->printHeader($title, $this->scripts, true, 'header_sqledit.twig');
-        $this->printBody(true, 'sql_edit');
+        $header=$this->printHeader($title, $this->scripts, false, 'header_sqledit.twig');
+        echo $header;
+        $this->printBody(true, 'sql_edit',false,false);
         echo $body_text;
 
-        $this->printFooter(true, 'footer_sqledit.twig');
+        $footer=$this->printFooter(false, 'footer_sqledit.twig');
+      
+        echo $footer;
     }
 
     /**
@@ -72,7 +75,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs('popup', 'sql', false);
 
-        $default_html .= '<form action="' . \containerInstance()->subFolder . '/src/views/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
+        $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="parent">';
         $default_html .= \PHP_EOL;
         $default_html .= $this->printConnection('sql', false);
 

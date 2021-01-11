@@ -1,6 +1,8 @@
 <body data-controller="{{ controller_name }}" class="{{ bodyClass }}" {{ onload }}>
  		<div class="flexbox_wrapper">
+			{% if includeJsTree %}
 			<div id="masking_overlay"></div>
+
 			<div id="browser_container">
 
 				<div class="browser_container">
@@ -11,6 +13,7 @@
 				</div>
 			</div>
 			<div class="splitter"></div>
+			{% endif %}
 			<div id="detail" class="detail_container">
 
  

@@ -4,7 +4,29 @@
 	<head data-headertemplate="{{headertemplate}}">
 
 
-		{% include 'components/common_head.twig' %}
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+{% set development_assets = true %}
+<link rel="stylesheet" href="{{subfolder}}/assets/vendor/jstree/themes/phppgadmin/style.css"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/themes/global.css" type="text/css" id="cssmain"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/themes/{{ theme }}/global.css" type="text/css" id="csstheme"/>
+<link rel="stylesheet" href="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.css" type="text/css"/>
+<link rel="shortcut icon" href="{{ Favicon }}" type="image/vnd.microsoft.icon"/>
+<link rel="icon" href="{{ Introduction }}" type="image/png"/>
+
+<script src="{{ subfolder }}/assets/vendor/jquery/jquery-3.4.1.min.js"></script>
+<script src="{{ subfolder }}/assets/vendor/jquery/jquery-ui.min.js"></script>
+ 
+{{
+  script|raw
+}}
+<!-- prettier-ignore-start -->
+
+ 
+
+<title data-headertemplate="{{ headertemplate }}" data-subfolder="{{ subfolder }}">
+	{{ appName }}{{ title }}
+</title>
+
 		<link href="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.css" type="text/css" rel="stylesheet"/>
 		<script src="{{subfolder}}/assets/vendor/codemirror/lib/codemirror.js"></script>
 		<script src="{{subfolder}}/assets/vendor/codemirror/addon/mode/loadmode.js"></script>

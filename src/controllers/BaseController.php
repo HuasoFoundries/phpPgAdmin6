@@ -417,9 +417,9 @@ class BaseController
      * @param string $bodyClass
      * @param boolean $onloadInit
      * @param boolean $includeJsTree either to add the jsTree in the root body. By default is inserted using an iframe
-     * @return void
+     * @return string
      */
-    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false,bool $includeJsTree=false)
+    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false,bool $includeJsTree=true)
     {
         $header_controller = $this->_getHeaderController();
 

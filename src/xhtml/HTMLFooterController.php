@@ -65,7 +65,7 @@ class HTMLFooterController extends HTMLController
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
-
+///ddd($template);
         $footer_html = $this->view->fetch($template);
 
         if ($doBody) {

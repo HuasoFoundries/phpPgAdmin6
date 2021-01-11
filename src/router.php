@@ -140,6 +140,7 @@ $app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
     $this->view->offsetSet('includeJsTree',true);
     $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
+   
     return $controller->render();
  
     

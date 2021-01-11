@@ -51,6 +51,7 @@ class HTMLHeaderController extends HTMLController
         $viewVars['dir'] = (0 !== \strcasecmp($lang['applangdir'], 'ltr')) ? ' dir="' . \htmlspecialchars($lang['applangdir']) . '"' : '';
         $viewVars['headertemplate'] = $template;
         $viewVars['headerFlags'][str_replace('.twig','',basename($template))]=1;
+        $viewVars['includeJsTree']=$template!=='header_sqledit.twig';
         $viewVars['title'] = ('' !== $title) ? ' - ' . $title : '';
         $viewVars['lang'] = $lang;
         $viewVars['appName'] = \htmlspecialchars($this->appName);
@@ -64,7 +65,7 @@ class HTMLHeaderController extends HTMLController
         }
         $viewVars['reload'] = $reload_param;
         $viewVars['script'] = $script;
-        $header_html = $this->view->fetch( 'header.twig'/*$template*/, $viewVars);
+        $header_html = $this->view->fetch($template==='header_sqledit.twig'?$template:'header.twig', $viewVars);
 
         /*$plugins_head = [];
         $_params      = ['heads' => &$plugins_head];
@@ -92,17 +93,17 @@ class HTMLHeaderController extends HTMLController
      *
      * @return string the parsed template
      */
-    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false,$includeJsTree=false)
+    public function printBody($doBody = true, $bodyClass = 'detailbody', $onloadInit = false,$includeJsTree=true)
     {
         
-       $includeJsTree=$includeJsTree||(       $this->view->offsetExists('includeJsTree')?$this->view->offsetGet('includeJsTree'):false);
+      // $includeJsTree=$includeJsTree||(       $this->view->offsetExists('includeJsTree')?$this->view->offsetGet('includeJsTree'):false);
         $viewVars=[
             'bodyClass'=> $this->lang['applangdir'] . ' ' . \htmlspecialchars($bodyClass).' '.$includeJsTree?'flexbox_body':'',
             'onload'=>($onloadInit ? 'onload="init();" ' : ''),
             'controller_name'=>$this->controller_name,
             'includeJsTree'=>$includeJsTree
         ];
-   
+    
         $bodyHtml = $this->view->fetch('components/common_body.twig', $viewVars);
 
         if (!$this->_no_output && $doBody) {

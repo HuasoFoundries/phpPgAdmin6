@@ -15,8 +15,8 @@ if (event.state && event.state.realurl) {
 let ifr = document.getElementById('detail'),
 realUrl = event.state.realurl,
 detailLocation = ifr.contentWindow.location.href;
-// console.log({detailLocation,realUrl});
-ifr.contentWindow.location.replace(event.state.realurl);
+console.log({detailLocation,realUrl});
+//ifr.contentWindow.location.replace(event.state.realurl);
 }
 };
 if ('serviceWorker' in navigator) {

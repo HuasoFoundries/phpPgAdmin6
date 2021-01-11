@@ -496,7 +496,7 @@ public function maybeRenderIframes(Response $response, string $subject, string $
     $c = $this->getContainer();
 
     $in_test = $this->offsetGet('in_test');
-    $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):true;
+    $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):false;
 
     if ('1' === $in_test||$includeJsTree) {
         $className = self::getControllerClassName($subject);

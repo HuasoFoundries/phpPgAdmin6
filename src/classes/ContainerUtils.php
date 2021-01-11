@@ -174,7 +174,9 @@ class ContainerUtils extends Container implements ContainerInterface
             $destinationurl = $this->subFolder. '/login' . ($query_string ? '?' . $query_string : '');
         }
 
-        return $destinationurl;
+        $destinationurl= (strpos($destinationurl,'/')===0)? $destinationurl:'/'.$destinationurl;
+       // ddd($destinationurl);
+       return $destinationurl;
     }
 
     /**
@@ -204,7 +206,7 @@ class ContainerUtils extends Container implements ContainerInterface
      *
      * @return string The destination url with last tab set in the query string
      */
-    public function getDestinationWithLastTab($subject)
+    public function getDestinationWithLastTab($subject,$urlvars=[])
     {
         $container = self::getContainerInstance();
         $_server_info = $container->misc->getServerInfo();
@@ -212,17 +214,17 @@ class ContainerUtils extends Container implements ContainerInterface
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
+        $url['urlvars']=array_merge($urlvars,$url['urlvars']??[]);
         $destinationurl = $this->getRedirectUrl();
-
-        if (!isset($_server_info['username'])||!\is_array($url)) {
-            $destinationurl= (strpos($destinationurl,$container->subFolder)===0?'': $container->subFolder).$destinationurl;
+        if (isset($_server_info['username']) && \is_array($url)) {
+        
+         
             
-            return $destinationurl;
-        }
+        
 
         $this->addFlash($url, 'getLastTabURL for ' . $subject);
         // Load query vars into superglobal arrays
-        if (isset($url['urlvars'])) {
+       
             $urlvars = [];
 
             foreach ($url['urlvars'] as $key => $urlvar) {
@@ -231,11 +233,12 @@ class ContainerUtils extends Container implements ContainerInterface
             }
             $_REQUEST = \array_merge($_REQUEST, $urlvars);
             $_GET = \array_merge($_GET, $urlvars);
-        }
+          
         $actionurl = Decorator::actionurl($url['url'], $_GET);
         $destinationurl =str_replace($this->subFolder,'', $actionurl->value($_GET));
-        $destinationurl= (strpos($destinationurl,$container->subFolder)===0?'': $container->subFolder).$destinationurl;
-
+        
+        }
+        $destinationurl=  (($container->subFolder==='' || strpos($destinationurl,$container->subFolder)===0)?'': $container->subFolder).$destinationurl;
         return $destinationurl;
     }
 

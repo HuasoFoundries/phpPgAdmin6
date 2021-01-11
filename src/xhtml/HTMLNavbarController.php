@@ -245,6 +245,7 @@ class HTMLNavbarController extends HTMLController
             $toplinks = [
                 'sql' => [
                     'attr' => [
+                        'class' => 'toplink_popup',
                         'href' => [
                             'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
@@ -253,7 +254,6 @@ class HTMLNavbarController extends HTMLController
                         ],
                         'target' => 'sqledit',
                         'id' => 'toplink_sql',
-                        'class' => 'toplink_popup',
                     ],
                     'content' => $lang['strsql'],
                 ],
@@ -272,6 +272,7 @@ class HTMLNavbarController extends HTMLController
                 ],
                 'find' => [
                     'attr' => [
+                        'class' => 'toplink_popup',
                         'href' => [
                             'url' => \containerInstance()->subFolder . '/src/views/sqledit',
                             'urlvars' => \array_merge($reqvars, [
@@ -280,7 +281,6 @@ class HTMLNavbarController extends HTMLController
                         ],
                         'target' => 'sqledit',
                         'id' => 'toplink_find',
-                        'class' => 'toplink_popup',
                     ],
                     'content' => $lang['strfind'],
                 ],
@@ -305,9 +305,12 @@ class HTMLNavbarController extends HTMLController
             ];
 
             $topbar_html .= '<td style="text-align: right">';
-
-            $topbar_html .= $this->printLinksList($toplinks, 'toplink', false, $from);
-
+$toplinks=$this->printLinksList($toplinks, 'toplink', false, $from);
+if(strpos($toplinks,'toplink_popup')!==false) {
+            $topbar_html .= str_replace(['<li>','</li>','<a','/a>','class="toplink_popup" href','src/views/','target="sqledit"'],[
+                '','',
+                '<button','/button>','class="toplink_popup" rel','','target="_blank" '],$toplinks);
+}
             $topbar_html .= '</td>';
         } else {
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";

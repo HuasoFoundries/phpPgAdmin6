@@ -65,14 +65,16 @@ class ServersController extends BaseController
         $server_html .= \ob_get_clean();
 
         $server_html .= $this->printFooter(false);
-
-        if (null === \requestInstance()->getAttribute('route')) {
+        $route=requestInstance()->getAttribute('route');
+        $theResponse=\responseInstance();
+      //  ddd($server_html);
+        if (null === $route) {
             echo $server_html;
         } else {
-            $body = \responseInstance()->getBody();
+            $body = $theResponse->getBody();
             $body->write($server_html);
-
-            return \responseInstance();
+          
+            return $theResponse ;
         }
     }
 
@@ -109,6 +111,7 @@ class ServersController extends BaseController
                 'field' => Decorator::field('desc'),
                 'url' => \containerInstance()->getDestinationWithLastTab('server'),
                 'vars' => ['server' => 'sha'],
+                
             ],
             'host' => [
                 'title' => $this->lang['strhost'],
@@ -154,7 +157,8 @@ class ServersController extends BaseController
             $this->printTitle(\sprintf($this->lang['strgroupservers'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
-        echo $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
+        $thetable= $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
+        echo $thetable;
     }
 
     /**
