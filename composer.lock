@@ -1997,43 +1997,49 @@
         },
         {
             "name": "ergebnis/composer-normalize",
-            "version": "2.8.2",
+            "version": "2.13.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/composer-normalize.git",
-                "reference": "0a25a226c5503659179c8ea440d1c76599e434fd"
+                "reference": "eff003890c655ee0e4b6ac5d4c5b40ce61247f7c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/0a25a226c5503659179c8ea440d1c76599e434fd",
-                "reference": "0a25a226c5503659179c8ea440d1c76599e434fd",
+                "url": "https://api.github.com/repos/ergebnis/composer-normalize/zipball/eff003890c655ee0e4b6ac5d4c5b40ce61247f7c",
+                "reference": "eff003890c655ee0e4b6ac5d4c5b40ce61247f7c",
                 "shasum": ""
             },
             "require": {
                 "composer-plugin-api": "^1.1.0 || ^2.0.0",
-                "ergebnis/json-normalizer": "~0.13.1",
+                "ergebnis/json-normalizer": "^1.0.3",
                 "ergebnis/json-printer": "^3.1.1",
                 "justinrainbow/json-schema": "^5.2.10",
                 "localheinz/diff": "^1.1.1",
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "composer/composer": "^1.10.13 || ^2.0.0",
-                "composer/package-versions-deprecated": "^1.11.99",
-                "ergebnis/phpstan-rules": "~0.15.2",
-                "ergebnis/test-util": "^1.1.0",
-                "jangregor/phpstan-prophecy": "~0.8.0",
-                "phpstan/extension-installer": "^1.0.5",
-                "phpstan/phpstan": "~0.12.43",
-                "phpstan/phpstan-deprecation-rules": "~0.12.5",
-                "phpstan/phpstan-phpunit": "~0.12.16",
-                "phpstan/phpstan-strict-rules": "~0.12.5",
-                "phpunit/phpunit": "^8.5.8",
-                "symfony/filesystem": "^5.1.5"
+                "composer/composer": "^1.10.19 || ^2.0.8",
+                "ergebnis/license": "^1.1.0",
+                "ergebnis/php-cs-fixer-config": "^2.13.0",
+                "ergebnis/phpstan-rules": "~0.15.3",
+                "ergebnis/test-util": "^1.4.0",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "~0.12.80",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.18",
+                "phpstan/phpstan-strict-rules": "~0.12.9",
+                "phpunit/phpunit": "^8.5.14",
+                "psalm/plugin-phpunit": "~0.15.0",
+                "symfony/filesystem": "^5.2.4",
+                "vimeo/psalm": "^4.6.2"
             },
             "type": "composer-plugin",
             "extra": {
-                "class": "Ergebnis\\Composer\\Normalize\\NormalizePlugin"
+                "class": "Ergebnis\\Composer\\Normalize\\NormalizePlugin",
+                "composer-normalize": {
+                    "indent-size": 2,
+                    "indent-style": "space"
+                }
             },
             "autoload": {
                 "psr-4": {
@@ -2068,43 +2074,43 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-22T09:55:49+00:00"
+            "time": "2021-03-06T14:00:23+00:00"
         },
         {
             "name": "ergebnis/json-normalizer",
-            "version": "0.13.1",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/ergebnis/json-normalizer.git",
-                "reference": "82897f7a0b6a896462a08ac02bee33ccf4ece0bb"
+                "reference": "4a7f064ce34d5a2e382564565cdd433dbc5b9494"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/82897f7a0b6a896462a08ac02bee33ccf4ece0bb",
-                "reference": "82897f7a0b6a896462a08ac02bee33ccf4ece0bb",
+                "url": "https://api.github.com/repos/ergebnis/json-normalizer/zipball/4a7f064ce34d5a2e382564565cdd433dbc5b9494",
+                "reference": "4a7f064ce34d5a2e382564565cdd433dbc5b9494",
                 "shasum": ""
             },
             "require": {
-                "ergebnis/json-printer": "^3.1.0",
+                "ergebnis/json-printer": "^3.1.1",
                 "ext-json": "*",
                 "justinrainbow/json-schema": "^5.2.10",
                 "php": "^7.2 || ^8.0"
             },
             "require-dev": {
-                "ergebnis/license": "^1.0.0",
-                "ergebnis/php-cs-fixer-config": "^2.2.1",
-                "ergebnis/phpstan-rules": "~0.15.2",
-                "ergebnis/test-util": "^1.1.0",
+                "ergebnis/license": "^1.1.0",
+                "ergebnis/php-cs-fixer-config": "^2.10.0",
+                "ergebnis/phpstan-rules": "~0.15.3",
+                "ergebnis/test-util": "^1.4.0",
                 "infection/infection": "~0.15.3",
-                "jangregor/phpstan-prophecy": "~0.8.0",
-                "phpstan/extension-installer": "^1.0.4",
-                "phpstan/phpstan": "~0.12.40",
-                "phpstan/phpstan-deprecation-rules": "~0.12.5",
-                "phpstan/phpstan-phpunit": "~0.12.16",
-                "phpstan/phpstan-strict-rules": "~0.12.4",
-                "phpunit/phpunit": "^8.5.8",
-                "psalm/plugin-phpunit": "~0.11.0",
-                "vimeo/psalm": "^3.14.2"
+                "jangregor/phpstan-prophecy": "~0.8.1",
+                "phpstan/extension-installer": "^1.1.0",
+                "phpstan/phpstan": "~0.12.80",
+                "phpstan/phpstan-deprecation-rules": "~0.12.6",
+                "phpstan/phpstan-phpunit": "~0.12.17",
+                "phpstan/phpstan-strict-rules": "~0.12.9",
+                "phpunit/phpunit": "^8.5.14",
+                "psalm/plugin-phpunit": "~0.12.2",
+                "vimeo/psalm": "^3.18"
             },
             "type": "library",
             "autoload": {
@@ -2138,7 +2144,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-08-30T12:00:06+00:00"
+            "time": "2021-03-06T13:33:57+00:00"
         },
         {
             "name": "ergebnis/json-printer",
