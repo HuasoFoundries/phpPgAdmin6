@@ -21,63 +21,71 @@ class UsersController extends BaseController
     public function render(): void
     {
         $this->printHeader();
-        $this->printBody();
-
+       
+$this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
         switch ($this->action) {
+            case 'cancel':
+                 $this->printBody();
+                $this->doDefault();
+                break;
+
             case 'changepassword':
                 if (isset($_REQUEST['ok'])) {
+                     $this->printBody();
                     $this->doChangePassword(false);
                 } else {
+                     $this->printBody();
                     $this->doAccount();
                 }
 
                 break;
             case 'confchangepassword':
+                 $this->printBody();
                 $this->doChangePassword(true);
 
                 break;
             case 'account':
+                 $this->printBody();
                 $this->doAccount();
 
                 break;
             case 'save_create':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doSaveCreate();
-                }
+                 $this->printBody();    
+                $this->doSaveCreate();
+               
 
                 break;
             case 'create':
+                 $this->printBody();
                 $this->doCreate();
 
                 break;
             case 'drop':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doDrop(false);
-                }
+                 $this->printBody();      
+                $this->doDrop(false);
+               
 
                 break;
             case 'confirm_drop':
+                 $this->printBody();
                 $this->doDrop(true);
 
                 break;
             case 'save_edit':
-                if (isset($_REQUEST['cancel'])) {
-                    $this->doDefault();
-                } else {
-                    $this->doSaveEdit();
-                }
+                 $this->printBody();       
+                $this->doSaveEdit();
+                
 
                 break;
             case 'edit':
+                 $this->printBody();
                 $this->doEdit();
 
                 break;
 
             default:
+                $this->view->offsetSet('trail',$this->printTrail('server',false));
+                $this->printBody();
                 $this->doDefault();
 
                 break;
@@ -100,7 +108,7 @@ class UsersController extends BaseController
             return 'infinity' === $val ? $lang['strnever'] : \htmlspecialchars($val);
         };
 
-        $this->printTrail('server');
+        
         $this->printTabs('server', 'users');
         $this->printMsg($msg);
 
@@ -269,7 +277,7 @@ class UsersController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/users" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '	<tr>
@@ -357,7 +365,7 @@ class UsersController extends BaseController
                 $_POST['formPassword'] = '';
             }
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/users" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '	<tr>
@@ -469,7 +477,7 @@ class UsersController extends BaseController
                 $this->misc->printVal($_REQUEST['username'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
+            echo '<form action="' . \containerInstance()->subFolder . '/users" method="post">' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="username" value="', \htmlspecialchars($_REQUEST['username']), '" />' . \PHP_EOL;
             echo $this->view->form;
@@ -515,7 +523,7 @@ class UsersController extends BaseController
         $this->printTitle($this->lang['strcreateuser'], 'pg.user.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/users" method="post">' . \PHP_EOL;
+        echo '<form action="' . \containerInstance()->subFolder . '/users" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>

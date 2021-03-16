@@ -439,6 +439,7 @@ class BaseController
     }
 
     /**
+     * Retrieves a request parameter either from the body or query string
      * @param string      $key
      * @param null|string $default
      */

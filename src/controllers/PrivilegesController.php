@@ -348,7 +348,7 @@ class PrivilegesController extends BaseController
 
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/privileges" method="post">' . \PHP_EOL;
+        echo '<form action="privileges" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '<tr><th class="data left">%s</th>',

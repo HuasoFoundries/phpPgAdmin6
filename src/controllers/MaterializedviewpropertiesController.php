@@ -153,7 +153,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $_POST['formComment'] = $viewdata->fields['relcomment'];
             }
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+            echo '<form action="materializedviewproperties" method="post">' . \PHP_EOL;
             echo '<table style="width: 100%">' . \PHP_EOL;
             echo \sprintf(
                 '	<tr>
@@ -208,7 +208,7 @@ class MaterializedviewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="materializedviewproperties" method="post">' . \PHP_EOL;
 
                 // Output matview header
                 echo '<table>' . \PHP_EOL;
@@ -324,7 +324,7 @@ class MaterializedviewpropertiesController extends BaseController
 
                 $this->coalesceArr($_POST, 'comment', $matview->fields['relcomment']);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="materializedviewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo \sprintf(
                     '<tr><th class="data left required">%s</th>',

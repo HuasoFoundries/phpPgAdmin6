@@ -43,7 +43,7 @@ class DatabaseController extends BaseController
         $scripts = '';
         // normal flow
         if ('locks' === $this->action || 'processes' === $this->action) {
-            $scripts .= '<script src="' . \containerInstance()->subFolder . '/assets/js/database.js" type="text/javascript"></script>';
+            $scripts .= '<script src="assets/js/database.js" type="text/javascript"></script>';
 
             $refreshTime = $this->conf['ajax_refresh'] * 1500;
 
@@ -80,7 +80,7 @@ class DatabaseController extends BaseController
             );
             $scripts .= "errmsg: '" . \str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
             $scripts .= "};\n";
-            $scripts .= '</script>' . \PHP_EOL;
+            $this->scripts = $scripts . '</script>' . \PHP_EOL;
         }
 
         $header_template = 'header.twig';
@@ -99,8 +99,8 @@ class DatabaseController extends BaseController
                 break;
             case 'sql':
                 $this->doSQL();
-                $header_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
+                $this->view->offsetSet('codemirror', true);
+
 
                 break;
             case 'variables':
@@ -126,8 +126,8 @@ class DatabaseController extends BaseController
 
             default:
                 if (false === $this->adminActions($this->action, 'database')) {
-                    $header_template = 'header_sqledit.twig';
-                    $footer_template = 'footer_sqledit.twig';
+                    $this->view->offsetSet('codemirror', true);
+
                     $this->doSQL();
                 }
 
@@ -135,7 +135,7 @@ class DatabaseController extends BaseController
         }
         $output = \ob_get_clean();
 
-        $this->printHeader($this->headerTitle(), $scripts, true, $header_template);
+        $this->printHeader($this->headerTitle(), $this->scripts, true, $header_template);
         $this->printBody();
 
         echo $output;
@@ -213,7 +213,7 @@ class DatabaseController extends BaseController
         $this->printTabs('database', 'find');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/database" method="post">' . \PHP_EOL;
+        echo '<form action="database" method="post">' . \PHP_EOL;
         echo '<p><input name="term" value="', \htmlspecialchars($_REQUEST['term']),
         \sprintf(
             '" size="32" maxlength="%s" />',
@@ -603,7 +603,7 @@ class DatabaseController extends BaseController
             '<p>%s</p>',
             $this->lang['strentersql']
         ) . \PHP_EOL;
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/sql" method="post" enctype="multipart/form-data" id="sqlform">' . \PHP_EOL;
+        echo '<form action="sql" method="post" enctype="multipart/form-data" id="sqlform">' . \PHP_EOL;
         echo \sprintf(
             '<p>%s<br />',
             $this->lang['strsql']

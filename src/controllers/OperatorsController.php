@@ -306,7 +306,7 @@ class OperatorsController extends BaseController
                 $this->misc->printVal($_REQUEST['operator'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/operators" method="post">' . \PHP_EOL;
+            echo '<form action="operators" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']

@@ -116,11 +116,16 @@ class SchemasController extends BaseController
             'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('nspowner'),
-            ],
-            'schema_size' => [
+            ]];
+            if(boolval($this->conf['display_sizes']['schemas']??false)===true) {
+            
+            
+            $columns['schema_size'] = [
                 'title' => $this->lang['strsize'],
                 'field' => Decorator::field('schema_size'),
-            ],
+            ];
+        }
+            $columns=array_merge($columns,[
             'actions' => [
                 'title' => $this->lang['stractions'],
             ],
@@ -128,7 +133,7 @@ class SchemasController extends BaseController
                 'title' => $this->lang['strcomment'],
                 'field' => Decorator::field('nspcomment'),
             ],
-        ];
+        ]);
 
         $actions = [
             'multiactions' => [
@@ -289,7 +294,7 @@ class SchemasController extends BaseController
         $this->printTitle($this->lang['strcreateschema'], 'pg.schema.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
+        echo '<form action="schemas" method="post">' . \PHP_EOL;
         echo '<table style="width: 100%">' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -314,8 +319,7 @@ class SchemasController extends BaseController
             echo \sprintf(
                 '				<option value="%s"',
                 $uname
-            ),
-            ($uname === $_POST['formAuth']) ? ' selected="selected"' : '', \sprintf(
+            ), ($uname === $_POST['formAuth']) ? ' selected="selected"' : '', \sprintf(
                 '>%s</option>',
                 $uname
             ) . \PHP_EOL;
@@ -394,7 +398,7 @@ class SchemasController extends BaseController
 
             $this->coalesceArr($_POST, 'owner', $schema->fields['ownername']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
+            echo '<form action="schemas" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -421,8 +425,7 @@ class SchemasController extends BaseController
 
                 while (!$users->EOF) {
                     $uname = $users->fields['usename'];
-                    echo '<option value="', \htmlspecialchars($uname), '"',
-                    ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
+                    echo '<option value="', \htmlspecialchars($uname), '"', ($uname === $_POST['owner']) ? ' selected="selected"' : '', '>', \htmlspecialchars($uname), '</option>' . \PHP_EOL;
                     $users->MoveNext();
                 }
                 echo '</select></td></tr>' . \PHP_EOL;
@@ -498,7 +501,7 @@ class SchemasController extends BaseController
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/schemas" method="post">' . \PHP_EOL;
+            echo '<form action="schemas" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {

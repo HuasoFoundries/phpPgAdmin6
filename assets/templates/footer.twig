@@ -1,5 +1,13 @@
-{{script_footer|raw}}
 
+{{script_footer|raw}}
+{% if codemirror == true %}
+<script type="text/javascript">
+CodeMirror.modeURL = "{{subfolder}}/assets/vendor/codemirror/mode/%N/%N.js";
+</script>
+<script src="{{subfolder}}/assets/js/codemirror/codemirror_footer.js" type="text/javascript"></script>
+<!--<script src="{{subfolder}}/assets/js/footer_scripts.js" type="text/javascript"></script>-->
+<script src="{{subfolder}}/assets/js/footer_sqledit.js" type="text/javascript"></script>
+{% endif %}
 {% if print_bottom_link == true %}
 	<a data-footertemplate="{{footer_template}}" href="#" class="bottom_link">{{lang.strgotoppage}}</a>
 {% endif %}
@@ -26,4 +34,6 @@ console.log('Service Worker Registered');
 console.warn(warn);
 })
 }
-</script></body></html>
+</script>
+</div>
+</body></html>

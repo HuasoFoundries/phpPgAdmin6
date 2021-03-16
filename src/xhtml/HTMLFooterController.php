@@ -65,7 +65,10 @@ class HTMLFooterController extends HTMLController
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
-///ddd($template);
+        if (!$this->view->offsetExists('excludeJsTree')) {
+            $this->view->offsetSet('excludeJsTree', false);
+        }
+        $template = $this->view->offsetGet('excludeJsTree') === true && $template === 'footer_sqledit.twig' ? $template : 'footer.twig';
         $footer_html = $this->view->fetch($template);
 
         if ($doBody) {

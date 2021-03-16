@@ -147,7 +147,7 @@ class HTMLTableController extends HTMLController
 
         foreach ($columns as $column_id => $column) {
             // Handle cases where no class has been passed
-
+          
             $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
             switch ($column_id) {
@@ -159,7 +159,7 @@ class HTMLTableController extends HTMLController
                     break;
 
                 default:
-                    $thead_html .= '<th class="data' . $class . '">';
+                    $thead_html .= '<th class="data' . $class . ' '.$column_id.'">';
 
                     if (isset($column['help'])) {
                         $thead_html .= $this->view->printHelp($column['title'], $column['help'], false);

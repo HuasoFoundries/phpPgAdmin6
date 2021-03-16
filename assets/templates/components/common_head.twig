@@ -31,6 +31,7 @@
 {% for key, value in params %}
 '{{ key }}' : "{{ value }}",
 {% endfor %}
+serverSide:!!'{{serverSide}}',
 dir: '{{ lang.applangdir }}',
 in_test: '{{ in_test }}',
 reload: '{{ reload }}',
@@ -41,6 +42,7 @@ query_string:"{{ query_string }}",
 strconfdropcred:"{{ lang.strconfdropcred }}",
 origin: globalThis.location.origin,
 url:"{{ url }}",
+dttFields: {{dttFields|json_encode|raw}},
 href: globalThis.location.href,
 guessedSubfolder: ('' + globalThis.location.pathname).replace("/ {{ path }}", ''),
 pathname: globalThis.location.pathname

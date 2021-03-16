@@ -142,7 +142,7 @@ class ContainerUtils extends Container implements ContainerInterface
 
             self::$instance
                 ->withConf(self::$envConfig);
-             
+
 
             $handlers = new ContainerHandlers(self::$instance);
             $handlers->setExtra()
@@ -168,15 +168,15 @@ class ContainerUtils extends Container implements ContainerInterface
 
         // if server_id isn't set, then you will be redirected to intro
         if (null === $container->request->getQueryParam('server')) {
-            $destinationurl = $this->subFolder. '/intro';
+            $destinationurl = $this->subFolder . '/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = $this->subFolder. '/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = $this->subFolder . '/login' . ($query_string ? '?' . $query_string : '');
         }
 
-        $destinationurl= (strpos($destinationurl,'/')===0)? $destinationurl:'/'.$destinationurl;
-       // ddd($destinationurl);
-       return $destinationurl;
+        $destinationurl = (strpos($destinationurl, '/') === 0) ? $destinationurl : '/' . $destinationurl;
+        // ddd($destinationurl);
+        return $destinationurl;
     }
 
     /**
@@ -198,33 +198,23 @@ class ContainerUtils extends Container implements ContainerInterface
         }
     }
 
-    /**
-     * Gets the destination with the last active tab selected for that controller
-     * Usually used after going through a redirect route.
-     *
-     * @param string $subject The subject, usually a view name like 'server' or 'table'
-     *
-     * @return string The destination url with last tab set in the query string
-     */
-    public function getDestinationWithLastTab($subject,$urlvars=[])
+    public function getActionUrl($subject,   bool $debug = false)
     {
         $container = self::getContainerInstance();
         $_server_info = $container->misc->getServerInfo();
-        $this->addFlash($subject, 'getDestinationWithLastTab');
-        //$this->prtrace('$_server_info', $_server_info);
-        // If username isn't set in server_info, you should login
         $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
-        $url['urlvars']=array_merge($urlvars,$url['urlvars']??[]);
-        $destinationurl = $this->getRedirectUrl();
-        if (isset($_server_info['username']) && \is_array($url)) {
-        
-         
-            
-        
+        $url['urlvars'] = array_merge([], $url['urlvars'] ?? []);
 
-        $this->addFlash($url, 'getLastTabURL for ' . $subject);
-        // Load query vars into superglobal arrays
-       
+
+        if (isset($_server_info['username']) && \is_array($url)) {
+
+
+
+
+
+            $this->addFlash($url, 'getLastTabURL for ' . $subject);
+            // Load query vars into superglobal arrays
+
             $urlvars = [];
 
             foreach ($url['urlvars'] as $key => $urlvar) {
@@ -233,12 +223,53 @@ class ContainerUtils extends Container implements ContainerInterface
             }
             $_REQUEST = \array_merge($_REQUEST, $urlvars);
             $_GET = \array_merge($_GET, $urlvars);
-          
-        $actionurl = Decorator::actionurl($url['url'], $_GET);
-        $destinationurl =str_replace($this->subFolder,'', $actionurl->value($_GET));
-        
+            $actionurl = Decorator::actionurl($url['url'], $_GET);
+            //kdump($actionurl);
+            return $actionurl;
         }
-        $destinationurl=  (($container->subFolder==='' || strpos($destinationurl,$container->subFolder)===0)?'': $container->subFolder).$destinationurl;
+        //kdump($url);
+        return null;
+    }
+    /**
+     * Gets the destination with the last active tab selected for that controller
+     * Usually used after going through a redirect route.
+     *
+     * @param string $subject The subject, usually a view name like 'server' or 'table'
+     *
+     * @return string The destination url with last tab set in the query string
+     */
+    public function getDestinationWithLastTab($subject, $urlvars = [])
+    {
+        $container = self::getContainerInstance();
+        $_server_info = $container->misc->getServerInfo();
+        $this->addFlash($subject, 'getDestinationWithLastTab');
+        //$this->prtrace('$_server_info', $_server_info);
+        // If username isn't set in server_info, you should login
+        $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
+        $url['urlvars'] = array_merge($urlvars, $url['urlvars'] ?? []);
+        $destinationurl = $this->getRedirectUrl();
+        if (isset($_server_info['username']) && \is_array($url)) {
+
+
+
+
+
+            $this->addFlash($url, 'getLastTabURL for ' . $subject);
+            // Load query vars into superglobal arrays
+
+            $urlvars = [];
+
+            foreach ($url['urlvars'] as $key => $urlvar) {
+                //$this->prtrace($key, $urlvar);
+                $urlvars[$key] = Decorator::get_sanitized_value($urlvar, $_REQUEST);
+            }
+            $_REQUEST = \array_merge($_REQUEST, $urlvars);
+            $_GET = \array_merge($_GET, $urlvars);
+
+            $actionurl = Decorator::actionurl($url['url'], $_GET);
+            $destinationurl = str_replace($this->subFolder, '', $actionurl->value($_GET));
+        }
+        $destinationurl =  (($container->subFolder === '' || strpos($destinationurl, $container->subFolder) === 0) ? '' : $container->subFolder) . $destinationurl;
         return $destinationurl;
     }
 
@@ -295,7 +326,7 @@ class ContainerUtils extends Container implements ContainerInterface
         $conf['plugins'] = [];
 
         $container->BASE_PATH = $conf['BASE_PATH'];
-        $container->subFolder = $conf['subfolder']??$conf['subFolder'];
+        $container->subFolder = $conf['subfolder'] ?? $conf['subFolder'];
         $container->debug = $conf['debugmode'];
         $container->THEME_PATH = $conf['theme_path'];
         $container->IN_TEST = $conf['IN_TEST'];

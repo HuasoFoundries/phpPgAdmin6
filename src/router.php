@@ -37,8 +37,9 @@ $container = $app->getContainer();
 
 // If no dump function has been globally declared at this point
 // we fill the gap with an empty one to avoid errors 
-if(!function_exists('dump')) {
-    function dump(...$args):void {
+if (!function_exists('dump')) {
+    function dump(...$args): void
+    {
         // do nothing
     }
 }
@@ -124,26 +125,24 @@ $app->get('/redirect[/{subject}]', function (
     array $args
 ) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
-    $destinationurl = $this->getDestinationWithLastTab($subject);
-    $cleanDestination=($this->subFolder.'/'. $destinationurl);
-    
-     return $response->withStatus(302)->withHeader('Location',$cleanDestination);
+    $destinationurl = str_replace($this->subFolder . '/', '', $this->getDestinationWithLastTab($subject));
+    $cleanDestination = ($this->subFolder . '/' . $destinationurl);
+
+    return $response->withStatus(302)->withHeader('Location', $cleanDestination);
 });
 
-ini_set('display_errors','on');
+ini_set('display_errors', 'on');
 $app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
     array $args
 ) {
     $subject = $args['subject'] ?? 'intro';
-    $this->view->offsetSet('includeJsTree',true);
+    $this->view->offsetSet('includeJsTree', true);
     $className = '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     $controller = new $className($this);
-   
+
     return $controller->render();
- 
-    
 });
 
 
@@ -153,16 +152,17 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     array $args
 ) {
     $subject = $args['subject'];
-    $nextPath=$this->subFolder.'/'. $subject;
+    $nextPath = $this->subFolder . '/' . $subject;
     $query_string = $request->getUri()->getQuery();
-return $response->withStatus(302)->withHeader('Location',$nextPath.($query_string? '?'.$query_string:'')); 
+    return $response->withStatus(307)->withHeader('Location', $nextPath . ($query_string ? '?' . $query_string : ''));
 });
 
-$app->get('/{subject:\w+}[/{server_id}]', function (
+$app->map(['GET', 'POST'], '/{subject:\w+}[/{server_id}]', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
     array $args
 ) {
+    //  ddd($args);
     $subject = $args['subject'] ?? 'intro';
     $server_id = $args['server_id'] ?? $request->getQueryParam('server');
     $_server_info = $this->misc->getServerInfo();
@@ -174,11 +174,10 @@ $app->get('/{subject:\w+}[/{server_id}]', function (
         $subject = 'servers';
     }
     $query_string = $request->getUri()->getQuery();
-    $this->view->offsetSet('includeJsTree',true);
+    $this->view->offsetSet('includeJsTree', true);
     $className = $this->view->getControllerClassName($subject);
     $controller = new $className($this);
     return $controller->render();
-
 });
 
 $app->get('/', function (

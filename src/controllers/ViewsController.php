@@ -126,9 +126,7 @@ class ViewsController extends BaseController
                 'title' => $this->lang['strview'],
                 'field' => Decorator::field('relname'),
                 'url' => \containerInstance()->getDestinationWithLastTab('view'),
-                    '/redirect/view?%s&amp;',
-                    $this->misc->href
-                ),
+                  
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -287,7 +285,7 @@ class ViewsController extends BaseController
             $this->printTrail('view');
             $this->printTitle($this->lang['strdrop'], 'pg.view.drop');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/views" method="post">' . \PHP_EOL;
+            echo '<form action="views" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {

@@ -29,7 +29,7 @@ class IndexesController extends BaseController
         if ('tree' === $this->action) {
             return $this->doTree();
         }
-        $this->scripts = '<script src="' . \containerInstance()->subFolder . '/assets/js/indexes.js" type="text/javascript"></script>';
+        $this->scripts = '<script src="assets/js/indexes.js" type="text/javascript"></script>';
         $this->printHeader($this->headerTitle(), $this->scripts);
 
         $onloadInit = false;
@@ -278,7 +278,7 @@ class IndexesController extends BaseController
                 $this->misc->printVal($_REQUEST['index'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/indexes" method="post">' . \PHP_EOL;
+            echo '<form action="indexes" method="post">' . \PHP_EOL;
             echo '<p><input type="checkbox" id="analyze" name="analyze"', (isset($_REQUEST['analyze']) ? ' checked="checked"' : ''), ' />';
             echo \sprintf(
                 '<label for="analyze">%s</label></p>',
@@ -550,7 +550,7 @@ class IndexesController extends BaseController
                 $this->lang['strconfdropindex'],
                 $this->misc->printVal($this->getRequestParam('index'))
             ), '</p>' . \PHP_EOL;
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/indexes" method="post">' . \PHP_EOL;
+            echo '<form action="indexes" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop_index" />' . \PHP_EOL;
             echo '<input type="hidden" name="table" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="index" value="', \htmlspecialchars($this->getRequestParam('index')), '" />' . \PHP_EOL;

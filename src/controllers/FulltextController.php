@@ -322,7 +322,7 @@ class FulltextController extends BaseController
                 $this->misc->printVal($_REQUEST['ftscfg'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']
@@ -366,7 +366,7 @@ class FulltextController extends BaseController
                 $this->misc->printVal($_REQUEST['ftsdict'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']
@@ -427,7 +427,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreateconfig'], 'pg.ftscfg.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<form action="fulltext" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         // conf name
         echo \sprintf(
@@ -601,7 +601,7 @@ class FulltextController extends BaseController
             // Fetch all FTS parsers from the database
             $ftsparsers = $data->getFtsParsers();
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -915,7 +915,7 @@ class FulltextController extends BaseController
         $this->printTitle($this->lang['strftscreatedict'], 'pg.ftsdict.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+        echo '<form action="fulltext" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -1105,7 +1105,7 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'formName', $_REQUEST['ftsdict']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo "\t<tr>" . \PHP_EOL;
@@ -1195,7 +1195,7 @@ class FulltextController extends BaseController
             $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
 
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
@@ -1272,7 +1272,7 @@ class FulltextController extends BaseController
 
             $this->coalesceArr($_POST, 'ftscfg', $_REQUEST['ftscfg']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
 
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>" . \PHP_EOL;
@@ -1396,7 +1396,7 @@ class FulltextController extends BaseController
 
             $mappings = $data->getFtsMappings($_POST['ftscfg']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/fulltext" method="post">' . \PHP_EOL;
+            echo '<form action="fulltext" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo "\t<tr>" . \PHP_EOL;
             echo \sprintf(

@@ -158,6 +158,10 @@ class TablesController extends BaseController
 
         $columns = $this->_getColumns();
 
+        if(boolval($this->conf['display_sizes']['tables']??false)===false) {
+            unset($columns['table_size']);
+        }
+
         $actions = $this->_getActions();
 
         echo $this->printTable($tables, $columns, $actions, $this->table_place, $this->lang['strnotables']);
@@ -322,7 +326,7 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/' . $this->script . '" method="post">';
+                echo '<form action="' . $this->script . '" method="post">';
                 echo \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo \sprintf(
@@ -334,8 +338,8 @@ class TablesController extends BaseController
                     '		<td class="data"><input name="name" size="32" maxlength="%s" value="',
                     $data->_maxNameLen
                 ),
-                    \htmlspecialchars($_REQUEST['name']),
-                    "\" /></td>\n\t</tr>" . \PHP_EOL;
+                \htmlspecialchars($_REQUEST['name']),
+                "\" /></td>\n\t</tr>" . \PHP_EOL;
                 echo \sprintf(
                     '	<tr>
 		<th class="data left required">%s</th>',
@@ -345,8 +349,8 @@ class TablesController extends BaseController
                     '		<td class="data"><input name="fields" size="5" maxlength="%s" value="',
                     $data->_maxNameLen
                 ),
-                    \htmlspecialchars($_REQUEST['fields']),
-                    "\" /></td>\n\t</tr>" . \PHP_EOL;
+                \htmlspecialchars($_REQUEST['fields']),
+                "\" /></td>\n\t</tr>" . \PHP_EOL;
                 echo \sprintf(
                     '	<tr>
 		<th class="data left">%s</th>',
@@ -363,21 +367,19 @@ class TablesController extends BaseController
                     ) . \PHP_EOL;
                     echo "\t\t<td class=\"data1\">\n\t\t\t<select name=\"spcname\">" . \PHP_EOL;
                     // Always offer the default (empty) option
-                    echo "\t\t\t\t<option value=\"\"",
-                        ('' === $_REQUEST['spcname']) ? ' selected="selected"' : '',
-                        '></option>' . \PHP_EOL;
+                    echo "\t\t\t\t<option value=\"\"", ('' === $_REQUEST['spcname']) ? ' selected="selected"' : '',
+                    '></option>' . \PHP_EOL;
                     // Display all other tablespaces
                     while (!$tablespaces->EOF) {
                         $spcname = \htmlspecialchars($tablespaces->fields['spcname']);
                         echo \sprintf(
                             '				<option value="%s"',
                             $spcname
-                        ),
-                            ($tablespaces->fields['spcname'] === $_REQUEST['spcname']) ? ' selected="selected"' : '',
-                            \sprintf(
-                                '>%s</option>',
-                                $spcname
-                            ) . \PHP_EOL;
+                        ), ($tablespaces->fields['spcname'] === $_REQUEST['spcname']) ? ' selected="selected"' : '',
+                        \sprintf(
+                            '>%s</option>',
+                            $spcname
+                        ) . \PHP_EOL;
                         $tablespaces->MoveNext();
                     }
                     echo "\t\t\t</select>\n\t\t</td>\n\t</tr>" . \PHP_EOL;
@@ -389,8 +391,8 @@ class TablesController extends BaseController
                     $this->lang['strcomment']
                 ) . \PHP_EOL;
                 echo "\t\t<td><textarea name=\"tblcomment\" rows=\"3\" cols=\"32\">",
-                    \htmlspecialchars($_REQUEST['tblcomment']),
-                    "</textarea></td>\n\t</tr>" . \PHP_EOL;
+                \htmlspecialchars($_REQUEST['tblcomment']),
+                "</textarea></td>\n\t</tr>" . \PHP_EOL;
 
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create" />' . \PHP_EOL;
@@ -433,8 +435,8 @@ class TablesController extends BaseController
                 $this->printTitle($this->lang['strcreatetable'], 'pg.table.create');
                 $this->printMsg($msg);
 
-                echo '<script src="' . \containerInstance()->subFolder . '/assets/js/tables.js" type="text/javascript"></script>';
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<script src="assets/js/tables.js" type="text/javascript"></script>';
+                echo '<form action="tables" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -482,8 +484,8 @@ class TablesController extends BaseController
                         $i,
                         $data->_maxNameLen
                     ),
-                        \htmlspecialchars($_REQUEST['field'][$i]),
-                        '" /></td>' . \PHP_EOL;
+                    \htmlspecialchars($_REQUEST['field'][$i]),
+                    '" /></td>' . \PHP_EOL;
                     echo \sprintf(
                         '		<td>
 			<select name="type[%s]" class="select2" id="types%s" onchange="checkLengths(this.options[this.selectedIndex].value,%s);">',
@@ -494,22 +496,20 @@ class TablesController extends BaseController
                     // Output any "magic" types
                     foreach ($data->extraTypes as $v) {
                         $types_for_js[\mb_strtolower($v)] = 1;
-                        echo "\t\t\t\t<option value=\"", \htmlspecialchars($v), '"',
-                            (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] === $v) ? ' selected="selected"' : '',
-                            '>',
-                            $this->misc->printVal($v),
-                            '</option>' . \PHP_EOL;
+                        echo "\t\t\t\t<option value=\"", \htmlspecialchars($v), '"', (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] === $v) ? ' selected="selected"' : '',
+                        '>',
+                        $this->misc->printVal($v),
+                        '</option>' . \PHP_EOL;
                     }
                     $types->moveFirst();
 
                     while (!$types->EOF) {
                         $typname = $types->fields['typname'];
                         $types_for_js[$typname] = 1;
-                        echo "\t\t\t\t<option value=\"", \htmlspecialchars($typname), '"',
-                            (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] === $typname) ? ' selected="selected"' : '',
-                            '>',
-                            $this->misc->printVal($typname),
-                            '</option>' . \PHP_EOL;
+                        echo "\t\t\t\t<option value=\"", \htmlspecialchars($typname), '"', (isset($_REQUEST['type'][$i]) && $_REQUEST['type'][$i] === $typname) ? ' selected="selected"' : '',
+                        '>',
+                        $this->misc->printVal($typname),
+                        '</option>' . \PHP_EOL;
                         $types->MoveNext();
                     }
                     echo "\t\t\t</select>\n\t\t\n";
@@ -543,8 +543,8 @@ class TablesController extends BaseController
                         $i,
                         $i
                     ),
-                        \htmlspecialchars($_REQUEST['length'][$i]),
-                        '" /></td>' . \PHP_EOL;
+                    \htmlspecialchars($_REQUEST['length'][$i]),
+                    '" /></td>' . \PHP_EOL;
                     echo \sprintf(
                         '		<td><input type="checkbox" name="notnull[%s]"',
                         $i
@@ -564,21 +564,21 @@ class TablesController extends BaseController
                         '		<td><input name="default[%s]" size="20" value="',
                         $i
                     ),
-                        \htmlspecialchars($_REQUEST['default'][$i]),
-                        '" /></td>' . \PHP_EOL;
+                    \htmlspecialchars($_REQUEST['default'][$i]),
+                    '" /></td>' . \PHP_EOL;
                     echo \sprintf(
                         '		<td><input name="colcomment[%s]" size="40" value="',
                         $i
                     ),
-                        \htmlspecialchars($_REQUEST['colcomment'][$i]),
-                        \sprintf(
-                            '" />
+                    \htmlspecialchars($_REQUEST['colcomment'][$i]),
+                    \sprintf(
+                        '" />
 						<script type="text/javascript">checkLengths(document.getElementById(\'types%s\').value,%s);</script>
 						</td>
 	</tr>',
-                            $i,
-                            $i
-                        ) . \PHP_EOL;
+                        $i,
+                        $i
+                    ) . \PHP_EOL;
                 }
                 echo '</table>' . \PHP_EOL;
                 echo '<p><input type="hidden" name="action" value="create" />' . \PHP_EOL;
@@ -735,7 +735,7 @@ class TablesController extends BaseController
 
             unset($tbltmp);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+            echo '<form action="tables" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<table>
 	<tr>
@@ -783,28 +783,28 @@ class TablesController extends BaseController
                 $this->lang['stroptions']
             );
             echo '<label for="withdefaults"><input type="checkbox" id="withdefaults" name="withdefaults"',
-                isset($_REQUEST['withdefaults']) ? ' checked="checked"' : '',
-                \sprintf(
-                    '/>%s</label>',
-                    $this->lang['strcreatelikewithdefaults']
-                );
+            isset($_REQUEST['withdefaults']) ? ' checked="checked"' : '',
+            \sprintf(
+                '/>%s</label>',
+                $this->lang['strcreatelikewithdefaults']
+            );
 
             if ($data->hasCreateTableLikeWithConstraints()) {
                 echo '<br /><label for="withconstraints"><input type="checkbox" id="withconstraints" name="withconstraints"',
-                    isset($_REQUEST['withconstraints']) ? ' checked="checked"' : '',
-                    \sprintf(
-                        '/>%s</label>',
-                        $this->lang['strcreatelikewithconstraints']
-                    );
+                isset($_REQUEST['withconstraints']) ? ' checked="checked"' : '',
+                \sprintf(
+                    '/>%s</label>',
+                    $this->lang['strcreatelikewithconstraints']
+                );
             }
 
             if ($data->hasCreateTableLikeWithIndexes()) {
                 echo '<br /><label for="withindexes"><input type="checkbox" id="withindexes" name="withindexes"',
-                    isset($_REQUEST['withindexes']) ? ' checked="checked"' : '',
-                    \sprintf(
-                        '/>%s</label>',
-                        $this->lang['strcreatelikewithindexes']
-                    );
+                isset($_REQUEST['withindexes']) ? ' checked="checked"' : '',
+                \sprintf(
+                    '/>%s</label>',
+                    $this->lang['strcreatelikewithindexes']
+                );
             }
             echo "</td>\n\t</tr>" . \PHP_EOL;
             echo '</table>';
@@ -877,7 +877,7 @@ class TablesController extends BaseController
 
             $attrs = $data->getTableAttributes($_REQUEST['table']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="selectform">' . \PHP_EOL;
+            echo '<form action="display" method="post" id="selectform">' . \PHP_EOL;
 
             if (0 < $attrs->RecordCount()) {
                 // JavaScript for select all feature
@@ -931,8 +931,8 @@ class TablesController extends BaseController
                     ) . \PHP_EOL;
                     echo '<td style="white-space:nowrap;">';
                     echo '<input type="checkbox" name="show[', \htmlspecialchars($attrs->fields['attname']), ']"',
-                        isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '',
-                        ' /></td>';
+                    isset($_REQUEST['show'][$attrs->fields['attname']]) ? ' checked="checked"' : '',
+                    ' /></td>';
                     echo '<td style="white-space:nowrap;">', $this->misc->printVal($attrs->fields['attname']), '</td>';
                     echo '<td style="white-space:nowrap;">', $this->misc->printVal($data->formatType($attrs->fields['type'], $attrs->fields['atttypmod'])), '</td>';
                     echo '<td style="white-space:nowrap;">';
@@ -943,9 +943,9 @@ class TablesController extends BaseController
 
                     foreach (\array_keys($data->selectOps) as $v) {
                         echo '<option value="', \htmlspecialchars($v), '"', ($_REQUEST['ops'][$attrs->fields['attname']] === $v) ? ' selected="selected"' : '',
-                            '>',
-                            \htmlspecialchars($v),
-                            '</option>' . \PHP_EOL;
+                        '>',
+                        \htmlspecialchars($v),
+                        '</option>' . \PHP_EOL;
                     }
                     echo "</select>\n</td>" . \PHP_EOL;
                     echo '<td style="white-space:nowrap;">', $data->printField(
@@ -1052,7 +1052,7 @@ class TablesController extends BaseController
         $this->coalesceArr($_REQUEST, 'nulls', []);
         $this->coalesceArr($_REQUEST, 'format', []);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="tables" method="post" id="ac_form">' . \PHP_EOL;
 
         if (0 < $attrs->RecordCount()) {
             echo '<table>' . \PHP_EOL;
@@ -1113,8 +1113,8 @@ class TablesController extends BaseController
                     '<input type="hidden" name="types[%s]" value="',
                     $attrs->fields['attnum']
                 ),
-                    \htmlspecialchars($attrs->fields['type']),
-                    '" /></td>';
+                \htmlspecialchars($attrs->fields['type']),
+                '" /></td>';
                 echo '<td style="white-space:nowrap;">' . \PHP_EOL;
 
                 echo \sprintf(
@@ -1232,7 +1232,7 @@ class TablesController extends BaseController
             $this->lang['strcancel'],
             \PHP_EOL
         );
-        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo '<script src="assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
     /**
@@ -1289,7 +1289,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strempty'], 'pg.table.empty');
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1310,7 +1310,7 @@ class TablesController extends BaseController
                     $this->misc->printVal($_REQUEST['table'])
                 ), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="tables" method="post">' . \PHP_EOL;
 
                 echo \sprintf(
                     '<input type="hidden" name="table" value="%s"  />%s',
@@ -1406,7 +1406,7 @@ class TablesController extends BaseController
                 $this->printTrail('schema');
                 $this->printTitle($this->lang['strdrop'], 'pg.table.drop');
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="tables" method="post">' . \PHP_EOL;
 
                 foreach ($_REQUEST['ma'] as $v) {
                     $a = \unserialize(\htmlspecialchars_decode($v, \ENT_QUOTES));
@@ -1425,7 +1425,7 @@ class TablesController extends BaseController
                     $this->misc->printVal($_REQUEST['table'])
                 ), '</p>' . \PHP_EOL;
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/tables" method="post">' . \PHP_EOL;
+                echo '<form action="tables" method="post">' . \PHP_EOL;
                 echo \sprintf(
                     '<input type="hidden" name="table" value="%s"  />%s',
                     \htmlspecialchars($_REQUEST['table']),
@@ -1521,10 +1521,10 @@ class TablesController extends BaseController
             'table' => [
                 'title' => $this->lang['strtable'],
                 'field' => Decorator::field('relname'),
-                'url' => \containerInstance()->getDestinationWithLastTab('table').'&',
-                   // '/redirect/table?%s&amp;',
-                    //$this->misc->href
-              //  ),
+                'url' => \containerInstance()->getDestinationWithLastTab('table') . '&',
+                // '/redirect/table?%s&amp;',
+                //$this->misc->href
+                //  ),
                 'vars' => ['table' => 'relname'],
             ],
             'owner' => [

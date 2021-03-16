@@ -126,9 +126,7 @@ class MaterializedviewsController extends BaseController
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
                 'url' => \containerInstance()->getDestinationWithLastTab('matview'),
-                    '/redirect/matview?%s&amp;',
-                    $this->misc->href
-                ),
+                  
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -287,7 +285,7 @@ class MaterializedviewsController extends BaseController
             $this->printTrail('getTrail');
             $this->printTitle($this->lang['strdrop'], 'pg.matview.drop');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/materializedviews" method="post">' . \PHP_EOL;
+            echo '<form action="materializedviews" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {

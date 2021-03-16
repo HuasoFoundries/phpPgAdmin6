@@ -190,7 +190,7 @@ class TablespacesController extends BaseController
 
             $this->coalesceArr($_POST, 'comment', ($data->hasSharedComments()) ? $tablespace->fields['spccomment'] : '');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+            echo '<form action="tablespaces" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -291,7 +291,7 @@ class TablespacesController extends BaseController
                 $this->misc->printVal($_REQUEST['tablespace'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+            echo '<form action="tablespaces" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="tablespace" value="', \htmlspecialchars($_REQUEST['tablespace']), '" />' . \PHP_EOL;
@@ -341,7 +341,7 @@ class TablespacesController extends BaseController
         $this->printTitle($this->lang['strcreatetablespace'], 'pg.tablespace.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/tablespaces" method="post">' . \PHP_EOL;
+        echo '<form action="tablespaces" method="post">' . \PHP_EOL;
         echo $this->view->form;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(

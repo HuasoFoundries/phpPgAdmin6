@@ -118,9 +118,7 @@ class RolesController extends BaseController
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
                 'url' => \containerInstance()->getDestinationWithLastTab('role'),
-                    '/redirect/role?action=properties&amp;%s&amp;',
-                    $this->misc->href
-                ),
+               
                 'vars' => ['rolename' => 'rolname'],
             ],
             'group' => [
@@ -244,7 +242,7 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
+        echo '<form action="roles" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -471,7 +469,7 @@ class RolesController extends BaseController
 
         $this->_adjustPostVars($roledata, $canRename);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
+        echo '<form action="roles" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -687,7 +685,7 @@ class RolesController extends BaseController
                 $this->misc->printVal($_REQUEST['rolename'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
+            echo '<form action="roles" method="post">' . \PHP_EOL;
             echo '<p><input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="rolename" value="', \htmlspecialchars($_REQUEST['rolename']), '" />' . \PHP_EOL;
             echo $this->view->form;
@@ -1000,7 +998,7 @@ class RolesController extends BaseController
 
             $this->coalesceArr($_POST, 'confirm', '');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/roles" method="post">' . \PHP_EOL;
+            echo '<form action="roles" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '	<tr>

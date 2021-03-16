@@ -6,8 +6,10 @@
 
 namespace PHPPgAdmin\Controller;
 
+use ADOFieldObject;
 use ADORecordSet;
 use Exception;
+use Kint\Kint;
 use PHPPgAdmin\ADOdbException;
 use PHPPgAdmin\Traits\InsertEditRowTrait;
 
@@ -31,23 +33,24 @@ class DisplayController extends BaseController
 
         \set_time_limit(0);
 
-        $scripts = '<script src="' . \containerInstance()->subFolder . '/assets/js/display.js" type="text/javascript"></script>';
+        $scripts = '<script src="assets/js/display.js" type="text/javascript"></script>';
 
         $scripts .= '<script type="text/javascript">' . \PHP_EOL;
         $scripts .= "var Display = {\n";
         $scripts .= "errmsg: '" . \str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
         $scripts .= "};\n";
-        $scripts .= '</script>' . \PHP_EOL;
+        $this->scripts =$scripts. '</script>' . \PHP_EOL;
 
         $footer_template = 'footer.twig';
         $header_template = 'header.twig';
-
+$browseResult=[];
         \ob_start();
 
         switch ($this->action) {
             case 'editrow':
-                $header_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
+                               $this->view->offsetSet('codemirror',true);
+
+                
 
                 if (isset($_POST['save'])) {
                     $this->doEditRow();
@@ -62,8 +65,9 @@ class DisplayController extends BaseController
 
                 break;
             case 'delrow':
-                $header_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
+                               $this->view->offsetSet('codemirror',true);
+
+                
 
                 if (isset($_POST['yes'])) {
                     $this->doDelRow(false);
@@ -78,14 +82,21 @@ class DisplayController extends BaseController
                 break;
 
             default:
-                $header_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
-                $this->doBrowse();
+            $this->view->offsetSet('datatables',true);
+                            $this->view->offsetSet('codemirror',true);
+   
+            
+                $jsonResult=$this->doBrowse();
 
                 break;
         }
         $output = \ob_get_clean();
+        $json=boolval($this->getRequestParam('json',null));
+        //ddd($this->getAllParams());
+if($json) {
+    return responseInstance()->withJson( $jsonResult);
 
+ }
         $subject = $this->coalesceArr($_REQUEST, 'subject', 'table')['subject'];
 
         $object = null;
@@ -103,8 +114,8 @@ class DisplayController extends BaseController
         } else {
             $title = $this->headerTitle('strqueryresults');
         }
-
-        $this->printHeader($title, $scripts, true, $header_template);
+$this->view->offsetSet('serverSide',1);
+        $this->printHeader($title, $this->scripts, true, $header_template);
 
         $this->printBody();
 
@@ -161,25 +172,29 @@ class DisplayController extends BaseController
             $_REQUEST['return'] = 'selectrows';
         }
 
+        $json=boolval($this->getRequestParam('json',null));
+
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);
-
-        $this->printTrail($subject);
-
+        $trailsubject=$subject;
+        if($subject==='table' && !$this->getRequestParam($subject,null)) {
+            $trailsubject='database';
+        }
+        $this->printTrail($trailsubject,!$json);
         $tabsPosition = 'browse';
 
-        if ('database' === $subject) {
+        if ('database' === $trailsubject) {
             $tabsPosition = 'sql';
-        } elseif ('column' === $subject) {
+        } elseif ('column' === $trailsubject) {
             $tabsPosition = 'colproperties';
         }
-
-        $this->printTabs($subject, $tabsPosition);
-
+        
+        $this->printTabs($trailsubject, $tabsPosition, !$json);
+ 
         [$query, $title, $type] = $this->getQueryTitleAndType($data, $object);
 
-        $this->printTitle($this->lang[$title]);
+        $this->printTitle($this->lang[$title],null, !$json);
 
-        $this->printMsg($msg);
+        $this->printMsg($msg, !$json);
 
         // If 'sortkey' is not set, default to ''
         $sortkey = $this->coalesceArr($_REQUEST, 'sortkey', '')['sortkey'];
@@ -197,6 +212,9 @@ class DisplayController extends BaseController
         if (isset($search_path) && (0 !== $data->setSearchPath(\array_map('trim', \explode(',', $search_path))))) {
             return;
         }
+         
+        $paginate=$this->getRequestParam('paginate',null);
+      
 
         try {
             $max_pages = 0;
@@ -212,6 +230,22 @@ class DisplayController extends BaseController
                 $this->conf['max_rows'],
                 $max_pages
             );
+           
+           
+            if($json) {
+                $jsonResult=[];
+                while (!$resultset->EOF) {
+                    $jsonResult[]= $this->getJsonRowCells($resultset,isset($object));
+                    $resultset->MoveNext();
+                }
+             
+                return [
+                    'draw'=>1,
+                    'recordsTotal'=>$max_pages,
+                    'recordsFiltered'=>$max_pages,
+                    'data'=>$jsonResult];
+            }
+
         } catch (ADOdbException $e) {
             return $this->halt($e->getMessage());
         }
@@ -258,17 +292,25 @@ class DisplayController extends BaseController
 
         //die(htmlspecialchars($query));
 
-        echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
-        echo $this->view->form;
+        $formHTML= '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+        $formHTML.= $this->view->form;
 
         if ($object) {
-            echo '<input type="hidden" name="' . $subject . '" value="', \htmlspecialchars($object), '" />' . \PHP_EOL;
+            $formHTML.= '<input type="hidden" name="' . $subject . '" value="'. \htmlspecialchars($object). '" />' . \PHP_EOL;
         }
-        echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
-        echo \htmlspecialchars($query);
-        echo '</textarea><br><input type="submit"/>';
+        $search_path = \htmlspecialchars($_REQUEST['search_path']??null);
+        $formHTML.= '<input type="hidden" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
+        
+        if(isset($_REQUEST['paginate'])) {
+        $formHTML.=  '<input type="hidden" name="paginate" value="on" />';
+        }
+      //  $formHTML.=  '<input type="checkbox" name="json" />';
+        $formHTML.= '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
+        $formHTML.= \htmlspecialchars($query);
+        $formHTML.= '</textarea><br><input type="submit"/>';
+        $formHTML.= '</form>';
+echo $formHTML;
 
-        echo '</form>';
 
         $this->printResultsTable($resultset, $page, $max_pages, $_gets, $object);
         // Navigation links
@@ -318,171 +360,6 @@ class DisplayController extends BaseController
         return [$query, $title, $type];
     }
 
-    /**
-     * @param array  $_gets
-     * @param mixed  $type
-     * @param mixed  $page
-     * @param string $subject
-     * @param mixed  $object
-     * @param mixed  $resultset
-     *
-     * @return ((array|mixed|string)[][]|mixed)[][]
-     *
-     * @psalm-return array{back?: array{attr: array{href: array{url: mixed, urlvars: mixed}}, content: mixed}, edit?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, paginate: string}}}, content: mixed}, collapse: array{attr: array{href: array{url: string, urlvars: array{strings: string, page: mixed}}}, content: mixed}, createview?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, formDefinition: mixed}}}, content: mixed}, download?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed}}}, content: mixed}, insert?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, table: mixed}}}, content: mixed}, refresh: array{attr: array{href: array{url: string, urlvars: array{strings: mixed, page: mixed}}}, content: mixed}}
-     */
-    public function getBrowseNavLinks($type, array $_gets, $page, string $subject, $object, $resultset)
-    {
-        $fields = [
-            'server' => $_REQUEST['server'],
-            'database' => $_REQUEST['database'],
-        ];
-
-        $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
-
-        $navlinks = [];
-        $strings = $_gets['strings'];
-        // Return
-        if (isset($_REQUEST['return'])) {
-            $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
-
-            $navlinks['back'] = [
-                'attr' => [
-                    'href' => [
-                        'url' => $urlvars['url'],
-                        'urlvars' => $urlvars['params'],
-                    ],
-                ],
-                'content' => $this->lang['strback'],
-            ];
-        }
-
-        // Edit SQL link
-        if ('QUERY' === $type) {
-            $navlinks['edit'] = [
-                'attr' => [
-                    'href' => [
-                        'url' => 'database',
-                        'urlvars' => \array_merge(
-                            $fields,
-                            [
-                                'action' => 'sql',
-                                'paginate' => 'on',
-                            ]
-                        ),
-                    ],
-                ],
-                'content' => $this->lang['streditsql'],
-            ];
-        }
-
-        $navlinks['collapse'] = [
-            'attr' => [
-                'href' => [
-                    'url' => 'display',
-                    'urlvars' => \array_merge(
-                        $_gets,
-                        [
-                            'strings' => 'expanded',
-                            'page' => $page,
-                        ]
-                    ),
-                ],
-            ],
-            'content' => $this->lang['strexpand'],
-        ];
-        // Expand/Collapse
-        if ('expanded' === $strings) {
-            $navlinks['collapse'] = [
-                'attr' => [
-                    'href' => [
-                        'url' => 'display',
-                        'urlvars' => \array_merge(
-                            $_gets,
-                            [
-                                'strings' => 'collapsed',
-                                'page' => $page,
-                            ]
-                        ),
-                    ],
-                ],
-                'content' => $this->lang['strcollapse'],
-            ];
-        }
-
-        // Create view and download
-        if (isset($_REQUEST['query'], $resultset) && \is_object($resultset) && 0 < $resultset->RecordCount()) {
-            // Report views don't set a schema, so we need to disable create view in that case
-            if (isset($_REQUEST['schema'])) {
-                $navlinks['createview'] = [
-                    'attr' => [
-                        'href' => [
-                            'url' => 'views',
-                            'urlvars' => \array_merge(
-                                $fields,
-                                [
-                                    'action' => 'create',
-                                    'formDefinition' => $_REQUEST['query'],
-                                ]
-                            ),
-                        ],
-                    ],
-                    'content' => $this->lang['strcreateview'],
-                ];
-            }
-
-            $urlvars = [];
-
-            $this->setIfIsset($urlvars['search_path'], $_REQUEST['search_path'], null, false);
-
-            $navlinks['download'] = [
-                'attr' => [
-                    'href' => [
-                        'url' => 'dataexport',
-                        'urlvars' => \array_merge($fields, $urlvars),
-                    ],
-                ],
-                'content' => $this->lang['strdownload'],
-            ];
-        }
-
-        // Insert
-        if (isset($object) && (isset($subject) && 'table' === $subject)) {
-            $navlinks['insert'] = [
-                'attr' => [
-                    'href' => [
-                        'url' => 'tables',
-                        'urlvars' => \array_merge(
-                            $fields,
-                            [
-                                'action' => 'confinsertrow',
-                                'table' => $object,
-                            ]
-                        ),
-                    ],
-                ],
-                'content' => $this->lang['strinsert'],
-            ];
-        }
-
-        // Refresh
-        $navlinks['refresh'] = [
-            'attr' => [
-                'href' => [
-                    'url' => 'display',
-                    'urlvars' => \array_merge(
-                        $_gets,
-                        [
-                            'strings' => $strings,
-                            'page' => $page,
-                        ]
-                    ),
-                ],
-            ],
-            'content' => $this->lang['strrefresh'],
-        ];
-
-        return $navlinks;
-    }
 
     /**
      * @param array $_gets
@@ -493,6 +370,7 @@ class DisplayController extends BaseController
      */
     public function printResultsTable($resultset, $page, $max_pages, array $_gets, $object): void
     {
+ 
         if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
@@ -509,7 +387,6 @@ class DisplayController extends BaseController
         $fkey_information = $this->getFKInfo();
         // Show page navigation
         $paginator = $this->_printPages($page, $max_pages, $_gets);
-
         echo $paginator;
         echo '<table id="data">' . \PHP_EOL;
         echo '<tr>';
@@ -576,18 +453,20 @@ class DisplayController extends BaseController
         if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             return;
         }
-
+$dttFields=[];
         foreach (\array_keys($resultset->fields) as $index => $key) {
             if (($key === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
             $finfo = $resultset->FetchField($index);
 
+            $dttFields[]=["data"=>$finfo->name];
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>' . \PHP_EOL;
 
                 continue;
             }
+           
             $args['page'] = $_REQUEST['page'];
             $args['sortkey'] = $index + 1;
             // Sort direction opposite to current direction, unless it's currently ''
@@ -611,10 +490,37 @@ class DisplayController extends BaseController
             }
             echo '</a></th>' . \PHP_EOL;
         }
-
-        \reset($resultset->fields);
+        $this->view->offsetSet('dttFields',$dttFields);
+         \reset($resultset->fields);
     }
+private function FetchField(ADORecordSet $ADORecordSet,int $index):ADOFieldObject {
+    return $ADORecordSet->FetchField($index);
+}
 
+  /**
+     * Print table rows.
+     *
+     * @param ADORecordSet $resultset        The resultset
+      * @param bool         $withOid          either to display OIDs or not
+     */
+    public function getJsonRowCells(&$resultset, $withOid): array
+    {
+        $data = $this->misc->getDatabaseAccessor();
+        $j = 0;
+
+        $strings=$this->getRequestParam('string',  'collapsed');
+$result=[];
+        foreach ($resultset->fields as $fieldname => $fieldvalue) {
+            /** @var \ADOFieldObject */
+            $finfo =$this->FetchField( $resultset,$j++);
+
+            if (($fieldname === $data->id) && (!($withOid && $this->conf['show_oids']))) {
+                continue;
+            }
+            $result[$finfo->name ] =$fieldvalue;
+        }
+        return $result;
+    }
     /**
      * Print table rows.
      *
@@ -627,24 +533,25 @@ class DisplayController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
         $j = 0;
 
-        $this->coalesceArr($_REQUEST, 'strings', 'collapsed');
+        $strings=$this->getRequestParam('string',  'collapsed');
 
-        foreach ($resultset->fields as $k => $v) {
-            $finfo = $resultset->FetchField($j++);
+        foreach ($resultset->fields as $fieldName => $fieldValue) {
+            /** @var \ADOFieldObject */
+            $finfo =$this->FetchField( $resultset,$j++);
 
-            if (($k === $data->id) && (!($withOid && $this->conf['show_oids']))) {
+            if (($fieldName === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
-            $printvalOpts = ['null' => true, 'clip' => ('collapsed' === $_REQUEST['strings'])];
+            $printvalOpts = ['null' => true, 'clip' => ('collapsed' === $strings)];
 
-            if (null !== $v && '' === $v) {
+            if (null !== $fieldValue && '' === $fieldValue) {
                 echo '<td>&nbsp;</td>';
             } else {
                 echo '<td style="white-space:nowrap;">';
-
-                $this->_printFKLinks($resultset, $fkey_information, $k, $v, $printvalOpts);
-
-                $val = $this->misc->printVal($v, $finfo->type, $printvalOpts);
+                if ((null !== $fieldValue)&& isset($fkey_information['byfield'][$fieldName])) {
+                $this->_printFKLinks($resultset, $fkey_information, $fieldName, $fieldValue, $printvalOpts);
+                }
+                $val = $this->misc->printVal($fieldValue, $finfo->type, $printvalOpts);
 
                 echo $val;
                 echo '</td>';
@@ -672,7 +579,7 @@ class DisplayController extends BaseController
 
         $fksprops = $this->_getFKProps();
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post" id="ac_form">' . \PHP_EOL;
+        echo '<form action="display" method="post" id="ac_form">' . \PHP_EOL;
 
         $elements = 0;
         $error = true;
@@ -871,9 +778,173 @@ class DisplayController extends BaseController
 
         echo '</p>' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
-        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
+        echo '<script src="assets/js/insert_or_edit_row.js" type="text/javascript"></script>';
     }
 
+    /**
+     * @param array  $_gets
+     * @param mixed  $type
+     * @param mixed  $page
+     * @param string $subject
+     * @param mixed  $object
+     * @param mixed  $resultset
+     *
+     * @return ((array|mixed|string)[][]|mixed)[][]
+     *
+     * @psalm-return array{back?: array{attr: array{href: array{url: mixed, urlvars: mixed}}, content: mixed}, edit?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, paginate: string}}}, content: mixed}, collapse: array{attr: array{href: array{url: string, urlvars: array{strings: string, page: mixed}}}, content: mixed}, createview?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, formDefinition: mixed}}}, content: mixed}, download?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed}}}, content: mixed}, insert?: array{attr: array{href: array{url: string, urlvars: array{server: mixed, database: mixed, action: string, table: mixed}}}, content: mixed}, refresh: array{attr: array{href: array{url: string, urlvars: array{strings: mixed, page: mixed}}}, content: mixed}}
+     */
+    public function getBrowseNavLinks($type, array $_gets, $page, string $subject, $object, $resultset)
+    {
+        $fields = [
+            'server' => $_REQUEST['server'],
+            'database' => $_REQUEST['database'],
+        ];
+
+        $this->setIfIsset($fields['schema'], $_REQUEST['schema'], null, false);
+
+        $navlinks = [];
+        $strings = $_gets['strings'];
+        // Return
+        if (isset($_REQUEST['return'])) {
+            $urlvars = $this->misc->getSubjectParams($_REQUEST['return']);
+
+            $navlinks['back'] = [
+                'attr' => [
+                    'href' => [
+                        'url' => $urlvars['url'],
+                        'urlvars' => $urlvars['params'],
+                    ],
+                ],
+                'content' => $this->lang['strback'],
+            ];
+        }
+
+        // Edit SQL link
+        if ('QUERY' === $type) {
+            $navlinks['edit'] = [
+                'attr' => [
+                    'href' => [
+                        'url' => 'database',
+                        'urlvars' => \array_merge(
+                            $fields,
+                            [
+                                'action' => 'sql',
+                                'paginate' => 'on',
+                            ]
+                        ),
+                    ],
+                ],
+                'content' => $this->lang['streditsql'],
+            ];
+        } 
+        $navlinks['collapse'] = [
+            'attr' => [
+                'href' => [
+                    'url' => 'display',
+                    'urlvars' => \array_merge(
+                        $_gets,
+                        [
+                            'strings' => 'expanded',
+                            'page' => $page,
+                        ]
+                    ),
+                ],
+            ],
+            'content' => $this->lang['strexpand'],
+        ];
+        // Expand/Collapse
+        if ('expanded' === $strings) {
+            $navlinks['collapse'] = [
+                'attr' => [
+                    'href' => [
+                        'url' => 'display',
+                        'urlvars' => \array_merge(
+                            $_gets,
+                            [
+                                'strings' => 'collapsed',
+                                'page' => $page,
+                            ]
+                        ),
+                    ],
+                ],
+                'content' => $this->lang['strcollapse'],
+            ];
+        }
+
+        // Create view and download
+        if (isset($_REQUEST['query'], $resultset) && \is_object($resultset) && 0 < $resultset->RecordCount()) {
+            // Report views don't set a schema, so we need to disable create view in that case
+            if (isset($_REQUEST['schema'])) {
+                $navlinks['createview'] = [
+                    'attr' => [
+                        'href' => [
+                            'url' => 'views',
+                            'urlvars' => \array_merge(
+                                $fields,
+                                [
+                                    'action' => 'create',
+                                    'formDefinition' => $_REQUEST['query'],
+                                ]
+                            ),
+                        ],
+                    ],
+                    'content' => $this->lang['strcreateview'],
+                ];
+            }
+
+            $urlvars = [];
+
+            $this->setIfIsset($urlvars['search_path'], $_REQUEST['search_path'], null, false);
+
+            $navlinks['download'] = [
+                'attr' => [
+                    'href' => [
+                        'url' => 'dataexport',
+                        'urlvars' => \array_merge($fields, $urlvars),
+                    ],
+                ],
+                'content' => $this->lang['strdownload'],
+            ];
+        }
+
+        // Insert
+        if (isset($object) && (isset($subject) && 'table' === $subject)) {
+            $navlinks['insert'] = [
+                'attr' => [
+                    'href' => [
+                        'url' => 'tables',
+                        'urlvars' => \array_merge(
+                            $fields,
+                            [
+                                'action' => 'confinsertrow',
+                                'table' => $object,
+                            ]
+                        ),
+                    ],
+                ],
+                'content' => $this->lang['strinsert'],
+            ];
+        }
+
+        // Refresh
+        $navlinks['refresh'] = [
+            'attr' => [
+                'href' => [
+                    'url' => 'display',
+                    'urlvars' => \array_merge(
+                        $_gets,
+                        [
+                            'strings' => $strings,
+                            'page' => $page,
+                        ]
+                    ),
+                ],
+            ],
+            'content' => $this->lang['strrefresh'],
+        ];
+
+        return $navlinks;
+    }
     /**
      * Performs actual edition of row.
      */
@@ -922,7 +993,7 @@ class DisplayController extends BaseController
 
             $resultset = $data->browseRow($_REQUEST['table'], $_REQUEST['key']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/display" method="post">' . \PHP_EOL;
+            echo '<form action="display" method="post">' . \PHP_EOL;
             echo $this->view->form;
 
             if (1 === $resultset->RecordCount()) {
@@ -1257,16 +1328,16 @@ class DisplayController extends BaseController
      * @param bool[]       $printvalOpts
      * @param ADORecordSet $resultset
      * @param array        $fkey_information
-     * @param mixed        $k
-     * @param mixed        $v
+     * @param mixed        $fieldName
+     * @param mixed        $fieldValue
      */
-    private function _printFKLinks(ADORecordSet $resultset, array $fkey_information, $k, $v, array &$printvalOpts): void
+    private function _printFKLinks(ADORecordSet $resultset, array $fkey_information, $fieldName, $fieldValue, array &$printvalOpts): void
     {
-        if ((null === $v) || !isset($fkey_information['byfield'][$k])) {
+        if ((null === $fieldValue) || !isset($fkey_information['byfield'][$fieldName])) {
             return;
         }
 
-        foreach ($fkey_information['byfield'][$k] as $conid) {
+        foreach ($fkey_information['byfield'][$fieldName] as $conid) {
             $query_params = $fkey_information['byconstr'][$conid]['url_data'];
 
             foreach ($fkey_information['byconstr'][$conid]['fkeys'] as $p_field => $f_field) {

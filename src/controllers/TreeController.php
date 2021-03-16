@@ -87,18 +87,17 @@ class TreeController extends BaseController
      *
      * @psalm-return array<int|string, array<string, mixed>|bool|string>
      */
-    public function printTree(  &$_treedata, &$attrs, $section, $print = true)
+    public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
         $treedata = [];
 
         if (0 < $_treedata->RecordCount()) {
             while (!$_treedata->EOF) {
-                 $treedata[] = $_treedata->fields;
+                $treedata[] = $_treedata->fields;
                 $_treedata->MoveNext();
             }
-
         }
-        
+
         $tree_params = [
             'treedata' => &$treedata,
             'attrs' => &$attrs,
@@ -147,15 +146,15 @@ class TreeController extends BaseController
     private function printTreeJSON(&$treedata, &$attrs, $print = true)
     {
         $parent = [];
-
+        $subFolder = containerInstance()->subFolder;
         if (isset($attrs['is_root'])) {
             $parent = [
                 'id' => 'root',
                 'children' => true,
-                'icon' => \containerInstance()->subFolder . '/assets/images/themes/default/Servers.png',
+                'icon' => $subFolder . '/assets/images/themes/default/Servers.png',
                 'state' => ['opened' => true],
-                'a_attr' => ['href' =>'servers'],
-                'url' => \containerInstance()->subFolder . ('/servers?action=tree'),
+                'a_attr' => ['href' => 'servers'],
+                'url' => $subFolder . ('/servers?action=tree'),
                 'text' => 'Servers',
             ];
         } elseif (0 < \count($treedata)) {
@@ -165,43 +164,44 @@ class TreeController extends BaseController
                 if (!empty($attrs['openicon'])) {
                     $icon = $this->view->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
-                $href=Decorator::get_sanitized_value($attrs['action'], $rec);
+                $href = Decorator::get_sanitized_value($attrs['action'], $rec);
                 if ($href) {
-                    $href = \str_replace('//', '/',   $href);
+                    $href =  \str_replace('//', '/',   $href);
+                    $href = $subFolder . str_replace($subFolder, '', $href);
                 }
- 
+
                 $tree = [
                     'text' => Decorator::get_sanitized_value($attrs['text'], $rec),
-                    'id' => \sha1(Decorator::get_sanitized_value($attrs['action'], $rec)),
+                    'id' => \sha1($href),
                     'icon' => Decorator::get_sanitized_value($icon, $rec),
                     'iconaction' => Decorator::get_sanitized_value($attrs['iconAction'], $rec),
                     'openicon' => Decorator::get_sanitized_value($icon, $rec),
                     'tooltip' => Decorator::get_sanitized_value($attrs['toolTip'], $rec),
                     'a_attr' => ['href' => $href],
+                    'href' => $href,
                     //'url'=>strtolower(),
                     'children' => false,
                 ];
 
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
-                $urlparts=parse_url('https://dummy.domain'.$tree['a_attr']['href']);
-                $path_arr=explode('/',$urlparts['path']??'');
-                $tree['url']=containerInstance()->getDestinationWithLastTab(array_pop($path_arr));
+                $urlparts = parse_url('https://dummy.domain' . $tree['a_attr']['href']);
+                $path_arr = explode('/', $urlparts['path'] ?? '');
+                $tree['url'] = containerInstance()->getDestinationWithLastTab(array_pop($path_arr));
 
 
-                
-                    $url = \str_replace('/src/views/', '/',    $url);
-                
+
+                $url = \str_replace('/src/views/', '/',    $url);
+
 
                 if ($url) {
                     $tree['url'] = $url;
                     $tree['children'] = true;
                 }
 
-                //$tree['text'] = '<a href="' . $tree['id'] . '" target="detail">' . $tree['text'] . '</a>';
 
                 $parent[] = $tree;
             }
-         } else {
+        } else {
             $parent = ['children' => false];
         }
         //ddd($parent);

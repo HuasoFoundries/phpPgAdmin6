@@ -438,7 +438,7 @@ class SequencesController extends BaseController
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="sequences" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -548,7 +548,7 @@ class SequencesController extends BaseController
         $this->printTitle($this->lang['strcreatesequence'], 'pg.sequence.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
+        echo '<form action="sequences" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
 
         echo \sprintf(
@@ -735,7 +735,7 @@ class SequencesController extends BaseController
         $sequence = $data->getSequence($_REQUEST['sequence']);
 
         if (\is_object($sequence) && 0 < $sequence->RecordCount()) {
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="sequences" method="post">' . \PHP_EOL;
             echo '<table border="0">';
             echo \sprintf(
                 '<tr><th class="data left required">%s</th>',
@@ -861,7 +861,7 @@ class SequencesController extends BaseController
                 $_POST['formCycledValue'] = 'on';
             }
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/sequences" method="post">' . \PHP_EOL;
+            echo '<form action="sequences" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
 
             echo \sprintf(

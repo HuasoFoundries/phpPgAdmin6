@@ -282,7 +282,7 @@ class TriggersController extends BaseController
         if (0 < $triggerdata->RecordCount()) {
             $this->coalesceArr($_POST, 'name', $triggerdata->fields['tgname']);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="triggers" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '<tr><th class="data">%s</th>',
@@ -340,7 +340,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo \sprintf(
                 '<input type="hidden" name="table" value="%s"  />%s',
@@ -392,7 +392,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="enable" />' . \PHP_EOL;
             echo \sprintf(
                 '<input type="hidden" name="table" value="%s"  />%s',
@@ -440,7 +440,7 @@ class TriggersController extends BaseController
                 $this->misc->printVal($_REQUEST['table'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
+            echo '<form action="triggers" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="disable" />' . \PHP_EOL;
             echo \sprintf(
                 '<input type="hidden" name="table" value="%s"  />%s',
@@ -511,7 +511,7 @@ class TriggersController extends BaseController
         $sel3 = new XHtmlSelect('formFrequency');
         $sel3->set_data($data->triggerFrequency);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/triggers" method="post">' . \PHP_EOL;
+        echo '<form action="triggers" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo \sprintf(

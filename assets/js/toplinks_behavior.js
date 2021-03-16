@@ -24,6 +24,7 @@ function addBehaviorToTopLinks(amIDetailFrame) {
       ),
     ].forEach((element) => {
       element.addEventListener('click', (e) => {
+        window.name = 'detail';
         window
           .open(
             `${element.getAttribute('rel')}`,
@@ -37,7 +38,7 @@ function addBehaviorToTopLinks(amIDetailFrame) {
     toplink_logout.addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm(stateObj.strconfdropcred)) {
-        window.location.href = e.target.href;
+        window.location.href = e.target.getAttribute('rel');
       }
     });
 

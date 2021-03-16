@@ -379,7 +379,7 @@ class TypesController extends BaseController
                 $this->misc->printVal($_REQUEST['type'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+            echo '<form action="types" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']
@@ -431,7 +431,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo \sprintf(
                     '	<tr>
@@ -502,7 +502,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreatecomptype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -669,7 +669,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="types" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo \sprintf(
                     '	<tr>
@@ -738,7 +738,7 @@ class TypesController extends BaseController
                 $this->printTitle($this->lang['strcreateenumtype'], 'pg.type.create');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+                echo '<form action="types" method="post">' . \PHP_EOL;
 
                 // Output table header
                 echo '<table>' . \PHP_EOL;
@@ -858,7 +858,7 @@ class TypesController extends BaseController
         $this->printTitle($this->lang['strcreatetype'], 'pg.type.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/types" method="post">' . \PHP_EOL;
+        echo '<form action="types" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '<tr><th class="data left required">%s</th>',

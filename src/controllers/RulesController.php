@@ -173,7 +173,7 @@ class RulesController extends BaseController
             $this->printTitle($this->lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/rules" method="post">' . \PHP_EOL;
+            echo '<form action="rules" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '<tr><th class="data left required">%s</th>',
@@ -282,7 +282,7 @@ class RulesController extends BaseController
                 $this->misc->printVal($_REQUEST[$_REQUEST['reltype']])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/rules" method="post">' . \PHP_EOL;
+            echo '<form action="rules" method="post">' . \PHP_EOL;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="', \htmlspecialchars($_REQUEST['reltype']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['reltype']),

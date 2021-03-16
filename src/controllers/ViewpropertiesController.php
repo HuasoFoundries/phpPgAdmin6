@@ -46,8 +46,8 @@ class ViewpropertiesController extends BaseController
 
                 break;
             case 'edit':
-                $footer_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
+                $this->view->offsetSet('codemirror',true);
+ 
                 $this->doEdit();
 
                 break;
@@ -135,7 +135,9 @@ class ViewpropertiesController extends BaseController
         $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST[$this->subject]);
-        $this->printHeader($this->headerTitle(), null, true, 'header_sqledit.twig');
+        $this->view->offsetSet('codemirror',true);
+
+        $this->printHeader($this->headerTitle(), null, true  );
 
         if (0 < $viewdata->RecordCount()) {
             if (!isset($_POST['formDefinition'])) {
@@ -216,7 +218,7 @@ class ViewpropertiesController extends BaseController
                 $this->printTitle($this->lang['stralter'], 'pg.column.alter');
                 $this->printMsg($msg);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="viewproperties" method="post">' . \PHP_EOL;
 
                 // Output view header
                 echo '<table>' . \PHP_EOL;
@@ -332,7 +334,7 @@ class ViewpropertiesController extends BaseController
 
                 $this->coalesceArr($_POST, 'comment', $view->fields['relcomment']);
 
-                echo '<form action="' . \containerInstance()->subFolder . '/src/views/viewproperties" method="post">' . \PHP_EOL;
+                echo '<form action="viewproperties" method="post">' . \PHP_EOL;
                 echo '<table>' . \PHP_EOL;
                 echo \sprintf(
                     '<tr><th class="data left required">%s</th>',

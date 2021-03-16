@@ -109,7 +109,7 @@ class DataexportController extends BaseController
             $this->printMsg($msg);
         }
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/dataexport" method="post">' . \PHP_EOL;
+        echo '<form action="dataexport" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '<tr><th class="data">%s:</th><td><select name="d_format">',

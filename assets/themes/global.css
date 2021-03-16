@@ -12,6 +12,24 @@ html body {
   /** FK browsing **/
   /** Syntax highlighting **/
 }
+html body .topbar_parent {
+  display: flex;
+  flex-direction: row;
+}
+html body .topbar_parent .logo {
+  width: 200px;
+  height: 100px;
+  flex: 250px 0;
+  background-position: 0;
+}
+html body .topbar_parent .trail_parent {
+  flex: 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+html body .topbar_parent .trail_parent .topbar {
+  flex: 2 auto;
+}
 html body.sql_edit #sqlform #queryedition {
   min-height: 80px;
 }
@@ -35,20 +53,23 @@ html body.sql_edit #sqlform #queryedition #query {
 }
 html body #detail.detail_container,
 html body.detailbody {
-  padding-top: 90px;
+  flex: 1 auto;
+  padding-top: 0;
   margin-left: 10px !important;
   padding-bottom: 20px;
+}
+html body #detail.detail_container .max_height:not(.SqlEditController),
+html body.detailbody .max_height:not(.SqlEditController) {
+  max-height: calc(100vh - 91px);
+  max-width: calc(100vw - 275px);
+  overflow: auto;
 }
 html body #detail.detail_container div.tabs,
 html body.detailbody div.tabs {
   display: flex;
-  /* margin-top: 58px; */
-  /* width: 100%; */
   flex: 2 1 1500px;
   flex-direction: row;
-  position: relative;
   right: 0;
-  top: 60px;
 }
 html body #detail.detail_container div.tabs .tab,
 html body.detailbody div.tabs .tab {
@@ -65,10 +86,6 @@ html body.detailbody > table.tabs {
 html body #detail.detail_container > table.tabs tbody tr td,
 html body.detailbody > table.tabs tbody tr td {
   white-space: nowrap;
-}
-html body #detail.detail_container table,
-html body.detailbody table {
-  min-width: calc(100vw - 370px);
 }
 html body #detail.detail_container table.searchpath html body #detail.detail_container table#data td,
 html body #detail.detail_container table.searchpath html body.detailbody table#data td,
@@ -169,11 +186,8 @@ html body.detailbody table tr.data3 td.opbutton3 a {
   white-space: nowrap;
   color: #fff !important;
 }
-html body #detail.detail_container {
-  padding-top: 0 !important;
-}
 html body #detail.detail_container .clearfix {
-  height: 61px;
+  height: 20px;
   clear: both;
   display: block;
   width: 40px;
@@ -182,12 +196,22 @@ html body #detail.detail_container table.tabs {
   position: relative;
   margin-right: -10px;
 }
-html body #detail.detail_container .topbar {
+html body #detail.detail_container .fixed-top {
+  display: flex;
   position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+}
+html body #detail.detail_container .topbar {
+  z-index: 100;
+  width: 100%;
+  top: 0;
+  margin-left: -10px !important;
 }
 html body #detail.detail_container .topbar .toplink {
-  width: 180px;
-  margin-right: 150px;
+  width: 200px;
+  margin-right: 15px;
 }
 html body #detail.detail_container .topbar .toplink button,
 html body #detail.detail_container .topbar .toplink .toplink_popup {
@@ -202,7 +226,10 @@ html body #detail.detail_container .topbar .toplink .toplink_popup {
 }
 html body #detail.detail_container .trail {
   height: 24px;
-  position: fixed;
+  z-index: 100;
+  width: 100%;
+  top: 27px;
+  margin-left: -10px !important;
 }
 html body #detail.detail_container .trail .trail_table {
   min-width: unset;
@@ -253,57 +280,12 @@ html body.sql_edit table.tabs {
 html body.flexbox_body {
   height: 100%;
   margin: 0;
-  /*
-
-        & > .detail_container {
-          height: 100%;
-          width: 100%;
-          margin: 0px;
-          padding: 0px;
-          text-align: left;
-          float: left;
-          flex: 1 1 1300px;
-        }*/
-  /*
-        & > #browser_container {
-          height: 100%;
-          margin: 0px;
-          padding: 0px;
-          text-align: left;
-          float: left;
-          flex: 1 2 300px;
-
-          & > .browser_container {
-            height: 100%;
-            margin: 0px;
-            padding: 0px;
-            text-align: left;
-            float: left;
-            width: 100%;
-          }
-
-          &.ui-resizable {
-            width: 300px;
-            //flex: unset;
-            border-right: 8px solid #cfd8dc;
-
-            .ui-resizable-handle.ui-resizable-e {
-              width: 8px;
-              right: -8px;
-              background: #84a0ad;
-              top: 45%;
-              height: 50px;
-            }
-          }
-        }
-        */
 }
 html body.flexbox_body .flexbox_wrapper {
   height: 100%;
   margin: 0;
   display: flex;
   flex-direction: row;
-  border: 1px solid silver;
   overflow: hidden;
   /* avoid browser level touch actions */
   xtouch-action: none;
@@ -409,27 +391,6 @@ html body .pre {
 html body .arg_icon {
   padding-right: 5pt;
   padding-left: 5pt;
-}
-html body .fixed-top {
-  display: flex;
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-html body .topbar {
-  position: sticky;
-  z-index: 100;
-  width: 100%;
-  top: 0;
-  margin-left: -10px !important;
-}
-html body .trail {
-  position: sticky;
-  z-index: 100;
-  width: 100%;
-  top: 27px;
-  margin-left: -10px !important;
 }
 html body #fkbg {
   display: none;

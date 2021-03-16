@@ -7,6 +7,7 @@
 namespace PHPPgAdmin\Controller;
 
 use ADORecordSet;
+use Kint\Kint;
 use PHPPgAdmin\ADOdbException;
 
 /**
@@ -56,7 +57,7 @@ class SqlController extends BaseController
         if (isset($_REQUEST['subject'])) {
             $this->subject = $_REQUEST['subject'];
         }
-
+        
         // Check to see if pagination has been specified. In that case, send to display
         // script for pagination
         // if a file is given or the request is an explain, do not paginate
@@ -64,33 +65,47 @@ class SqlController extends BaseController
             !(isset($_FILES['script']) && 0 < $_FILES['script']['size']) &&
             (0 === \preg_match('/^\s*explain/i', $this->query))) {
             //if (!(isset($_FILES['script']) && $_FILES['script']['size'] > 0)) {
-
+           
             $display_controller = new DisplayController($this->getContainer());
-
+          
             return $display_controller->render();
         }
+        
+        $this->view->offsetSet('codemirror',true);
 
-        $this->printHeader($this->headerTitle(), null, true, 'header_sqledit.twig');
-        $this->printBody();
-        $this->printTrail('database');
-        $this->printTitle($this->lang['strqueryresults']);
-
+    
+        
         // Set the schema search path
         if (isset($_REQUEST['search_path'])) {
             if (0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
+                $this->printHeader($this->headerTitle(), null, true );
+                $body=$this->printBody(false);
+                $trail=$this->printTrail('database',false);
+                $title=$this->printTitle($this->lang['strqueryresults'],null,false);
+                echo $body.$trail.$title;
                 return $this->printFooter();
             }
         }
+      
 
         // May as well try to time the query
         if (\function_exists('microtime')) {
             [$usec, $sec] = \explode(' ', \microtime());
             $this->start_time = ((float) $usec + (float) $sec);
-        }
-
+            $this->view->offsetSet('serverSide',1);
+           $header= $this->printHeader($this->headerTitle(), null, true );
+            $body=$this->printBody(false);
+            $trail=$this->printTrail('database',false);
+            $title=$this->printTitle($this->lang['strqueryresults'],null,false);
+            echo $body.$trail.$title;
+          
         $rs = $this->doDefault();
-
-        $this->doFooter(true, 'footer_sqledit.twig', $rs);
+     
+      
+    }
+    echo $body.$trail.$title;
+  //  echo $body.$trail.$title;
+       $this->doFooter(true, 'footer_sqledit.twig', $rs);
     }
 
     public function doDefault()
@@ -98,10 +113,7 @@ class SqlController extends BaseController
         $_connection = $this->misc->getConnection();
 
         try {
-            // Execute the query.  If it's a script upload, special handling is necessary
-            if (isset($_FILES['script']) && 0 < $_FILES['script']['size']) {
-                return $this->execute_script();
-            }
+            
 
             return $this->execute_query();
         } catch (ADOdbException $e) {
@@ -119,12 +131,13 @@ class SqlController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
         $lang = $this->lang;
+        $json=[];
         /**
          * This is a callback function to display the result of each separate query.
          *
          * @param ADORecordSet $rs The recordset returned by the script execetor
          */
-        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection): void {
+        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection,&$json): void {
             // Check if $rs is false, if so then there was a fatal error
             if (false === $rs) {
                 echo \htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', \nl2br(\htmlspecialchars($_connection->getLastError())), '<br/>' . \PHP_EOL;
@@ -136,8 +149,8 @@ class SqlController extends BaseController
                         $num_fields = \pg_numfields($rs);
                         echo "<p><table>\n<tr>";
 
-                        for ($k = 0; $k < $num_fields; ++$k) {
-                            echo '<th class="data">', $misc->printVal(\pg_fieldname($rs, $k)), '</th>';
+                        for ($fieldIndex = 0; $fieldIndex < $num_fields; ++$fieldIndex) {
+                            echo '<th class="data">', $misc->printVal(\pg_fieldname($rs, $fieldIndex)), '</th>';
                         }
 
                         $i = 0;
@@ -150,11 +163,12 @@ class SqlController extends BaseController
                                 $id
                             ) . \PHP_EOL;
 
-                            foreach ($row as $k => $v) {
-                                echo '<td style="white-space:nowrap;">', $misc->printVal($v, \pg_fieldtype($rs, $k), ['null' => true]), '</td>';
+                            foreach ($row as $fieldIndex => $v) {
+                                echo '<td style="white-space:nowrap;">', $misc->printVal($v, \pg_fieldtype($rs, $fieldIndex), ['null' => true]), '</td>';
                             }
                             echo '</tr>' . \PHP_EOL;
                             $row = \pg_fetch_row($rs);
+                         
                             ++$i;
                         }
 
@@ -186,8 +200,9 @@ class SqlController extends BaseController
                 }
             }
         };
+        $final= $data->executeScript('script', $sqlCallback);
 
-        return $data->executeScript('script', $sqlCallback);
+        return $final;
     }
 
     /**
@@ -205,7 +220,7 @@ class SqlController extends BaseController
          * @var ADORecordSet
          */
         $rs = $data->conn->Execute($this->query);
-
+     
         echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
@@ -213,7 +228,7 @@ class SqlController extends BaseController
         echo '</textarea><br>';
         echo $this->view->setForm();
         echo '<input type="submit"/></form>';
-
+$json=[];
         // $rs will only be an object if there is no error
         if (\is_object($rs)) {
             // Request was run, saving it in history
@@ -227,28 +242,37 @@ class SqlController extends BaseController
             if (0 < $rs->RecordCount()) {
                 echo "<table>\n<tr>";
 
-                foreach ($rs->fields as $k => $v) {
-                    $finfo = $rs->FetchField($k);
+                foreach ($rs->fields as $fieldName => $fieldValue) {
+                    $finfo = $rs->FetchField($fieldName);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
                 echo '</tr>' . \PHP_EOL;
                 $i = 0;
-
+$res='';
                 while (!$rs->EOF) {
                     $id = (0 === ($i % 2) ? '1' : '2');
-                    echo \sprintf(
+                    $res.= \sprintf(
                         '<tr class="data%s">',
                         $id
                     ) . \PHP_EOL;
 
-                    foreach ($rs->fields as $k => $v) {
-                        $finfo = $rs->FetchField($k);
-                        echo '<td style="white-space:nowrap;">', $this->misc->printVal($v, $finfo->type, ['null' => true]), '</td>';
+                    $json[$i]=[];
+                    foreach ($rs->fields as $fieldName => $fieldValue) {
+                        $finfo = $rs->FetchField($fieldName);
+                        $parsedValue=$this->misc->printVal($fieldValue, $finfo->type, ['null' => true]);
+                      
+                        $json[$i][$fieldName]=$parsedValue;
+                        $res.= '<td style="white-space:nowrap;">';
+                        $res.= $parsedValue;
+                        $res.= '</td>';
                     }
-                    echo '</tr>' . \PHP_EOL;
+                    $res.= '</tr>' . \PHP_EOL;
                     $rs->MoveNext();
                     ++$i;
+                 
                 }
+              
+                echo $res;
                 echo '</table>' . \PHP_EOL;
                 echo '<p>', $rs->RecordCount(), \sprintf(
                     ' %s</p>',
@@ -264,7 +288,7 @@ class SqlController extends BaseController
                 // Otherwise nodata to print
                 echo '<p>', $this->lang['strnodata'], '</p>' . \PHP_EOL;
             }
-
+           
             return $rs;
         }
     }

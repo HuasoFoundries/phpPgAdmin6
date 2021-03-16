@@ -24,10 +24,36 @@ function redirectToIframesView() {
 
 $.ready
   .then(() => {
+    stateObj.dttArgs = {
+      pageLength: 100,
+    };
     // Need to open popup from parent document
     stateObj.basePath =
       window.parent.location.origin + (stateObj.subfolder || '');
 
+    if (stateObj.serverSide) {
+      let dttData = [...new URLSearchParams($('#sqlform').serialize())].reduce(
+        (accum, [key, value]) => {
+          accum[key] = value;
+          return accum;
+        },
+        {}
+      );
+      dttData.json = 'on';
+      stateObj.dttArgs = {
+        ...stateObj.dttArgs,
+        columns: stateObj.dttFields,
+        processing: !!stateObj.serverSide,
+        serverSide: !!stateObj.serverSide,
+        ajax: !stateObj.serverSide
+          ? ''
+          : {
+              url: $('#sqlform').attr('action'),
+              method: 'POST',
+              data: dttData,
+            },
+      };
+    }
     let redirect_to = redirectToIframesView();
     window.parent.document.title = window.document.title;
 
@@ -76,9 +102,7 @@ $.ready
       jQuery('.select2').select2();
     }
     if (jqFn.DataTable) {
-      $('.will_be_datatable').DataTable({
-        pageLength: 100,
-      });
+      stateObj.dataTable = $('.will_be_datatable').DataTable(stateObj.dttArgs);
     }
 
     if (hljsFn.highlightBlock) {

@@ -45,6 +45,9 @@ class SqleditController extends BaseController
         $this->setWindowName('sqledit');
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
+        $this->view->offsetSet('excludeJsTree',true);
+        $this->view->offsetSet('inPopUp',true);
+        $this->view->offsetSet('codemirror',true);
 
         $header=$this->printHeader($title, $this->scripts, false, 'header_sqledit.twig');
         echo $header;
@@ -70,21 +73,21 @@ class SqleditController extends BaseController
         }
 
         $this->coalesceArr($_REQUEST, 'search_path', \implode(',', $data->getSearchPath()));
-        $search_path = \htmlspecialchars($_REQUEST['search_path']);
         $sqlquery = \htmlspecialchars($_SESSION['sqlquery']);
-
+        
         $default_html = $this->printTabs('popup', 'sql', false);
-
-        $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="parent">';
+        
+        $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="opener">';
         $default_html .= \PHP_EOL;
         $default_html .= $this->printConnection('sql', false);
-
+        
         $default_html .= \PHP_EOL;
-
+        
         $default_html .= ' <div class="searchpath">';
         $default_html .= '<label>';
         $default_html .= $this->view->printHelp($this->lang['strsearchpath'], 'pg.schema.search_path', false);
-
+        
+        $search_path = \htmlspecialchars($_REQUEST['search_path']);
         $default_html .= ': <input type="text" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= '</label>' . \PHP_EOL;
 
@@ -151,7 +154,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs('popup', 'find', false);
 
-        $default_html .= '<form action="database" method="post" target="detail">' . \PHP_EOL;
+        $default_html .= '<form action="database" method="post" target="opener">' . \PHP_EOL;
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . \sprintf(
             '" size="32" maxlength="%s" />',

@@ -270,7 +270,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['stralter'], 'pg.database.alter');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
+            echo '<form action="alldb" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
                 '<tr><th class="data left required">%s</th>',
@@ -361,7 +361,7 @@ class AlldbController extends BaseController
             $this->printTrail('database');
             $this->printTitle($this->lang['strdrop'], 'pg.database.drop');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
+            echo '<form action="alldb" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -469,7 +469,7 @@ class AlldbController extends BaseController
             $tablespaces = $data->getTablespaces();
         }
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/alldb" method="post">' . \PHP_EOL;
+        echo '<form action="alldb" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>

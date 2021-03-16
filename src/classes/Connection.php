@@ -109,7 +109,7 @@ class Connection
             return null;
         }
         $serverInfo = $this->conn->ServerInfo();
-        dump($serverInfo);
+       // dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
         $description = \sprintf(
             'PostgreSQL %s',

@@ -102,7 +102,7 @@ class AggregatesController extends BaseController
                 'title' => $this->lang['strname'],
                 'field' => Decorator::field('proname'),
                 'url' => \sprintf(
-                    'redirect.php?subject=aggregate&amp;action=properties&amp;%s&amp;',
+                    'aggregates?subject=aggregate&amp;action=properties&amp;%s&amp;',
                     $this->misc->href
                 ),
                 'vars' => ['aggrname' => 'proname', 'aggrtype' => 'proargtypes'],
@@ -282,7 +282,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['strcreateaggregate'], 'pg.aggregate.create');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
+        echo '<form action="aggregates" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -425,7 +425,7 @@ class AggregatesController extends BaseController
         $this->printTitle($this->lang['stralter'], 'pg.aggregate.alter');
         $this->printMsg($msg);
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
+        echo '<form action="aggregates" method="post">' . \PHP_EOL;
         $aggrdata = $this->data->getAggregate($_REQUEST['aggrname'], $_REQUEST['aggrtype']);
 
         if (0 < $aggrdata->RecordCount()) {
@@ -505,7 +505,7 @@ class AggregatesController extends BaseController
                 \htmlspecialchars($_REQUEST['aggrname'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/aggregates" method="post">' . \PHP_EOL;
+            echo '<form action="aggregates" method="post">' . \PHP_EOL;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']

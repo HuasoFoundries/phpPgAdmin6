@@ -66,8 +66,8 @@ class FunctionsController extends BaseController
 
                 break;
             case 'edit':
-                $header_template = 'header_sqledit.twig';
-                $footer_template = 'footer_sqledit.twig';
+                $this->view->offsetSet('codemirror',true);
+ 
                 $this->doEdit();
 
                 break;
@@ -119,9 +119,7 @@ class FunctionsController extends BaseController
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
                 'url'=>containerInstance()->getDestinationWithLastTab('function'),
-                    '/redirect/function?action=properties&amp;%s&amp;',
-                    $this->misc->href
-                ),
+               
                 'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
@@ -339,7 +337,7 @@ class FunctionsController extends BaseController
             $args = $fndata->fields['proarguments'];
         }
 
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
+        echo '<form action="functions" method="post">' . \PHP_EOL;
         echo '<table style="width: 95%">' . \PHP_EOL;
         echo '<tr>' . \PHP_EOL;
         echo \sprintf(
@@ -803,7 +801,7 @@ class FunctionsController extends BaseController
             $this->printTabs('function', 'definition');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
+            echo '<form action="functions" method="post">' . \PHP_EOL;
 
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -1128,7 +1126,7 @@ class FunctionsController extends BaseController
 			//]]>
 		</script>
 		";
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/functions" method="post">' . \PHP_EOL;
+        echo '<form action="functions" method="post">' . \PHP_EOL;
         echo '<table><tbody id="args_table">' . \PHP_EOL;
         echo \sprintf(
             '<tr><th class="data required">%s</th>',
@@ -1282,7 +1280,7 @@ class FunctionsController extends BaseController
 
         $szJS = '';
 
-        echo '<script src="' . \containerInstance()->subFolder . '/assets/js/functions.js" type="text/javascript"></script>';
+        echo '<script src="assets/js/functions.js" type="text/javascript"></script>';
         echo '<script type="text/javascript">' . $this->_buildJSData() . '</script>';
 
         if (!empty($_POST['formArgName'])) {

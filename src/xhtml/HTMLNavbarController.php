@@ -47,7 +47,6 @@ class HTMLNavbarController extends HTMLController
         $viewVars = $this->_getSearchPathsCrumbs($crumbs, $viewVars);
 
         $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
-
         if ($do_print) {
             echo $trail_html;
 
@@ -191,8 +190,8 @@ class HTMLNavbarController extends HTMLController
             $search_paths = $data->getSearchPath();
 
             foreach ($search_paths as $schema) {
-                 $destination = $this->container->getDestinationWithLastTab('database');
-                 $search_path_crumbs[$schema] = [
+                $destination = $this->container->getDestinationWithLastTab('database');
+                $search_path_crumbs[$schema] = [
                     'title' => $lang['strschema'],
                     'text' => $schema,
                     'icon' => $this->view->icon('Schema'),
@@ -259,6 +258,7 @@ class HTMLNavbarController extends HTMLController
                 ],
                 'history' => [
                     'attr' => [
+                        'class' => 'toplink_popup',
                         'href' => [
                             'url' => \containerInstance()->subFolder . '/src/views/history',
                             'urlvars' => \array_merge($reqvars, [
@@ -266,7 +266,7 @@ class HTMLNavbarController extends HTMLController
                             ]),
                         ],
                         'id' => 'toplink_history',
-                        'class' => 'toplink_popup',
+
                     ],
                     'content' => $lang['strhistory'],
                 ],
@@ -286,6 +286,7 @@ class HTMLNavbarController extends HTMLController
                 ],
                 'logout' => [
                     'attr' => [
+                        'id' => 'toplink_logout',
                         'href' => [
                             'url' => \containerInstance()->subFolder . '/src/views/servers',
                             'urlvars' => [
@@ -293,7 +294,6 @@ class HTMLNavbarController extends HTMLController
                                 'logoutServer' => \sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}"),
                             ],
                         ],
-                        'id' => 'toplink_logout',
                     ],
                     'content' => $lang['strlogout'],
                 ],
@@ -305,12 +305,29 @@ class HTMLNavbarController extends HTMLController
             ];
 
             $topbar_html .= '<td style="text-align: right">';
-$toplinks=$this->printLinksList($toplinks, 'toplink', false, $from);
-if(strpos($toplinks,'toplink_popup')!==false) {
-            $topbar_html .= str_replace(['<li>','</li>','<a','/a>','class="toplink_popup" href','src/views/','target="sqledit"'],[
-                '','',
-                '<button','/button>','class="toplink_popup" rel','','target="_blank" '],$toplinks);
-}
+            $toplinks = $this->printLinksList($toplinks, 'toplink', false, $from);
+
+            if (strpos($toplinks, 'toplink_popup') !== false) {
+                $topbar_html .= str_replace(
+                    [
+                        '<li>',
+                        '</li>', '<a', '/a>',
+
+                        'id="toplink_logout" href',
+                        'class="toplink_popup" href',
+                        'src/views/', 'target="sqledit"'
+                    ],
+                    [
+                        '', '',
+                        '<button',
+                        '/button>',
+                        'id="toplink_logout" rel',
+
+                        'class="toplink_popup" rel', '', 'target="_blank" '
+                    ],
+                    $toplinks
+                );
+            }
             $topbar_html .= '</td>';
         } else {
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
@@ -332,7 +349,7 @@ if(strpos($toplinks,'toplink_popup')!==false) {
         $vars = $this->misc->getSubjectParams($subject);
         \ksort($vars['params']);
 
-        return "{$vars['url']}?" . \http_build_query($vars['params'], '', '&amp;');
+        return "{$vars['url']}&" . \http_build_query($vars['params'], '', '&amp;');
     }
 
     /**

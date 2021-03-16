@@ -187,7 +187,7 @@ class GroupsController extends BaseController
                 $this->misc->printVal($_REQUEST['group'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
+            echo '<form action="groups" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop_member" />' . \PHP_EOL;
             echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
@@ -261,7 +261,7 @@ class GroupsController extends BaseController
         }
 
         // Display form for adding a user to the group
-        echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
+        echo '<form action="groups" method="post">' . \PHP_EOL;
         echo '<select name="user">';
 
         while (!$users->EOF) {
@@ -317,7 +317,7 @@ class GroupsController extends BaseController
                 $this->misc->printVal($_REQUEST['group'])
             ), '</p>' . \PHP_EOL;
 
-            echo '<form action="' . \containerInstance()->subFolder . '/src/views/groups" method="post">' . \PHP_EOL;
+            echo '<form action="groups" method="post">' . \PHP_EOL;
             echo $this->view->form;
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
             echo '<input type="hidden" name="group" value="', \htmlspecialchars($_REQUEST['group']), '" />' . \PHP_EOL;
