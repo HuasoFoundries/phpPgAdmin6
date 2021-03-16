@@ -18,7 +18,7 @@ trait SequenceTrait
      *
      * @param bool $all true to get all sequences of all schemas
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getSequences($all = false)
     {
@@ -51,7 +51,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function nextvalSequence($sequence)
     {
@@ -77,7 +77,7 @@ trait SequenceTrait
      * @param string $sequence  Sequence name
      * @param int    $nextvalue The next value
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function setvalSequence($sequence, $nextvalue)
     {
@@ -104,7 +104,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function restartSequence($sequence)
     {
@@ -126,7 +126,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function resetSequence($sequence)
     {
@@ -160,7 +160,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getSequence($sequence)
     {
@@ -198,7 +198,7 @@ trait SequenceTrait
      * @param int    $cachevalue  The cache value
      * @param bool   $cycledvalue True if cycled, false otherwise
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function createSequence(
         $sequence,
@@ -282,7 +282,7 @@ trait SequenceTrait
      * @param null|bool $cycledvalue  True if cycled, false otherwise
      * @param int       $startvalue   The sequence start value when issueing a restart
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterSequence(
         $sequence,
@@ -346,7 +346,7 @@ trait SequenceTrait
      * @param ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string       $owner the new owner of the sequence
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal string $name new owner for the sequence
      */
@@ -384,7 +384,7 @@ trait SequenceTrait
      * @param null|bool    $cycledvalue  Sequence can cycle ?
      * @param int          $startvalue   The sequence start value when issueing a restart
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function alterSequenceProps(
         $seqrs,
@@ -467,7 +467,7 @@ trait SequenceTrait
      * @param ADORecordSet $seqrs The sequence RecordSet returned by getSequence()
      * @param string       $name  The new name for the sequence
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function alterSequenceName($seqrs, $name)
     {
@@ -499,7 +499,7 @@ trait SequenceTrait
      * @param ADORecordSet $seqrs  The sequence RecordSet returned by getSequence()
      * @param string       $schema
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal param The $name new schema for the sequence
      */
@@ -528,7 +528,7 @@ trait SequenceTrait
      * @param string $sequence Sequence name
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropSequence($sequence, $cascade = false)
     {
@@ -585,6 +585,8 @@ trait SequenceTrait
      * @param int          $startvalue   The sequence start value when issueing a restart
      *
      * @return int 0 success
+     *
+     * @psalm-return -7|-6|-5|-4|-3|0
      */
     protected function _alterSequence(
         $seqrs,

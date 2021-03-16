@@ -63,7 +63,7 @@ trait DatabaseTrait
      *
      * @param string $table (optional) The table to analyze
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function analyzeDB($table = '')
     {
@@ -89,7 +89,7 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to retrieve
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDatabase($database)
     {
@@ -107,7 +107,7 @@ trait DatabaseTrait
      *
      * @param null|string $currentdatabase database name that should be on top of the resultset
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -189,7 +189,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDatabaseComment($database)
     {
@@ -211,7 +211,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDatabaseOwner($database)
     {
@@ -250,6 +250,8 @@ trait DatabaseTrait
      * @param string $lc_ctype
      *
      * @return int 0 success
+     *
+     * @psalm-return -2|-1|0
      */
     public function createDatabase(
         $database,
@@ -323,7 +325,7 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to drop
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropDatabase($database)
     {
@@ -345,7 +347,7 @@ trait DatabaseTrait
      * @param string $newOwner The new owner for the database
      * @param string $comment
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
     {
@@ -397,7 +399,7 @@ trait DatabaseTrait
      * @param string $oldName name of database to rename
      * @param string $newName new name of database
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function alterDatabaseRename($oldName, $newName)
     {
@@ -424,7 +426,7 @@ trait DatabaseTrait
      * @param string $dbName   database to change ownership of
      * @param string $newOwner user that will own the database
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function alterDatabaseOwner($dbName, $newOwner)
     {
@@ -445,7 +447,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getPreparedXacts($database = null)
     {
@@ -468,7 +470,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getProcesses($database = null)
     {
@@ -497,7 +499,7 @@ trait DatabaseTrait
     /**
      * Returns table locks information in the current database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getLocks()
     {
@@ -532,6 +534,8 @@ trait DatabaseTrait
      * @param string $signal 'CANCEL' or 'KILL'
      *
      * @return int 0 success
+     *
+     * @psalm-return -1|0
      */
     public function sendSignal($pid, $signal)
     {
@@ -574,7 +578,9 @@ trait DatabaseTrait
      * @param bool   $full    If true, selects "full" vacuum
      * @param bool   $freeze  If true, selects aggressive "freezing" of tuples
      *
-     * @return array result status and sql sentence
+     * @return (int|string)[] result status and sql sentence
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function vacuumDB($table = '', $analyze = false, $full = false, $freeze = false)
     {
@@ -644,7 +650,7 @@ trait DatabaseTrait
     /**
      * Returns all available variable information.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getVariables()
     {

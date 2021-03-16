@@ -18,7 +18,7 @@ trait SchemaTrait
     /**
      * Return all schemas in the current database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getSchemas()
     {
@@ -104,7 +104,7 @@ trait SchemaTrait
      *
      * @param mixed $paths An array of schemas in required search order
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function setSearchPath($paths)
     {
@@ -143,7 +143,7 @@ trait SchemaTrait
      * @param string $authorization (optional) The username to create the schema for
      * @param string $comment       (optional) If omitted, defaults to nothing
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createSchema($schemaname, $authorization = '', $comment = '')
     {
@@ -203,7 +203,7 @@ trait SchemaTrait
      * @param string $name       new name for this schema
      * @param string $owner      The new owner for this schema
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function updateSchema($schemaname, $comment, $name, $owner)
     {
@@ -268,7 +268,7 @@ trait SchemaTrait
      *
      * @param string $schema The name of the schema
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getSchemaByName($schema)
     {
@@ -294,7 +294,7 @@ trait SchemaTrait
      * @param string $schemaname The name of the schema to drop
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropSchema($schemaname, $cascade)
     {

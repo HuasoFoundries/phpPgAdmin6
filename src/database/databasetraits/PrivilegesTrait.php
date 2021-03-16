@@ -134,7 +134,7 @@ trait PrivilegesTrait
      * @param bool   $cascade     True for cascade revoke, false otherwise
      * @param string $table       the column's table if type=column
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function setPrivileges(
         $mode,
@@ -337,9 +337,11 @@ trait PrivilegesTrait
      *
      * @param string $acl The ACL to parse (of type aclitem[])
      *
-     * @return array|int Privileges array or integer with error code
+     * @return (array|false|null|string)[][]|int Privileges array or integer with error code
      *
      * @internal bool $in_quotes toggles acl in_quotes attribute
+     *
+     * @psalm-return int|non-empty-list<array{0: string, 1: false|null|string, 2: list<mixed>, 3: false|string, 4: list<mixed>}>
      */
     protected function parseACL($acl)
     {

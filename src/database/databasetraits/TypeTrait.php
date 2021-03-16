@@ -20,7 +20,7 @@ trait TypeTrait
      * @param string $typname The name of the type
      * @param int    $typmod  The contents of the typmod field
      *
-     * @return bool|string
+     * @return false|string
      */
     public function formatType($typname, $typmod)
     {
@@ -75,7 +75,7 @@ trait TypeTrait
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getType($typname)
     {
@@ -94,7 +94,7 @@ trait TypeTrait
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -152,7 +152,7 @@ trait TypeTrait
      * @param string $typalign
      * @param string $typstorage
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal param $ ...
      */
@@ -215,7 +215,7 @@ trait TypeTrait
      * @param string $typname The name of the type to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropType($typname, $cascade)
     {
@@ -239,7 +239,7 @@ trait TypeTrait
      * @param array  $values     An array of values
      * @param string $typcomment Type comment
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createEnumType($name, $values, $typcomment)
     {
@@ -295,7 +295,7 @@ trait TypeTrait
      *
      * @param string $name
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getEnumValues($name)
     {
@@ -322,7 +322,7 @@ trait TypeTrait
      * @param array  $colcomment An array of comments
      * @param string $typcomment Type comment
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createCompositeType($name, $fields, $field, $type, $array, $length, $colcomment, $typcomment)
     {
@@ -447,7 +447,7 @@ trait TypeTrait
     /**
      * Returns a list of all casts in the database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getCasts()
     {
@@ -492,7 +492,7 @@ trait TypeTrait
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getConversions()
     {

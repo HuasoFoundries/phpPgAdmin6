@@ -286,7 +286,7 @@ trait HasTrait
     /**
      * Determines if it has tablespaces.
      *
-     * @return bool true if has tablespaces, False otherwise
+     * @return true true if has tablespaces, False otherwise
      */
     public function hasTablespaces()
     {
@@ -296,7 +296,7 @@ trait HasTrait
     /**
      * Determines if it has shared comments.
      *
-     * @return bool true if has shared comments, False otherwise
+     * @return true true if has shared comments, False otherwise
      */
     public function hasSharedComments()
     {
@@ -306,7 +306,7 @@ trait HasTrait
     /**
      * Determines if it has roles.
      *
-     * @return bool true if has roles, False otherwise
+     * @return true true if has roles, False otherwise
      */
     public function hasRoles()
     {
@@ -316,7 +316,7 @@ trait HasTrait
     /**
      * Determines if it has grant option.
      *
-     * @return bool true if has grant option, False otherwise
+     * @return true true if has grant option, False otherwise
      */
     public function hasGrantOption()
     {
@@ -326,7 +326,7 @@ trait HasTrait
     /**
      * Determines if it has create table like with constraints.
      *
-     * @return bool true if has create table like with constraints, False otherwise
+     * @return true true if has create table like with constraints, False otherwise
      */
     public function hasCreateTableLikeWithConstraints()
     {
@@ -336,7 +336,7 @@ trait HasTrait
     /**
      * Determines if it has create table like with indexes.
      *
-     * @return bool true if has create table like with indexes, False otherwise
+     * @return true true if has create table like with indexes, False otherwise
      */
     public function hasCreateTableLikeWithIndexes()
     {
@@ -346,7 +346,7 @@ trait HasTrait
     /**
      * Determines if it has create field with constraints.
      *
-     * @return bool true if has create field with constraints, False otherwise
+     * @return true true if has create field with constraints, False otherwise
      */
     public function hasCreateFieldWithConstraints()
     {
@@ -356,7 +356,7 @@ trait HasTrait
     /**
      * Determines if it has domain constraints.
      *
-     * @return bool true if has domain constraints, False otherwise
+     * @return true true if has domain constraints, False otherwise
      */
     public function hasDomainConstraints()
     {
@@ -366,7 +366,7 @@ trait HasTrait
     /**
      * Determines if it has function alter owner.
      *
-     * @return bool true if has function alter owner, False otherwise
+     * @return true true if has function alter owner, False otherwise
      */
     public function hasFunctionAlterOwner()
     {
@@ -376,7 +376,7 @@ trait HasTrait
     /**
      * Determines if it has function alter schema.
      *
-     * @return bool true if has function alter schema, False otherwise
+     * @return true true if has function alter schema, False otherwise
      */
     public function hasFunctionAlterSchema()
     {
@@ -386,7 +386,7 @@ trait HasTrait
     /**
      * Determines if it has read only queries.
      *
-     * @return bool true if has read only queries, False otherwise
+     * @return true true if has read only queries, False otherwise
      */
     public function hasReadOnlyQueries()
     {
@@ -396,7 +396,7 @@ trait HasTrait
     /**
      * Determines if it has aggregate sort operation.
      *
-     * @return bool true if has aggregate sort operation, False otherwise
+     * @return true true if has aggregate sort operation, False otherwise
      */
     public function hasAggregateSortOp()
     {
@@ -406,7 +406,7 @@ trait HasTrait
     /**
      * Determines if it has alter aggregate.
      *
-     * @return bool true if has alter aggregate, False otherwise
+     * @return true true if has alter aggregate, False otherwise
      */
     public function hasAlterAggregate()
     {
@@ -416,7 +416,7 @@ trait HasTrait
     /**
      * Determines if it has alter column type.
      *
-     * @return bool true if has alter column type, False otherwise
+     * @return true true if has alter column type, False otherwise
      */
     public function hasAlterColumnType()
     {
@@ -426,7 +426,7 @@ trait HasTrait
     /**
      * Determines if it has alter database owner.
      *
-     * @return bool true if has alter database owner, False otherwise
+     * @return true true if has alter database owner, False otherwise
      */
     public function hasAlterDatabaseOwner()
     {
@@ -436,7 +436,7 @@ trait HasTrait
     /**
      * Determines if it has alter schema.
      *
-     * @return bool true if has alter schema, False otherwise
+     * @return true true if has alter schema, False otherwise
      */
     public function hasAlterSchema()
     {
@@ -446,7 +446,7 @@ trait HasTrait
     /**
      * Determines if it has alter schema owner.
      *
-     * @return bool true if has alter schema owner, False otherwise
+     * @return true true if has alter schema owner, False otherwise
      */
     public function hasAlterSchemaOwner()
     {
@@ -456,7 +456,7 @@ trait HasTrait
     /**
      * Determines if it has alter sequence schema.
      *
-     * @return bool true if has alter sequence schema, False otherwise
+     * @return true true if has alter sequence schema, False otherwise
      */
     public function hasAlterSequenceSchema()
     {
@@ -466,7 +466,7 @@ trait HasTrait
     /**
      * Determines if it has alter sequence start.
      *
-     * @return bool true if has alter sequence start, False otherwise
+     * @return true true if has alter sequence start, False otherwise
      */
     public function hasAlterSequenceStart()
     {
@@ -476,7 +476,7 @@ trait HasTrait
     /**
      * Determines if it has alter table schema.
      *
-     * @return bool true if has alter table schema, False otherwise
+     * @return true true if has alter table schema, False otherwise
      */
     public function hasAlterTableSchema()
     {
@@ -486,7 +486,7 @@ trait HasTrait
     /**
      * Determines if it has autovacuum.
      *
-     * @return bool true if has autovacuum, False otherwise
+     * @return true true if has autovacuum, False otherwise
      */
     public function hasAutovacuum()
     {
@@ -496,7 +496,7 @@ trait HasTrait
     /**
      * Determines if it has create table like.
      *
-     * @return bool true if has create table like, False otherwise
+     * @return true true if has create table like, False otherwise
      */
     public function hasCreateTableLike()
     {
@@ -506,7 +506,7 @@ trait HasTrait
     /**
      * Determines if it has disable triggers.
      *
-     * @return bool true if has disable triggers, False otherwise
+     * @return true true if has disable triggers, False otherwise
      */
     public function hasDisableTriggers()
     {
@@ -516,7 +516,7 @@ trait HasTrait
     /**
      * Determines if it has alter domains.
      *
-     * @return bool true if has alter domains, False otherwise
+     * @return true true if has alter domains, False otherwise
      */
     public function hasAlterDomains()
     {
@@ -526,7 +526,7 @@ trait HasTrait
     /**
      * Determines if it has enum types.
      *
-     * @return bool true if has enum types, False otherwise
+     * @return true true if has enum types, False otherwise
      */
     public function hasEnumTypes()
     {
@@ -536,7 +536,7 @@ trait HasTrait
     /**
      * Determines if it has fts.
      *
-     * @return bool true if has fts, False otherwise
+     * @return true true if has fts, False otherwise
      */
     public function hasFTS()
     {
@@ -546,7 +546,7 @@ trait HasTrait
     /**
      * Determines if it has function costing.
      *
-     * @return bool true if has function costing, False otherwise
+     * @return true true if has function costing, False otherwise
      */
     public function hasFunctionCosting()
     {
@@ -556,7 +556,7 @@ trait HasTrait
     /**
      * Determines if it has function guc.
      *
-     * @return bool true if has function guc, False otherwise
+     * @return true true if has function guc, False otherwise
      */
     public function hasFunctionGUC()
     {
@@ -566,7 +566,7 @@ trait HasTrait
     /**
      * Determines if it has named parameters.
      *
-     * @return bool true if has named parameters, False otherwise
+     * @return true true if has named parameters, False otherwise
      */
     public function hasNamedParams()
     {
@@ -576,7 +576,7 @@ trait HasTrait
     /**
      * Determines if it has prepare.
      *
-     * @return bool true if has prepare, False otherwise
+     * @return true true if has prepare, False otherwise
      */
     public function hasPrepare()
     {
@@ -586,7 +586,7 @@ trait HasTrait
     /**
      * Determines if it has prepared xacts.
      *
-     * @return bool true if has prepared xacts, False otherwise
+     * @return true true if has prepared xacts, False otherwise
      */
     public function hasPreparedXacts()
     {
@@ -596,7 +596,7 @@ trait HasTrait
     /**
      * Determines if it has recluster.
      *
-     * @return bool true if has recluster, False otherwise
+     * @return true true if has recluster, False otherwise
      */
     public function hasRecluster()
     {
@@ -606,7 +606,7 @@ trait HasTrait
     /**
      * Determines if it has server admin funcs.
      *
-     * @return bool true if has server admin funcs, False otherwise
+     * @return true true if has server admin funcs, False otherwise
      */
     public function hasServerAdminFuncs()
     {
@@ -616,7 +616,7 @@ trait HasTrait
     /**
      * Determines if it has query cancel.
      *
-     * @return bool true if has query cancel, False otherwise
+     * @return true true if has query cancel, False otherwise
      */
     public function hasQueryCancel()
     {
@@ -626,7 +626,7 @@ trait HasTrait
     /**
      * Determines if it has user rename.
      *
-     * @return bool true if has user rename, False otherwise
+     * @return true true if has user rename, False otherwise
      */
     public function hasUserRename()
     {
@@ -636,7 +636,7 @@ trait HasTrait
     /**
      * Determines if it has user signals.
      *
-     * @return bool true if has user signals, False otherwise
+     * @return true true if has user signals, False otherwise
      */
     public function hasUserSignals()
     {
@@ -646,7 +646,7 @@ trait HasTrait
     /**
      * Determines if it has virtual transaction identifier.
      *
-     * @return bool true if has virtual transaction identifier, False otherwise
+     * @return true true if has virtual transaction identifier, False otherwise
      */
     public function hasVirtualTransactionId()
     {
@@ -666,7 +666,7 @@ trait HasTrait
     /**
      * Determines if it has alter database rename.
      *
-     * @return bool true if has alter database rename, False otherwise
+     * @return true true if has alter database rename, False otherwise
      */
     public function hasAlterDatabaseRename()
     {
@@ -676,7 +676,7 @@ trait HasTrait
     /**
      * Determines if it has database collation.
      *
-     * @return bool true if has database collation, False otherwise
+     * @return true true if has database collation, False otherwise
      */
     public function hasDatabaseCollation()
     {
@@ -686,7 +686,7 @@ trait HasTrait
     /**
      * Determines if it has magic types.
      *
-     * @return bool true if has magic types, False otherwise
+     * @return true true if has magic types, False otherwise
      */
     public function hasMagicTypes()
     {
@@ -696,7 +696,7 @@ trait HasTrait
     /**
      * Determines if it has query kill.
      *
-     * @return bool true if has query kill, False otherwise
+     * @return true true if has query kill, False otherwise
      */
     public function hasQueryKill()
     {
@@ -706,7 +706,7 @@ trait HasTrait
     /**
      * Determines if it has concurrent index build.
      *
-     * @return bool true if has concurrent index build, False otherwise
+     * @return true true if has concurrent index build, False otherwise
      */
     public function hasConcurrentIndexBuild()
     {
@@ -716,7 +716,7 @@ trait HasTrait
     /**
      * Determines if it has force reindex.
      *
-     * @return bool true if has force reindex, False otherwise
+     * @return false true if has force reindex, False otherwise
      */
     public function hasForceReindex()
     {
@@ -726,7 +726,7 @@ trait HasTrait
     /**
      * Determines if it has bytea hexadecimal default.
      *
-     * @return bool true if has bytea hexadecimal default, False otherwise
+     * @return true true if has bytea hexadecimal default, False otherwise
      */
     public function hasByteaHexDefault()
     {

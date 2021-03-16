@@ -21,7 +21,7 @@ trait TableTrait
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getAllTables()
     {
@@ -39,7 +39,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTables()
     {
@@ -81,7 +81,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTableParents($table)
     {
@@ -115,7 +115,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTableChildren($table)
     {
@@ -148,6 +148,8 @@ trait TableTrait
      *
      * @param string $table       The table to define
      * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
+     *
+     * @return null|string
      */
     public function getTableDefPrefix($table, $cleanprefix = ''): ?string
     {
@@ -262,7 +264,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTable($table)
     {
@@ -325,7 +327,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getConstraints($table)
     {
@@ -479,7 +481,7 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -510,7 +512,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTriggers($table = '')
     {
@@ -545,7 +547,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getRules($table)
     {
@@ -586,7 +588,7 @@ trait TableTrait
      * @param array  $uniquekey   An Array indicating the fields that are unique (those indexes that are set)
      * @param array  $primarykey  An Array indicating the field used for the primarykey (those indexes that are set)
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createTable(
         $name,
@@ -815,7 +817,7 @@ trait TableTrait
      * @param bool   $idx
      * @param string $tablespace  The tablespace name ('' means none/default)
      *
-     * @return bool|int
+     * @return int
      */
     public function createTableLike($name, $like, $defaults = false, $constraints = false, $idx = false, $tablespace = '')
     {
@@ -887,7 +889,7 @@ trait TableTrait
      * @param string $tablespace The new tablespace for the table ('' means leave as is)
      * @param bool   $with_oids  If set to FALSE, will drop oids column
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterTable($table, $name, $owner, $schema, $comment, $tablespace, bool $with_oids = true)
     {
@@ -1119,7 +1121,9 @@ trait TableTrait
      * @param string $table   The table to be emptied
      * @param bool   $cascade True to cascade truncate, false to restrict
      *
-     * @return array<integer,mixed|string> 0 if operation was successful
+     * @return (int|string)[] 0 if operation was successful
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function emptyTable($table, $cascade)
     {
@@ -1148,7 +1152,7 @@ trait TableTrait
      * @param string $table   The table to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropTable($table, $cascade)
     {
@@ -1174,6 +1178,8 @@ trait TableTrait
      * transaction, sets variables, etc.
      *
      * @return int 0 success
+     *
+     * @psalm-return -1|0
      */
     public function beginDump()
     {
@@ -1235,7 +1241,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1342,7 +1348,7 @@ trait TableTrait
      * @param int    $vaccostdelay   vacuum cost delay
      * @param int    $vaccostlimit   vacuum cost limit
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function saveAutovacuum(
         $table,
@@ -1434,7 +1440,7 @@ trait TableTrait
      *
      * @param string $table The table
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropAutovacuum($table)
     {
@@ -1506,6 +1512,8 @@ trait TableTrait
      * @param bool         $withoutoids If set to TRUE, will drop oids column
      *
      * @return int 0 success
+     *
+     * @psalm-return -7|-6|-5|-4|-3|0
      */
     protected function _alterTable($tblrs, $name, $owner, $schema, $comment, $tablespace, bool $withoutoids = false)
     {
@@ -1994,7 +2002,7 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
@@ -2050,7 +2058,7 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {

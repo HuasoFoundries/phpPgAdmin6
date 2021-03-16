@@ -19,7 +19,7 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -85,7 +85,9 @@ trait FunctionTrait
      *
      * @param array $f The array of data for the function
      *
-     * @return array|int An array containing the properties, or -1 in case of error
+     * @return int|string[] An array containing the properties, or -1 in case of error
+     *
+     * @psalm-return int|non-empty-list<string>
      */
     public function getFunctionProperties($f)
     {
@@ -259,7 +261,7 @@ trait FunctionTrait
      * @param bool   $replace    (optional) True if OR REPLACE, false for
      *                           normal
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false)
     {
@@ -381,7 +383,7 @@ trait FunctionTrait
      * @param int  $function_oid The OID of the function to drop
      * @param bool $cascade      True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropFunction($function_oid, $cascade)
     {
@@ -410,7 +412,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -452,7 +454,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getFunctionDef($function_oid)
     {

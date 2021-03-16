@@ -16,7 +16,7 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getViews()
     {
@@ -36,7 +36,7 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getMaterializedViews()
     {
@@ -77,7 +77,7 @@ trait ViewTrait
      * @param string $comment
      * @param bool   $materialized tells if it's a materialized view
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createView($viewname, $definition, $replace, $comment, $materialized = false)
     {
@@ -131,7 +131,7 @@ trait ViewTrait
      * @param string $schema  The new schema for the view
      * @param string $comment The comment on the view
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterView($view, $name, $owner, $schema, $comment)
     {
@@ -165,7 +165,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getView($view)
     {
@@ -191,7 +191,7 @@ trait ViewTrait
      * @param ADORecordSet $vwrs  The view recordSet returned by getView()
      * @param null|string  $owner
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal param  $name new view's owner
      */
@@ -219,7 +219,7 @@ trait ViewTrait
      * @param ADORecordSet $vwrs The view recordSet returned by getView()
      * @param string       $name The new view's name
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function alterViewName($vwrs, $name)
     {
@@ -248,7 +248,7 @@ trait ViewTrait
      * @param ADORecordSet $vwrs   The view recordSet returned by getView()
      * @param string       $schema
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal param The $name new view's schema
      */
@@ -276,7 +276,7 @@ trait ViewTrait
      * @param string $viewname The name of the view to drop
      * @param string $cascade  True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropView($viewname, $cascade)
     {
@@ -325,6 +325,8 @@ trait ViewTrait
      * @param string       $comment The comment on the view
      *
      * @return int 0 success
+     *
+     * @psalm-return -6|-5|-4|-3|0
      */
     protected function _alterView($vwrs, $name, $owner, $schema, $comment)
     {

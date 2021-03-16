@@ -55,7 +55,9 @@ trait IndexTrait
      * @param string       $tablespace   The tablespaces ('' means none/default)
      * @param bool         $concurrently true to create index concurrently
      *
-     * @return array status (0 if operation was successful) and sql sentence
+     * @return (int|string)[] status (0 if operation was successful) and sql sentence
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function createIndex($name, $table, $columns, $type, $unique, $where, $tablespace, $concurrently)
     {
@@ -119,7 +121,9 @@ trait IndexTrait
      * @param string $index   The index to drop
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return array<integer,mixed|string> 0 if operation was successful
+     * @return (int|string)[] 0 if operation was successful
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function dropIndex($index, $cascade)
     {
@@ -150,7 +154,7 @@ trait IndexTrait
      * @param bool   $force If true, recreates indexes forcedly in PostgreSQL 7.0-7.1, forces rebuild of system indexes in
      *                      7.2-7.3, ignored in >=7.4
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function reindex($type, $name, $force = false)
     {
@@ -199,7 +203,9 @@ trait IndexTrait
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return array<integer,mixed|string> 0 if operation was successful
+     * @return (int|string)[] 0 if operation was successful
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function clusterIndex($table = '', $index = '')
     {
@@ -239,7 +245,7 @@ trait IndexTrait
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getConstraintsWithFields($table)
     {
@@ -314,7 +320,7 @@ trait IndexTrait
      * @param string $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function addPrimaryKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -362,7 +368,7 @@ trait IndexTrait
      * @param string      $name       (optional) The name to give the key, otherwise default name is assigned
      * @param string      $tablespace (optional) The tablespace for the schema, '' indicates default
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function addUniqueKey($table, $fields, $name = '', $tablespace = '')
     {
@@ -411,7 +417,7 @@ trait IndexTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function addCheckConstraint($table, $definition, $name = '')
     {
@@ -448,7 +454,7 @@ trait IndexTrait
      * @param string $table The table from which to drop the check
      * @param string $name  The name of the check to be dropped
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function dropCheckConstraint($table, $name)
     {
@@ -537,7 +543,7 @@ trait IndexTrait
      * @param string $initially  The initially parameter for the FK (eg. INITIALLY IMMEDIATE)
      * @param string $name       [optional] The name to give the key, otherwise default name is assigned
      *
-     * @return ADORecordSet|int
+     * @return int|string
      *
      * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
      * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
@@ -636,7 +642,7 @@ trait IndexTrait
      * @param string $type       The type of constraint (c, f, u or p)
      * @param bool   $cascade    True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropConstraint($constraint, $relation, $type, $cascade)
     {
@@ -664,7 +670,7 @@ trait IndexTrait
      *
      * @param array $tables multi dimensional assoc array that holds schema and table name
      *
-     * @return ADORecordSet|int recordset of linked tables and columns or -1 if $tables isn't an array
+     * @return \RecordSet|int|string recordset of linked tables and columns or -1 if $tables isn't an array
      */
     public function getLinkingKeys($tables)
     {
@@ -792,7 +798,7 @@ trait IndexTrait
      *
      * @param string $table The table to find referrers for
      *
-     * @return ADORecordSet|int A recordset or -1 in case of error
+     * @return \RecordSet|int|string A recordset or -1 in case of error
      */
     public function getReferrers($table)
     {

@@ -83,9 +83,9 @@ class ADOdbBase
      * @param string $table The table to get attributes for
      * @param array  $atts  An array of attribute numbers
      *
-     * @return array|int An array mapping attnum to attname or error code
-     *                   - -1 $atts must be an array
-     *                   - -2 wrong number of attributes found
+     * @return array|int An array mapping attnum to attname or error code - -1 $atts must be an array - -2 wrong number of attributes found
+     *
+     * @psalm-return -2|-1|array
      */
     public function getAttributeNames($table, $atts)
     {
@@ -138,7 +138,7 @@ class ADOdbBase
      * @param string      $comment  the comment to add
      * @param null|string $basetype
      *
-     * @return ADORecordSet|int recordset of results or error code
+     * @return int|string recordset of results or error code
      */
     public function setComment($obj_type, $obj_name, $table, $comment, $basetype = null)
     {
@@ -296,7 +296,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return int|string A recordset or an error code
+     * @return \the|int|string A recordset or an error code
      */
     public function execute($sql)
     {
@@ -386,7 +386,9 @@ class ADOdbBase
      * @param array  $conditions (array) A map of field names to conditions
      * @param string $schema     (optional) The table's schema
      *
-     * @return int 0 success
+     * @return \the|int 0 success
+     *
+     * @psalm-return -2|-1|\the
      */
     public function delete($table, $conditions, $schema = '')
     {
@@ -491,7 +493,9 @@ class ADOdbBase
      * @param string $table The table to insert into
      * @param array  $vars  (array) A mapping of the field names to the values to be inserted
      *
-     * @return int 0 success
+     * @return \the|int 0 success
+     *
+     * @psalm-return -2|-1|\the
      */
     public function insert($table, $vars)
     {
@@ -557,7 +561,9 @@ class ADOdbBase
      * @param array  $where (array) A mapping of field names to values for the where clause
      * @param array  $nulls (array, optional) An array of fields to be set null
      *
-     * @return int 0 success
+     * @return \the|int 0 success
+     *
+     * @psalm-return -3|-2|-1|\the
      */
     public function update($table, $vars, $where, $nulls = [])
     {
@@ -653,6 +659,8 @@ class ADOdbBase
      * Begin a transaction.
      *
      * @return int 0 success
+     *
+     * @psalm-return 0|1
      */
     public function beginTransaction()
     {
@@ -663,6 +671,8 @@ class ADOdbBase
      * End a transaction.
      *
      * @return int 0 success
+     *
+     * @psalm-return 0|1
      */
     public function endTransaction()
     {
@@ -673,6 +683,8 @@ class ADOdbBase
      * Roll back a transaction.
      *
      * @return int 0 success
+     *
+     * @psalm-return 0|1
      */
     public function rollbackTransaction()
     {
@@ -702,7 +714,7 @@ class ADOdbBase
      *
      * @param mixed $parameter the parameter
      *
-     * @return string boolean  database representation
+     * @return string boolean database representation
      */
     public function dbBool(&$parameter)
     {
@@ -728,9 +740,11 @@ class ADOdbBase
      *
      * @param string $dbarr
      *
-     * @return array A PHP array
+     * @return (false|string)[] A PHP array
      *
      * @internal param String $arr representing the DB array
+     *
+     * @psalm-return non-empty-list<false|string>
      */
     public function phpArray($dbarr)
     {

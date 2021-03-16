@@ -18,7 +18,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain to fetch
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDomain($domain)
     {
@@ -52,7 +52,7 @@ trait DomainTrait
     /**
      * Return all domains in current schema.  Excludes domain constraints.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDomains()
     {
@@ -86,7 +86,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain whose constraints to fetch
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getDomainConstraints($domain)
     {
@@ -129,7 +129,7 @@ trait DomainTrait
      * @param string $default Default value for domain
      * @param string $check   A CHECK constraint if there is one
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function createDomain($domain, $type, $length, $array, $notnull, $default, $check)
     {
@@ -213,7 +213,7 @@ trait DomainTrait
      * @param bool   $domnotnull True for NOT NULL, false otherwise
      * @param string $domowner   The domain owner
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterDomain($domain, $domdefault, $domnotnull, $domowner)
     {
@@ -302,7 +302,7 @@ trait DomainTrait
      * @param string $domain  The name of the domain to drop
      * @param string $cascade True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropDomain($domain, $cascade)
     {
@@ -330,7 +330,7 @@ trait DomainTrait
      * @param string $definition The definition of the check
      * @param string $name       (optional) The name to give the check, otherwise default name is assigned
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function addDomainCheckConstraint($domain, $definition, $name = '')
     {
@@ -367,7 +367,7 @@ trait DomainTrait
      * @param string $constraint The constraint to remove
      * @param bool   $cascade    True to cascade, false otherwise
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropDomainConstraint($domain, $constraint, $cascade)
     {

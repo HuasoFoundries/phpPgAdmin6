@@ -25,7 +25,9 @@ trait ColumnTrait
      * @param mixed  $default The default for the column.  '' for none.
      * @param string $comment comment for the column
      *
-     * @return array first element is 0 on success, second element is sql sentence
+     * @return (int|string)[] first element is 0 on success, second element is sql sentence
+     *
+     * @psalm-return array{0: int, 1: string}
      */
     public function addColumn($table, $column, $type, $array, $length, $notnull, $default, $comment)
     {
@@ -148,7 +150,9 @@ trait ColumnTrait
      * @param string $oldtype    The old type for the column
      * @param string $comment    Comment for the column
      *
-     * @return array 0 success
+     * @return (int|string)[] 0 success
+     *
+     * @psalm-return array{0: int, 1: string}
      */
     public function alterColumn(
         $table,
@@ -305,7 +309,9 @@ trait ColumnTrait
      * @param string $column  The column to be renamed
      * @param string $newName The new name for the column
      *
-     * @return array [0 if operation was successful, sql of sentence]
+     * @return (int|string)[] [0 if operation was successful, sql of sentence]
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function renameColumn($table, $column, $newName)
     {
@@ -335,7 +341,7 @@ trait ColumnTrait
      * @param string $column  The column name to set
      * @param mixed  $default The new default value
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function setColumnDefault($table, $column, $default)
     {
@@ -362,7 +368,7 @@ trait ColumnTrait
      * @param string $column The column to alter
      * @param bool   $state  True to set null, false to set not null
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function setColumnNull($table, $column, $state)
     {
@@ -388,7 +394,9 @@ trait ColumnTrait
      * @param string $column  The column to be dropped
      * @param bool   $cascade True to cascade drop, false to restrict
      *
-     * @return array [int status, string sql sentence]
+     * @return (int|string)[] [int status, string sql sentence]
+     *
+     * @psalm-return array{0: int|string, 1: string}
      */
     public function dropColumn($table, $column, $cascade)
     {
@@ -419,7 +427,7 @@ trait ColumnTrait
      * @param string $table  The table from which to drop
      * @param string $column The column name to drop default
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropColumnDefault($table, $column)
     {

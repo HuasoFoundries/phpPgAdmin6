@@ -18,7 +18,7 @@ trait TablespaceTrait
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTablespaces($all = false)
     {
@@ -44,7 +44,7 @@ trait TablespaceTrait
      *
      * @param string $spcname
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getTablespace($spcname)
     {
@@ -66,6 +66,8 @@ trait TablespaceTrait
      * @param string $comment
      *
      * @return int 0 success
+     *
+     * @psalm-return -2|-1|0
      */
     public function createTablespace($spcname, $spcowner, $spcloc, $comment = '')
     {
@@ -106,7 +108,7 @@ trait TablespaceTrait
      * @param string $owner   The new owner for the tablespace
      * @param string $comment
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterTablespace($spcname, $name, $owner, $comment = '')
     {
@@ -162,7 +164,7 @@ trait TablespaceTrait
      *
      * @param string $spcname The name of the domain to drop
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropTablespace($spcname)
     {

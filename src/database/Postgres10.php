@@ -35,7 +35,7 @@ class Postgres10 extends Postgres96
     /**
      * Return all tables in current database (and schema).
      *
-     * @return ADORecordSet|int All tables, sorted alphabetically
+     * @return \RecordSet|int|string All tables, sorted alphabetically
      */
     public function getTables()
     {

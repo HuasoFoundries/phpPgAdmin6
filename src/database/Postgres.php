@@ -93,7 +93,9 @@ class Postgres extends ADOdbBase
      *
      * @param string $help
      *
-     * @return null|array|string the help page or pages related to the $help topic, or null if none exists
+     * @return null|string|string[] the help page or pages related to the $help topic, or null if none exists
+     *
+     * @psalm-return non-empty-list<string>|null|string
      */
     public function getHelp($help)
     {
@@ -250,7 +252,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return ADORecordSet|int A recordset
+     * @return \RecordSet|int|string A recordset
      */
     public function findObject($term, $filter)
     {
@@ -449,7 +451,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return ADORecordSet|int A recordset
+     * @return \RecordSet|int|string A recordset
      */
     public function getLanguages($all = false)
     {
@@ -764,12 +766,7 @@ class Postgres extends ADOdbBase
      * @param null|int $page_size The number of rows per page
      * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return ADORecordSet|int A  recordset on success or an int with error code
-     *                          - -1 transaction error
-     *                          - -2 counting error
-     *                          - -3 page or page_size invalid
-     *                          - -4 unknown type
-     *                          - -5 failed setting transaction read only
+     * @return \RecordSet|int|string A recordset on success or an int with error code - -1 transaction error - -2 counting error - -3 page or page_size invalid - -4 unknown type - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {

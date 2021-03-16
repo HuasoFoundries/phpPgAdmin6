@@ -25,7 +25,7 @@ trait AggregateTrait
      * @param string $sortop   The sort operator for the aggregate
      * @param string $comment  Aggregate comment
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function createAggregate($name, $basetype, $sfunc, $stype, $ffunc, $initcond, $sortop, $comment)
     {
@@ -101,7 +101,7 @@ trait AggregateTrait
      * @param string $aggrtype The input data type of the aggregate
      * @param bool   $cascade  True to cascade drop, false to restrict
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function dropAggregate($aggrname, $aggrtype, $cascade)
     {
@@ -130,7 +130,7 @@ trait AggregateTrait
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getAggregate($name, $basetype)
     {
@@ -163,7 +163,7 @@ trait AggregateTrait
     /**
      * Gets all aggregates.
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function getAggregates()
     {
@@ -195,7 +195,7 @@ trait AggregateTrait
      * @param string $newaggrschema  The new schema where the aggregate will belong to
      * @param string $newaggrcomment The new comment for the aggregate
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function alterAggregate(
         $aggrname,
@@ -273,7 +273,7 @@ trait AggregateTrait
      * @param string $aggrtype     The input data type of the aggregate
      * @param string $newaggrowner The new owner of the aggregate
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function changeAggregateOwner($aggrname, $aggrtype, $newaggrowner)
     {
@@ -299,7 +299,7 @@ trait AggregateTrait
      * @param string $aggrtype      The input data type of the aggregate
      * @param string $newaggrschema The new schema for the aggregate
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function changeAggregateSchema($aggrname, $aggrtype, $newaggrschema)
     {
@@ -326,7 +326,7 @@ trait AggregateTrait
      * @param string $aggrtype    The actual input data type of the aggregate
      * @param string $newaggrname The new name of the aggregate
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function renameAggregate($aggrschema, $aggrname, $aggrtype, $newaggrname)
     {

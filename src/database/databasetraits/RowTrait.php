@@ -19,7 +19,7 @@ trait RowTrait
      * @param string $table The name of a table
      * @param array  $key   The associative array holding the key to retrieve
      *
-     * @return ADORecordSet|int
+     * @return \RecordSet|int|string
      */
     public function browseRow($table, $key)
     {
@@ -55,7 +55,7 @@ trait RowTrait
      *
      * @param string $table The table for which to retrieve the identifier
      *
-     * @return array|array<integer,string>|int An array mapping attribute number to attribute name, empty for no identifiers
+     * @return array|int An array mapping attribute number to attribute name, empty for no identifiers
      */
     public function getRowIdentifier($table)
     {
@@ -126,7 +126,7 @@ trait RowTrait
      * @param array  $format An array of the data type (VALUE or EXPRESSION)
      * @param array  $types  An array of field types
      *
-     * @return ADORecordSet|int
+     * @return int|string
      */
     public function insertRow($table, $fields, $values, $nulls, $format, $types)
     {
@@ -252,7 +252,7 @@ trait RowTrait
      * @param array  $types  An array of field types
      * @param array  $keyarr An array mapping column => value to update
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function editRow($table, $vars, $nulls, $format, $types, $keyarr)
     {
@@ -346,7 +346,7 @@ trait RowTrait
      * @param array  $key    An array mapping column => value to delete
      * @param string $schema the schema of the table
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function deleteRow($table, $key, $schema = '')
     {

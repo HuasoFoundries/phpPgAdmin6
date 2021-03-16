@@ -6,8 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
-use PHPPgAdmin\Interfaces\Recordset;
-use ADORecordSet;
+ use ADORecordSet;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
