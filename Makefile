@@ -89,7 +89,7 @@ test:
 ifeq ("$(wildcard config.inc.php)","")
 	cp config.inc.php-dist config.inc.php
 endif
-	./vendor/bin/codecept run unit --debug
+	./vendor/bin/pest
 	
 
 
