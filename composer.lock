@@ -2373,16 +2373,16 @@
         },
         {
             "name": "filp/whoops",
-            "version": "2.8.0",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/filp/whoops.git",
-                "reference": "fa50d9db1c0c2fae99cf988d27023effda5524a3"
+                "reference": "6ecda5217bf048088b891f7403b262906be5a957"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/filp/whoops/zipball/fa50d9db1c0c2fae99cf988d27023effda5524a3",
-                "reference": "fa50d9db1c0c2fae99cf988d27023effda5524a3",
+                "url": "https://api.github.com/repos/filp/whoops/zipball/6ecda5217bf048088b891f7403b262906be5a957",
+                "reference": "6ecda5217bf048088b891f7403b262906be5a957",
                 "shasum": ""
             },
             "require": {
@@ -2432,9 +2432,15 @@
             ],
             "support": {
                 "issues": "https://github.com/filp/whoops/issues",
-                "source": "https://github.com/filp/whoops/tree/2.8.0"
+                "source": "https://github.com/filp/whoops/tree/2.10.0"
             },
-            "time": "2020-10-17T09:00:00+00:00"
+            "funding": [
+                {
+                    "url": "https://github.com/denis-sokolov",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-03-16T12:00:00+00:00"
         },
         {
             "name": "friendsofphp/php-cs-fixer",
