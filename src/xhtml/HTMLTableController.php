@@ -95,6 +95,9 @@ class HTMLTableController extends HTMLController
         $this->pre_fn = $pre_fn;
     }
 
+    /**
+     * @return string
+     */
     public function printTable($turn_into_datatable = true, $with_body = true)
     {
         if (0 >= $this->tabledata->RecordCount()) {
@@ -133,6 +136,9 @@ class HTMLTableController extends HTMLController
         return $tablehtml;
     }
 
+    /**
+     * @return string
+     */
     public function getThead()
     {
         $columns = $this->columns;
@@ -177,6 +183,9 @@ class HTMLTableController extends HTMLController
         return $thead_html;
     }
 
+    /**
+     * @return string
+     */
     public function getTfooter()
     {
         $columns = $this->columns;
@@ -203,6 +212,11 @@ class HTMLTableController extends HTMLController
         return $tfoot_html;
     }
 
+    /**
+     * @return string[]
+     *
+     * @psalm-return array{0: string, 1: string}
+     */
     private function _getMaHtml()
     {
         $matop_html = '';
@@ -261,6 +275,9 @@ class HTMLTableController extends HTMLController
         return [$matop_html, $ma_bottomhtml];
     }
 
+    /**
+     * @return string
+     */
     private function getTbody()
     {
         $columns = $this->columns;
@@ -374,6 +391,9 @@ class HTMLTableController extends HTMLController
         return $this->form;
     }
 
+    /**
+     * @return null|string
+     */
     private function printUrlVars(&$vars, &$fields, bool $do_print = true)
     {
         $url_vars_html = '';

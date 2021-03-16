@@ -14,6 +14,9 @@ class ArrayMergeDecorator extends Decorator
         $this->m = $arrays;
     }
 
+    /**
+     * @return array
+     */
     public function value($fields)
     {
         $accum = [];

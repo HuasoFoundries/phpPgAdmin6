@@ -145,6 +145,11 @@ class HTMLNavbarController extends HTMLController
         }
     }
 
+    /**
+     * @return (mixed|string)[][]
+     *
+     * @psalm-return array<array-key, array{url: string, iconalt?: mixed|string, title?: mixed, icon?: string, text?: mixed, helpurl?: string}>
+     */
     private function _getCrumbs($trail)
     {
         $crumbs = [];
@@ -178,6 +183,8 @@ class HTMLNavbarController extends HTMLController
     /**
      * @param mixed $crumbs
      * @param array $viewVars
+     *
+     * @return array
      */
     private function _getSearchPathsCrumbs($crumbs, array $viewVars)
     {
@@ -210,6 +217,8 @@ class HTMLNavbarController extends HTMLController
      *
      * @param bool       $do_print true to print, false to return html
      * @param null|mixed $from     which method is calling this one
+     *
+     * @return string
      */
     private function printTopbar($do_print = true, $from = null): ?string
     {
@@ -344,6 +353,9 @@ class HTMLNavbarController extends HTMLController
         return $topbar_html;
     }
 
+    /**
+     * @return string
+     */
     private function getHREFSubject(string $subject)
     {
         $vars = $this->misc->getSubjectParams($subject);
@@ -469,6 +481,10 @@ class HTMLNavbarController extends HTMLController
     /**
      * @param (mixed|string)[][] $trail
      * @param (mixed|string)[][] $the_array
+     *
+     * @return (mixed|string)[][]
+     *
+     * @psalm-return array<array-key, array<array-key, mixed|string>>
      */
     private function _getTrailsFromArray(array $trail, array $the_array)
     {

@@ -49,6 +49,9 @@ class XHtmlSimpleElement
         $this->set_attribute('class', $class);
     }
 
+    /**
+     * @return string
+     */
     public function is_element()
     {
         $lower_classname = \mb_strtolower(\get_class($this));
@@ -58,6 +61,8 @@ class XHtmlSimpleElement
 
     /**
      * Private function generates xhtml.
+     *
+     * @return string
      */
     public function _html()
     {

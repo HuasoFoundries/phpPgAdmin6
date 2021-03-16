@@ -14,6 +14,9 @@ class ConcatDecorator extends Decorator
         $this->c = $values;
     }
 
+    /**
+     * @return string
+     */
     public function value($fields)
     {
         $accum = '';

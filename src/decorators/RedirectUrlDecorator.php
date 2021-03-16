@@ -22,6 +22,9 @@ class RedirectUrlDecorator extends Decorator
         }
     }
 
+    /**
+     * @return string
+     */
     public function value($fields)
     {
         $url = Decorator::get_sanitized_value($this->base, $fields);

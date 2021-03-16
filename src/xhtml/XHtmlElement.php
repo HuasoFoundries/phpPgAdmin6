@@ -56,6 +56,9 @@ class XHtmlElement extends XHtmlSimpleElement
         return $this->_html();
     }
 
+    /**
+     * @return string
+     */
     public function _html()
     {
         $this->_htmlcode = "<{$this->_element}";
@@ -86,6 +89,9 @@ class XHtmlElement extends XHtmlSimpleElement
         return $this->_siblings;
     }
 
+    /**
+     * @return bool
+     */
     public function has_siblings()
     {
         return 0 !== \count($this->_siblings);

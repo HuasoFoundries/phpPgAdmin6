@@ -62,6 +62,8 @@ class Decorator
     /**
      * @param Closure                 $callback
      * @param ((mixed|string)[]|null) $params
+     *
+     * @return CallbackDecorator
      */
     public static function callback(Closure $callback, ?array $params = null)
     {
@@ -77,6 +79,9 @@ class Decorator
         return self::get_sanitized_value($var, $fields, 'url');
     }
 
+    /**
+     * @return ConcatDecorator
+     */
     public static function concat(/* ... */)
     {
         return new ConcatDecorator(\func_get_args());
@@ -85,6 +90,8 @@ class Decorator
     /**
      * @param array  $params
      * @param string $str
+     *
+     * @return ReplaceDecorator
      */
     public static function replace(string $str, array $params)
     {
@@ -94,6 +101,8 @@ class Decorator
     /**
      * @param null|array $default
      * @param string     $fieldName
+     *
+     * @return FieldDecorator
      */
     public static function field(string $fieldName, ?array $default = null)
     {
@@ -103,6 +112,8 @@ class Decorator
     /**
      * @param null|array $vars
      * @param mixed      $base
+     *
+     * @return BranchUrlDecorator
      */
     public static function branchurl($base, ?array $vars = null/* ... */)
     {
@@ -122,6 +133,8 @@ class Decorator
     /**
      * @param null|array $vars
      * @param mixed      $base
+     *
+     * @return ActionUrlDecorator
      */
     public static function actionurl($base, ?array $vars = null/* ... */)
     {
@@ -141,6 +154,8 @@ class Decorator
     /**
      * @param null|array $vars
      * @param mixed      $base
+     *
+     * @return RedirectUrlDecorator
      */
     public static function redirecturl($base, ?array $vars = null/* ... */)
     {
@@ -160,6 +175,8 @@ class Decorator
     /**
      * @param null|array $vars
      * @param mixed      $base
+     *
+     * @return UrlDecorator
      */
     public static function url($base, ?array $vars = null/* ... */)
     {
@@ -177,6 +194,9 @@ class Decorator
         return new UrlDecorator($base, $vars);
     }
 
+    /**
+     * @return IfEmptyDecorator
+     */
     public static function ifempty($value, string $empty, $full = null)
     {
         return new IfEmptyDecorator($value, $empty, $full);

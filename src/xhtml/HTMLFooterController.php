@@ -22,7 +22,7 @@ class HTMLFooterController extends HTMLController
      *
      * @param bool $flag sets internal $_reload_drop_database var which will be passed to the footer methods
      *
-     * @return HTMLFooterController $this the instance of this class
+     * @return static $this the instance of this class
      */
     public function setReloadDropDatabase($flag)
     {
@@ -36,7 +36,7 @@ class HTMLFooterController extends HTMLController
      *
      * @param bool $flag [description]
      *
-     * @return HTMLFooterController $this the instance of this class
+     * @return static $this the instance of this class
      */
     public function setNoBottomLink($flag)
     {
@@ -50,6 +50,8 @@ class HTMLFooterController extends HTMLController
      *
      * @param bool  $doBody   True to output body tag, false to return the html
      * @param mixed $template
+     *
+     * @return null|string
      */
     public function printFooter($doBody = true, $template = 'footer.twig')
     {
