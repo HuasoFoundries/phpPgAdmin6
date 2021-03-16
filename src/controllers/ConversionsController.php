@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -26,13 +27,8 @@ class ConversionsController extends BaseController
 
         $this->printHeader();
         $this->printBody();
-
-        switch ($this->action) {
-            default:
-                $this->doDefault();
-
-                break;
-        }
+        $this->doDefault();
+        
 
         return $this->printFooter();
     }
@@ -82,7 +78,7 @@ class ConversionsController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {

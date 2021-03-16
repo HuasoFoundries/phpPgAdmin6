@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
+use Closure;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ExportTrait;
 
@@ -237,7 +239,7 @@ class TblpropertiesController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -862,11 +864,11 @@ class TblpropertiesController extends BaseController
      *
      * @param mixed $data
      *
-     * @return \Closure
+     * @return Closure
      */
     private function _getAttPre($data)
     {
-        $attPre = static function (&$rowdata, $actions) use ($data) {
+        return static function (&$rowdata, $actions) use ($data) {
             $rowdata->fields['+type'] = $data->formatType($rowdata->fields['type'], $rowdata->fields['atttypmod']);
             $attname = $rowdata->fields['attname'];
             $table = $_REQUEST['table'];
@@ -884,8 +886,6 @@ class TblpropertiesController extends BaseController
 
             return $actions;
         };
-
-        return $attPre;
     }
 
     /**
@@ -894,12 +894,13 @@ class TblpropertiesController extends BaseController
      * @param mixed $misc
      * @param mixed $data
      *
-     * @return \Closure
+     * @return Closure
      */
     private function _getCstrRender($misc, $data)
     {
         $view = $this->view;
-        $cstrRender = static function ($s, $p) use ($misc, $data, $view) {
+
+        return static function ($s, $p) use ($misc, $data, $view) {
             $str = '';
 
             foreach ($p['keys'] as $k => $c) {
@@ -958,8 +959,6 @@ class TblpropertiesController extends BaseController
 
             return $str;
         };
-
-        return $cstrRender;
     }
 
     private function _printTable($ck, $attrs): void

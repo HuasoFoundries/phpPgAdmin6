@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 \defined('BASE_PATH') || \define('BASE_PATH', __DIR__);

@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ServersTrait;
@@ -162,7 +163,7 @@ class ServersController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {

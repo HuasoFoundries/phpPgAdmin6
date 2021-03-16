@@ -1,11 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
 
+use PHPPgAdmin\Interfaces\RecordSet;
 use ADOFieldObject;
 use ADORecordSet as ADODBRecordsetClass;
 use Countable;
@@ -13,7 +14,7 @@ use Countable;
 /**
  * Extends ADORecordSet to let correct inference on PHPDoc params.
  */
-class ADORecordSet extends ADODBRecordsetClass implements Countable, Interfaces\RecordSet
+class ADORecordSet extends ADODBRecordsetClass implements Countable, RecordSet
 {
     /**
      * Returns the recordCount.
@@ -28,7 +29,7 @@ class ADORecordSet extends ADODBRecordsetClass implements Countable, Interfaces\
      *
      * @return int number of rows or -1 if this is not supported
      */
-    public function RecordCount()
+    public function RecordCount():int
     {
         return $this->count();
     }
@@ -45,7 +46,8 @@ class ADORecordSet extends ADODBRecordsetClass implements Countable, Interfaces\
         return parent::FetchField();
     }
 
-    public function MoveNext():void {
-parent::MoveNext();
+    public function MoveNext(): void
+    {
+        parent::MoveNext();
     }
 }

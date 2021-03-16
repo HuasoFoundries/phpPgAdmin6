@@ -8,6 +8,7 @@ namespace PHPPgAdmin\Decorators;
 
 class ConcatDecorator extends Decorator
 {
+    public $c;
     public function __construct($values)
     {
         $this->c = $values;

@@ -176,16 +176,14 @@ trait PrivilegesTrait
 
         if (\in_array('ALL PRIVILEGES', $privileges, true)) {
             $sql .= ' ALL PRIVILEGES';
+        } elseif ('column' === $type) {
+            $this->fieldClean($object);
+            $sql .= ' ' . \implode(\sprintf(
+                ' ("%s"), ',
+                $object
+            ), $privileges);
         } else {
-            if ('column' === $type) {
-                $this->fieldClean($object);
-                $sql .= ' ' . \implode(\sprintf(
-                    ' ("%s"), ',
-                    $object
-                ), $privileges);
-            } else {
-                $sql .= ' ' . \implode(', ', $privileges);
-            }
+            $sql .= ' ' . \implode(', ', $privileges);
         }
 
         switch ($type) {
@@ -388,18 +386,14 @@ trait PrivilegesTrait
             // Figure out type of ACE (public, user or group)
             if (0 === \mb_strpos($v, '=')) {
                 $atype = 'public';
+            } elseif ($this->hasRoles()) {
+                $atype = 'role';
+            } elseif (0 === \mb_strpos($v, 'group ')) {
+                $atype = 'group';
+                // Tear off 'group' prefix
+                $v = \mb_substr($v, 6);
             } else {
-                if ($this->hasRoles()) {
-                    $atype = 'role';
-                } else {
-                    if (0 === \mb_strpos($v, 'group ')) {
-                        $atype = 'group';
-                        // Tear off 'group' prefix
-                        $v = \mb_substr($v, 6);
-                    } else {
-                        $atype = 'user';
-                    }
-                }
+                $atype = 'user';
             }
 
             // Break on unquoted equals sign...

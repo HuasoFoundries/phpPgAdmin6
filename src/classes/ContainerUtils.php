@@ -110,7 +110,7 @@ class ContainerUtils extends Container implements ContainerInterface
 
         $container = self::getContainerInstance($config);
 
-        if (!self::$appInstance) {
+        if (self::$appInstance === null) {
             self::$appInstance = new App($container);
         }
 
@@ -137,7 +137,7 @@ class ContainerUtils extends Container implements ContainerInterface
         ];
 
         self::$envConfig = \array_merge(self::$envConfig, $config);
-        if (!self::$instance) {
+        if (self::$instance === null) {
             self::$instance = new static(self::$envConfig);
 
             self::$instance
@@ -171,12 +171,10 @@ class ContainerUtils extends Container implements ContainerInterface
             $destinationurl = $this->subFolder . '/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = $this->subFolder . '/login' . ($query_string ? '?' . $query_string : '');
+            $destinationurl = $this->subFolder . '/login' . ($query_string !== '' ? '?' . $query_string : '');
         }
-
-        $destinationurl = (strpos($destinationurl, '/') === 0) ? $destinationurl : '/' . $destinationurl;
         // ddd($destinationurl);
-        return $destinationurl;
+        return (strpos($destinationurl, '/') === 0) ? $destinationurl : '/' . $destinationurl;
     }
 
     /**
@@ -223,9 +221,8 @@ class ContainerUtils extends Container implements ContainerInterface
             }
             $_REQUEST = \array_merge($_REQUEST, $urlvars);
             $_GET = \array_merge($_GET, $urlvars);
-            $actionurl = Decorator::actionurl($url['url'], $_GET);
             //kdump($actionurl);
-            return $actionurl;
+            return Decorator::actionurl($url['url'], $_GET);
         }
         //kdump($url);
         return null;
@@ -269,8 +266,7 @@ class ContainerUtils extends Container implements ContainerInterface
             $actionurl = Decorator::actionurl($url['url'], $_GET);
             $destinationurl = str_replace($this->subFolder, '', $actionurl->value($_GET));
         }
-        $destinationurl =  (($container->subFolder === '' || strpos($destinationurl, $container->subFolder) === 0) ? '' : $container->subFolder) . $destinationurl;
-        return $destinationurl;
+        return (($container->subFolder === '' || strpos($destinationurl, $container->subFolder) === 0) ? '' : $container->subFolder) . $destinationurl;
     }
 
     /**

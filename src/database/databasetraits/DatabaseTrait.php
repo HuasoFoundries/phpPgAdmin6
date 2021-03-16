@@ -155,11 +155,7 @@ trait DatabaseTrait
             $orderby = 'ORDER BY pdb.datname';
         }
 
-        if (!$conf['show_system']) {
-            $where = ' AND NOT pdb.datistemplate';
-        } else {
-            $where = ' AND pdb.datallowconn';
-        }
+        $where = $conf['show_system'] ? ' AND pdb.datallowconn' : ' AND NOT pdb.datistemplate';
 
         $sql = \sprintf(
             '
@@ -507,11 +503,7 @@ trait DatabaseTrait
     {
         $conf = $this->conf;
 
-        if (!$conf['show_system']) {
-            $where = 'AND pn.nspname NOT LIKE $$pg\_%$$';
-        } else {
-            $where = "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'";
-        }
+        $where = $conf['show_system'] ? "AND nspname !~ '^pg_t(emp_[0-9]+|oast)$'" : 'AND pn.nspname NOT LIKE $$pg\_%$$';
 
         $sql = \sprintf(
             '

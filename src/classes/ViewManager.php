@@ -264,7 +264,7 @@ class ViewManager extends Twig
     {
         $form = [];
 
-        if ($this->container->server) {
+        if ($this->container->server !== '') {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'server',
@@ -272,7 +272,7 @@ class ViewManager extends Twig
             );
         }
 
-        if ($this->container->database) {
+        if ($this->container->database !== '') {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'database',
@@ -280,7 +280,7 @@ class ViewManager extends Twig
             );
         }
 
-        if ($this->container->schema) {
+        if ($this->container->schema !== '') {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'schema',
@@ -505,7 +505,7 @@ public function maybeRenderIframes(Response $response, string $subject, string $
         return $controller->render();
     }
     $viewVars = [
-        'url' => '/src/views/' . $subject . ($query_string ? '?' . $query_string : ''),
+        'url' => '/src/views/' . $subject . ($query_string !== '' ? '?' . $query_string : ''),
         'headertemplate' => 'header.twig',
     ];
 

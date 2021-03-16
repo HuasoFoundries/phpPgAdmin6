@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -26,14 +27,8 @@ class CastsController extends BaseController
 
         $this->printHeader();
         $this->printBody();
-
-        switch ($this->action) {
-            default:
-                $this->doDefault();
-
-                break;
-        }
-
+        $this->doDefault();
+ 
         return $this->printFooter();
     }
 
@@ -99,7 +94,7 @@ class CastsController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {

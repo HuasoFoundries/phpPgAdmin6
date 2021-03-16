@@ -8,6 +8,7 @@ namespace PHPPgAdmin\Decorators;
 
 class ArrayMergeDecorator extends Decorator
 {
+    public $m;
     public function __construct($arrays)
     {
         $this->m = $arrays;

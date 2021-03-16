@@ -14,7 +14,7 @@
     }
   ],
   "require": {
-    "php": ">=7.2",
+    "php": ">=7.4",
     "ext-json": "*",
     "ext-mbstring": "*",
     "ext-pgsql": "*",
@@ -38,7 +38,7 @@
     "php-parallel-lint/php-parallel-lint": "^1.2",
     "phpmd/phpmd": "^2.9",
     "phpstan/phpstan": "^0.12.64",
-    "rector/rector-prefixed": "^0.9",
+    "rector/rector-prefixed": "^0.9.31",
     "simpletest/simpletest": "^1.2",
     "staabm/annotate-pull-request-from-checkstyle": "^1.4",
     "vimeo/psalm": "^4"

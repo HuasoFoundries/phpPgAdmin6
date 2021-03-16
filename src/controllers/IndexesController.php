@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\ADOdbException;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\XHtmlButton;
@@ -218,7 +219,7 @@ class IndexesController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {

@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ExportTrait;
 
@@ -117,7 +118,7 @@ class SchemasController extends BaseController
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('nspowner'),
             ]];
-            if(boolval($this->conf['display_sizes']['schemas']??false)===true) {
+            if(boolval($this->conf['display_sizes']['schemas']??false)) {
             
             
             $columns['schema_size'] = [
@@ -203,7 +204,7 @@ class SchemasController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -239,7 +240,7 @@ class SchemasController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doSubTree()
     {
@@ -500,7 +501,6 @@ class SchemasController extends BaseController
         if ($confirm) {
             $this->printTrail('schema');
             $this->printTitle($this->lang['strdrop'], 'pg.schema.drop');
-
             echo '<form action="schemas" method="post">' . \PHP_EOL;
             //If multi drop
             if (isset($_REQUEST['ma'])) {
@@ -519,7 +519,6 @@ class SchemasController extends BaseController
                 ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="nsp" value="', \htmlspecialchars($_REQUEST['nsp']), '" />' . \PHP_EOL;
             }
-
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']
@@ -537,51 +536,47 @@ class SchemasController extends BaseController
                 \PHP_EOL
             );
             echo '</form>' . \PHP_EOL;
-        } else {
-            if (\is_array($_POST['nsp'])) {
-                $msg = '';
-                $status = $data->beginTransaction();
+        } elseif (\is_array($_POST['nsp'])) {
+            $msg = '';
+            $status = $data->beginTransaction();
+            if (0 === $status) {
+                foreach ($_POST['nsp'] as $s) {
+                    $status = $data->dropSchema($s, isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    foreach ($_POST['nsp'] as $s) {
-                        $status = $data->dropSchema($s, isset($_POST['cascade']));
+                    if (0 === $status) {
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strschemadropped']
+                        );
+                    } else {
+                        $data->endTransaction();
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strschemadroppedbad']
+                        ));
 
-                        if (0 === $status) {
-                            $msg .= \sprintf(
-                                '%s: %s<br />',
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strschemadropped']
-                            );
-                        } else {
-                            $data->endTransaction();
-                            $this->doDefault(\sprintf(
-                                '%s%s: %s<br />',
-                                $msg,
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strschemadroppedbad']
-                            ));
-
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                if (0 === $data->endTransaction()) {
-                    // Everything went fine, back to the Default page....
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($msg);
-                } else {
-                    $this->doDefault($this->lang['strschemadroppedbad']);
-                }
+            }
+            if (0 === $data->endTransaction()) {
+                // Everything went fine, back to the Default page....
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($msg);
             } else {
-                $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
+                $this->doDefault($this->lang['strschemadroppedbad']);
+            }
+        } else {
+            $status = $data->dropSchema($_POST['nsp'], isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strschemadropped']);
-                } else {
-                    $this->doDefault($this->lang['strschemadroppedbad']);
-                }
+            if (0 === $status) {
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($this->lang['strschemadropped']);
+            } else {
+                $this->doDefault($this->lang['strschemadroppedbad']);
             }
         }
     }

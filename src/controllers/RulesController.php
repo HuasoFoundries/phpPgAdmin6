@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -132,7 +133,7 @@ class RulesController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -172,7 +173,6 @@ class RulesController extends BaseController
             $this->printTrail($_REQUEST['subject']);
             $this->printTitle($this->lang['strcreaterule'], 'pg.rule.create');
             $this->printMsg($msg);
-
             echo '<form action="rules" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -189,7 +189,6 @@ class RulesController extends BaseController
                 $this->lang['strevent']
             ) . \PHP_EOL;
             echo '<td class="data1"><select name="event">' . \PHP_EOL;
-
             foreach ($data->rule_events as $v) {
                 echo \sprintf(
                     '<option value="%s"',
@@ -224,7 +223,6 @@ class RulesController extends BaseController
             echo '(<input name="raction" size="32" value="',
             \htmlspecialchars($_POST['raction']), '" />)</td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
-
             echo '<input type="hidden" name="action" value="save_create_rule" />' . \PHP_EOL;
             echo '<input type="hidden" name="subject" value="', \htmlspecialchars($_REQUEST['subject']), '" />' . \PHP_EOL;
             echo '<input type="hidden" name="', \htmlspecialchars($_REQUEST['subject']),
@@ -240,25 +238,23 @@ class RulesController extends BaseController
                 \PHP_EOL
             );
             echo '</form>' . \PHP_EOL;
+        } elseif ('' === \trim($_POST['name'])) {
+            $this->createRule(true, $this->lang['strruleneedsname']);
         } else {
-            if ('' === \trim($_POST['name'])) {
-                $this->createRule(true, $this->lang['strruleneedsname']);
-            } else {
-                $status = $data->createRule(
-                    $_POST['name'],
-                    $_POST['event'],
-                    $_POST[$_POST['subject']],
-                    $_POST['where'],
-                    isset($_POST['instead']),
-                    $_POST['type'],
-                    $_POST['raction']
-                );
+            $status = $data->createRule(
+                $_POST['name'],
+                $_POST['event'],
+                $_POST[$_POST['subject']],
+                $_POST['where'],
+                isset($_POST['instead']),
+                $_POST['type'],
+                $_POST['raction']
+            );
 
-                if (0 === $status) {
-                    $this->doDefault($this->lang['strrulecreated']);
-                } else {
-                    $this->createRule(true, $this->lang['strrulecreatedbad']);
-                }
+            if (0 === $status) {
+                $this->doDefault($this->lang['strrulecreated']);
+            } else {
+                $this->createRule(true, $this->lang['strrulecreatedbad']);
             }
         }
     }

@@ -8,6 +8,11 @@ namespace PHPPgAdmin\Decorators;
 
 class UrlDecorator extends Decorator
 {
+    public $base;
+    /**
+     * @var mixed
+     */
+    public $queryVars;
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;
@@ -36,11 +41,8 @@ class UrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-
-        
-            $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
         
 
-        return $url;
+        return \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
     }
 }

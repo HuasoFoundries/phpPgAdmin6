@@ -1134,7 +1134,7 @@ trait TableTrait
         );
 
         if ($cascade) {
-            $sql = $sql . ' CASCADE';
+            $sql .= ' CASCADE';
         }
 
         $status = $this->execute($sql);
@@ -1241,12 +1241,7 @@ trait TableTrait
     {
         $this->fieldClean($relation);
 
-        // Actually retrieve the rows
-        if ($oids) {
-            $oid_str = $this->id . ', ';
-        } else {
-            $oid_str = '';
-        }
+        $oid_str = $oids ? $this->id . ', ' : '';
 
         return $this->selectSet(\sprintf(
             'SELECT %s* FROM "%s"',

@@ -337,7 +337,7 @@ class Misc
                 return null;
             }
 
-            if (!$_connection) {
+            if ($_connection === null) {
                 $this->container->addError($lang['strloginfailed']);
                 $this->setErrorMsg($lang['strloginfailed']);
 
@@ -382,7 +382,7 @@ class Misc
             }
         }
 
-        if (false !== $this->getNoDBConnection() ||
+        if ($this->getNoDBConnection() ||
             null === $this->getDatabase() ||
             !isset($_REQUEST['schema'])
         ) {
@@ -454,7 +454,7 @@ class Misc
                     $this->container
                 );
             } catch (ADOdbException $e) {
-                throw new Exception($lang['strloginfailed']);
+                throw new Exception($lang['strloginfailed'], $e->getCode(), $e);
             }
         }
 
@@ -540,12 +540,10 @@ class Misc
             } else {
                 $_SESSION['webdbLogin'][$server_id] = $value;
             }
+        } elseif (null === $value) {
+            unset($_SESSION['webdbLogin'][$server_id][$key]);
         } else {
-            if (null === $value) {
-                unset($_SESSION['webdbLogin'][$server_id][$key]);
-            } else {
-                $_SESSION['webdbLogin'][$server_id][$key] = $value;
-            }
+            $_SESSION['webdbLogin'][$server_id][$key] = $value;
         }
     }
 
@@ -669,7 +667,7 @@ class Misc
     public function stripVar(&$var): void
     {
         if (\is_array($var)) {
-            foreach ($var as $k => $v) {
+            foreach (array_keys($var) as $k) {
                 $this->stripVar($var[$k]);
 
                 /* magic_quotes_gpc escape keys as well ...*/
@@ -804,15 +802,15 @@ class Misc
         [$usec, $sec] = \explode(' ', \microtime());
         $time = ((float) $usec + (float) $sec);
 
-        $server = $this->container->server ? $this->container->server : $_REQUEST['server'];
-        $database = $this->container->database ? $this->container->database : $_REQUEST['database'];
+        $server = $this->container->server !== '' ? $this->container->server : $_REQUEST['server'];
+        $database = $this->container->database !== '' ? $this->container->database : $_REQUEST['database'];
 
         $_SESSION['history'][$server][$database][\sprintf(
             '%s',
             $time
         )] = [
             'query' => $script,
-            'paginate' => !isset($_REQUEST['paginate']) ? 'f' : 't',
+            'paginate' => isset($_REQUEST['paginate']) ? 't' : 'f',
             'queryid' => $time,
         ];
     }

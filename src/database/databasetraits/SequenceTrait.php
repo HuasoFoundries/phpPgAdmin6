@@ -442,7 +442,7 @@ trait SequenceTrait
 
         // toggle cycle yes/no
         if (null !== $cycledvalue) {
-            $sql .= (!$cycledvalue ? ' NO ' : '') . ' CYCLE';
+            $sql .= ($cycledvalue ? '' : ' NO ') . ' CYCLE';
         }
 
         if ('' !== $sql) {

@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\HTMLController;
 
@@ -33,11 +34,7 @@ class FulltextController extends BaseController
         $this->printBody();
 
         if (null !== $this->getPostParam('cancel')) {
-            if (isset($_POST['prev_action'])) {
-                $this->action = $_POST['prev_action'];
-            } else {
-                $this->action = '';
-            }
+            $this->action = isset($_POST['prev_action']) ? $_POST['prev_action'] : '';
         }
 
         switch ($this->action) {
@@ -221,7 +218,7 @@ class FulltextController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -254,7 +251,7 @@ class FulltextController extends BaseController
     /**
      * @param mixed $what
      *
-     * @return null|\Slim\Http\Response|string
+     * @return null|Response|string
      */
     public function doSubTree($what)
     {
@@ -552,17 +549,9 @@ class FulltextController extends BaseController
             return $this->doCreateConfig($err);
         }
 
-        if ('' !== $_POST['formParser']) {
-            $formParser = \unserialize($_POST['formParser']);
-        } else {
-            $formParser = '';
-        }
+        $formParser = '' !== $_POST['formParser'] ? \unserialize($_POST['formParser']) : '';
 
-        if ('' !== $_POST['formTemplate']) {
-            $formTemplate = \unserialize($_POST['formTemplate']);
-        } else {
-            $formTemplate = '';
-        }
+        $formTemplate = '' !== $_POST['formTemplate'] ? \unserialize($_POST['formTemplate']) : '';
 
         $status = $data->createFtsConfiguration($_POST['formName'], $formParser, $formTemplate, $_POST['formComment']);
 
@@ -1052,11 +1041,7 @@ class FulltextController extends BaseController
         } else {
             $this->coalesceArr($_POST, 'formIsTemplate', false);
 
-            if (isset($_POST['formTemplate'])) {
-                $formTemplate = \unserialize($_POST['formTemplate']);
-            } else {
-                $formTemplate = '';
-            }
+            $formTemplate = isset($_POST['formTemplate']) ? \unserialize($_POST['formTemplate']) : '';
 
             $this->coalesceArr($_POST, 'formLexize', '');
 
@@ -1192,11 +1177,10 @@ class FulltextController extends BaseController
         }
 
         if ($confirm) {
-            $this->printTrail('ftscfg'); // TODO: proper breadcrumbs
+            $this->printTrail('ftscfg');
+            // TODO: proper breadcrumbs
             $this->printTitle($this->lang['strdrop'], 'pg.ftscfg.alter');
-
             echo '<form action="fulltext" method="post">' . \PHP_EOL;
-
             // Case of multiaction drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -1216,7 +1200,6 @@ class FulltextController extends BaseController
                 ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="mapping" value="', \htmlspecialchars($_REQUEST['mapping']), '" />' . \PHP_EOL;
             }
-
             echo \sprintf(
                 '<input type="hidden" name="ftscfg" value="%s" />',
                 $_REQUEST['ftscfg']
@@ -1233,25 +1216,21 @@ class FulltextController extends BaseController
                 $this->lang['strcancel']
             ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
+        } elseif (\is_array($_REQUEST['mapping'])) {
+            $status = $data->changeFtsMapping($_REQUEST['ftscfg'], $_REQUEST['mapping'], 'drop');
+            if (0 !== $status) {
+                $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
+
+                return;
+            }
+            $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdropped']);
         } else {
-            // Case of multiaction drop
-            if (\is_array($_REQUEST['mapping'])) {
-                $status = $data->changeFtsMapping($_REQUEST['ftscfg'], $_REQUEST['mapping'], 'drop');
+            $status = $data->changeFtsMapping($_REQUEST['ftscfg'], [$_REQUEST['mapping']], 'drop');
 
-                if (0 !== $status) {
-                    $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
-
-                    return;
-                }
+            if (0 === $status) {
                 $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdropped']);
             } else {
-                $status = $data->changeFtsMapping($_REQUEST['ftscfg'], [$_REQUEST['mapping']], 'drop');
-
-                if (0 === $status) {
-                    $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdropped']);
-                } else {
-                    $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
-                }
+                $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
             }
         }
     }
@@ -1418,7 +1397,7 @@ class FulltextController extends BaseController
                         '>%s',
                         $mapping
                     ),
-                    $mapping_desc ? \sprintf(
+                    $mapping_desc !== '' ? \sprintf(
                         ' - %s',
                         $mapping_desc
                     ) : '',

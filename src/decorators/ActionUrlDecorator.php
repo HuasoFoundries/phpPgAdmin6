@@ -8,6 +8,11 @@ namespace PHPPgAdmin\Decorators;
 
 class ActionUrlDecorator extends Decorator
 {
+    public $base;
+    /**
+     * @var mixed
+     */
+    public $queryVars;
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;

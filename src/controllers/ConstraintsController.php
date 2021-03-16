@@ -581,7 +581,6 @@ class ConstraintsController extends BaseController
             $this->printTrail('table');
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
-
             echo '<form action="constraints" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -592,17 +591,14 @@ class ConstraintsController extends BaseController
                 '<th class="data required">%s</th></tr>',
                 $this->lang['strdefinition']
             ) . \PHP_EOL;
-
             echo \sprintf(
                 '<tr><td class="data1"><input name="name" size="24" maxlength="%s" value="',
                 $data->_maxNameLen
             ),
             \htmlspecialchars($_POST['name']), '" /></td>' . \PHP_EOL;
-
             echo '<td class="data1">(<input name="definition" size="64" value="',
             \htmlspecialchars($_POST['definition']), '" />)</td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
-
             echo $this->getFormInputsAndButtons(
                 [
                     ['name' => 'action', 'type' => 'hidden', 'value' => 'save_add_check'],
@@ -613,27 +609,24 @@ class ConstraintsController extends BaseController
                     ['type' => 'submit', 'name' => 'cancel', 'value' => $this->lang['strcancel']],
                 ]
             );
-
             echo \sprintf(
                 '</form>%s',
                 \PHP_EOL
             );
+        } elseif ('' === \trim($_POST['definition'])) {
+            $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
         } else {
-            if ('' === \trim($_POST['definition'])) {
-                $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
-            } else {
-                $status = $data->addCheckConstraint(
-                    $_POST['table'],
-                    $_POST['definition'],
-                    $_POST['name']
-                );
+            $status = $data->addCheckConstraint(
+                $_POST['table'],
+                $_POST['definition'],
+                $_POST['name']
+            );
 
-                if (0 === $status) {
-                    return $this->doDefault($this->lang['strcheckadded']);
-                }
-
-                return $this->addCheck(true, $this->lang['strcheckaddedbad']);
+            if (0 === $status) {
+                return $this->doDefault($this->lang['strcheckadded']);
             }
+
+            return $this->addCheck(true, $this->lang['strcheckaddedbad']);
         }
     }
 

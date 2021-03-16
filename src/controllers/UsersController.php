@@ -272,11 +272,8 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
             $this->printTrail('user');
             $this->printTitle($this->lang['strchangepassword'], 'pg.user.alter');
             $this->printMsg($msg);
-
             $this->coalesceArr($_POST, 'password', '');
-
             $this->coalesceArr($_POST, 'confirm', '');
-
             echo '<form action="' . \containerInstance()->subFolder . '/users" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -305,24 +302,21 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
                 $this->lang['strcancel']
             ) . \PHP_EOL;
             echo '</p></form>' . \PHP_EOL;
+        } elseif (\mb_strlen($_POST['password']) < $this->conf['min_password_length']) {
+            $this->doChangePassword(true, $this->lang['strpasswordshort']);
+        } elseif ($_POST['password'] !== $_POST['confirm']) {
+            // Check that password matches confirmation password
+            $this->doChangePassword(true, $this->lang['strpasswordconfirm']);
         } else {
-            // Check that password is minimum length
-            if (\mb_strlen($_POST['password']) < $this->conf['min_password_length']) {
-                $this->doChangePassword(true, $this->lang['strpasswordshort']);
-            } elseif ($_POST['password'] !== $_POST['confirm']) {
-                // Check that password matches confirmation password
-                $this->doChangePassword(true, $this->lang['strpasswordconfirm']);
-            } else {
-                $status = $data->changePassword(
-                    $server_info['username'],
-                    $_POST['password']
-                );
+            $status = $data->changePassword(
+                $server_info['username'],
+                $_POST['password']
+            );
 
-                if (0 === $status) {
-                    $this->doAccount($this->lang['strpasswordchanged']);
-                } else {
-                    $this->doAccount($this->lang['strpasswordchangedbad']);
-                }
+            if (0 === $status) {
+                $this->doAccount($this->lang['strpasswordchanged']);
+            } else {
+                $this->doAccount($this->lang['strpasswordchangedbad']);
             }
         }
     }

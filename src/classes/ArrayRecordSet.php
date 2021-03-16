@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin;
 
+use PHPPgAdmin\Interfaces\RecordSet;
 use ADOFieldObject;
 use Countable;
 
@@ -22,7 +23,7 @@ use Countable;
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
  */
-class ArrayRecordSet implements Countable , Interfaces\RecordSet
+class ArrayRecordSet implements Countable , RecordSet
 {
     public $EOF = false;
 

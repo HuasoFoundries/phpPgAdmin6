@@ -364,7 +364,7 @@ class DataexportController extends BaseController
             // Output header row
             $j = 0;
 
-            foreach ($rs->fields as $k => $v) {
+            foreach (array_keys($rs->fields) as $k) {
                 $finfo = $rs->FetchField($j++);
 
                 if ($finfo->name === $data->id && !$oids) {
@@ -407,7 +407,7 @@ class DataexportController extends BaseController
             $j = 0;
             echo "\t<header>" . \PHP_EOL;
 
-            foreach ($rs->fields as $k => $v) {
+            foreach (array_keys($rs->fields) as $k) {
                 $finfo = $rs->FetchField($j++);
                 $name = \htmlspecialchars($finfo->name);
                 $type = \htmlspecialchars($finfo->type);

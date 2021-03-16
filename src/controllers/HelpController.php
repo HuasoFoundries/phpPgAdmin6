@@ -72,7 +72,7 @@ class HelpController extends BaseController
 
         $pages = $data->getHelpPages();
 
-        foreach ($pages as $page => $dummy) {
+        foreach (array_keys($pages) as $page) {
             echo \sprintf(
                 '<dt>%s</dt>',
                 $page

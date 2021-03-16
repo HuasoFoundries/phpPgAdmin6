@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d816e67674915a07938ecd48e0f3c836",
+    "content-hash": "66789c6f3cf55b113dfcd3cf15e9bdb9",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -4216,16 +4216,16 @@
         },
         {
             "name": "rector/rector-prefixed",
-            "version": "0.9.3",
+            "version": "0.9.31",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector-prefixed.git",
-                "reference": "31b49acefe7240cba59f94b01f7ee47325322d8b"
+                "reference": "cff116f7c19bf898c2d76751c8f01debb3c9c13f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/31b49acefe7240cba59f94b01f7ee47325322d8b",
-                "reference": "31b49acefe7240cba59f94b01f7ee47325322d8b",
+                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/cff116f7c19bf898c2d76751c8f01debb3c9c13f",
+                "reference": "cff116f7c19bf898c2d76751c8f01debb3c9c13f",
                 "shasum": ""
             },
             "require": {
@@ -4242,9 +4242,9 @@
             ],
             "description": "Prefixed scoped version of rector/rector package",
             "support": {
-                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.9.3"
+                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.9.31"
             },
-            "time": "2020-12-29T16:24:44+00:00"
+            "time": "2021-02-22T12:37:56+00:00"
         },
         {
             "name": "sebastian/cli-parser",
@@ -7086,7 +7086,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-json": "*",
         "ext-mbstring": "*",
         "ext-pgsql": "*",

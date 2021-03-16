@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -210,7 +211,7 @@ class SequencesController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -437,9 +438,7 @@ class SequencesController extends BaseController
             $this->printTrail('sequence');
             $this->printTitle($this->lang['strdrop'], 'pg.sequence.drop');
             $this->printMsg($msg);
-
             echo '<form action="sequences" method="post">' . \PHP_EOL;
-
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -457,7 +456,6 @@ class SequencesController extends BaseController
                 ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="sequence" value="', \htmlspecialchars($_REQUEST['sequence']), '" />' . \PHP_EOL;
             }
-
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
                 $this->lang['strcascade']
@@ -474,51 +472,47 @@ class SequencesController extends BaseController
                 \PHP_EOL
             );
             echo '</form>' . \PHP_EOL;
-        } else {
-            if (\is_array($_POST['sequence'])) {
-                $msg = '';
-                $status = $data->beginTransaction();
+        } elseif (\is_array($_POST['sequence'])) {
+            $msg = '';
+            $status = $data->beginTransaction();
+            if (0 === $status) {
+                foreach ($_POST['sequence'] as $s) {
+                    $status = $data->dropSequence($s, isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    foreach ($_POST['sequence'] as $s) {
-                        $status = $data->dropSequence($s, isset($_POST['cascade']));
+                    if (0 === $status) {
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strsequencedropped']
+                        );
+                    } else {
+                        $data->endTransaction();
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strsequencedroppedbad']
+                        ));
 
-                        if (0 === $status) {
-                            $msg .= \sprintf(
-                                '%s: %s<br />',
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strsequencedropped']
-                            );
-                        } else {
-                            $data->endTransaction();
-                            $this->doDefault(\sprintf(
-                                '%s%s: %s<br />',
-                                $msg,
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strsequencedroppedbad']
-                            ));
-
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                if (0 === $data->endTransaction()) {
-                    // Everything went fine, back to the Default page....
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($msg);
-                } else {
-                    $this->doDefault($this->lang['strsequencedroppedbad']);
-                }
+            }
+            if (0 === $data->endTransaction()) {
+                // Everything went fine, back to the Default page....
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($msg);
             } else {
-                $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
+                $this->doDefault($this->lang['strsequencedroppedbad']);
+            }
+        } else {
+            $status = $data->dropSequence($_POST['sequence'], isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strsequencedropped']);
-                } else {
-                    $this->doDrop(true, $this->lang['strsequencedroppedbad']);
-                }
+            if (0 === $status) {
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($this->lang['strsequencedropped']);
+            } else {
+                $this->doDrop(true, $this->lang['strsequencedroppedbad']);
             }
         }
     }

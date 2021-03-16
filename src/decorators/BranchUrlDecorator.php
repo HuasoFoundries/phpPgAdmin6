@@ -8,6 +8,11 @@ namespace PHPPgAdmin\Decorators;
 
 class BranchUrlDecorator extends Decorator
 {
+    public $base;
+    /**
+     * @var mixed
+     */
+    public $queryVars;
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;

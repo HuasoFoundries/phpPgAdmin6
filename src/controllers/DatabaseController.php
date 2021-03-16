@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\AdminTrait;
 use PHPPgAdmin\Traits\ExportTrait;
@@ -146,7 +147,7 @@ class DatabaseController extends BaseController
     /**
      * @param mixed $print
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree($print = true)
     {
@@ -737,10 +738,7 @@ class DatabaseController extends BaseController
         switch ($curr) {
             case 'SCHEMA':
                 $destination = $this->container->getDestinationWithLastTab('schema');
-                echo '<li><a href="' . \containerInstance()->subFolder . \sprintf(
-                    '%s',
-                    $destination
-                );
+                echo '<li><a href="' . \containerInstance()->subFolder . $destination;
                 echo $this->misc->printVal($rs->fields['name']), '">';
                 echo $this->_highlight($this->misc->printVal($rs->fields['name']), $_REQUEST['term']);
                 echo '</a></li>' . \PHP_EOL;

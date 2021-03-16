@@ -63,7 +63,7 @@ trait SchemaTrait
      *
      * @param string $schema The the name of the schema to work in
      *
-     * @return int|\PHPPgAdmin\ADORecordSet 0 if operation was successful
+     * @return int|ADORecordSet 0 if operation was successful
      */
     public function setSchema($schema)
     {

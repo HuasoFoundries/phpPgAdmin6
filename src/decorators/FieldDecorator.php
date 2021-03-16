@@ -8,6 +8,11 @@ namespace PHPPgAdmin\Decorators;
 
 class FieldDecorator extends Decorator
 {
+    /**
+     * @var mixed|mixed[]
+     */
+    public $fieldName;
+    public $defaultValue;
     public function __construct($fieldName, $defaultValue = null)
     {
         $this->fieldName = $fieldName;

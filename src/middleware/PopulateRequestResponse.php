@@ -54,24 +54,16 @@ class PopulateRequestResponse extends Middleware
         $requestPath = $uri->getPath();
 
         $view->offsetSet('query_string', $query_string);
-        $path = $requestPath . ($query_string ? '?' . $query_string : '');
+        $path = $requestPath . ($query_string !== '' ? '?' . $query_string : '');
         $view->offsetSet('path', $path);
 
         $params = $request->getParams();
 
         $viewparams = [];
 
-        foreach ($params as $key => $value) {
-            if (\is_scalar($value)) {
-                $viewparams[$key] = $value;
-            }
-        }
+        $viewparams = array_filter($params, 'is_scalar');
 
-        if (isset($_COOKIE['IN_TEST'])) {
-            $in_test = (string) $_COOKIE['IN_TEST'];
-        } else {
-            $in_test = '0';
-        }
+        $in_test = isset($_COOKIE['IN_TEST']) ? (string) $_COOKIE['IN_TEST'] : '0';
 
         // remove tabs and linebreaks from query
         if (isset($params['query'])) {

@@ -25,6 +25,7 @@ use ADORecordSet as ADODBRecordsetClass;
  */
 class BaseController
 {
+    public $postgresqlMinVer;
     use HelperTrait;
 
     public $appLangFiles = [];
@@ -174,13 +175,7 @@ class BaseController
 
         $this->printHeader();
         $this->printBody();
-
-        switch ($this->action) {
-            default:
-                $this->doDefault();
-
-                break;
-        }
+        $this->doDefault();
 
         $this->printFooter();
     }
@@ -207,9 +202,9 @@ class BaseController
      */
     public function headerTitle($title = '', $prefix = '', $suffix = '')
     {
-        $title = $title ? $title : $this->controller_title;
+        $title = $title !== '' ? $title : $this->controller_title;
 
-        return $prefix . $this->lang[$title] . ($suffix ? ': ' . $suffix : '');
+        return $prefix . $this->lang[$title] . ($suffix !== '' ? ': ' . $suffix : '');
     }
 
     /**
@@ -404,7 +399,7 @@ class BaseController
      */
     public function printHeader(string $title = '', ?string $script = null, bool $do_print = true, string $template = 'header.twig')
     {
-        $title = $title ? $title : $this->headerTitle();
+        $title = $title !== '' ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printHeader($title, $script, $do_print, $template);
@@ -509,7 +504,7 @@ class BaseController
 
     private function renderInitialPageIfNotLogged(): void
     {
-        if (false === $this->misc->getNoDBConnection()) {
+        if (!$this->misc->getNoDBConnection()) {
             if (null === $this->misc->getServerId()) {
                 $servers_controller = new ServersController($this->container);
 

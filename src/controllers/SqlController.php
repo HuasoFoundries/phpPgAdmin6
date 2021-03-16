@@ -76,15 +76,13 @@ class SqlController extends BaseController
     
         
         // Set the schema search path
-        if (isset($_REQUEST['search_path'])) {
-            if (0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
-                $this->printHeader($this->headerTitle(), null, true );
-                $body=$this->printBody(false);
-                $trail=$this->printTrail('database',false);
-                $title=$this->printTitle($this->lang['strqueryresults'],null,false);
-                echo $body.$trail.$title;
-                return $this->printFooter();
-            }
+        if (isset($_REQUEST['search_path']) && 0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
+            $this->printHeader($this->headerTitle(), null, true );
+            $body=$this->printBody(false);
+            $trail=$this->printTrail('database',false);
+            $title=$this->printTitle($this->lang['strqueryresults'],null,false);
+            echo $body.$trail.$title;
+            return $this->printFooter();
         }
       
 
@@ -200,9 +198,8 @@ class SqlController extends BaseController
                 }
             }
         };
-        $final= $data->executeScript('script', $sqlCallback);
 
-        return $final;
+        return $data->executeScript('script', $sqlCallback);
     }
 
     /**
@@ -242,7 +239,7 @@ $json=[];
             if (0 < $rs->RecordCount()) {
                 echo "<table>\n<tr>";
 
-                foreach ($rs->fields as $fieldName => $fieldValue) {
+                foreach (array_keys($rs->fields) as $fieldName) {
                     $finfo = $rs->FetchField($fieldName);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }

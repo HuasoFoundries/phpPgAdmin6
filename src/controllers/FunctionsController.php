@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use ADORecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 
@@ -197,7 +198,7 @@ class FunctionsController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -330,12 +331,7 @@ class FunctionsController extends BaseController
             $_POST['formRows'] = $this->getPostParam('formRows', $fndata->fields['prorows']);
         }
 
-        // Deal with named parameters
-        if ($data->hasNamedParams()) {
-            $args = $this->_getNamedParamsArgs($data, $fndata);
-        } else {
-            $args = $fndata->fields['proarguments'];
-        }
+        $args = $data->hasNamedParams() ? $this->_getNamedParamsArgs($data, $fndata) : $fndata->fields['proarguments'];
 
         echo '<form action="functions" method="post">' . \PHP_EOL;
         echo '<table style="width: 95%">' . \PHP_EOL;
@@ -473,7 +469,7 @@ class FunctionsController extends BaseController
                 '<td class="data1" colspan="2">%s: <input name="formRows" size="16" value="',
                 $this->lang['strresultrows']
             ),
-            \htmlspecialchars($_POST['formRows']), '"', (!$fndata->fields['proretset']) ? 'disabled' : '', '/></td>';
+            \htmlspecialchars($_POST['formRows']), '"', ($fndata->fields['proretset']) ? '' : 'disabled', '/></td>';
         }
 
         // Display function properties
@@ -800,9 +796,7 @@ class FunctionsController extends BaseController
             $this->printTrail('function');
             $this->printTabs('function', 'definition');
             $this->printTitle($this->lang['strdrop'], 'pg.function.drop');
-
             echo '<form action="functions" method="post">' . \PHP_EOL;
-
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -822,9 +816,7 @@ class FunctionsController extends BaseController
                 echo '<input type="hidden" name="function" value="', \htmlspecialchars($_REQUEST['function']), '" />' . \PHP_EOL;
                 echo '<input type="hidden" name="function_oid" value="', \htmlspecialchars($_REQUEST['function_oid']), '" />' . \PHP_EOL;
             }
-
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-
             echo $this->view->form;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /><label for="cascade">%s</label></p>',
@@ -839,51 +831,47 @@ class FunctionsController extends BaseController
                 $this->lang['strcancel']
             ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
-        } else {
-            if (\is_array($_POST['function_oid'])) {
-                $msg = '';
-                $status = $data->beginTransaction();
+        } elseif (\is_array($_POST['function_oid'])) {
+            $msg = '';
+            $status = $data->beginTransaction();
+            if (0 === $status) {
+                foreach ($_POST['function_oid'] as $k => $s) {
+                    $status = $data->dropFunction($s, isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    foreach ($_POST['function_oid'] as $k => $s) {
-                        $status = $data->dropFunction($s, isset($_POST['cascade']));
+                    if (0 === $status) {
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($_POST['function'][$k], \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strfunctiondropped']
+                        );
+                    } else {
+                        $data->endTransaction();
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($_POST['function'][$k], \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strfunctiondroppedbad']
+                        ));
 
-                        if (0 === $status) {
-                            $msg .= \sprintf(
-                                '%s: %s<br />',
-                                \htmlentities($_POST['function'][$k], \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strfunctiondropped']
-                            );
-                        } else {
-                            $data->endTransaction();
-                            $this->doDefault(\sprintf(
-                                '%s%s: %s<br />',
-                                $msg,
-                                \htmlentities($_POST['function'][$k], \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strfunctiondroppedbad']
-                            ));
-
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                if (0 === $data->endTransaction()) {
-                    // Everything went fine, back to the Default page....
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($msg);
-                } else {
-                    $this->doDefault($this->lang['strfunctiondroppedbad']);
-                }
+            }
+            if (0 === $data->endTransaction()) {
+                // Everything went fine, back to the Default page....
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($msg);
             } else {
-                $status = $data->dropFunction($_POST['function_oid'], isset($_POST['cascade']));
+                $this->doDefault($this->lang['strfunctiondroppedbad']);
+            }
+        } else {
+            $status = $data->dropFunction($_POST['function_oid'], isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strfunctiondropped']);
-                } else {
-                    $this->doDefault($this->lang['strfunctiondroppedbad']);
-                }
+            if (0 === $status) {
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($this->lang['strfunctiondropped']);
+            } else {
+                $this->doDefault($this->lang['strfunctiondroppedbad']);
             }
         }
     }
@@ -1534,7 +1522,7 @@ class FunctionsController extends BaseController
         foreach ($arrayArgs as $pV) {
             $arrayWords = \explode(' ', $pV);
 
-            if (true === \in_array($arrayWords[0], $arrayModes, true)) {
+            if (\in_array($arrayWords[0], $arrayModes, true)) {
                 $szMode = $arrayWords[0];
                 \array_shift($arrayWords);
             }

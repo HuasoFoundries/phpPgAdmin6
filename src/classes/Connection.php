@@ -165,11 +165,7 @@ class Connection
         $this->conn->setFetchMode($fetchMode);
         // Ignore host if null
         if (null === $host || '' === $host) {
-            if (null !== $port && '' !== $port) {
-                $pghost = ':' . $port;
-            } else {
-                $pghost = '';
-            }
+            $pghost = null !== $port && '' !== $port ? ':' . $port : '';
         } else {
             $pghost = \sprintf(
                 '%s:%s',

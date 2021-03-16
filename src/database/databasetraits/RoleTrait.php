@@ -1029,7 +1029,7 @@ trait RoleTrait
      * @param mixed $inherits
      * @param mixed $login
      *
-     * @return int|\PHPPgAdmin\ADORecordSet
+     * @return int|ADORecordSet
      */
     private function _alterRole($rolename, $password, $connlimit, $expiry, $superuser, $createdb, $createrole, $inherits, $login)
     {

@@ -6,6 +6,8 @@
 
 namespace PHPPgAdmin\Controller;
 
+use PHPPgAdmin\Interfaces\Recordset;
+use ADORecordSet;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
@@ -69,7 +71,7 @@ class TreeController extends BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\Interfaces\Recordset|\ADORecordSet $_treedata a set of records to populate the tree
+     * @param Recordset|ADORecordSet $_treedata a set of records to populate the tree
      * @param array          $attrs     Attributes for tree items
      *                                  'text' - the text for the tree node
      *                                  'icon' - an icon for node
@@ -206,7 +208,7 @@ class TreeController extends BaseController
         }
         //ddd($parent);
 
-        if (true === $print) {
+        if ($print) {
             if (isset($_REQUEST['children'])) {
                 $children = $parent;
                 $parent = ['children' => $children];

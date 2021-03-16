@@ -73,7 +73,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return int|\PHPPgAdmin\ADORecordSet Functions that can be used in a trigger
+     * @return int|ADORecordSet Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
     {
@@ -105,20 +105,12 @@ trait FunctionTrait
         // Null handling
         $f['proisstrict'] = $this->phpBool($f['proisstrict']);
 
-        if ($f['proisstrict']) {
-            $temp[] = 'RETURNS NULL ON NULL INPUT';
-        } else {
-            $temp[] = 'CALLED ON NULL INPUT';
-        }
+        $temp[] = $f['proisstrict'] ? 'RETURNS NULL ON NULL INPUT' : 'CALLED ON NULL INPUT';
 
         // Security
         $f['prosecdef'] = $this->phpBool($f['prosecdef']);
 
-        if ($f['prosecdef']) {
-            $temp[] = 'SECURITY DEFINER';
-        } else {
-            $temp[] = 'SECURITY INVOKER';
-        }
+        $temp[] = $f['prosecdef'] ? 'SECURITY DEFINER' : 'SECURITY INVOKER';
 
         return $temp;
     }

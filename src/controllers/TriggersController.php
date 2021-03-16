@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\XHtmlOption;
 use PHPPgAdmin\XHtml\XHtmlSelect;
@@ -232,7 +233,7 @@ class TriggersController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {

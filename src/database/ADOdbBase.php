@@ -409,7 +409,7 @@ class ADOdbBase
             $this->clean($key);
             $this->clean($value);
 
-            if ($sql) {
+            if ($sql !== '') {
                 $sql .= \sprintf(
                     ' AND "%s"=\'%s\'',
                     $key,
@@ -427,11 +427,9 @@ class ADOdbBase
         }
 
         // Check for failures
-        if (!$this->conn->Execute($sql)) {
-            // Check for referential integrity failure
-            if (\mb_stristr($this->ErrorMsg(), 'referential')) {
-                return -1;
-            }
+        // Check for referential integrity failure
+        if (!$this->conn->Execute($sql) && \mb_stristr($this->ErrorMsg(), 'referential')) {
+            return -1;
         }
 
         // Check for no rows modified
@@ -454,9 +452,8 @@ class ADOdbBase
         if (null === $str) {
             return null;
         }
-        $str = \str_replace('"', '""', $str);
 
-        return $str;
+        return \str_replace('"', '""', $str);
     }
 
     /**
@@ -472,9 +469,8 @@ class ADOdbBase
             return null;
         }
         $str = \str_replace("\r\n", "\n", $str);
-        $str = \pg_escape_string($str);
 
-        return $str;
+        return \pg_escape_string($str);
     }
 
     /**
@@ -510,7 +506,7 @@ class ADOdbBase
                 $this->clean($key);
                 $this->clean($value);
 
-                if ($fields) {
+                if ($fields !== '') {
                     $fields .= \sprintf(
                         ', "%s"',
                         $key
@@ -523,7 +519,7 @@ class ADOdbBase
                     );
                 }
 
-                if ($values) {
+                if ($values !== '') {
                     $values .= \sprintf(
                         ', \'%s\'',
                         $value
@@ -577,7 +573,7 @@ class ADOdbBase
             $this->fieldClean($key);
             $this->clean($value);
 
-            if ($setClause) {
+            if ($setClause !== '') {
                 $setClause .= \sprintf(
                     ', "%s"=\'%s\'',
                     $key,
@@ -598,7 +594,7 @@ class ADOdbBase
         foreach ($nulls as $key => $value) {
             $this->fieldClean($value);
 
-            if ($setClause) {
+            if ($setClause !== '') {
                 $setClause .= \sprintf(
                     ', "%s"=NULL',
                     $value
@@ -618,7 +614,7 @@ class ADOdbBase
             $this->fieldClean($key);
             $this->clean($value);
 
-            if ($whereClause) {
+            if ($whereClause !== '') {
                 $whereClause .= \sprintf(
                     ' AND "%s"=\'%s\'',
                     $key,
@@ -710,11 +706,7 @@ class ADOdbBase
      */
     public function dbBool(&$parameter)
     {
-        if ($parameter) {
-            $parameter = 't';
-        } else {
-            $parameter = 'f';
-        }
+        $parameter = $parameter ? 't' : 'f';
 
         return $parameter;
     }

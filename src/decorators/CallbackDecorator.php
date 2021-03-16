@@ -10,6 +10,11 @@ use Closure;
 
 class CallbackDecorator extends Decorator
 {
+    /**
+     * @var \Closure|mixed
+     */
+    public $fn;
+    public $p;
     public function __construct(Closure $callback, $param = null)
     {
         $this->fn = $callback;

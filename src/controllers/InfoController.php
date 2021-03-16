@@ -13,6 +13,10 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 class InfoController extends BaseController
 {
+    /**
+     * @var array<string, bool>|mixed
+     */
+    public $shownull;
     public $controller_title = 'strtables';
 
     /**
@@ -22,14 +26,8 @@ class InfoController extends BaseController
     {
         $this->printHeader($this->headerTitle('', '', $_REQUEST['table'] . ' - ' . $this->lang['strinfo']));
         $this->printBody();
-
-        switch ($this->action) {
-            default:
-                $this->doDefault();
-
-                break;
-        }
-
+        $this->doDefault();
+ 
         $this->printFooter();
     }
 
@@ -304,11 +302,7 @@ class InfoController extends BaseController
 
             $total = $tablestatsio->fields['heap_blks_hit'] + $tablestatsio->fields['heap_blks_read'];
 
-            if (0 < $total) {
-                $percentage = \round(($tablestatsio->fields['heap_blks_hit'] / $total) * 100);
-            } else {
-                $percentage = 0;
-            }
+            $percentage = 0 < $total ? \round(($tablestatsio->fields['heap_blks_hit'] / $total) * 100) : 0;
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['heap_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -320,11 +314,7 @@ class InfoController extends BaseController
 
             $total = $tablestatsio->fields['idx_blks_hit'] + $tablestatsio->fields['idx_blks_read'];
 
-            if (0 < $total) {
-                $percentage = \round(($tablestatsio->fields['idx_blks_hit'] / $total) * 100);
-            } else {
-                $percentage = 0;
-            }
+            $percentage = 0 < $total ? \round(($tablestatsio->fields['idx_blks_hit'] / $total) * 100) : 0;
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['idx_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -336,11 +326,7 @@ class InfoController extends BaseController
 
             $total = $tablestatsio->fields['toast_blks_hit'] + $tablestatsio->fields['toast_blks_read'];
 
-            if (0 < $total) {
-                $percentage = \round(($tablestatsio->fields['toast_blks_hit'] / $total) * 100);
-            } else {
-                $percentage = 0;
-            }
+            $percentage = 0 < $total ? \round(($tablestatsio->fields['toast_blks_hit'] / $total) * 100) : 0;
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['toast_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -352,11 +338,7 @@ class InfoController extends BaseController
 
             $total = $tablestatsio->fields['tidx_blks_hit'] + $tablestatsio->fields['tidx_blks_read'];
 
-            if (0 < $total) {
-                $percentage = \round(($tablestatsio->fields['tidx_blks_hit'] / $total) * 100);
-            } else {
-                $percentage = 0;
-            }
+            $percentage = 0 < $total ? \round(($tablestatsio->fields['tidx_blks_hit'] / $total) * 100) : 0;
 
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($tablestatsio->fields['tidx_blks_hit'], 'int4', $this->shownull), '</td>' . \PHP_EOL;
@@ -455,11 +437,7 @@ class InfoController extends BaseController
             ) . \PHP_EOL;
             $total = $indexstatsio->fields['idx_blks_hit'] + $indexstatsio->fields['idx_blks_read'];
 
-            if (0 < $total) {
-                $percentage = \round(($indexstatsio->fields['idx_blks_hit'] / $total) * 100);
-            } else {
-                $percentage = 0;
-            }
+            $percentage = 0 < $total ? \round(($indexstatsio->fields['idx_blks_hit'] / $total) * 100) : 0;
 
             echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['indexrelname']), '</td>' . \PHP_EOL;
             echo "\t\t<td>", $this->misc->printVal($indexstatsio->fields['idx_blks_read'], 'int4', $this->shownull), '</td>' . \PHP_EOL;

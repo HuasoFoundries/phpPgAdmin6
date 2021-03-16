@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ViewsMatviewsTrait;
 
@@ -246,7 +247,7 @@ class MaterializedviewsController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -284,9 +285,7 @@ class MaterializedviewsController extends BaseController
         if ($confirm) {
             $this->printTrail('getTrail');
             $this->printTitle($this->lang['strdrop'], 'pg.matview.drop');
-
             echo '<form action="materializedviews" method="post">' . \PHP_EOL;
-
             //If multi drop
             if (isset($_REQUEST['ma'])) {
                 foreach ($_REQUEST['ma'] as $v) {
@@ -304,9 +303,7 @@ class MaterializedviewsController extends BaseController
                 ), '</p>' . \PHP_EOL;
                 echo '<input type="hidden" name="view" value="', \htmlspecialchars($_REQUEST['matview']), '" />' . \PHP_EOL;
             }
-
             echo '<input type="hidden" name="action" value="drop" />' . \PHP_EOL;
-
             echo $this->view->form;
             echo \sprintf(
                 '<p><input type="checkbox" id="cascade" name="cascade" /> <label for="cascade">%s</label></p>',
@@ -321,51 +318,47 @@ class MaterializedviewsController extends BaseController
                 $this->lang['strcancel']
             ) . \PHP_EOL;
             echo '</form>' . \PHP_EOL;
-        } else {
-            if (\is_array($_POST['view'])) {
-                $msg = '';
-                $status = $data->beginTransaction();
+        } elseif (\is_array($_POST['view'])) {
+            $msg = '';
+            $status = $data->beginTransaction();
+            if (0 === $status) {
+                foreach ($_POST['view'] as $s) {
+                    $status = $data->dropView($s, isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    foreach ($_POST['view'] as $s) {
-                        $status = $data->dropView($s, isset($_POST['cascade']));
+                    if (0 === $status) {
+                        $msg .= \sprintf(
+                            '%s: %s<br />',
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strviewdropped']
+                        );
+                    } else {
+                        $data->endTransaction();
+                        $this->doDefault(\sprintf(
+                            '%s%s: %s<br />',
+                            $msg,
+                            \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
+                            $this->lang['strviewdroppedbad']
+                        ));
 
-                        if (0 === $status) {
-                            $msg .= \sprintf(
-                                '%s: %s<br />',
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strviewdropped']
-                            );
-                        } else {
-                            $data->endTransaction();
-                            $this->doDefault(\sprintf(
-                                '%s%s: %s<br />',
-                                $msg,
-                                \htmlentities($s, \ENT_QUOTES, 'UTF-8'),
-                                $this->lang['strviewdroppedbad']
-                            ));
-
-                            return;
-                        }
+                        return;
                     }
                 }
-
-                if (0 === $data->endTransaction()) {
-                    // Everything went fine, back to the Default page....
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($msg);
-                } else {
-                    $this->doDefault($this->lang['strviewdroppedbad']);
-                }
+            }
+            if (0 === $data->endTransaction()) {
+                // Everything went fine, back to the Default page....
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($msg);
             } else {
-                $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
+                $this->doDefault($this->lang['strviewdroppedbad']);
+            }
+        } else {
+            $status = $data->dropView($_POST['view'], isset($_POST['cascade']));
 
-                if (0 === $status) {
-                    $this->view->setReloadBrowser(true);
-                    $this->doDefault($this->lang['strviewdropped']);
-                } else {
-                    $this->doDefault($this->lang['strviewdroppedbad']);
-                }
+            if (0 === $status) {
+                $this->view->setReloadBrowser(true);
+                $this->doDefault($this->lang['strviewdropped']);
+            } else {
+                $this->doDefault($this->lang['strviewdroppedbad']);
             }
         }
     }
@@ -419,11 +412,7 @@ class MaterializedviewsController extends BaseController
         $this->coalesceArr($_REQUEST, 'formView', '');
 
         if (!isset($_REQUEST['formDefinition'])) {
-            if (isset($_SESSION['sqlquery'])) {
-                $_REQUEST['formDefinition'] = $_SESSION['sqlquery'];
-            } else {
-                $_REQUEST['formDefinition'] = 'SELECT ';
-            }
+            $_REQUEST['formDefinition'] = isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : 'SELECT ';
         }
         $this->coalesceArr($_REQUEST, 'formComment', '');
 

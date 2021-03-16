@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\AdminTrait;
 use PHPPgAdmin\Traits\InsertEditRowTrait;
@@ -158,7 +159,7 @@ class TablesController extends BaseController
 
         $columns = $this->_getColumns();
 
-        if(boolval($this->conf['display_sizes']['tables']??false)===false) {
+        if(!boolval($this->conf['display_sizes']['tables']??false)) {
             unset($columns['table_size']);
         }
 
@@ -230,7 +231,7 @@ class TablesController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -253,7 +254,7 @@ class TablesController extends BaseController
     }
 
     /**
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doSubTree()
     {

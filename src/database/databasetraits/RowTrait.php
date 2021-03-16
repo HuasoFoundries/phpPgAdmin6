@@ -269,12 +269,7 @@ trait RowTrait
             foreach ($vars as $key => $value) {
                 $this->fieldClean($key);
 
-                // Handle NULL values
-                if (isset($nulls[$key])) {
-                    $tmp = 'NULL';
-                } else {
-                    $tmp = $this->formatValue($types[$key], $format[$key], $value);
-                }
+                $tmp = isset($nulls[$key]) ? 'NULL' : $this->formatValue($types[$key], $format[$key], $value);
 
                 if (0 < \mb_strlen($sql)) {
                     $sql .= \sprintf(

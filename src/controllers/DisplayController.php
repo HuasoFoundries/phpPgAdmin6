@@ -511,7 +511,7 @@ private function FetchField(ADORecordSet $ADORecordSet,int $index):ADOFieldObjec
         $strings=$this->getRequestParam('string',  'collapsed');
 $result=[];
         foreach ($resultset->fields as $fieldname => $fieldvalue) {
-            /** @var \ADOFieldObject */
+            /** @var ADOFieldObject */
             $finfo =$this->FetchField( $resultset,$j++);
 
             if (($fieldname === $data->id) && (!($withOid && $this->conf['show_oids']))) {
@@ -536,7 +536,7 @@ $result=[];
         $strings=$this->getRequestParam('string',  'collapsed');
 
         foreach ($resultset->fields as $fieldName => $fieldValue) {
-            /** @var \ADOFieldObject */
+            /** @var ADOFieldObject */
             $finfo =$this->FetchField( $resultset,$j++);
 
             if (($fieldName === $data->id) && (!($withOid && $this->conf['show_oids']))) {
@@ -1139,7 +1139,7 @@ $result=[];
 
         $ops = [];
 
-        foreach ($_REQUEST['fkey'] as $x => $y) {
+        foreach (array_keys($_REQUEST['fkey']) as $x) {
             $ops[$x] = '=';
         }
         $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
@@ -1478,8 +1478,7 @@ $result=[];
                 \PHP_EOL
             );
         }
-        $result .= '</p>' . \PHP_EOL;
 
-        return $result;
+        return $result . ('</p>' . \PHP_EOL);
     }
 }

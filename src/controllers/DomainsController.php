@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Controller;
 
+use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -209,7 +210,7 @@ class DomainsController extends BaseController
     /**
      * Generate XML for the browser tree.
      *
-     * @return \Slim\Http\Response|string
+     * @return Response|string
      */
     public function doTree()
     {
@@ -365,7 +366,6 @@ class DomainsController extends BaseController
             $this->printTrail('domain');
             $this->printTitle($this->lang['straddcheck'], 'pg.constraint.check');
             $this->printMsg($msg);
-
             echo '<form action="domains" method="post">' . \PHP_EOL;
             echo '<table>' . \PHP_EOL;
             echo \sprintf(
@@ -376,17 +376,14 @@ class DomainsController extends BaseController
                 '<th class="data required">%s</th></tr>',
                 $this->lang['strdefinition']
             ) . \PHP_EOL;
-
             echo \sprintf(
                 '<tr><td class="data1"><input name="name" size="16" maxlength="%s" value="',
                 $data->_maxNameLen
             ),
             \htmlspecialchars($_POST['name']), '" /></td>' . \PHP_EOL;
-
             echo '<td class="data1">(<input name="definition" size="32" value="',
             \htmlspecialchars($_POST['definition']), '" />)</td></tr>' . \PHP_EOL;
             echo '</table>' . \PHP_EOL;
-
             echo '<p><input type="hidden" name="action" value="save_add_check" />' . \PHP_EOL;
             echo '<input type="hidden" name="domain" value="', \htmlspecialchars($_REQUEST['domain']), '" />' . \PHP_EOL;
             echo $this->view->form;
@@ -400,21 +397,19 @@ class DomainsController extends BaseController
                 \PHP_EOL
             );
             echo '</form>' . \PHP_EOL;
+        } elseif ('' === \trim($_POST['definition'])) {
+            $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
         } else {
-            if ('' === \trim($_POST['definition'])) {
-                $this->addCheck(true, $this->lang['strcheckneedsdefinition']);
-            } else {
-                $status = $data->addDomainCheckConstraint(
-                    $_POST['domain'],
-                    $_POST['definition'],
-                    $_POST['name']
-                );
+            $status = $data->addDomainCheckConstraint(
+                $_POST['domain'],
+                $_POST['definition'],
+                $_POST['name']
+            );
 
-                if (0 === $status) {
-                    $this->doProperties($this->lang['strcheckadded']);
-                } else {
-                    $this->addCheck(true, $this->lang['strcheckaddedbad']);
-                }
+            if (0 === $status) {
+                $this->doProperties($this->lang['strcheckadded']);
+            } else {
+                $this->addCheck(true, $this->lang['strcheckaddedbad']);
             }
         }
     }

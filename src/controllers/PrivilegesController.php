@@ -84,12 +84,7 @@ class PrivilegesController extends BaseController
             return;
         }
 
-        // Determine whether object should be ref'd by name or oid.
-        if (isset($_REQUEST[$subject . '_oid'])) {
-            $object = $_REQUEST[$subject . '_oid'];
-        } else {
-            $object = $_REQUEST[$subject];
-        }
+        $object = isset($_REQUEST[$subject . '_oid']) ? $_REQUEST[$subject . '_oid'] : $_REQUEST[$subject];
 
         // Get the privileges on the object, given its type
         if ('column' === $subject) {
@@ -489,11 +484,7 @@ class PrivilegesController extends BaseController
             $object = $_REQUEST[$_REQUEST['subject']];
         }
 
-        if (isset($_REQUEST['table'])) {
-            $table = $_REQUEST['table'];
-        } else {
-            $table = null;
-        }
+        $table = isset($_REQUEST['table']) ? $_REQUEST['table'] : null;
 
         $status = $data->setPrivileges(
             ('grant' === $mode) ? 'GRANT' : 'REVOKE',

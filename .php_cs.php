@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 use Ergebnis\PhpCsFixer\Config;
@@ -12,10 +12,11 @@ $composerinfo = \json_decode(\file_get_contents('composer.json'));
 
 $version = $composerinfo->extra->version;
 
-$header = "PHPPgAdmin {$version}";
+$header = 'PHPPgAdmin6';
 
-$config = Config\Factory::fromRuleSet(new Config\RuleSet\Php71($header), [
+$config = Config\Factory::fromRuleSet(new Config\RuleSet\Php74($header), [
     'declare_strict_types' => false,
+    'void_return' => false,
     'escape_implicit_backslashes' => false,
     'final_class' => false,
     'final_internal_class' => false,

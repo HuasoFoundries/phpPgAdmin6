@@ -219,11 +219,7 @@ class Translations
 
         $_SESSION['webdbLanguage'] = $_language;
 
-        if (\array_key_exists($_language, $languages_iso_code)) {
-            $_isolang = $languages_iso_code[$_language];
-        } else {
-            $_isolang = 'en';
-        }
+        $_isolang = \array_key_exists($_language, $languages_iso_code) ? $languages_iso_code[$_language] : 'en';
         $_SESSION['isolang'] = $_isolang;
 
         $container->offsetSet('appLangFiles', $appLangFiles);
@@ -247,7 +243,7 @@ class Translations
         $_language = null;
         $_acceptLang = [];
         \preg_match_all(
-            '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.[0-9]{0,3})?))?\s*(?:,|$)/',
+            '/\s*([a-z]{1,8}(?:-[a-z]{1,8})*)(?:;q=([01](?:.\d{0,3})?))?\s*(?:,|$)/',
             \mb_strtolower($_SERVER['HTTP_ACCEPT_LANGUAGE']),
             $_m,
             \PREG_SET_ORDER

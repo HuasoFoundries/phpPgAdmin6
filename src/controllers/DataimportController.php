@@ -232,12 +232,7 @@ class DataimportController extends BaseController
             case 'tab':
                 // XXX: Length of CSV lines limited to 100k
                 $csv_max_line = 100000;
-                // Set delimiter to tabs or commas
-                if ('csv' === $_REQUEST['format']) {
-                    $csv_delimiter = ',';
-                } else {
-                    $csv_delimiter = "\t";
-                }
+                $csv_delimiter = 'csv' === $_REQUEST['format'] ? ',' : "\t";
 
                 // Get first line of field names
                 $fields = \fgetcsv($fd, $csv_max_line, $csv_delimiter);

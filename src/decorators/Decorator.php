@@ -11,6 +11,7 @@ use PHPPgAdmin\Traits\HelperTrait;
 
 class Decorator
 {
+    public $val;
     use HelperTrait;
 
     public $container;

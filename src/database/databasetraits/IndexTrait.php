@@ -40,7 +40,7 @@ trait IndexTrait
 
         $v = $this->selectSet($sql);
 
-        return !(0 === $v->RecordCount());
+        return 0 !== $v->RecordCount();
     }
 
     /**
@@ -262,11 +262,7 @@ trait IndexTrait
 
         $rs = $this->selectSet($sql);
 
-        if ($rs->EOF) {
-            $max_col = 0;
-        } else {
-            $max_col = $rs->fields['nb'];
-        }
+        $max_col = $rs->EOF ? 0 : $rs->fields['nb'];
 
         $sql = '
 			SELECT

@@ -455,11 +455,7 @@ class Postgres extends ADOdbBase
     {
         $conf = $this->conf;
 
-        if ($conf['show_system'] || $all) {
-            $where = '';
-        } else {
-            $where = 'WHERE lanispl';
-        }
+        $where = $conf['show_system'] || $all ? '' : 'WHERE lanispl';
 
         $sql = \sprintf(
             '
@@ -567,7 +563,7 @@ class Postgres extends ADOdbBase
                     ) {
                         $in_quote = 0;
                     }
-                } elseif ($dol_quote) {
+                } elseif ($dol_quote !== '') {
                     $this->prtrace('dol_quote', $dol_quote, $line);
 
                     if (0 === \strncmp(\mb_substr($line, $i), $dol_quote, \mb_strlen($dol_quote))) {
@@ -658,7 +654,7 @@ class Postgres extends ADOdbBase
                         /* append the line to the query buffer */
                         $query_buf .= $subline;
                         /* is there anything in the query_buf? */
-                        if (\trim($query_buf)) {
+                        if (\trim($query_buf) !== '') {
                             $query_buf .= ';';
 
                             // Execute the query. PHP cannot execute
@@ -785,11 +781,7 @@ class Postgres extends ADOdbBase
         // If $type is TABLE, then generate the query
         switch ($type) {
             case 'TABLE':
-                if (\preg_match('/^[0-9]+$/', $sortkey) && 0 < $sortkey) {
-                    $orderby = [$sortkey => $sortdir];
-                } else {
-                    $orderby = [];
-                }
+                $orderby = \preg_match('/^\d+$/', $sortkey) && 0 < $sortkey ? [$sortkey => $sortdir] : [];
 
                 $query = $this->getSelectSQL($table, [], [], [], $orderby);
 
@@ -862,7 +854,7 @@ class Postgres extends ADOdbBase
 
         // Figure out ORDER BY.  Sort key is always the column number (based from one)
         // of the column to order by.  Only need to do this for non-TABLE queries
-        if ('TABLE' !== $type && \preg_match('/^[0-9]+$/', $sortkey) && 0 < $sortkey) {
+        if ('TABLE' !== $type && \preg_match('/^\d+$/', $sortkey) && 0 < $sortkey) {
             $orderby = \sprintf(
                 ' ORDER BY %s',
                 $sortkey
@@ -913,14 +905,10 @@ class Postgres extends ADOdbBase
 
         // If an empty array is passed in, then show all columns
         if (0 === \count($show)) {
-            if ($this->hasObjectID($table)) {
-                $sql = \sprintf(
-                    'SELECT "%s", * FROM ',
-                    $this->id
-                );
-            } else {
-                $sql = 'SELECT * FROM ';
-            }
+            $sql = $this->hasObjectID($table) ? \sprintf(
+                'SELECT "%s", * FROM ',
+                $this->id
+            ) : 'SELECT * FROM ';
         } else {
             // Add oid column automatically to results for editing purposes
             if (!\in_array($this->id, $show, true) && $this->hasObjectID($table)) {
@@ -1025,7 +1013,7 @@ class Postgres extends ADOdbBase
                     $sql .= ', ';
                 }
 
-                if (\preg_match('/^[0-9]+$/', $k)) {
+                if (\preg_match('/^\d+$/', $k)) {
                     $sql .= $k;
                 } else {
                     $this->fieldClean($k);
