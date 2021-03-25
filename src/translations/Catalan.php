@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Translations;

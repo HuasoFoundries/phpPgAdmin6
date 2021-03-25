@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for indexes and constraints manipulation.
@@ -55,7 +53,7 @@ trait IndexTrait
      * @param string       $tablespace   The tablespaces ('' means none/default)
      * @param bool         $concurrently true to create index concurrently
      *
-     * @return (int|string)[] status (0 if operation was successful) and sql sentence
+     * @return (int|string)[]
      *
      * @psalm-return array{0: int|string, 1: string}
      */
@@ -203,7 +201,7 @@ trait IndexTrait
      * @param string $table The table the index is on
      * @param string $index The name of the index
      *
-     * @return (int|string)[] 0 if operation was successful
+     * @return (int|string)[]
      *
      * @psalm-return array{0: int|string, 1: string}
      */
@@ -245,7 +243,7 @@ trait IndexTrait
      *
      * @param string $table the table where we are looking for fk
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getConstraintsWithFields($table)
     {
@@ -454,7 +452,9 @@ trait IndexTrait
      * @param string $table The table from which to drop the check
      * @param string $name  The name of the check to be dropped
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-2|0|1
      */
     public function dropCheckConstraint($table, $name)
     {
@@ -545,8 +545,8 @@ trait IndexTrait
      *
      * @return int|string
      *
-     * @internal param \PHPPgAdmin\Database\The $target table that contains the target columns
-     * @internal param \PHPPgAdmin\Database\The $intially initial deferrability (eg. INITIALLY IMMEDIATE)
+     * @internal param string $targtable table that contains the target columns
+     * @internal param string $intially initial deferrability (eg. INITIALLY IMMEDIATE)
      */
     public function addForeignKey(
         $table,
@@ -561,8 +561,9 @@ trait IndexTrait
         $initially,
         $name = ''
     ) {
-        if (!\is_array($sfields) || 0 === \count($sfields) ||
-            !\is_array($tfields) || 0 === \count($tfields)) {
+        if (!\is_array($sfields) || 0 === \count($sfields)
+            || !\is_array($tfields) || 0 === \count($tfields)
+        ) {
             return -1;
         }
 
@@ -670,7 +671,7 @@ trait IndexTrait
      *
      * @param array $tables multi dimensional assoc array that holds schema and table name
      *
-     * @return \RecordSet|int|string recordset of linked tables and columns or -1 if $tables isn't an array
+     * @return \ADORecordSet|bool|int|string recordset of linked tables and columns or -1 if $tables isn't an array
      */
     public function getLinkingKeys($tables)
     {
@@ -798,7 +799,7 @@ trait IndexTrait
      *
      * @param string $table The table to find referrers for
      *
-     * @return \RecordSet|int|string A recordset or -1 in case of error
+     * @return \ADORecordSet|bool|int|string A recordset or -1 in case of error
      */
     public function getReferrers($table)
     {

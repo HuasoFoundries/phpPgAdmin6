@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
- use ADORecordSet;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Decorators\Decorator;
@@ -70,19 +69,19 @@ class TreeController extends BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param Recordset|ADORecordSet $_treedata a set of records to populate the tree
-     * @param array          $attrs     Attributes for tree items
-     *                                  'text' - the text for the tree node
-     *                                  'icon' - an icon for node
-     *                                  'openIcon' - an alternative icon when the node is expanded
-     *                                  'toolTip' - tool tip text for the node
-     *                                  'action' - URL to visit when single clicking the node
-     *                                  'iconAction' - URL to visit when single clicking the icon node
-     *                                  'branch' - URL for child nodes (tree XML)
-     *                                  'expand' - the action to return XML for the subtree
-     *                                  'nodata' - message to display when node has no children
-     * @param string         $section   The section where the branch is linked in the tree
-     * @param bool           $print     either to return or echo the result
+     * @param \PHPPgAdmin\ADORecordSet|Recordset $_treedata a set of records to populate the tree
+     * @param array                              $attrs     Attributes for tree items
+     *                                                      'text' - the text for the tree node
+     *                                                      'icon' - an icon for node
+     *                                                      'openIcon' - an alternative icon when the node is expanded
+     *                                                      'toolTip' - tool tip text for the node
+     *                                                      'action' - URL to visit when single clicking the node
+     *                                                      'iconAction' - URL to visit when single clicking the icon node
+     *                                                      'branch' - URL for child nodes (tree XML)
+     *                                                      'expand' - the action to return XML for the subtree
+     *                                                      'nodata' - message to display when node has no children
+     * @param string                             $section   The section where the branch is linked in the tree
+     * @param bool                               $print     either to return or echo the result
      *
      * @return (array|bool|string)[] the json rendered tree
      *
@@ -148,6 +147,7 @@ class TreeController extends BaseController
     {
         $parent = [];
         $subFolder = containerInstance()->subFolder;
+
         if (isset($attrs['is_root'])) {
             $parent = [
                 'id' => 'root',
@@ -166,9 +166,10 @@ class TreeController extends BaseController
                     $icon = $this->view->icon(Decorator::get_sanitized_value($attrs['openIcon'], $rec));
                 }
                 $href = Decorator::get_sanitized_value($attrs['action'], $rec);
+
                 if ($href) {
-                    $href =  \str_replace('//', '/',   $href);
-                    $href = $subFolder . str_replace($subFolder, '', $href);
+                    $href = \str_replace('//', '/', $href);
+                    $href = $subFolder . \str_replace($subFolder, '', $href);
                 }
 
                 $tree = [
@@ -185,20 +186,16 @@ class TreeController extends BaseController
                 ];
 
                 $url = Decorator::get_sanitized_value($attrs['branch'], $rec);
-                $urlparts = parse_url('https://dummy.domain' . $tree['a_attr']['href']);
-                $path_arr = explode('/', $urlparts['path'] ?? '');
-                $tree['url'] = containerInstance()->getDestinationWithLastTab(array_pop($path_arr));
+                $urlparts = \parse_url('https://dummy.domain' . $tree['a_attr']['href']);
+                $path_arr = \explode('/', $urlparts['path'] ?? '');
+                $tree['url'] = containerInstance()->getDestinationWithLastTab(\array_pop($path_arr));
 
-
-
-                $url = \str_replace('/src/views/', '/',    $url);
-
+                $url = \str_replace('/src/views/', '/', $url);
 
                 if ($url) {
                     $tree['url'] = $url;
                     $tree['children'] = true;
                 }
-
 
                 $parent[] = $tree;
             }

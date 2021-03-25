@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -26,7 +26,7 @@ class SqleditController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         switch ($this->action) {
             case 'find':
@@ -41,21 +41,21 @@ class SqleditController extends BaseController
 
                 break;
         }
-        
+
         $this->setWindowName('sqledit');
 
         $this->scripts = '<script type="text/javascript">window.inPopUp=true;</script>';
-        $this->view->offsetSet('excludeJsTree',true);
-        $this->view->offsetSet('inPopUp',true);
-        $this->view->offsetSet('codemirror',true);
+        $this->view->offsetSet('excludeJsTree', true);
+        $this->view->offsetSet('inPopUp', true);
+        $this->view->offsetSet('codemirror', true);
 
-        $header=$this->printHeader($title, $this->scripts, false, 'header_sqledit.twig');
+        $header = $this->printHeader($title, $this->scripts, false, 'header_sqledit.twig');
         echo $header;
-        $this->printBody(true, 'sql_edit',false,false);
+        $this->printBody(true, 'sql_edit', false, false);
         echo $body_text;
 
-        $footer=$this->printFooter(false, 'footer_sqledit.twig');
-      
+        $footer = $this->printFooter(false, 'footer_sqledit.twig');
+
         echo $footer;
     }
 
@@ -74,19 +74,19 @@ class SqleditController extends BaseController
 
         $this->coalesceArr($_REQUEST, 'search_path', \implode(',', $data->getSearchPath()));
         $sqlquery = \htmlspecialchars($_SESSION['sqlquery']);
-        
+
         $default_html = $this->printTabs('popup', 'sql', false);
-        
-        $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="opener">';
+
+        $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= \PHP_EOL;
         $default_html .= $this->printConnection('sql', false);
-        
+
         $default_html .= \PHP_EOL;
-        
+
         $default_html .= ' <div class="searchpath">';
         $default_html .= '<label>';
         $default_html .= $this->view->printHelp($this->lang['strsearchpath'], 'pg.schema.search_path', false);
-        
+
         $search_path = \htmlspecialchars($_REQUEST['search_path']);
         $default_html .= ': <input type="text" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
         $default_html .= '</label>' . \PHP_EOL;
@@ -154,7 +154,7 @@ class SqleditController extends BaseController
 
         $default_html = $this->printTabs('popup', 'find', false);
 
-        $default_html .= '<form action="database" method="post" target="opener">' . \PHP_EOL;
+        $default_html .= '<form action="database" method="post" target="detail">' . \PHP_EOL;
         $default_html .= $this->printConnection('find', false);
         $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . \sprintf(
             '" size="32" maxlength="%s" />',

@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\Database\Traits\AggregateTrait;
 use PHPPgAdmin\Database\Traits\DatabaseTrait;
 use PHPPgAdmin\Database\Traits\DomainTrait;
@@ -252,7 +251,7 @@ class Postgres extends ADOdbBase
      * @param string $term   The search term
      * @param string $filter The object type to restrict to ('' means no restriction)
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function findObject($term, $filter)
     {
@@ -451,7 +450,7 @@ class Postgres extends ADOdbBase
      *
      * @param bool $all True to get all languages, regardless of show_system
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function getLanguages($all = false)
     {
@@ -560,12 +559,12 @@ class Postgres extends ADOdbBase
                      * end of quote if matching non-backslashed character.
                      * backslashes don't count for double quotes, though.
                      */
-                    if (\mb_substr($line, $i, 1) === $in_quote &&
-                        (0 === $bslash_count % 2 || '"' === $in_quote)
+                    if (\mb_substr($line, $i, 1) === $in_quote
+                        && (0 === $bslash_count % 2 || '"' === $in_quote)
                     ) {
                         $in_quote = 0;
                     }
-                } elseif ($dol_quote !== '') {
+                } elseif ('' !== $dol_quote) {
                     $this->prtrace('dol_quote', $dol_quote, $line);
 
                     if (0 === \strncmp(\mb_substr($line, $i), $dol_quote, \mb_strlen($dol_quote))) {
@@ -766,7 +765,7 @@ class Postgres extends ADOdbBase
      * @param null|int $page_size The number of rows per page
      * @param int      $max_pages (return-by-ref) The max number of pages in the relation
      *
-     * @return \RecordSet|int|string A recordset on success or an int with error code - -1 transaction error - -2 counting error - -3 page or page_size invalid - -4 unknown type - -5 failed setting transaction read only
+     * @return \ADORecordSet|bool|int|string A recordset on success or an int with error code - -1 transaction error - -2 counting error - -3 page or page_size invalid - -4 unknown type - -5 failed setting transaction read only
      */
     public function browseQuery($type, $table, $query, $sortkey, $sortdir, $page, $page_size, &$max_pages)
     {

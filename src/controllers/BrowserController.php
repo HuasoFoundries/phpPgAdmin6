@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -20,6 +20,8 @@ class BrowserController extends BaseController
      * Default method to render the controller according to the action parameter.
      *
      * @param null|mixed $action
+     *
+     * @return string
      */
     public function render($action = null)
     {

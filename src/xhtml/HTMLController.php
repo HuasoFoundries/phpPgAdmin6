@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -104,7 +104,7 @@ class HTMLController
         if (!isset($link['fields'])) {
             $link['fields'] = $_REQUEST;
         }
-        $from = $from ? $from : __METHOD__;
+        $from = $from ?: __METHOD__;
         $tag = '<a ';
 
         foreach ($link['attr'] as $attr => $value) {
@@ -136,9 +136,9 @@ class HTMLController
      * @return string with the generated HTML select box
      *
      * @internal param $ (optional) $bBlankEntry bool to specify whether or not we want a blank selection
-     * @internal param $ (optional) $szDefault string to specify the default VALUE selected
      * @internal param $ (optional) $bMultiple bool to specify whether or not we want a multi select combo box
      * @internal param $ (optional) $iSize int to specify the size IF a multi select combo
+     * @internal param $ (optional) $szDefault string to specify the default VALUE selected
      */
     public static function printCombo(
         &$arrOptions,
@@ -195,7 +195,7 @@ class HTMLController
      */
     protected function getActionUrl(&$action, &$fields, $from = null)
     {
-        $from = $from ? $from : __METHOD__;
+        $from = $from ?: __METHOD__;
 
         $url = Decorator::get_sanitized_value($action['url'], $fields);
 

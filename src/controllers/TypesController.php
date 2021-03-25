@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class TypesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -88,7 +90,7 @@ class TypesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -155,7 +157,9 @@ class TypesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($types, $columns, $actions, 'types-types', $this->lang['strnotypes']);
+        if (self::isRecordset($types)) {
+            echo $this->printTable($types, $columns, $actions, 'types-types', $this->lang['strnotypes']);
+        }
 
         $navlinks = [
             'create' => [
@@ -242,7 +246,7 @@ class TypesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         // Get type (using base name)
@@ -280,7 +284,9 @@ class TypesController extends BaseController
 
                     $actions = [];
 
-                    echo $this->printTable($attrs, $columns, $actions, 'types-properties', $this->lang['strnodata'], $attPre);
+                    if (self::isRecordset($attrs)) {
+                        echo $this->printTable($attrs, $columns, $actions, 'types-properties', $this->lang['strnodata'], $attPre);
+                    }
 
                     break;
                 case 'e':
@@ -414,7 +420,7 @@ class TypesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateComposite($msg = ''): void
+    public function doCreateComposite($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -652,7 +658,7 @@ class TypesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateEnum($msg = ''): void
+    public function doCreateEnum($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -829,7 +835,7 @@ class TypesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

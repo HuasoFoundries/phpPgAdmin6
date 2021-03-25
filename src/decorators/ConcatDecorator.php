@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,12 +9,15 @@ namespace PHPPgAdmin\Decorators;
 class ConcatDecorator extends Decorator
 {
     public $c;
+
     public function __construct($values)
     {
         $this->c = $values;
     }
 
     /**
+     * @param mixed $fields
+     *
      * @return string
      */
     public function value($fields)

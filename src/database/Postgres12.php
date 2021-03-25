@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
@@ -31,7 +31,6 @@ class Postgres12 extends Postgres11
      * Checks to see whether or not a table has a unique id column.
      *
      * @deprecated this field has been removed of pg_class as of PG 12
-     *
      * @see https://www.postgresql.org/docs/12/catalog-pg-class.html
      *
      * @param string $table The table name

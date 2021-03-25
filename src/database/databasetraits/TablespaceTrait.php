@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for tablespaces manipulation.
@@ -18,7 +16,7 @@ trait TablespaceTrait
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTablespaces($all = false)
     {
@@ -44,7 +42,7 @@ trait TablespaceTrait
      *
      * @param string $spcname
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTablespace($spcname)
     {
@@ -65,7 +63,7 @@ trait TablespaceTrait
      * @param string $spcloc   The directory in which to create the tablespace
      * @param string $comment
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -2|-1|0
      */
@@ -108,7 +106,9 @@ trait TablespaceTrait
      * @param string $owner   The new owner for the tablespace
      * @param string $comment
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-2|-1|0|1
      */
     public function alterTablespace($spcname, $name, $owner, $comment = '')
     {

@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for domains manipulation.
@@ -18,7 +16,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain to fetch
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDomain($domain)
     {
@@ -52,7 +50,7 @@ trait DomainTrait
     /**
      * Return all domains in current schema.  Excludes domain constraints.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDomains()
     {
@@ -86,7 +84,7 @@ trait DomainTrait
      *
      * @param string $domain The name of the domain whose constraints to fetch
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDomainConstraints($domain)
     {
@@ -213,7 +211,9 @@ trait DomainTrait
      * @param bool   $domnotnull True for NOT NULL, false otherwise
      * @param string $domowner   The domain owner
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-2|-1|0|1
      */
     public function alterDomain($domain, $domdefault, $domnotnull, $domowner)
     {

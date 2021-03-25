@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for tables manipulation.
@@ -89,7 +87,7 @@ trait DatabaseTrait
      *
      * @param string $database The name of the database to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDatabase($database)
     {
@@ -107,7 +105,7 @@ trait DatabaseTrait
      *
      * @param null|string $currentdatabase database name that should be on top of the resultset
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDatabases($currentdatabase = null)
     {
@@ -189,7 +187,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the comment for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDatabaseComment($database)
     {
@@ -211,7 +209,7 @@ trait DatabaseTrait
      *
      * @param string $database the name of the database to get the owner for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getDatabaseOwner($database)
     {
@@ -249,7 +247,7 @@ trait DatabaseTrait
      * @param string $lc_collate
      * @param string $lc_ctype
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -2|-1|0
      */
@@ -347,7 +345,9 @@ trait DatabaseTrait
      * @param string $newOwner The new owner for the database
      * @param string $comment
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-2|-1|0|1
      */
     public function alterDatabase($dbName, $newName, $newOwner = '', $comment = '')
     {
@@ -447,7 +447,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only prepared transactions executed in a specific database
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getPreparedXacts($database = null)
     {
@@ -470,7 +470,7 @@ trait DatabaseTrait
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getProcesses($database = null)
     {
@@ -499,7 +499,7 @@ trait DatabaseTrait
     /**
      * Returns table locks information in the current database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getLocks()
     {
@@ -533,7 +533,7 @@ trait DatabaseTrait
      * @param int    $pid    The ID of the backend process
      * @param string $signal 'CANCEL' or 'KILL'
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -1|0
      */
@@ -578,7 +578,7 @@ trait DatabaseTrait
      * @param bool   $full    If true, selects "full" vacuum
      * @param bool   $freeze  If true, selects aggressive "freezing" of tuples
      *
-     * @return (int|string)[] result status and sql sentence
+     * @return (int|string)[]
      *
      * @psalm-return array{0: int|string, 1: string}
      */
@@ -650,7 +650,7 @@ trait DatabaseTrait
     /**
      * Returns all available variable information.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getVariables()
     {

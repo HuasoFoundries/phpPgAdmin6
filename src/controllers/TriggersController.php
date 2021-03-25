@@ -1,15 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\XHtmlOption;
 use PHPPgAdmin\XHtml\XHtmlSelect;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -20,6 +20,8 @@ class TriggersController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -106,7 +108,7 @@ class TriggersController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -213,7 +215,9 @@ class TriggersController extends BaseController
             ];
         }
 
-        echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $this->lang['strnotriggers'], $tgPre);
+        if (self::isRecordset($triggers)) {
+            echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $this->lang['strnotriggers'], $tgPre);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -270,7 +274,7 @@ class TriggersController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -475,7 +479,7 @@ class TriggersController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

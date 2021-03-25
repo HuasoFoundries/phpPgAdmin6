@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -20,6 +20,8 @@ trait ServersTrait
      * @param mixed $group     a group name to filter the returned servers using $this->conf[srv_groups]
      *
      * @return array|\PHPPgAdmin\ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     *
+     * @psalm-return \PHPPgAdmin\ArrayRecordSet|array<string, mixed>
      */
     public function getServers($recordset = false, $group = false)
     {
@@ -95,6 +97,8 @@ trait ServersTrait
      *
      * @param string $the_action an action identifying the purpose of this snipper sql|find|history
      * @param mixed  $do_print
+     *
+     * @return null|string
      */
     public function printConnection($the_action, $do_print = true)
     {
@@ -135,9 +139,9 @@ trait ServersTrait
 
         $connection_html .= '</td><td class="popup_select2" style="text-align: right">' . \PHP_EOL;
 
-        if (1 === \count($servers) &&
-            isset($servers[$server_id]['useonlydefaultdb']) &&
-            true === $servers[$server_id]['useonlydefaultdb']
+        if (1 === \count($servers)
+            && isset($servers[$server_id]['useonlydefaultdb'])
+            && true === $servers[$server_id]['useonlydefaultdb']
         ) {
             $connection_html .= '<input type="hidden" name="database" value="' . \htmlspecialchars($servers[$server_id]['defaultdb']) . '" />' . \PHP_EOL;
         } else {

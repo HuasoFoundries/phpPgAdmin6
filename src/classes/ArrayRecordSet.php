@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
 
-use PHPPgAdmin\Interfaces\RecordSet;
 use ADOFieldObject;
 use Countable;
+use PHPPgAdmin\Interfaces\RecordSet;
 
 /**
  * @file
@@ -23,7 +23,7 @@ use Countable;
  *
  * Id: ArrayRecordSet.php,v 1.3 2007/01/10 01:46:28 soranzo Exp $
  */
-class ArrayRecordSet implements Countable , RecordSet
+class ArrayRecordSet implements Countable, RecordSet
 {
     public $EOF = false;
 
@@ -53,25 +53,27 @@ class ArrayRecordSet implements Countable , RecordSet
     {
         return \count($this->_array);
     }
-	function FetchField($off = 0): ADOFieldObject
-	{
-		// offsets begin at 0
-        
-		$o= new ADOFieldObject();
-		
-        $o->name= array_keys($this->fields)[$off]??null;
-        $value = $this->fields[$o->name??random_bytes(64)]??null;
-        $o->type= get_debug_type($value);
-		$o->max_length = 1024;
-		return $o;
-	}
+
+    public function FetchField($off = 0): ADOFieldObject
+    {
+        // offsets begin at 0
+
+        $o = new ADOFieldObject();
+
+        $o->name = \array_keys($this->fields)[$off] ?? null;
+        $value = $this->fields[$o->name ?? \random_bytes(64)] ?? null;
+        $o->type = get_debug_type($value);
+        $o->max_length = 1024;
+
+        return $o;
+    }
 
     /**
      * Counts the records in the instance array.
      *
      * @return int number of records in the instance array
      */
-    public function RecordCount():int
+    public function RecordCount(): int
     {
         return $this->count();
     }

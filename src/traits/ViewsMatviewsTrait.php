@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -498,6 +498,11 @@ trait ViewsMatviewsTrait
         //  if field already exist, just ignore this one
     }
 
+    /**
+     * @return (array|int)[]
+     *
+     * @psalm-return array{0: list<mixed>, 1: 0|positive-int}
+     */
     private function _getArrLinks()
     {
         $arrLinks = [];

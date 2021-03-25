@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\HTMLController;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -19,6 +19,8 @@ class FulltextController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -34,7 +36,7 @@ class FulltextController extends BaseController
         $this->printBody();
 
         if (null !== $this->getPostParam('cancel')) {
-            $this->action = isset($_POST['prev_action']) ? $_POST['prev_action'] : '';
+            $this->action = $_POST['prev_action'] ?? '';
         }
 
         switch ($this->action) {
@@ -132,7 +134,7 @@ class FulltextController extends BaseController
         return $this->printFooter();
     }
 
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -193,7 +195,9 @@ class FulltextController extends BaseController
             ],
         ];
 
-        echo $this->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $this->lang['strftsnoconfigs']);
+        if (self::isRecordset($cfgs)) {
+            echo $this->printTable($cfgs, $columns, $actions, 'fulltext-fulltext', $this->lang['strftsnoconfigs']);
+        }
 
         $navlinks = [
             'createconf' => [
@@ -401,7 +405,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateConfig($msg = ''): void
+    public function doCreateConfig($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -568,7 +572,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlterConfig($msg = ''): void
+    public function doAlterConfig($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -658,7 +662,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doViewParsers($msg = ''): void
+    public function doViewParsers($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -686,7 +690,9 @@ class FulltextController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $this->lang['strftsnoparsers']);
+        if (self::isRecordset($parsers)) {
+            echo $this->printTable($parsers, $columns, $actions, 'fulltext-viewparsers', $this->lang['strftsnoparsers']);
+        }
 
         //TODO: navlink to "create parser"
     }
@@ -696,7 +702,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doViewDicts($msg = ''): void
+    public function doViewDicts($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -752,7 +758,9 @@ class FulltextController extends BaseController
             ],
         ];
 
-        echo $this->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $this->lang['strftsnodicts']);
+        if (self::isRecordset($dicts)) {
+            echo $this->printTable($dicts, $columns, $actions, 'fulltext-viewdicts', $this->lang['strftsnodicts']);
+        }
 
         $navlinks = [
             'createdict' => [
@@ -850,7 +858,9 @@ class FulltextController extends BaseController
             ],
         ];
 
-        echo $this->printTable($map, $columns, $actions, 'fulltext-viewconfig', $this->lang['strftsemptymap']);
+        if (self::isRecordset($map)) {
+            echo $this->printTable($map, $columns, $actions, 'fulltext-viewconfig', $this->lang['strftsemptymap']);
+        }
 
         $navlinks = [
             'addmapping' => [
@@ -878,7 +888,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateDict($msg = ''): void
+    public function doCreateDict($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1073,7 +1083,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlterDict($msg = ''): void
+    public function doAlterDict($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1218,6 +1228,7 @@ class FulltextController extends BaseController
             echo '</form>' . \PHP_EOL;
         } elseif (\is_array($_REQUEST['mapping'])) {
             $status = $data->changeFtsMapping($_REQUEST['ftscfg'], $_REQUEST['mapping'], 'drop');
+
             if (0 !== $status) {
                 $this->doViewConfig($_REQUEST['ftscfg'], $this->lang['strftsmappingdroppedbad']);
 
@@ -1235,7 +1246,7 @@ class FulltextController extends BaseController
         }
     }
 
-    public function doAlterMapping($msg = ''): void
+    public function doAlterMapping($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('ftscfg');
@@ -1356,7 +1367,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAddMapping($msg = ''): void
+    public function doAddMapping($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1397,7 +1408,7 @@ class FulltextController extends BaseController
                         '>%s',
                         $mapping
                     ),
-                    $mapping_desc !== '' ? \sprintf(
+                    '' !== $mapping_desc ? \sprintf(
                         ' - %s',
                         $mapping_desc
                     ) : '',

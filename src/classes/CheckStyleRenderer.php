@@ -1,17 +1,17 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
+
 namespace PHPPgAdmin;
 
-use PHPMD\PHPMD;
-use PHPMD\Report;
 use PHPMD\Renderer\XMLRenderer;
+use PHPMD\Report;
 
 /**
  * This class will render a Java-checkstyle compatible xml-report.
- * for use with cs2pr and others
+ * for use with cs2pr and others.
  */
 class CheckStyleRenderer extends XMLRenderer
 {
@@ -24,28 +24,8 @@ class CheckStyleRenderer extends XMLRenderer
     private $fileName;
 
     /**
-     * Get a violation severity level according to the priority
-     * of the rule that's being broken
-     * @see https://checkstyle.sourceforge.io/version/4.4/property_types.html#severity
-     * - priority 1 maps to error level severity
-     * - priority 2 maps to warning level severity
-     * - priority > 2 maps to info level severity
-     *
-     * @param integer $priority priority of the broken rule
-     * @return string either error, warning or info
-     */
-    protected function mapPriorityToSeverity($priority)
-    {
-        if ($priority>2) {
-            return 'info';
-        }
-        return $priority===2? 'warning':'error';
-    }
-    /**
      * This method will be called when the engine has finished the source analysis
      * phase.
-     *
-     * @param Report $report
      */
     public function renderReport(Report $report)
     {
@@ -105,17 +85,39 @@ class CheckStyleRenderer extends XMLRenderer
 
         $writer->write('</checkstyle>' . \PHP_EOL);
     }
-        /**
+
+    /**
+     * Get a violation severity level according to the priority
+     * of the rule that's being broken.
+     *
+     * @see https://checkstyle.sourceforge.io/version/4.4/property_types.html#severity
+     * - priority 1 maps to error level severity
+     * - priority 2 maps to warning level severity
+     * - priority > 2 maps to info level severity
+     *
+     * @param int $priority priority of the broken rule
+     *
+     * @return string either error, warning or info
+     */
+    protected function mapPriorityToSeverity($priority)
+    {
+        if (2 < $priority) {
+            return 'info';
+        }
+
+        return 2 === $priority ? 'warning' : 'error';
+    }
+
+    /**
      * This method will write a xml attribute named <b>$attr</b> to the output
      * when the given <b>$value</b> is not an empty string and is not <b>null</b>.
      *
-     * @param string $attr The xml attribute name.
-     * @param string $value The attribute value.
-     * @return void
+     * @param string $attr  the xml attribute name
+     * @param string $value the attribute value
      */
     protected function maybeAdd($attr, $value)
     {
-        if ($value === null || trim($value) === '') {
+        if (null === $value || \trim($value) === '') {
             return;
         }
         $this->getWriter()->write(' ' . $attr . '="' . $value . '"');

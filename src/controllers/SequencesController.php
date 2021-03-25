@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class SequencesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -111,7 +113,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -190,7 +192,9 @@ class SequencesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $this->lang['strnosequences']);
+        if (self::isRecordset($sequences)) {
+            echo $this->printTable($sequences, $columns, $actions, 'sequences-sequences', $this->lang['strnosequences']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -236,7 +240,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->printTrail('sequence');
@@ -475,6 +479,7 @@ class SequencesController extends BaseController
         } elseif (\is_array($_POST['sequence'])) {
             $msg = '';
             $status = $data->beginTransaction();
+
             if (0 === $status) {
                 foreach ($_POST['sequence'] as $s) {
                     $status = $data->dropSequence($s, isset($_POST['cascade']));
@@ -498,6 +503,7 @@ class SequencesController extends BaseController
                     }
                 }
             }
+
             if (0 === $data->endTransaction()) {
                 // Everything went fine, back to the Default page....
                 $this->view->setReloadBrowser(true);
@@ -522,7 +528,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateSequence($msg = ''): void
+    public function doCreateSequence($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -717,7 +723,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doSetval($msg = ''): void
+    public function doSetval($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -828,7 +834,7 @@ class SequencesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

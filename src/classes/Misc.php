@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
@@ -184,7 +184,7 @@ class Misc
      * @param string $key   name of the key to set
      * @param mixed  $value value of the key to set
      *
-     * @return \PHPPgAdmin\Misc this class instance
+     * @return static this class instance
      */
     public function setConf($key, $value)
     {
@@ -240,7 +240,7 @@ class Misc
      *
      * @param ViewManager $view view instance
      *
-     * @return \PHPPgAdmin\Misc this class instance
+     * @return static this class instance
      */
     public function setView(ViewManager $view)
     {
@@ -259,7 +259,7 @@ class Misc
      *
      * @param bool $flag true or false to allow unconnected clients to access the view
      *
-     * @return \PHPPgAdmin\Misc this class instance
+     * @return static this class instance
      */
     public function setNoDBConnection($flag)
     {
@@ -283,7 +283,7 @@ class Misc
      *
      * @param string $msg error message string
      *
-     * @return \PHPPgAdmin\Misc this class instance
+     * @return static this class instance
      */
     public function setErrorMsg($msg)
     {
@@ -337,7 +337,7 @@ class Misc
                 return null;
             }
 
-            if ($_connection === null) {
+            if (null === $_connection) {
                 $this->container->addError($lang['strloginfailed']);
                 $this->setErrorMsg($lang['strloginfailed']);
 
@@ -382,9 +382,9 @@ class Misc
             }
         }
 
-        if ($this->getNoDBConnection() ||
-            null === $this->getDatabase() ||
-            !isset($_REQUEST['schema'])
+        if ($this->getNoDBConnection()
+            || null === $this->getDatabase()
+            || !isset($_REQUEST['schema'])
         ) {
             return $this->_data;
         }
@@ -402,10 +402,9 @@ class Misc
     /**
      * Undocumented function.
      *
-     * @param string $database
      * @param string $server_id
      *
-     * @return null|Connection
+     * @return Connection
      */
     public function getConnection(string $database = '', $server_id = null): ?Connection
     {
@@ -429,16 +428,16 @@ class Misc
                     'administrator' => 'administrator',
                 ];
 
-                if (isset($server_info['username']) &&
-                    \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
+                if (isset($server_info['username'])
+                    && \array_key_exists(\mb_strtolower($server_info['username']), $bad_usernames)
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
                     throw new Exception($msg);
                 }
 
-                if (!isset($server_info['password']) ||
-                    '' === $server_info['password']
+                if (!isset($server_info['password'])
+                    || '' === $server_info['password']
                 ) {
                     $msg = $lang['strlogindisallowed'];
 
@@ -489,8 +488,8 @@ class Misc
             $server_string = $info['host'] . ':' . $info['port'] . ':' . $info['sslmode'];
             $server_sha = \sha1($server_string);
 
-            if ($this->_server_id === $server_string ||
-                $this->_server_id === $server_sha
+            if ($this->_server_id === $server_string
+                || $this->_server_id === $server_sha
             ) {
                 if (isset($info['username'])) {
                     $this->setServerInfo(null, $info, $this->_server_id);
@@ -555,10 +554,10 @@ class Misc
 
         $server_info = $this->getServerInfo($this->_server_id);
 
-        if (null !== $this->_server_id &&
-            isset($server_info['useonlydefaultdb']) &&
-            true === $server_info['useonlydefaultdb'] &&
-            isset($server_info['defaultdb'])
+        if (null !== $this->_server_id
+            && isset($server_info['useonlydefaultdb'])
+            && true === $server_info['useonlydefaultdb']
+            && isset($server_info['defaultdb'])
         ) {
             $this->_database = $server_info['defaultdb'];
         } elseif ('' !== $database) {
@@ -581,7 +580,7 @@ class Misc
      *
      * @param string $schema The schema name
      *
-     * @return int 0 on success
+     * @return int|string 0 on success
      */
     public function setCurrentSchema($schema)
     {
@@ -617,7 +616,7 @@ class Misc
     /**
      * Sets the href tracking variable.
      *
-     * @return \PHPPgAdmin\Misc this class instance
+     * @return static this class instance
      */
     public function setHREF()
     {
@@ -667,7 +666,7 @@ class Misc
     public function stripVar(&$var): void
     {
         if (\is_array($var)) {
-            foreach (array_keys($var) as $k) {
+            foreach (\array_keys($var) as $k) {
                 $this->stripVar($var[$k]);
 
                 /* magic_quotes_gpc escape keys as well ...*/
@@ -691,7 +690,7 @@ class Misc
      *
      * @param mixed $strIniSize The PHP.INI variable
      *
-     * @return bool|float|int size in bytes, false on failure
+     * @return false|float size in bytes, false on failure
      */
     public function inisizeToBytes($strIniSize)
     {
@@ -722,6 +721,13 @@ class Misc
         }
     }
 
+    /**
+     * @param string $subject
+     *
+     * @return (mixed|string)[]
+     *
+     * @psalm-return array{subject?: string, server?: string, database?: string, schema?: mixed}
+     */
     public function getRequestVars($subject = '')
     {
         $v = [];
@@ -802,8 +808,8 @@ class Misc
         [$usec, $sec] = \explode(' ', \microtime());
         $time = ((float) $usec + (float) $sec);
 
-        $server = $this->container->server !== '' ? $this->container->server : $_REQUEST['server'];
-        $database = $this->container->database !== '' ? $this->container->database : $_REQUEST['database'];
+        $server = '' !== $this->container->server ? $this->container->server : $_REQUEST['server'];
+        $database = '' !== $this->container->database ? $this->container->database : $_REQUEST['database'];
 
         $_SESSION['history'][$server][$database][\sprintf(
             '%s',

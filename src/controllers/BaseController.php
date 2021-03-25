@@ -1,12 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use PHPPgAdmin\ADORecordSet;
+use IteratorAggregate;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Misc;
@@ -17,16 +17,15 @@ use PHPPgAdmin\XHtml\HTMLFooterController;
 use PHPPgAdmin\XHtml\HTMLHeaderController;
 use PHPPgAdmin\XHtml\HTMLNavbarController;
 use PHPPgAdmin\XHtml\HTMLTableController;
-use Slim\Http\Response;
-use ADORecordSet as ADODBRecordsetClass;
 
 /**
  * Base controller class.
  */
 class BaseController
 {
-    public $postgresqlMinVer;
     use HelperTrait;
+
+    public $postgresqlMinVer;
 
     public $appLangFiles = [];
 
@@ -126,8 +125,7 @@ class BaseController
     /**
      * Constructs the base controller (common for almost all controllers).
      *
-     * @param ContainerUtils $container        the $app container
-     * @param bool           $no_db_connection [optional] if true, sets  $this->misc->setNoDBConnection(true);
+     * @param ContainerUtils $container the $app container
      */
     public function __construct(ContainerUtils $container)
     {
@@ -202,9 +200,9 @@ class BaseController
      */
     public function headerTitle($title = '', $prefix = '', $suffix = '')
     {
-        $title = $title !== '' ? $title : $this->controller_title;
+        $title = '' !== $title ? $title : $this->controller_title;
 
-        return $prefix . $this->lang[$title] . ($suffix !== '' ? ': ' . $suffix : '');
+        return $prefix . $this->lang[$title] . ('' !== $suffix ? ': ' . $suffix : '');
     }
 
     /**
@@ -218,16 +216,16 @@ class BaseController
     /**
      * Display a table of data.
      *
-     * @param ADORecordSet|ArrayRecordSet $tabledata a set of data to be formatted
-     * @param array                       $columns   An associative array of columns to be displayed:
-     * @param array                       $actions   Actions that can be performed on each object:
-     * @param string                      $place     Place where the $actions are displayed. Like 'display-browse',
-     * @param string                      $nodata    (optional) Message to display if data set is empty
-     * @param callable                    $pre_fn    (optional) callback closure for each row
+     * @param IteratorAggregate $tabledata a set of data to be formatted
+     * @param array             $columns   An associative array of columns to be displayed:
+     * @param array             $actions   Actions that can be performed on each object:
+     * @param string            $place     Place where the $actions are displayed. Like 'display-browse',
+     * @param string            $nodata    (optional) Message to display if data set is empty
+     * @param callable          $pre_fn    (optional) callback closure for each row
      *
      * @return string the html of the table
      */
-    public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null)
+    public function printTable(IteratorAggregate &$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null)
     {
         $html_table = $this->_getTableController();
 
@@ -236,12 +234,17 @@ class BaseController
         return $html_table->printTable();
     }
 
+    public static function isRecordSet($variable)
+    {
+        return $variable instanceof IteratorAggregate && \method_exists($variable, 'MoveNext');
+    }
+
     /**
      * Hides or show tree tabs according to their properties.
      *
      * @param array $tabs The tabs
      *
-     * @return ADORecordSet|ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
+     * @return ArrayRecordSet filtered tabs in the form of an ArrayRecordSet
      */
     public function adjustTabsForTree(&$tabs)
     {
@@ -253,14 +256,15 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \PHPPgAdmin\Interfaces\Recordset|\ADORecordSet
-     * @param array                       $attrs     Attributes for tree items
-     * @param string                      $section   The section where the branch is linked in the tree
-     * @param bool                        $print     either to return or echo the result
+     * @param \ADORecordSet|\PHPPgAdmin\Interfaces\Recordset
+     * @param false|string $section
+     * @param bool         $print   either to return or echo the result
      *
-     * @return Response|string the json rendered tree
+     * @return (array|bool|string)[]
+     *
+     * @psalm-return array<int|string, array<string, mixed>|bool|string>
      */
-    public function printTree(  &$_treedata, &$attrs, $section, $print = true)
+    public function printTree(&$_treedata, &$attrs, $section, $print = true)
     {
         $tree = $this->_getTreeController();
 
@@ -285,9 +289,9 @@ class BaseController
 
     /**
      * @param (array[][]|mixed)[][] $navlinks
-     * @param string                $place
-     * @param array                 $env
      * @param mixed                 $do_print
+     *
+     * @return null|string
      */
     public function printNavLinks(array $navlinks, string $place, array $env = [], $do_print = true)
     {
@@ -306,9 +310,10 @@ class BaseController
     }
 
     /**
-     * @param true        $do_print
-     * @param null|string $from
-     * @param mixed       $link
+     * @param true  $do_print
+     * @param mixed $link
+     *
+     * @return null|string
      */
     public function printLink($link, bool $do_print = true, ?string $from = null)
     {
@@ -323,6 +328,8 @@ class BaseController
 
     /**
      * @param true $flag
+     *
+     * @return HTMLFooterController
      */
     public function setReloadDropDatabase(bool $flag)
     {
@@ -333,6 +340,8 @@ class BaseController
 
     /**
      * @param true $flag
+     *
+     * @return HTMLFooterController
      */
     public function setNoBottomLink(bool $flag)
     {
@@ -341,6 +350,9 @@ class BaseController
         return $footer_controller->setNoBottomLink($flag);
     }
 
+    /**
+     * @return null|string
+     */
     public function printFooter(bool $doBody = true, string $template = 'footer.twig')
     {
         $footer_controller = $this->_getFooterController();
@@ -383,6 +395,8 @@ class BaseController
 
     /**
      * @param true $flag
+     *
+     * @return HTMLHeaderController
      */
     public function setNoOutput(bool $flag)
     {
@@ -392,39 +406,32 @@ class BaseController
     }
 
     /**
-     * @param null|string $script
-     * @param string      $title
-     * @param bool        $do_print
-     * @param string      $template
+     * @return string
      */
     public function printHeader(string $title = '', ?string $script = null, bool $do_print = true, string $template = 'header.twig')
     {
-        $title = $title !== '' ? $title : $this->headerTitle();
+        $title = '' !== $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
         return $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
     /**
-     * Undocumented function
+     * Undocumented function.
      *
-     * @param boolean $doBody
-     * @param string $bodyClass
-     * @param boolean $onloadInit
-     * @param boolean $includeJsTree either to add the jsTree in the root body. By default is inserted using an iframe
+     * @param bool $includeJsTree either to add the jsTree in the root body. By default is inserted using an iframe
+     *
      * @return string
      */
-    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false,bool $includeJsTree=true)
+    public function printBody(bool $doBody = true, string $bodyClass = 'detailbody', bool $onloadInit = false, bool $includeJsTree = true)
     {
         $header_controller = $this->_getHeaderController();
 
-        return $header_controller->printBody($doBody, $bodyClass, $onloadInit,$includeJsTree);
+        return $header_controller->printBody($doBody, $bodyClass, $onloadInit, $includeJsTree);
     }
 
     /**
-     * @param null|string $help
-     * @param string      $title
-     * @param bool        $do_print
+     * @return string
      */
     public function printTitle(string $title, ?string $help = null, bool $do_print = true)
     {
@@ -434,9 +441,7 @@ class BaseController
     }
 
     /**
-     * Retrieves a request parameter either from the body or query string
-     * @param string      $key
-     * @param null|string $default
+     * Retrieves a request parameter either from the body or query string.
      */
     public function getRequestParam(string $key, ?string $default = null)
     {
@@ -444,7 +449,6 @@ class BaseController
     }
 
     /**
-     * @param string                           $key
      * @param null|array|bool|float|int|string $default
      *
      * @return bool| null|array|string|int|float
@@ -460,20 +464,9 @@ class BaseController
      *
      * @return null|array|float|int|string
      */
-    public function getQueryStrinParam($key, $default = null)
+    public function getQueryStringParam($key, $default = null)
     {
         return \requestInstance()->getQueryParam($key, $default);
-    }
-
-    /**
-     * @return array
-     */
-    public function getAllParams(): array
-    {
-        return \array_merge(
-            \requestInstance()->getQueryParams() ?? [],
-            \requestInstance()->getParsedBody() ?? []
-        );
     }
 
     /**

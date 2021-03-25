@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -94,7 +94,7 @@ class DataexportController extends BaseController
         return $this->mimicDumpFeature($format, $cleanprefix, $oids);
     }
 
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         if (!isset($_REQUEST['query']) || empty($_REQUEST['query'])) {
             $_REQUEST['query'] = $_SESSION['sqlquery'];
@@ -250,6 +250,12 @@ class DataexportController extends BaseController
         return $response;
     }
 
+    /**
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     *
+     * @return \ADORecordSet|bool|int|string
+     */
     private function _getRS($data, $object, bool $oids)
     {
         if ($object) {
@@ -291,6 +297,13 @@ class DataexportController extends BaseController
             ->withHeader('Content-Disposition', 'attachment; filename=dump.' . $ext);
     }
 
+    /**
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param \ADORecordSet|bool|int|string $rs
+     * @param mixed                         $object
+     * @param mixed                         $format
+     * @param mixed                         $response
+     */
     private function pickFormat($data, $object, bool $oids, $rs, $format, $response)
     {
         if ('copy' === $format) {
@@ -311,6 +324,12 @@ class DataexportController extends BaseController
         return $response;
     }
 
+    /**
+     * @param bool                          $oids
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     * @param mixed                         $rs
+     */
     private function _mimicCopy($data, $object, $oids, $rs): void
     {
         $data->fieldClean($object);
@@ -348,6 +367,12 @@ class DataexportController extends BaseController
         echo "\\.\n";
     }
 
+    /**
+     * @param bool                          $oids
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     * @param mixed                         $rs
+     */
     private function _mimicHtml($data, $object, $oids, $rs): void
     {
         echo "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\r\n";
@@ -364,7 +389,7 @@ class DataexportController extends BaseController
             // Output header row
             $j = 0;
 
-            foreach (array_keys($rs->fields) as $k) {
+            foreach (\array_keys($rs->fields) as $k) {
                 $finfo = $rs->FetchField($j++);
 
                 if ($finfo->name === $data->id && !$oids) {
@@ -397,6 +422,12 @@ class DataexportController extends BaseController
         echo "</html>\r\n";
     }
 
+    /**
+     * @param bool                          $oids
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     * @param mixed                         $rs
+     */
     private function _mimicXml($data, $object, $oids, $rs): void
     {
         echo '<?xml version="1.0" encoding="utf-8" ?>' . \PHP_EOL;
@@ -407,7 +438,7 @@ class DataexportController extends BaseController
             $j = 0;
             echo "\t<header>" . \PHP_EOL;
 
-            foreach (array_keys($rs->fields) as $k) {
+            foreach (\array_keys($rs->fields) as $k) {
                 $finfo = $rs->FetchField($j++);
                 $name = \htmlspecialchars($finfo->name);
                 $type = \htmlspecialchars($finfo->type);
@@ -448,6 +479,12 @@ class DataexportController extends BaseController
         echo '</data>' . \PHP_EOL;
     }
 
+    /**
+     * @param bool                          $oids
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     * @param mixed                         $rs
+     */
     private function _mimicSQL($data, $object, $oids, $rs): void
     {
         $data->fieldClean($object);
@@ -514,6 +551,13 @@ class DataexportController extends BaseController
         }
     }
 
+    /**
+     * @param bool                          $oids
+     * @param \PHPPgAdmin\Database\Postgres $data
+     * @param mixed                         $object
+     * @param mixed                         $rs
+     * @param mixed                         $format
+     */
     private function _csvOrTab($data, $object, $oids, $rs, $format): void
     {
         switch ($format) {

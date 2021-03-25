@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Middleware;
@@ -54,14 +54,14 @@ class PopulateRequestResponse extends Middleware
         $requestPath = $uri->getPath();
 
         $view->offsetSet('query_string', $query_string);
-        $path = $requestPath . ($query_string !== '' ? '?' . $query_string : '');
+        $path = $requestPath . ('' !== $query_string ? '?' . $query_string : '');
         $view->offsetSet('path', $path);
 
         $params = $request->getParams();
 
         $viewparams = [];
 
-        $viewparams = array_filter($params, 'is_scalar');
+        $viewparams = \array_filter($params, 'is_scalar');
 
         $in_test = isset($_COOKIE['IN_TEST']) ? (string) $_COOKIE['IN_TEST'] : '0';
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -24,7 +24,7 @@ class HTMLNavbarController extends HTMLController
      */
     public function printTrail($trail = [], $do_print = true, $from = null)
     {
-        $from = $from ? $from : __METHOD__;
+        $from = $from ?: __METHOD__;
 
         $trail_html = $this->printTopbar(false, $from);
 
@@ -44,9 +44,13 @@ class HTMLNavbarController extends HTMLController
             'crumbs' => $crumbs,
             'controller_name' => $this->controller_name,
         ];
-        $viewVars = $this->_getSearchPathsCrumbs($crumbs, $viewVars);
+        $containerInstance = $this->getContainer();
+        $requestVars = $containerInstance->getAllRequestVars();
 
-        $trail_html .= $this->getContainer()->view->fetch('components/trail.twig', $viewVars);
+        $viewVars = $this->_getSearchPathsCrumbs($crumbs, $viewVars, $requestVars);
+
+        $trail_html .= $containerInstance->view->fetch('components/trail.twig', $viewVars);
+
         if ($do_print) {
             echo $trail_html;
 
@@ -90,7 +94,7 @@ class HTMLNavbarController extends HTMLController
      */
     public function printTabs($alltabs, $activetab, $do_print = true, $from = null)
     {
-        $from = $from ? $from : __METHOD__;
+        $from = $from ?: __METHOD__;
 
         $this->misc = $this->misc;
         $_SESSION['webdbLastTab'] = $_SESSION['webdbLastTab'] ?? [];
@@ -146,9 +150,11 @@ class HTMLNavbarController extends HTMLController
     }
 
     /**
-     * @return (mixed|string)[][]
-     *
      * @psalm-return array<array-key, array{url: string, iconalt?: mixed|string, title?: mixed, icon?: string, text?: mixed, helpurl?: string}>
+     *
+     * @param mixed $trail
+     *
+     * @return (mixed|string)[][]
      */
     private function _getCrumbs($trail)
     {
@@ -182,11 +188,10 @@ class HTMLNavbarController extends HTMLController
 
     /**
      * @param mixed $crumbs
-     * @param array $viewVars
      *
      * @return array
      */
-    private function _getSearchPathsCrumbs($crumbs, array $viewVars)
+    private function _getSearchPathsCrumbs($crumbs, array $viewVars, array $requestVars = [])
     {
         $data = $this->misc->getDatabaseAccessor();
         $lang = $this->lang;
@@ -197,7 +202,7 @@ class HTMLNavbarController extends HTMLController
             $search_paths = $data->getSearchPath();
 
             foreach ($search_paths as $schema) {
-                $destination = $this->container->getDestinationWithLastTab('database');
+                $destination = $this->container->getDestinationWithLastTab('database', $requestVars);
                 $search_path_crumbs[$schema] = [
                     'title' => $lang['strschema'],
                     'text' => $schema,
@@ -222,7 +227,7 @@ class HTMLNavbarController extends HTMLController
      */
     private function printTopbar($do_print = true, $from = null): ?string
     {
-        $from = $from ? $from : __METHOD__;
+        $from = $from ?: __METHOD__;
 
         $lang = $this->lang;
 
@@ -234,7 +239,7 @@ class HTMLNavbarController extends HTMLController
         $server_id = $this->misc->getServerId();
         $reqvars = $this->misc->getRequestVars('table');
 
-        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><table style="width: 100%"><tr><td>';
+        $topbar_html = '<div class="topbar" data-controller="' . $this->controller_name . '"><div class="platform">';
 
         if ($server_info && isset($server_info['platform'], $server_info['username'])) {
             // top left informations when connected
@@ -246,7 +251,7 @@ class HTMLNavbarController extends HTMLController
                 '<span class="username">' . \htmlspecialchars($server_info['username']) . '</span>'
             );
 
-            $topbar_html .= '</td>';
+            $topbar_html .= '</div>';
 
             // top right informations when connected
 
@@ -275,7 +280,6 @@ class HTMLNavbarController extends HTMLController
                             ]),
                         ],
                         'id' => 'toplink_history',
-
                     ],
                     'content' => $lang['strhistory'],
                 ],
@@ -313,36 +317,39 @@ class HTMLNavbarController extends HTMLController
                 'toplinks' => &$toplinks,
             ];
 
-            $topbar_html .= '<td style="text-align: right">';
-            $toplinks = $this->printLinksList($toplinks, 'toplink', false, $from);
+            $topbar_html .= '<div class="toplinks">';
+            $toplinks_html = '';
 
-            if (strpos($toplinks, 'toplink_popup') !== false) {
-                $topbar_html .= str_replace(
+            foreach ($toplinks as $link) {
+                $toplinks_html .= \str_replace('.php', '', $this->printLink($link, false, $from)) . \PHP_EOL;
+            }
+
+            if (\mb_strpos($toplinks_html, 'toplink_popup') !== false) {
+                $topbar_html .= \str_replace(
                     [
-                        '<li>',
-                        '</li>', '<a', '/a>',
-
+                        '<a',
+                        '/a>',
                         'id="toplink_logout" href',
                         'class="toplink_popup" href',
-                        'src/views/', 'target="sqledit"'
+                        'src/views/',
+                        'target="sqledit"',
                     ],
                     [
-                        '', '',
                         '<button',
                         '/button>',
                         'id="toplink_logout" rel',
-
-                        'class="toplink_popup" rel', '', 'target="_blank" '
+                        'class="toplink_popup" rel',
+                        '',
+                        'target="_blank" ',
                     ],
-                    $toplinks
+                    $toplinks_html
                 );
             }
-            $topbar_html .= '</td>';
         } else {
             $topbar_html .= "<span class=\"appname\">{$appName}</span> <span class=\"version\">{$appVersion}</span>";
         }
 
-        $topbar_html .= '</tr></table></div>' . \PHP_EOL;
+        $topbar_html .= '</div></div>' . \PHP_EOL;
 
         if ($do_print) {
             echo $topbar_html;
@@ -369,7 +376,9 @@ class HTMLNavbarController extends HTMLController
      *
      * @param null|string $subject sunkect of the trail
      *
-     * @return array the trail array
+     * @return (mixed|null|string)[][] the trail array
+     *
+     * @psalm-return array<array-key, array<array-key, mixed|null|string>>
      */
     private function _getTrail($subject = null)
     {
@@ -505,6 +514,13 @@ class HTMLNavbarController extends HTMLController
         return $trail;
     }
 
+    /**
+     * @param (mixed|string)[][] $trail
+     *
+     * @return (mixed|null|string)[][]
+     *
+     * @psalm-return array<array-key, array<array-key, mixed|null|string>>
+     */
     private function _getLastTrailPart(string $subject, $trail)
     {
         $lang = $this->lang;

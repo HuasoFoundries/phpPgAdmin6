@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -116,7 +116,7 @@ class ConstraintsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -171,7 +171,9 @@ class ConstraintsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $this->lang['strnoconstraints'], $cnPre);
+        if (self::isRecordset($constraints)) {
+            echo $this->printTable($constraints, $columns, $actions, 'constraints-constraints', $this->lang['strnoconstraints'], $cnPre);
+        }
 
         $navlinks = [
             'addcheck' => [
@@ -243,7 +245,7 @@ class ConstraintsController extends BaseController
      *
      * @param string $msg The message
      */
-    public function formAddForeignKey($msg = ''): void
+    public function formAddForeignKey($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -702,9 +704,9 @@ class ConstraintsController extends BaseController
         $this->coalesceArr($_POST, 'target', '');
 
         // Check that they've given at least one source column
-        if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList']) ||
-            !\is_array($_POST['IndexColumnList']) ||
-            0 === \count($_POST['IndexColumnList']))) {
+        if (!isset($_REQUEST['SourceColumnList']) && (!isset($_POST['IndexColumnList'])
+            || !\is_array($_POST['IndexColumnList'])
+            || 0 === \count($_POST['IndexColumnList']))) {
             return $this->formAddForeignKey($this->lang['strfkneedscols']);
         }
         // Copy the IndexColumnList variable from stage 1

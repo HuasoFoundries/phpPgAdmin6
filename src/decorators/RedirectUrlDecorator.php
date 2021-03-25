@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,10 +9,12 @@ namespace PHPPgAdmin\Decorators;
 class RedirectUrlDecorator extends Decorator
 {
     public $base;
+
     /**
      * @var mixed
      */
     public $queryVars;
+
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;
@@ -23,6 +25,8 @@ class RedirectUrlDecorator extends Decorator
     }
 
     /**
+     * @param mixed $fields
+     *
      * @return string
      */
     public function value($fields)
@@ -52,8 +56,8 @@ class RedirectUrlDecorator extends Decorator
                 $sep = '&';
             }
         }
- 
-        $url = \str_replace('//', '/', containerInstance()->subFolder.  '/' . $url);
+
+        $url = \str_replace('//', '/', containerInstance()->subFolder . '/' . $url);
 
         return \str_replace('.php', '', $url);
     }

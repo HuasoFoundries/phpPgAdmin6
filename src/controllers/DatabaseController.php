@@ -1,15 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\AdminTrait;
 use PHPPgAdmin\Traits\ExportTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -27,6 +27,8 @@ class DatabaseController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -101,7 +103,6 @@ class DatabaseController extends BaseController
             case 'sql':
                 $this->doSQL();
                 $this->view->offsetSet('codemirror', true);
-
 
                 break;
             case 'variables':
@@ -316,7 +317,7 @@ class DatabaseController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doExport($msg = ''): void
+    public function doExport($msg = '')
     {
         $this->printTrail('database');
         $this->printTabs('database', 'export');
@@ -366,7 +367,9 @@ class DatabaseController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($variables, $columns, $actions, $this->table_place, $this->lang['strnodata']);
+        if (self::isRecordset($variables)) {
+            echo $this->printTable($variables, $columns, $actions, $this->table_place, $this->lang['strnodata']);
+        }
     }
 
     /**
@@ -375,7 +378,7 @@ class DatabaseController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProcesses($msg = ''): void
+    public function doProcesses($msg = '')
     {
         $this->printTrail('database');
         $this->printTabs('database', 'processes');
@@ -428,7 +431,9 @@ class DatabaseController extends BaseController
 
             $actions = [];
 
-            echo $this->printTable($prep_xacts, $columns, $actions, 'database-processes-preparedxacts', $this->lang['strnodata']);
+            if (self::isRecordset($prep_xacts)) {
+                echo $this->printTable($prep_xacts, $columns, $actions, 'database-processes-preparedxacts', $this->lang['strnodata']);
+            }
         }
 
         // Fetch the processes from the database
@@ -518,7 +523,9 @@ class DatabaseController extends BaseController
             unset($columns['actions']);
         }
 
-        echo $this->printTable($processes, $columns, $actions, 'database-processes', $this->lang['strnodata']);
+        if (self::isRecordset($processes)) {
+            echo $this->printTable($processes, $columns, $actions, 'database-processes', $this->lang['strnodata']);
+        }
     }
 
     public function currentLocks(bool $isAjax = false): void
@@ -565,7 +572,10 @@ class DatabaseController extends BaseController
         }
 
         $actions = [];
-        echo $this->printTable($variables, $columns, $actions, 'database-locks', $this->lang['strnodata']);
+
+        if (self::isRecordset($variables)) {
+            echo $this->printTable($variables, $columns, $actions, 'database-locks', $this->lang['strnodata']);
+        }
     }
 
     /**
@@ -676,8 +686,6 @@ class DatabaseController extends BaseController
     }
 
     /**
-     * @param string $curr
-     *
      * @return string
      */
     private function _printTypeOption(string $curr)
@@ -731,6 +739,10 @@ class DatabaseController extends BaseController
         return $this->lang['strallobjects'];
     }
 
+    /**
+     * @param string $curr
+     * @param mixed  $rs
+     */
     private function _printHtmlForType($curr, $rs): void
     {
         $destination = null;

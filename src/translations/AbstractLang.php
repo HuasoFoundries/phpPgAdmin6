@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Translations;
@@ -16,9 +16,6 @@ abstract class AbstractLang
      */
     protected $lang = [];
 
-    /**
-     * @return array
-     */
     public function getLang(): array
     {
         return $this->lang;

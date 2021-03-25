@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -14,7 +14,9 @@ class CallbackDecorator extends Decorator
      * @var \Closure|mixed
      */
     public $fn;
+
     public $p;
+
     public function __construct(Closure $callback, $param = null)
     {
         $this->fn = $callback;

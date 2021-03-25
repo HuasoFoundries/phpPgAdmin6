@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -96,6 +96,9 @@ class HTMLTableController extends HTMLController
     }
 
     /**
+     * @param mixed $turn_into_datatable
+     * @param mixed $with_body
+     *
      * @return string
      */
     public function printTable($turn_into_datatable = true, $with_body = true)
@@ -153,7 +156,7 @@ class HTMLTableController extends HTMLController
 
         foreach ($columns as $column_id => $column) {
             // Handle cases where no class has been passed
-          
+
             $class = (isset($column['class']) && '' !== $column['class']) ? $column['class'] : '';
 
             switch ($column_id) {
@@ -165,7 +168,7 @@ class HTMLTableController extends HTMLController
                     break;
 
                 default:
-                    $thead_html .= '<th class="data' . $class . ' '.$column_id.'">';
+                    $thead_html .= '<th class="data' . $class . ' ' . $column_id . '">';
 
                     if (isset($column['help'])) {
                         $thead_html .= $this->view->printHelp($column['title'], $column['help'], false);
@@ -348,18 +351,19 @@ class HTMLTableController extends HTMLController
                         if (null !== $val) {
                             $type = $column['type'] ?? null;
                             $params = $column['params'] ?? [];
-                            $parsedValue= $this->misc->printVal($val, $type, $params);
+                            $parsedValue = $this->misc->printVal($val, $type, $params);
+
                             if (isset($column['url'])) {
-                                $column['url']=str_replace(sprintf('%s%s',$this->container->subFolder,$this->container->subFolder),$this->container->subFolder.'/',$column['url']??'');
-                                $parsedurl=parse_url($column['url']);
-                                $parsedVars=implode('&',[$parsedurl['query']??null,$this->printUrlVars($column['vars'], $tabledata->fields, false)]);
-                                $column['url']=$parsedurl['path']??'/';
+                                $column['url'] = \str_replace(\sprintf('%s%s', $this->container->subFolder, $this->container->subFolder), $this->container->subFolder . '/', $column['url'] ?? '');
+                                $parsedurl = \parse_url($column['url']);
+                                $parsedVars = \implode('&', [$parsedurl['query'] ?? null, $this->printUrlVars($column['vars'], $tabledata->fields, false)]);
+                                $column['url'] = $parsedurl['path'] ?? '/';
                                 $tbody_html .= "<a href=\"{$column['url']}?";
                                 $tbody_html .= $parsedVars;
                                 $tbody_html .= '">';
-                             //   d($parsedurl,$parsedVars,$parsedValue);
+                                //   d($parsedurl,$parsedVars,$parsedValue);
                             }
-                            $tbody_html .=$parsedValue;
+                            $tbody_html .= $parsedValue;
 
                             if (isset($column['url'])) {
                                 $tbody_html .= '</a>';
@@ -392,6 +396,9 @@ class HTMLTableController extends HTMLController
     }
 
     /**
+     * @param mixed $vars
+     * @param mixed $fields
+     *
      * @return null|string
      */
     private function printUrlVars(&$vars, &$fields, bool $do_print = true)

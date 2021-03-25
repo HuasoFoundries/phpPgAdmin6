@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for tables manipulation.
@@ -18,7 +16,7 @@ trait SchemaTrait
     /**
      * Return all schemas in the current database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getSchemas()
     {
@@ -63,7 +61,7 @@ trait SchemaTrait
      *
      * @param string $schema The the name of the schema to work in
      *
-     * @return int|ADORecordSet 0 if operation was successful
+     * @return int|string 0 if operation was successful
      */
     public function setSchema($schema)
     {
@@ -85,7 +83,9 @@ trait SchemaTrait
     /**
      * Return the current schema search path.
      *
-     * @return array array of schema names
+     * @return (false|string)[] array of schema names
+     *
+     * @psalm-return non-empty-list<false|string>
      */
     public function getSearchPath()
     {
@@ -143,7 +143,9 @@ trait SchemaTrait
      * @param string $authorization (optional) The username to create the schema for
      * @param string $comment       (optional) If omitted, defaults to nothing
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createSchema($schemaname, $authorization = '', $comment = '')
     {
@@ -203,7 +205,9 @@ trait SchemaTrait
      * @param string $name       new name for this schema
      * @param string $owner      The new owner for this schema
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function updateSchema($schemaname, $comment, $name, $owner)
     {
@@ -268,7 +272,7 @@ trait SchemaTrait
      *
      * @param string $schema The name of the schema
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getSchemaByName($schema)
     {

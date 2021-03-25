@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class LanguagesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -37,7 +39,7 @@ class LanguagesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -65,7 +67,9 @@ class LanguagesController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($languages, $columns, $actions, 'languages-languages', $this->lang['strnolanguages']);
+        if (self::isRecordset($languages)) {
+            echo $this->printTable($languages, $columns, $actions, 'languages-languages', $this->lang['strnolanguages']);
+        }
     }
 
     /**

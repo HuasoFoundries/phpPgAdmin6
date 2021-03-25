@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 use PHPPgAdmin\ContainerUtils;
@@ -19,7 +19,7 @@ function getAppInstance(): App
     $subfolder = '';
     // Check to see if the configuration file exists, if not, explain
     if (!\file_exists(\dirname(__DIR__) . '/config.inc.php')) {
-        die('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
+        exit('Configuration error: Copy config.inc.php-dist to config.inc.php and edit appropriately.');
     }
     $conf = [];
 
@@ -57,7 +57,7 @@ function getAppInstance(): App
     $conf['IN_TEST'] = IN_TEST;
 
     // Fetch App and DI Container
-     $app = ContainerUtils::getAppInstance($conf);
+    $app = ContainerUtils::getAppInstance($conf);
 
     return $app;
 }
@@ -71,12 +71,12 @@ function containerInstance(): ContainerUtils
         \trigger_error('App Container must be an instance of \\Slim\\Container', \E_USER_ERROR);
     }
 
-    return  $container;
+    return $container;
 }
 
 function requestInstance(): Request
 {
-    return  \containerInstance()->request;
+    return \containerInstance()->request;
 }
 
 function responseInstance(): Response

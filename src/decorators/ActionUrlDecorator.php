@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,10 +9,12 @@ namespace PHPPgAdmin\Decorators;
 class ActionUrlDecorator extends Decorator
 {
     public $base;
+
     /**
      * @var mixed
      */
     public $queryVars;
+
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;
@@ -23,6 +25,8 @@ class ActionUrlDecorator extends Decorator
     }
 
     /**
+     * @param array $fields
+     *
      * @return string
      */
     public function value($fields)
@@ -49,6 +53,6 @@ class ActionUrlDecorator extends Decorator
             }
         }
 
-        return   \str_replace('.php', '', containerInstance()->subFolder.'/'.$url);
+        return \str_replace('.php', '', containerInstance()->subFolder . '/' . $url);
     }
 }

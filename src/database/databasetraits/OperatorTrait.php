@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for operators manipulation.
@@ -16,7 +14,7 @@ trait OperatorTrait
     /**
      * Returns a list of all operators in the database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getOperators()
     {
@@ -90,7 +88,7 @@ trait OperatorTrait
      *
      * @param mixed $operator_oid The oid of the operator
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getOperator($operator_oid)
     {
@@ -124,7 +122,7 @@ trait OperatorTrait
     /**
      * Gets all opclasses.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getOpClasses()
     {

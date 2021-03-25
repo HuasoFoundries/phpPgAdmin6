@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
@@ -19,14 +19,14 @@ class ContainerHandlers
      * */
     private $container;
 
-    /**
-     * @param ContainerUtils $container
-     */
     public function __construct(ContainerUtils $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @return static
+     */
     public function storeMainRequestParams(): self
     {
         $this->container['action'] = $_REQUEST['action'] ?? '';
@@ -41,7 +41,7 @@ class ContainerHandlers
     /**
      * Sets the views.
      *
-     * @return self ( description_of_the_return_value )
+     * @return static ( description_of_the_return_value )
      */
     public function setViews(): self
     {
@@ -69,7 +69,7 @@ class ContainerHandlers
     /**
      * Sets the instance of Misc class.
      *
-     * @return self ( description_of_the_return_value )
+     * @return static ( description_of_the_return_value )
      */
     public function setMisc(): self
     {
@@ -96,6 +96,9 @@ class ContainerHandlers
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function setExtra(): self
     {
         $container = $this->container;
@@ -112,9 +115,15 @@ class ContainerHandlers
         return $this;
     }
 
+    /**
+     * @return static
+     */
     public function setHaltHandler(): self
     {
-        $this->container['haltHandler'] = static function (ContainerUtils $c) {
+        $this->container['haltHandler'] = /**
+         * @psalm-return \Closure(mixed, mixed, mixed, mixed=):mixed
+         */
+        static function (ContainerUtils $c): \Closure {
             return static function ($request, $response, $exits, $status = 500) {
                 $title = 'PHPPgAdmin Error';
 

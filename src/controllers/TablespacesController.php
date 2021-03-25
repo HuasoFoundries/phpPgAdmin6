@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -18,7 +18,7 @@ class TablespacesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader();
         $this->printBody();
@@ -75,7 +75,7 @@ class TablespacesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -149,7 +149,9 @@ class TablespacesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $this->lang['strnotablespaces']);
+        if (self::isRecordset($tablespaces)) {
+            echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $this->lang['strnotablespaces']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -170,7 +172,7 @@ class TablespacesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -320,7 +322,7 @@ class TablespacesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

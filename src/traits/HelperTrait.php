@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -33,6 +33,13 @@ trait HelperTrait
         throw new \Slim\Exception\SlimException(\requestInstance(), \responseInstance());
     }
 
+    /**
+     * @psalm-return array{class: mixed, type: mixed, function: mixed, spacer4: string, line: mixed}
+     *
+     * @param mixed $offset
+     *
+     * @return (mixed|string)[]
+     */
     public static function getBackTrace($offset = 0)
     {
         $i0 = $offset;
@@ -62,7 +69,9 @@ trait HelperTrait
      * @param \ADORecordSet $set   The set
      * @param string        $field optionally the field to query for
      *
-     * @return array the parsed array
+     * @return (\ADORecordSet|mixed)[] the parsed array
+     *
+     * @psalm-return list<\ADORecordSet|mixed>
      */
     public static function recordSetToArray($set, $field = '')
     {

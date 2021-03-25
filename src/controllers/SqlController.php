@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
 use ADORecordSet;
-use Kint\Kint;
+use Exception;
 use PHPPgAdmin\ADOdbException;
 
 /**
@@ -27,6 +27,8 @@ class SqlController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|\Slim\Http\Response|string
      */
     public function render()
     {
@@ -57,62 +59,56 @@ class SqlController extends BaseController
         if (isset($_REQUEST['subject'])) {
             $this->subject = $_REQUEST['subject'];
         }
-        
+
         // Check to see if pagination has been specified. In that case, send to display
         // script for pagination
         // if a file is given or the request is an explain, do not paginate
-        if (isset($_REQUEST['paginate']) &&
-            !(isset($_FILES['script']) && 0 < $_FILES['script']['size']) &&
-            (0 === \preg_match('/^\s*explain/i', $this->query))) {
+        if (isset($_REQUEST['paginate'])
+            && !(isset($_FILES['script']) && 0 < $_FILES['script']['size'])
+            && (0 === \preg_match('/^\s*explain/i', $this->query))
+        ) {
             //if (!(isset($_FILES['script']) && $_FILES['script']['size'] > 0)) {
-           
+
             $display_controller = new DisplayController($this->getContainer());
-          
+
             return $display_controller->render();
         }
-        
-        $this->view->offsetSet('codemirror',true);
 
-    
-        
-        // Set the schema search path
-        if (isset($_REQUEST['search_path']) && 0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
-            $this->printHeader($this->headerTitle(), null, true );
-            $body=$this->printBody(false);
-            $trail=$this->printTrail('database',false);
-            $title=$this->printTitle($this->lang['strqueryresults'],null,false);
-            echo $body.$trail.$title;
-            return $this->printFooter();
-        }
-      
+        $this->view->offsetSet('codemirror', true);
 
         // May as well try to time the query
-        if (\function_exists('microtime')) {
-            [$usec, $sec] = \explode(' ', \microtime());
-            $this->start_time = ((float) $usec + (float) $sec);
-            $this->view->offsetSet('serverSide',1);
-           $header= $this->printHeader($this->headerTitle(), null, true );
-            $body=$this->printBody(false);
-            $trail=$this->printTrail('database',false);
-            $title=$this->printTitle($this->lang['strqueryresults'],null,false);
-            echo $body.$trail.$title;
-          
-        $rs = $this->doDefault();
-     
-      
-    }
-    echo $body.$trail.$title;
-  //  echo $body.$trail.$title;
-       $this->doFooter(true, 'footer_sqledit.twig', $rs);
+
+        [$usec, $sec] = \explode(' ', \microtime());
+        $this->start_time = ((float) $usec + (float) $sec);
+        $this->view->offsetSet('serverSide', 1);
+        $header = $this->printHeader($this->headerTitle(), null, true);
+        $body = $this->printBody(false);
+        $trail = $this->printTrail('database', false);
+        $title = $this->printTitle($this->lang['strqueryresults'], null, false);
+        echo $body . $trail . $title;
+
+        if (isset($_REQUEST['search_path']) && 0 !== $data->setSearchPath(\array_map('trim', \explode(',', $_REQUEST['search_path'])))) {
+            return $this->printFooter();
+        }
+
+        try {
+            $rs = $this->doDefault();
+
+            //  echo $body.$trail.$title;
+            $this->doFooter(true, 'footer_sqledit.twig', $rs);
+        } catch (Exception $e) {
+            exit($e->getMessage());
+        }
     }
 
+    /**
+     * @return null|\PHPPgAdmin\ADORecordSet
+     */
     public function doDefault()
     {
         $_connection = $this->misc->getConnection();
 
         try {
-            
-
             return $this->execute_query();
         } catch (ADOdbException $e) {
             $message = $e->getMessage();
@@ -129,13 +125,13 @@ class SqlController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
         $lang = $this->lang;
-        $json=[];
+        $json = [];
         /**
          * This is a callback function to display the result of each separate query.
          *
          * @param ADORecordSet $rs The recordset returned by the script execetor
          */
-        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection,&$json): void {
+        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection, &$json): void {
             // Check if $rs is false, if so then there was a fatal error
             if (false === $rs) {
                 echo \htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', \nl2br(\htmlspecialchars($_connection->getLastError())), '<br/>' . \PHP_EOL;
@@ -166,7 +162,7 @@ class SqlController extends BaseController
                             }
                             echo '</tr>' . \PHP_EOL;
                             $row = \pg_fetch_row($rs);
-                         
+
                             ++$i;
                         }
 
@@ -203,7 +199,7 @@ class SqlController extends BaseController
     }
 
     /**
-     * @return null|ADORecordSet
+     * @return null|\PHPPgAdmin\ADORecordSet
      */
     private function execute_query()
     {
@@ -217,7 +213,7 @@ class SqlController extends BaseController
          * @var ADORecordSet
          */
         $rs = $data->conn->Execute($this->query);
-     
+
         echo '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
         echo '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
 
@@ -225,7 +221,7 @@ class SqlController extends BaseController
         echo '</textarea><br>';
         echo $this->view->setForm();
         echo '<input type="submit"/></form>';
-$json=[];
+        $json = [];
         // $rs will only be an object if there is no error
         if (\is_object($rs)) {
             // Request was run, saving it in history
@@ -239,37 +235,37 @@ $json=[];
             if (0 < $rs->RecordCount()) {
                 echo "<table>\n<tr>";
 
-                foreach (array_keys($rs->fields) as $fieldName) {
+                foreach (\array_keys($rs->fields) as $fieldName) {
                     $finfo = $rs->FetchField($fieldName);
                     echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>';
                 }
                 echo '</tr>' . \PHP_EOL;
                 $i = 0;
-$res='';
+
                 while (!$rs->EOF) {
                     $id = (0 === ($i % 2) ? '1' : '2');
-                    $res.= \sprintf(
+                    $res = \sprintf(
                         '<tr class="data%s">',
                         $id
                     ) . \PHP_EOL;
 
-                    $json[$i]=[];
+                    $json[$i] = [];
+
                     foreach ($rs->fields as $fieldName => $fieldValue) {
                         $finfo = $rs->FetchField($fieldName);
-                        $parsedValue=$this->misc->printVal($fieldValue, $finfo->type, ['null' => true]);
-                      
-                        $json[$i][$fieldName]=$parsedValue;
-                        $res.= '<td style="white-space:nowrap;">';
-                        $res.= $parsedValue;
-                        $res.= '</td>';
+                        $parsedValue = $this->misc->printVal($fieldValue, $finfo->type, ['null' => true]);
+
+                        $json[$i][$fieldName] = $parsedValue;
+                        $res .= '<td style="white-space:nowrap;">';
+                        $res .= $parsedValue;
+                        $res .= '</td>';
                     }
-                    $res.= '</tr>' . \PHP_EOL;
+                    $res .= '</tr>' . \PHP_EOL;
+                    echo $res;
                     $rs->MoveNext();
                     ++$i;
-                 
                 }
-              
-                echo $res;
+
                 echo '</table>' . \PHP_EOL;
                 echo '<p>', $rs->RecordCount(), \sprintf(
                     ' %s</p>',
@@ -285,15 +281,16 @@ $res='';
                 // Otherwise nodata to print
                 echo '<p>', $this->lang['strnodata'], '</p>' . \PHP_EOL;
             }
-           
+
             return $rs;
         }
     }
 
     /**
      * @param true       $doBody
-     * @param string     $template
      * @param null|mixed $rs
+     *
+     * @return null|string
      */
     private function doFooter(bool $doBody = true, string $template = 'footer.twig', $rs = null)
     {

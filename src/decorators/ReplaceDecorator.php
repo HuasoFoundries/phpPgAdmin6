@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -12,7 +12,9 @@ class ReplaceDecorator extends Decorator
      * @var mixed
      */
     public $s;
+
     public $p;
+
     public function __construct($str, $params)
     {
         $this->s = $str;

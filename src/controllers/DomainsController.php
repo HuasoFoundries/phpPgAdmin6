@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class DomainsController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -108,7 +110,7 @@ class DomainsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -186,7 +188,9 @@ class DomainsController extends BaseController
             unset($actions['alter']);
         }
 
-        echo $this->printTable($domains, $columns, $actions, 'domains-domains', $this->lang['strnodomains']);
+        if (self::isRecordset($domains)) {
+            echo $this->printTable($domains, $columns, $actions, 'domains-domains', $this->lang['strnodomains']);
+        }
 
         $navlinks = [
             'create' => [
@@ -263,7 +267,7 @@ class DomainsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -468,7 +472,7 @@ class DomainsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -554,7 +558,9 @@ class DomainsController extends BaseController
                     ],
                 ];
 
-                echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $this->lang['strnodata']);
+                if (self::isRecordset($domaincons)) {
+                    echo $this->printTable($domaincons, $columns, $actions, 'domains-properties', $this->lang['strnodata']);
+                }
             }
         } else {
             echo \sprintf(
@@ -668,7 +674,7 @@ class DomainsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

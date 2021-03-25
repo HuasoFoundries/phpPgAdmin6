@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -16,7 +16,7 @@ class HelpController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         switch ($this->action) {
             case 'browse':
@@ -57,7 +57,7 @@ class HelpController extends BaseController
         $this->doBrowse($this->lang['strinvalidhelppage']);
     }
 
-    public function doBrowse($msg = ''): void
+    public function doBrowse($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -72,7 +72,7 @@ class HelpController extends BaseController
 
         $pages = $data->getHelpPages();
 
-        foreach (array_keys($pages) as $page) {
+        foreach (\array_keys($pages) as $page) {
             echo \sprintf(
                 '<dt>%s</dt>',
                 $page

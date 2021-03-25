@@ -1,15 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ServersTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -36,6 +36,8 @@ class ServersController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -46,7 +48,7 @@ class ServersController extends BaseController
         $msg = $this->msg;
 
         $server_html = $this->printHeader($this->headerTitle(), null, false);
-        $server_html .= $this->printBody(false,'flexbox_body',false,true);
+        $server_html .= $this->printBody(false, 'flexbox_body', false, true);
         $server_html .= $this->printTrail('root', false);
 
         \ob_start();
@@ -66,20 +68,20 @@ class ServersController extends BaseController
         $server_html .= \ob_get_clean();
 
         $server_html .= $this->printFooter(false);
-        $route=requestInstance()->getAttribute('route');
-        $theResponse=\responseInstance();
-      //  ddd($server_html);
+        $route = requestInstance()->getAttribute('route');
+        $theResponse = \responseInstance();
+        //  ddd($server_html);
         if (null === $route) {
             echo $server_html;
         } else {
             $body = $theResponse->getBody();
             $body->write($server_html);
-          
-            return $theResponse ;
+
+            return $theResponse;
         }
     }
 
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $this->printTabs('root', 'servers');
         $this->printMsg($msg);
@@ -96,12 +98,15 @@ class ServersController extends BaseController
         ];
         $actions = [];
 
-        if ((false !== $group) &&
-            (isset($this->conf['srv_groups'][$group])) &&
-            (0 < $groups->RecordCount())
+        if ((false !== $group)
+            && (isset($this->conf['srv_groups'][$group]))
+            && (0 < $groups->RecordCount())
         ) {
             $this->printTitle(\sprintf($this->lang['strgroupgroups'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')));
-            echo $this->printTable($groups, $columns, $actions, $this->table_place);
+
+            if (self::isRecordset($groups)) {
+                echo $this->printTable($groups, $columns, $actions, $this->table_place);
+            }
         }
 
         $servers = $this->getServers(true, $group);
@@ -112,7 +117,6 @@ class ServersController extends BaseController
                 'field' => Decorator::field('desc'),
                 'url' => \containerInstance()->getDestinationWithLastTab('server'),
                 'vars' => ['server' => 'sha'],
-                
             ],
             'host' => [
                 'title' => $this->lang['strhost'],
@@ -146,19 +150,26 @@ class ServersController extends BaseController
             ],
         ];
         //\sha1("{$server_info['host']}:{$server_info['port']}:{$server_info['sslmode']}")
-        $svPre = static function (&$rowdata) use ($actions) {
+        $svPre = /**
+         * @psalm-return array{logout: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, logoutServer: \PHPPgAdmin\Decorators\FieldDecorator}}}, disable: bool}}
+         *
+         * @param mixed $rowdata
+         *
+         * @return (((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|string)[][]|bool|mixed)[][]
+         */
+        static function (&$rowdata) use ($actions): array {
             $actions['logout']['disable'] = empty($rowdata->fields['username']);
 
             return $actions;
         };
 
-        if ((false !== $group) &&
-            isset($this->conf['srv_groups'][$group])
+        if ((false !== $group)
+            && isset($this->conf['srv_groups'][$group])
         ) {
             $this->printTitle(\sprintf($this->lang['strgroupservers'], \htmlentities($this->conf['srv_groups'][$group]['desc'], \ENT_QUOTES, 'UTF-8')), null);
             $actions['logout']['attr']['href']['urlvars']['group'] = $group;
         }
-        $thetable= $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
+        $thetable = $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
         echo $thetable;
     }
 
@@ -224,7 +235,9 @@ class ServersController extends BaseController
      * @param bool  $recordset return as RecordSet suitable for HTMLTableController::printTable if true, otherwise just return an array
      * @param mixed $group_id  a group name to filter the returned servers using $this->conf[srv_groups]
      *
-     * @return array|ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     * @return (\PHPPgAdmin\Decorators\UrlDecorator|mixed|string)[][]|ArrayRecordSet either an array or a Recordset suitable for HTMLTableController::printTable
+     *
+     * @psalm-return ArrayRecordSet|array<array-key, array{id: mixed|string, desc: mixed, icon: string, action: \PHPPgAdmin\Decorators\UrlDecorator, branch: \PHPPgAdmin\Decorators\UrlDecorator}>
      */
     private function getServersGroups($recordset = false, $group_id = false)
     {
@@ -232,10 +245,10 @@ class ServersController extends BaseController
 
         if (isset($this->conf['srv_groups'])) {
             foreach ($this->conf['srv_groups'] as $i => $group) {
-                if (((false === $group_id) && (!isset($group['parents']))) ||
-                    (false !== $group_id) &&
-                    isset($group['parents']) &&
-                    \in_array(
+                if (((false === $group_id) && (!isset($group['parents'])))
+                    || (false !== $group_id)
+                    && isset($group['parents'])
+                    && \in_array(
                         $group_id,
                         \explode(
                             ',',

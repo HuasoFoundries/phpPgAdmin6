@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -18,23 +18,24 @@ class UsersController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader();
-       
-$this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
+
+        $this->action = isset($_REQUEST['cancel']) ? 'cancel' : $this->action;
+
         switch ($this->action) {
             case 'cancel':
                  $this->printBody();
                 $this->doDefault();
-                break;
 
+                break;
             case 'changepassword':
                 if (isset($_REQUEST['ok'])) {
-                     $this->printBody();
+                    $this->printBody();
                     $this->doChangePassword(false);
                 } else {
-                     $this->printBody();
+                    $this->printBody();
                     $this->doAccount();
                 }
 
@@ -50,9 +51,8 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
 
                 break;
             case 'save_create':
-                 $this->printBody();    
+                 $this->printBody();
                 $this->doSaveCreate();
-               
 
                 break;
             case 'create':
@@ -61,9 +61,8 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
 
                 break;
             case 'drop':
-                 $this->printBody();      
+                 $this->printBody();
                 $this->doDrop(false);
-               
 
                 break;
             case 'confirm_drop':
@@ -72,9 +71,8 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
 
                 break;
             case 'save_edit':
-                 $this->printBody();       
+                 $this->printBody();
                 $this->doSaveEdit();
-                
 
                 break;
             case 'edit':
@@ -84,7 +82,7 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
                 break;
 
             default:
-                $this->view->offsetSet('trail',$this->printTrail('server',false));
+                $this->view->offsetSet('trail', $this->printTrail('server', false));
                 $this->printBody();
                 $this->doDefault();
 
@@ -99,7 +97,7 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -108,7 +106,6 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
             return 'infinity' === $val ? $lang['strnever'] : \htmlspecialchars($val);
         };
 
-        
         $this->printTabs('server', 'users');
         $this->printMsg($msg);
 
@@ -175,7 +172,9 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
             ],
         ];
 
-        echo $this->printTable($users, $columns, $actions, 'users-users', $this->lang['strnousers']);
+        if (self::isRecordset($users)) {
+            echo $this->printTable($users, $columns, $actions, 'users-users', $this->lang['strnousers']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -199,7 +198,7 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
      *
      * @param mixed $msg
      */
-    public function doAccount($msg = ''): void
+    public function doAccount($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -326,7 +325,7 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
      *
      * @param mixed $msg
      */
-    public function doEdit($msg = ''): void
+    public function doEdit($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -501,7 +500,7 @@ $this->action=isset($_REQUEST['cancel'])?'cancel':$this->action;
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

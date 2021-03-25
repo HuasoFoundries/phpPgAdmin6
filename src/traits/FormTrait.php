@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -20,6 +20,8 @@ trait FormTrait
      * @param string $table  value for table input
      * @param string $add    text for add button
      * @param string $cancel text for cancel button
+     *
+     * @return string
      */
     public function getActionTableAndButtons($action, $table, $add, $cancel)
     {
@@ -38,6 +40,8 @@ trait FormTrait
      * @param array $inputs   array of inputs with their name, type and value
      * @param array $buttons  array of buttons with their name, type and value
      * @param array $cheboxes array of cheboxes with their name, id, checked state, type and text for label
+     *
+     * @return string
      */
     public function getFormInputsAndButtons($inputs, $buttons, $cheboxes = [])
     {

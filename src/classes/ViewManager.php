@@ -1,14 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
 
 use PHPPgAdmin\Traits\HelperTrait;
-use Psr\Http\Message\ResponseInterface;
-use Slim\Http\Response;
 use Slim\Views\Twig;
 use Slim\Views\TwigExtension;
 
@@ -127,9 +125,8 @@ class ViewManager extends Twig
     private static $instance;
 
     /**
-     * @param mixed          $path
-     * @param mixed          $settings
-     * @param ContainerUtils $c
+     * @param mixed $path
+     * @param mixed $settings
      */
     public function __construct($path, $settings, ContainerUtils $c)
     {
@@ -187,7 +184,7 @@ class ViewManager extends Twig
      *
      * @param bool $flag sets internal $_reload_browser var which will be passed to the footer methods
      *
-     * @return \PHPPgAdmin\ViewManager this class instance
+     * @return static this class instance
      */
     public function setReloadBrowser($flag): self
     {
@@ -196,15 +193,10 @@ class ViewManager extends Twig
         return $this;
     }
 
-    /**
-     * @return bool
-     */
     public function getReloadBrowser(): bool
     {
         return $this->_reload_browser;
     }
-
- 
 
     /**
      * Gets the theme from
@@ -225,31 +217,31 @@ class ViewManager extends Twig
 
         // Check if theme is in $_REQUEST, $_SESSION or $_COOKIE
         // 1.- First priority: $_REQUEST, this happens when you use the selector
-        if (\array_key_exists('theme', $_REQUEST) &&
-            \array_key_exists($_REQUEST['theme'], $themefolders)
+        if (\array_key_exists('theme', $_REQUEST)
+            && \array_key_exists($_REQUEST['theme'], $themefolders)
         ) {
             $_theme = $_REQUEST['theme'];
         } elseif ( // otherwise, see if there's a theme associated with this particular server
-            null !== $_server_info &&
-            \array_key_exists('theme', $_server_info) &&
-            \is_string($_server_info['theme']) &&
-            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
+            null !== $_server_info
+            && \array_key_exists('theme', $_server_info)
+            && \is_string($_server_info['theme'])
+            && \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             $_theme = $_server_info['theme'];
-        } elseif (isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION) &&
-            \array_key_exists($_SESSION['ppaTheme'], $themefolders)
+        } elseif (isset($_SESSION) && \array_key_exists('ppaTheme', $_SESSION)
+            && \array_key_exists($_SESSION['ppaTheme'], $themefolders)
         ) {
             // otherwise check $_SESSION
             $_theme = $_SESSION['ppaTheme'];
-        } elseif (\array_key_exists('ppaTheme', $_COOKIE) &&
-            \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
+        } elseif (\array_key_exists('ppaTheme', $_COOKIE)
+            && \array_key_exists($_COOKIE['ppaTheme'], $themefolders)
         ) {
             // oterwise check $_COOKIE
             $_theme = $_COOKIE['ppaTheme'];
         } elseif ( // see if there's a valid theme set in config file
-            \array_key_exists('theme', $conf) &&
-            \is_string($conf['theme']) &&
-            \array_key_exists($conf['theme'], $themefolders)
+            \array_key_exists('theme', $conf)
+            && \is_string($conf['theme'])
+            && \array_key_exists($conf['theme'], $themefolders)
         ) {
             $_theme = $conf['theme'];
         }
@@ -264,7 +256,7 @@ class ViewManager extends Twig
     {
         $form = [];
 
-        if ($this->container->server !== '') {
+        if ('' !== $this->container->server) {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'server',
@@ -272,7 +264,7 @@ class ViewManager extends Twig
             );
         }
 
-        if ($this->container->database !== '') {
+        if ('' !== $this->container->database) {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'database',
@@ -280,7 +272,7 @@ class ViewManager extends Twig
             );
         }
 
-        if ($this->container->schema !== '') {
+        if ('' !== $this->container->schema) {
             $form[] = \sprintf(
                 '<input type="hidden" name="%s" value="%s" />',
                 'schema',
@@ -335,8 +327,6 @@ class ViewManager extends Twig
 
     /**
      * @param string $icon
-     *
-     * @return string
      */
     public function icon($icon = ''): string
     {
@@ -443,6 +433,19 @@ class ViewManager extends Twig
         return $default_icon;
     }
 
+    /**
+     * Undocumented function.
+     *
+     * @psalm-suppress LessSpecificReturnStatement
+     * @psalm-suppress MoreSpecificReturnType
+     *
+     * @return class-string
+     */
+    public function getControllerClassName(string $subject): string
+    {
+        return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
+    }
+
     private function getCookieTheme(): ?string
     {
         $cookie_theme = $_COOKIE['ppaTheme'] ?? null;
@@ -481,48 +484,6 @@ class ViewManager extends Twig
         if ($this->isThemeAvailable($_theme)) {
             $_SESSION['ppaTheme'] = $_theme;
         }
-    }
-/**
- * Undocumented function
- * @deprecated v6.2.0 we won't use iframes anymore.
- * @param Response $response
- * @param string $subject
- * @param string $query_string
- * @param string $template
- * @return ResponseInterface
- */
-public function maybeRenderIframes(Response $response, string $subject, string $query_string,string $template='intro_view.twig')
-{
-    $c = $this->getContainer();
-
-    $in_test = $this->offsetGet('in_test');
-    $includeJsTree = $this->offsetExists('includeJsTree')?$this->offsetGet('includeJsTree'):false;
-
-    if ('1' === $in_test||$includeJsTree) {
-        $className = self::getControllerClassName($subject);
-        $controller = new $className($c);
-
-        return $controller->render();
-    }
-    $viewVars = [
-        'url' => '/src/views/' . $subject . ($query_string !== '' ? '?' . $query_string : ''),
-        'headertemplate' => 'header.twig',
-    ];
-
-    return $this->render($response, $template, $viewVars);
-}
-    /**
-     * Undocumented function.
-     *
-     * @param string $subject
-     * @psalm-suppress LessSpecificReturnStatement
-     * @psalm-suppress MoreSpecificReturnType
-     *
-     * @return class-string
-     */
-    public function getControllerClassName(string $subject): string
-    {
-        return '\PHPPgAdmin\Controller\\' . \ucfirst($subject) . 'Controller';
     }
 
     private function getContainer(): ContainerUtils
@@ -568,8 +529,8 @@ public function maybeRenderIframes(Response $response, string $subject, string $
                 'global.css'
             );
             // if $folderpath if indeed a folder and contains a global.css file, then it's a theme
-            if (\is_dir($folderpath) &&
-                \is_file($stylesheet)
+            if (\is_dir($folderpath)
+                && \is_file($stylesheet)
             ) {
                 $themefolders[$foldername] = $folderpath;
             }

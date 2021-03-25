@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -18,7 +18,7 @@ trait SequenceTrait
      *
      * @param bool $all true to get all sequences of all schemas
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getSequences($all = false)
     {
@@ -160,7 +160,7 @@ trait SequenceTrait
      *
      * @param string $sequence Sequence name
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getSequence($sequence)
     {
@@ -584,7 +584,7 @@ trait SequenceTrait
      * @param null|bool    $cycledvalue  True if cycled, false otherwise
      * @param int          $startvalue   The sequence start value when issueing a restart
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -7|-6|-5|-4|-3|0
      */

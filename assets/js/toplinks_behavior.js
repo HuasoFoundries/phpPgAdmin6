@@ -1,4 +1,7 @@
+/// <reference lib="dom" />
+
 function shouldSkipRedirection() {
+  
   return (
     window.inPopUp ||
     parent.frames.length ||
@@ -8,21 +11,12 @@ function shouldSkipRedirection() {
   );
 }
 
-function addBehaviorToTopLinks(amIDetailFrame) {
-  const parentHandle =
-      amIDetailFrame && window.parent.document.querySelector('#detail'),
-    toplink_logout =
-      amIDetailFrame &&
-      (parentHandle.contentDocument || document).querySelector(
-        '#toplink_logout'
-      );
-
-  parentHandle &&
-    [
-      ...(parentHandle.contentDocument || document).querySelectorAll(
-        '.toplink .toplink_popup'
-      ),
-    ].forEach((element) => {
+$.ready.then(() => {
+   
+  
+  document.querySelectorAll(
+    '.toplinks .toplink_popup'
+  ).forEach((element) => {
       element.addEventListener('click', (e) => {
         window.name = 'detail';
         window
@@ -34,8 +28,9 @@ function addBehaviorToTopLinks(amIDetailFrame) {
           .focus();
       });
     });
-  toplink_logout &&
-    toplink_logout.addEventListener('click', (e) => {
+    document.querySelector(
+      '#toplink_logout'
+    ).addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm(stateObj.strconfdropcred)) {
         window.location.href = e.target.getAttribute('rel');
@@ -43,11 +38,6 @@ function addBehaviorToTopLinks(amIDetailFrame) {
     });
 
   return;
-}
-
-$.ready.then(() => {
-  let amIDetailFrame = document.body.classList.contains('detailbody');
-  if (shouldSkipRedirection()) {
-    return addBehaviorToTopLinks(true || amIDetailFrame);
-  }
+ 
+ 
 });

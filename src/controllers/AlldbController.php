@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ExportTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -23,6 +23,8 @@ class AlldbController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -85,7 +87,7 @@ class AlldbController extends BaseController
         $output = \ob_get_clean();
 
         $this->printHeader($this->headerTitle(), null, true, $header_template);
-        $this->printBody(true,'flexbox_body',false,true);
+        $this->printBody(true, 'flexbox_body', false, true);
         echo $output;
 
         return $this->printFooter();
@@ -96,7 +98,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $this->printTrail('server');
         $this->printTabs('server', 'databases');
@@ -114,7 +116,7 @@ class AlldbController extends BaseController
             'database' => [
                 'title' => $this->lang['strdatabase'],
                 'field' => Decorator::field('datname'),
-                'url' =>   $redirecturl . '&amp;',
+                'url' => $redirecturl . '&amp;',
                 'vars' => ['database' => 'datname'],
             ],
             'owner' => [
@@ -218,7 +220,9 @@ class AlldbController extends BaseController
             unset($actions['privileges']);
         }
 
-        echo $this->printTable($databases, $columns, $actions, $this->table_place, $this->lang['strnodatabases']);
+        if (self::isRecordSet($databases)) {
+            echo $this->printTable($databases, $columns, $actions, $this->table_place, $this->lang['strnodatabases']);
+        }
 
         $navlinks = [
             'create' => [
@@ -255,6 +259,7 @@ class AlldbController extends BaseController
             'action' => Decorator::redirecturl('redirect', $reqvars, ['subject' => 'database', 'database' => Decorator::field('datname')]),
             'branch' => Decorator::url('/src/views/database', $reqvars, ['action' => 'tree', 'database' => Decorator::field('datname')]),
         ];
+
         return $this->printTree($databases, $attrs, 'databases');
     }
 
@@ -288,7 +293,7 @@ class AlldbController extends BaseController
                 // Fetch all users
 
                 $rs = $data->getDatabaseOwner($_REQUEST['alterdatabase']);
-                $owner = isset($rs->fields['usename']) ? $rs->fields['usename'] : '';
+                $owner = $rs->fields['usename'] ?? '';
                 $users = $data->getUsers();
 
                 echo \sprintf(
@@ -308,7 +313,7 @@ class AlldbController extends BaseController
 
             if ($data->hasSharedComments()) {
                 $rs = $data->getDatabaseComment($_REQUEST['alterdatabase']);
-                $comment = isset($rs->fields['description']) ? $rs->fields['description'] : '';
+                $comment = $rs->fields['description'] ?? '';
                 echo \sprintf(
                     '<tr><th class="data left">%s</th>',
                     $this->lang['strcomment']
@@ -443,7 +448,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -659,7 +664,7 @@ class AlldbController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doExport($msg = ''): void
+    public function doExport($msg = '')
     {
         $this->printTrail('server');
         $this->printTabs('server', 'export');

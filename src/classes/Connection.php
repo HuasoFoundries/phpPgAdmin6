@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
 
-use ADODB_pdo;
 use ADODB_postgres9;
 use PHPPgAdmin\Traits\HelperTrait;
 
@@ -83,9 +82,7 @@ class Connection
 
         $this->container = $container;
 
-        $this->conn = 'pdo' === $this->adodb_driver ?
-                $this->getPDOConnection($host, $port, $sslmode, $database, $user, $password, $fetchMode) :
-                $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
+        $this->conn = $this->getPG9Connection($host, $port, $sslmode, $database, $user, $password, $fetchMode);
         $this->conn->setFetchMode($fetchMode);
         //$this->prtrace($this->conn);
     }
@@ -109,7 +106,7 @@ class Connection
             return null;
         }
         $serverInfo = $this->conn->ServerInfo();
-       // dump($serverInfo);
+        // dump($serverInfo);
         $this->pgVersion = $serverInfo['version'];
         $description = \sprintf(
             'PostgreSQL %s',
@@ -184,29 +181,6 @@ class Connection
         $this->_connection_result = $this->conn->connect($pghost, $user, $password, $database);
 
         $this->_captured_error = \ob_get_clean();
-
-        return $this->conn;
-    }
-
-    private function getPDOConnection(
-        string $host,
-        int $port,
-        string $sslmode,
-        ?string $database,
-        ?string $user,
-        ?string $password,
-        int $fetchMode = \ADODB_FETCH_ASSOC
-    ): ADODB_pdo {
-        $this->conn = ADONewConnection('pdo');
-        $this->conn->setFetchMode($fetchMode);
-        $dsnString = \sprintf(
-            'pgsql:host=%s;port=%d;dbname=%s;sslmode=%s;application_name=PHPPgAdmin6',
-            $host,
-            $port,
-            $database,
-            $sslmode
-        );
-        $this->conn->connect($dsnString, $user, $password);
 
         return $this->conn;
     }

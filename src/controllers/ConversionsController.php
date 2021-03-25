@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class ConversionsController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -28,7 +30,6 @@ class ConversionsController extends BaseController
         $this->printHeader();
         $this->printBody();
         $this->doDefault();
-        
 
         return $this->printFooter();
     }
@@ -38,7 +39,7 @@ class ConversionsController extends BaseController
      *
      * @param string $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -74,7 +75,9 @@ class ConversionsController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $this->lang['strnoconversions']);
+        if (self::isRecordset($conversions)) {
+            echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $this->lang['strnoconversions']);
+        }
     }
 
     /**
@@ -86,7 +89,12 @@ class ConversionsController extends BaseController
 
         $constraints = $data->getConstraints($_REQUEST['table']);
 
-        $getIcon = static function ($f) {
+        $getIcon = /**
+         * @param mixed $f
+         *
+         * @return null|string
+         */
+        static function ($f) {
             switch ($f['contype']) {
                 case 'u':
                     return 'UniqueConstraint';

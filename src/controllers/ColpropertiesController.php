@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -22,7 +22,7 @@ class ColpropertiesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         if (isset($_REQUEST['table']) && !empty($_REQUEST['table'])) {
             $this->tableName = &$_REQUEST['table'];
@@ -125,7 +125,10 @@ class ColpropertiesController extends BaseController
             }
 
             $actions = [];
-            echo $this->printTable($attrs, $column, $actions, $this->table_place, $this->lang['strnodata'], $attPre);
+
+            if (self::isRecordset($attrs)) {
+                echo $this->printTable($attrs, $column, $actions, $this->table_place, $this->lang['strnodata'], $attPre);
+            }
 
             echo '<br />' . \PHP_EOL;
 
@@ -228,7 +231,7 @@ class ColpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

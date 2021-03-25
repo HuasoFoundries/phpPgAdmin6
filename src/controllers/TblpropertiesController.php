@@ -1,15 +1,15 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use Closure;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ExportTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -22,6 +22,8 @@ class TblpropertiesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -105,7 +107,7 @@ class TblpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $misc = $this->misc;
         $this->data = $misc->getDatabaseAccessor();
@@ -331,7 +333,7 @@ class TblpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $misc = $this->misc;
         $data = $misc->getDatabaseAccessor();
@@ -494,7 +496,7 @@ class TblpropertiesController extends BaseController
         }
     }
 
-    public function doExport($msg = ''): void
+    public function doExport($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         $subject = 'table';
@@ -520,7 +522,7 @@ class TblpropertiesController extends BaseController
         echo $this->formFooter($subject, $object);
     }
 
-    public function doImport($msg = ''): void
+    public function doImport($msg = '')
     {
         $misc = $this->misc;
 
@@ -609,7 +611,7 @@ class TblpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAddColumn($msg = ''): void
+    public function doAddColumn($msg = '')
     {
         $misc = $this->misc;
         $data = $misc->getDatabaseAccessor();
@@ -860,7 +862,7 @@ class TblpropertiesController extends BaseController
     }
 
     /**
-     * @psalm-return \Closure(mixed, mixed):mixed
+     * @psalm-return Closure(mixed, mixed):mixed
      *
      * @param mixed $data
      *
@@ -1072,6 +1074,8 @@ class TblpropertiesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', $this->lang['strnodata'], $attPre);
+        if (self::isRecordset($attrs)) {
+            echo $this->printTable($attrs, $columns, $actions, 'tblproperties-tblproperties', $this->lang['strnodata'], $attPre);
+        }
     }
 }

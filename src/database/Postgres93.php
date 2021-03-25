@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\Help\PostgresDoc93;
 
 /**
@@ -31,7 +30,7 @@ class Postgres93 extends Postgres94
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If not null, will find all trigger functions
      *
-     * @return \RecordSet|int|string All functions
+     * @return \ADORecordSet|bool|int|string All functions
      */
     public function getFunctions($all = false, $type = null)
     {

@@ -61,8 +61,16 @@ html body.detailbody {
 html body #detail.detail_container .max_height:not(.SqlEditController),
 html body.detailbody .max_height:not(.SqlEditController) {
   max-height: calc(100vh - 91px);
+  min-height: calc(100vh - 130px);
   max-width: calc(100vw - 275px);
   overflow: auto;
+  padding-bottom: 20px;
+}
+html body #detail.detail_container .max_height:not(.SqlEditController):after,
+html body.detailbody .max_height:not(.SqlEditController):after {
+  content: ' ';
+  pointer-events: none;
+  padding: 40px;
 }
 html body #detail.detail_container div.tabs,
 html body.detailbody div.tabs {
@@ -208,13 +216,17 @@ html body #detail.detail_container .topbar {
   width: 100%;
   top: 0;
   margin-left: -10px !important;
+  display: flex;
 }
-html body #detail.detail_container .topbar .toplink {
+html body #detail.detail_container .topbar .toplinks {
   width: 200px;
   margin-right: 15px;
+  flex: auto;
+  display: flex;
+  justify-content: flex-end;
 }
-html body #detail.detail_container .topbar .toplink button,
-html body #detail.detail_container .topbar .toplink .toplink_popup {
+html body #detail.detail_container .topbar .toplinks button,
+html body #detail.detail_container .topbar .toplinks .toplink_popup {
   font-size: 1.05em;
   border: 1px solid rgba(51, 102, 153, 0.5);
   border-radius: 4px;
@@ -222,6 +234,7 @@ html body #detail.detail_container .topbar .toplink .toplink_popup {
   margin-right: 3px;
   font-weight: bold;
   color: #336699;
+  background-color: #eceff1;
   cursor: pointer;
 }
 html body #detail.detail_container .trail {

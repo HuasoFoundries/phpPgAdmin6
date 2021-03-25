@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class OpclassesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -29,7 +31,6 @@ class OpclassesController extends BaseController
         $this->printBody();
         $this->doDefault();
 
-
         $this->printFooter();
     }
 
@@ -38,7 +39,7 @@ class OpclassesController extends BaseController
      *
      * @param string $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -74,7 +75,9 @@ class OpclassesController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $this->lang['strnoopclasses']);
+        if ($opclasses instanceof \PHPPgAdmin\Interfaces\RecordSet) {
+            echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $this->lang['strnoopclasses']);
+        }
     }
 
     /**

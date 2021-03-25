@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class CastsController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -28,7 +30,7 @@ class CastsController extends BaseController
         $this->printHeader();
         $this->printBody();
         $this->doDefault();
- 
+
         return $this->printFooter();
     }
 
@@ -37,7 +39,7 @@ class CastsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -88,7 +90,9 @@ class CastsController extends BaseController
 
         $actions = [];
 
-        echo $this->printTable($casts, $columns, $actions, 'casts-casts', $this->lang['strnocasts']);
+        if (self::isRecordset($casts)) {
+            echo $this->printTable($casts, $columns, $actions, 'casts-casts', $this->lang['strnocasts']);
+        }
     }
 
     /**

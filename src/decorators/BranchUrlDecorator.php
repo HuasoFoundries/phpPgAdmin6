@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,10 +9,12 @@ namespace PHPPgAdmin\Decorators;
 class BranchUrlDecorator extends Decorator
 {
     public $base;
+
     /**
      * @var mixed
      */
     public $queryVars;
+
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;
@@ -23,6 +25,8 @@ class BranchUrlDecorator extends Decorator
     }
 
     /**
+     * @param mixed $fields
+     *
      * @return string
      */
     public function value($fields)
@@ -47,13 +51,12 @@ class BranchUrlDecorator extends Decorator
             }
         }
 
-            $url = \str_replace('/src/views/', '/', $url);
-  
+        $url = \str_replace('/src/views/', '/', $url);
 
         //if ('' !== containerInstance()->subFolder && (0 === \mb_strpos($url, '/')) && (0 !== \mb_strpos($url, \containerInstance()->subFolder))) {
         //    $url = \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
         //}
 
-        return   \str_replace('.php', '', containerInstance()->subFolder.'/'.$url);
+        return \str_replace('.php', '', containerInstance()->subFolder . '/' . $url);
     }
 }

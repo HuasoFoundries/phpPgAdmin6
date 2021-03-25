@@ -1,11 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
 
+use IteratorAggregate;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -577,6 +578,8 @@ trait AdminTrait
      * perform actual vacuum.
      *
      * @param mixed $type
+     *
+     * @return null|string
      */
     public function doVacuum($type)
     {
@@ -633,8 +636,6 @@ trait AdminTrait
      * persist changes in autovacuum settings.
      *
      * @param mixed $type
-     * @param mixed $confirm
-     * @param mixed $msg
      */
     public function doEditAutovacuum($type): void
     {
@@ -790,6 +791,12 @@ trait AdminTrait
         $this->_printAutoVacuumConf($data, $type);
     }
 
+    /**
+     * @param mixed $action
+     * @param mixed $type
+     *
+     * @return bool
+     */
     public function adminActions($action, $type)
     {
         if ('database' === $type) {
@@ -886,8 +893,17 @@ trait AdminTrait
 
     abstract public function printTabs(string $tabs, string $activetab, bool $do_print = true);
 
-    abstract public function printTable(&$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null);
+    abstract public function printTable(IteratorAggregate &$tabledata, &$columns, &$actions, $place, $nodata = '', $pre_fn = null);
 
+    /**
+     * @psalm-return array{0: string, 1: string}
+     *
+     * @param mixed $data
+     * @param mixed $type
+     * @param mixed $table_hidden_inputs
+     *
+     * @return string[]
+     */
     private function _getReclusterConf($data, $type, $table_hidden_inputs)
     {
         if (!$data->hasRecluster()) {
@@ -936,7 +952,7 @@ trait AdminTrait
         echo '<p>' . (('on' === $defaults['autovacuum']) ? $this->lang['strturnedon'] : $this->lang['strturnedoff']) . '</p>';
         echo "<p class=\"message\">{$this->lang['strnotdefaultinred']}</p>";
 
-        $enlight = static function ($f, $p) {
+        $enlight = static function ($f, $p): string {
             if (isset($f[$p[0]]) && ($f[$p[0]] !== $p[1])) {
                 return '<span style="color:#F33;font-weight:bold">' . \htmlspecialchars($f[$p[0]]) . '</span>';
             }

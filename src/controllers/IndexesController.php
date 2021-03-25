@@ -1,17 +1,17 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\ADOdbException;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\XHtml\XHtmlButton;
 use PHPPgAdmin\XHtml\XHtmlOption;
 use PHPPgAdmin\XHtml\XHtmlSelect;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -24,6 +24,8 @@ class IndexesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -196,7 +198,9 @@ class IndexesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $this->lang['strnoindexes'], $indPre);
+        if (self::isRecordset($indexes)) {
+            echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $this->lang['strnoindexes'], $indPre);
+        }
 
         $this->printNavLinks([
             'create' => [
@@ -231,7 +235,7 @@ class IndexesController extends BaseController
 
         $indexes = $data->getIndexes($object);
 
-        $getIcon = static function ($f) {
+        $getIcon = static function ($f): string {
             if ('t' === $f['indisprimary']) {
                 return 'PrimaryKey';
             }
@@ -338,7 +342,7 @@ class IndexesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreateIndex($msg = ''): void
+    public function doCreateIndex($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

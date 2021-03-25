@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -19,7 +19,7 @@ class RolesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader();
         $this->printBody();
@@ -94,7 +94,7 @@ class RolesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -118,7 +118,7 @@ class RolesController extends BaseController
                 'title' => $this->lang['strrole'],
                 'field' => Decorator::field('rolname'),
                 'url' => \containerInstance()->getDestinationWithLastTab('role'),
-               
+
                 'vars' => ['rolename' => 'rolname'],
             ],
             'group' => [
@@ -194,7 +194,9 @@ class RolesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($roles, $columns, $actions, 'roles-roles', $this->lang['strnoroles']);
+        if (self::isRecordset($roles)) {
+            echo $this->printTable($roles, $columns, $actions, 'roles-roles', $this->lang['strnoroles']);
+        }
 
         $navlinks = [
             'create' => [
@@ -218,7 +220,7 @@ class RolesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -242,7 +244,7 @@ class RolesController extends BaseController
         $this->printTitle($this->lang['strcreaterole'], 'pg.role.create');
         $this->printMsg($msg);
 
-        echo '<form action="roles" method="post">' . \PHP_EOL;
+        echo '<form action="roles" class="max_height" method="post">' . \PHP_EOL;
         echo '<table>' . \PHP_EOL;
         echo \sprintf(
             '	<tr>
@@ -270,36 +272,31 @@ class RolesController extends BaseController
 		<th class="data left"><label for="formSuper">%s</label></th>',
             $this->lang['strsuper']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"", (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCreateDB">%s</label></th>',
             $this->lang['strcreatedb']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"", (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCreateRole">%s</label></th>',
             $this->lang['strcancreaterole']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"", (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formInherits">%s</label></th>',
             $this->lang['strinheritsprivs']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"", (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCanLogin">%s</label></th>',
             $this->lang['strcanlogin']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"", (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left">%s</th>',
@@ -329,8 +326,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -350,8 +346,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -371,8 +366,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -441,7 +435,7 @@ class RolesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -497,36 +491,31 @@ class RolesController extends BaseController
 		<th class="data left"><label for="formSuper">%s</label></th>',
             $this->lang['strsuper']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"",
-        (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formSuper\" name=\"formSuper\"", (isset($_POST['formSuper'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCreateDB">%s</label></th>',
             $this->lang['strcreatedb']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"",
-        (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateDB\" name=\"formCreateDB\"", (isset($_POST['formCreateDB'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCreateRole">%s</label></th>',
             $this->lang['strcancreaterole']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"",
-        (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCreateRole\" name=\"formCreateRole\"", (isset($_POST['formCreateRole'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formInherits">%s</label></th>',
             $this->lang['strinheritsprivs']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"",
-        (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formInherits\" name=\"formInherits\"", (isset($_POST['formInherits'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left"><label for="formCanLogin">%s</label></th>',
             $this->lang['strcanlogin']
         ) . \PHP_EOL;
-        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"",
-        (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
+        echo "\t\t<td class=\"data1\"><input type=\"checkbox\" id=\"formCanLogin\" name=\"formCanLogin\"", (isset($_POST['formCanLogin'])) ? ' checked="checked"' : '', " /></td>\n\t</tr>" . \PHP_EOL;
         echo \sprintf(
             '	<tr>
 		<th class="data left">%s</th>',
@@ -565,8 +554,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['memberof'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -586,8 +574,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['members'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -607,8 +594,7 @@ class RolesController extends BaseController
                 echo \sprintf(
                     '				<option value="%s"',
                     $rolename
-                ),
-                (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
+                ), (\in_array($rolename, $_POST['adminmembers'], true) ? ' selected="selected"' : ''), '>', $this->misc->printVal($rolename), '</option>' . \PHP_EOL;
                 $roles->MoveNext();
             }
             echo "\t\t\t</select>" . \PHP_EOL;
@@ -715,7 +701,7 @@ class RolesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -893,7 +879,7 @@ class RolesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAccount($msg = ''): void
+    public function doAccount($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1079,6 +1065,9 @@ class RolesController extends BaseController
         $_POST['formPassword'] = '';
     }
 
+    /**
+     * @param \PHPPgAdmin\Database\Postgres $data
+     */
     private function _populateMemberof($data): void
     {
         if (!isset($_POST['memberof'])) {
@@ -1097,6 +1086,9 @@ class RolesController extends BaseController
         }
     }
 
+    /**
+     * @param \PHPPgAdmin\Database\Postgres $data
+     */
     private function _populateMembers($data): void
     {
         if (!isset($_POST['members'])) {
@@ -1115,6 +1107,9 @@ class RolesController extends BaseController
         }
     }
 
+    /**
+     * @param \PHPPgAdmin\Database\Postgres $data
+     */
     private function _populateAdminmembers($data): void
     {
         if (!isset($_POST['adminmembers'])) {

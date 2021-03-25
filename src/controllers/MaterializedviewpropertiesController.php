@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -137,7 +137,7 @@ class MaterializedviewpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doEdit($msg = ''): void
+    public function doEdit($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -196,7 +196,7 @@ class MaterializedviewpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

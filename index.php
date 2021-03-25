@@ -27,11 +27,11 @@ if (\PHP_SAPI === 'cli-server') {
 
     $new_location = 'Location: http://' . $_SERVER['HTTP_HOST'] . $req_uri;
 
-    if ($filePath && // 1. check that filepath is set
-        \is_readable($filePath) && // 2. and references a readable file/folder
-        0 === \mb_strpos($filePath, BASE_PATH . \DIRECTORY_SEPARATOR) && // 3. And is inside this folder
-        BASE_PATH . \DIRECTORY_SEPARATOR . 'index.php' !== $filePath && // 4. discard circular references to index.php
-        '.' !== \mb_substr(\basename($filePath), 0, 1) // 5. don't serve dotfiles
+    if ($filePath // 1. check that filepath is set
+        && \is_readable($filePath) // 2. and references a readable file/folder
+        && 0 === \mb_strpos($filePath, BASE_PATH . \DIRECTORY_SEPARATOR) // 3. And is inside this folder
+        && BASE_PATH . \DIRECTORY_SEPARATOR . 'index.php' !== $filePath // 4. discard circular references to index.php
+        && '.' !== \mb_substr(\basename($filePath), 0, 1) // 5. don't serve dotfiles
     ) {
         if ('.php' === \mb_strtolower(\mb_substr($filePath, -4))) {
             // php file; serve through interpreter

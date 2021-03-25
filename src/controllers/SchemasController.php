@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ExportTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -21,6 +21,8 @@ class SchemasController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -92,7 +94,7 @@ class SchemasController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -117,16 +119,16 @@ class SchemasController extends BaseController
             'owner' => [
                 'title' => $this->lang['strowner'],
                 'field' => Decorator::field('nspowner'),
-            ]];
-            if(boolval($this->conf['display_sizes']['schemas']??false)) {
-            
-            
+            ],
+        ];
+
+        if ((bool) ($this->conf['display_sizes']['schemas'] ?? false)) {
             $columns['schema_size'] = [
                 'title' => $this->lang['strsize'],
                 'field' => Decorator::field('schema_size'),
             ];
         }
-            $columns=array_merge($columns,[
+        $columns = \array_merge($columns, [
             'actions' => [
                 'title' => $this->lang['stractions'],
             ],
@@ -184,7 +186,9 @@ class SchemasController extends BaseController
             unset($actions['alter']);
         }
 
-        echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $this->lang['strnoschemas']);
+        if (self::isRecordset($schemas)) {
+            echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $this->lang['strnoschemas']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -274,7 +278,7 @@ class SchemasController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -380,7 +384,7 @@ class SchemasController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -468,8 +472,6 @@ class SchemasController extends BaseController
 
     /**
      * Save the form submission containing changes to a schema.
-     *
-     * @param mixed $msg
      */
     public function doSaveAlter(): void
     {
@@ -539,6 +541,7 @@ class SchemasController extends BaseController
         } elseif (\is_array($_POST['nsp'])) {
             $msg = '';
             $status = $data->beginTransaction();
+
             if (0 === $status) {
                 foreach ($_POST['nsp'] as $s) {
                     $status = $data->dropSchema($s, isset($_POST['cascade']));
@@ -562,6 +565,7 @@ class SchemasController extends BaseController
                     }
                 }
             }
+
             if (0 === $data->endTransaction()) {
                 // Everything went fine, back to the Default page....
                 $this->view->setReloadBrowser(true);
@@ -586,7 +590,7 @@ class SchemasController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doExport($msg = ''): void
+    public function doExport($msg = '')
     {
         $this->printTrail('schema');
         $this->printTabs('schema', 'export');

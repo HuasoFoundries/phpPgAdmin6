@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -43,6 +43,8 @@ class LoginController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|\Slim\Http\Response
      */
     public function render()
     {

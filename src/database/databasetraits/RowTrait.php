@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for tables manipulation.
@@ -19,7 +17,7 @@ trait RowTrait
      * @param string $table The name of a table
      * @param array  $key   The associative array holding the key to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function browseRow($table, $key)
     {
@@ -252,7 +250,9 @@ trait RowTrait
      * @param array  $types  An array of field types
      * @param array  $keyarr An array mapping column => value to update
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -2|-1|0|1
      */
     public function editRow($table, $vars, $nulls, $format, $types, $keyarr)
     {
@@ -346,7 +346,9 @@ trait RowTrait
      * @param array  $key    An array mapping column => value to delete
      * @param string $schema the schema of the table
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -2|-1|0|1
      */
     public function deleteRow($table, $key, $schema = '')
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -67,10 +67,11 @@ class HTMLFooterController extends HTMLController
         $this->view->offsetSet('reload', $reload_param);
         $this->view->offsetSet('footer_template', $template);
         $this->view->offsetSet('print_bottom_link', !$this->_no_bottom_link);
+
         if (!$this->view->offsetExists('excludeJsTree')) {
             $this->view->offsetSet('excludeJsTree', false);
         }
-        $template = $this->view->offsetGet('excludeJsTree') === true && $template === 'footer_sqledit.twig' ? $template : 'footer.twig';
+        $template = $this->view->offsetGet('excludeJsTree') === true && 'footer_sqledit.twig' === $template ? $template : 'footer.twig';
         $footer_html = $this->view->fetch($template);
 
         if ($doBody) {
@@ -120,6 +121,8 @@ class HTMLFooterController extends HTMLController
      *                         and 'browse' is the place inside that code (doBrowse).
      * @param bool   $do_print if true, print html, if false, return html
      * @param mixed  $from     can either be null, false or the method calling this one
+     *
+     * @return null|string
      */
     public function printNavLinks($navlinks, $place, $env, $do_print, $from)
     {

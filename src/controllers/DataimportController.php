@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -15,6 +15,8 @@ class DataimportController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|string
      */
     public function render()
     {
@@ -328,8 +330,7 @@ class DataimportController extends BaseController
     }
 
     /**
-     * @param null|string $field
-     * @param mixed       $null_array
+     * @param mixed $null_array
      *
      * @return bool
      */

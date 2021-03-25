@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -27,6 +27,8 @@ class HistoryController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|string
      */
     public function render()
     {
@@ -64,8 +66,8 @@ class HistoryController extends BaseController
 
         // Set the name of the window
         $this->setWindowName('history');
-        $this->view->offsetSet('excludeJsTree',true);
-        $this->view->offsetSet('inPopUp',true);
+        $this->view->offsetSet('excludeJsTree', true);
+        $this->view->offsetSet('inPopUp', true);
 
         return $this->printFooter(true, 'footer_sqledit.twig');
     }
@@ -140,7 +142,9 @@ class HistoryController extends BaseController
                 ],
             ];
 
-            echo $this->printTable($history, $columns, $actions, 'history-history', $this->lang['strnohistory']);
+            if (self::isRecordset($history)) {
+                echo $this->printTable($history, $columns, $actions, 'history-history', $this->lang['strnohistory']);
+            }
         } else {
             echo \sprintf(
                 '<p>%s</p>',

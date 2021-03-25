@@ -1,3 +1,4 @@
+/** globals stateObj */
 function historyApiBack() {
   window.history && window.history.back();
 }
@@ -32,6 +33,7 @@ $.ready
       window.parent.location.origin + (stateObj.subfolder || '');
 
     if (stateObj.serverSide) {
+      // @ts-ignore
       let dttData = [...new URLSearchParams($('#sqlform').serialize())].reduce(
         (accum, [key, value]) => {
           accum[key] = value;
@@ -68,16 +70,10 @@ $.ready
       window.setTimeout(function () {
         window.parent.location.replace(`${stateObj.basePath}/servers`);
       }, 3000);
-      return { jqFn: {}, hljsFn: {} };
+      
     }
-    if (window.jsTree) {
-      return { jqFn: jQuery.fn || {}, hljsFn: globalThis.hljs || {} };
-    }
-    if (
-      shouldSkipRedirection() ||
-      window.parent.frames.length === 0 ||
-      stateObj.redirect_to === stateObj.parenturl
-    ) {
+    
+  
       if (
         stateObj.method === 'GET' &&
         stateObj.redirect_to !== stateObj.parenturl
@@ -90,12 +86,8 @@ $.ready
           stateObj.redirect_to
         );
       }
-      return { jqFn: jQuery.fn || {}, hljsFn: globalThis.hljs || {} };
-    } else {
-      //console.log({ stateObj });
-      window.parent.location.replace(redirect_to);
-    }
-    return { jqFn: {}, hljsFn: {} };
+      return { jqFn: jQuery.fn, hljsFn: globalThis.hljs };
+   
   })
   .then(({ jqFn, hljsFn }) => {
     if (jqFn.select2) {
@@ -118,7 +110,7 @@ $.ready
       );
     }
 
-    return;
+    return stateObj;
   })
   .catch((err) => {
     console.error(err);

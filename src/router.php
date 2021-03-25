@@ -1,12 +1,12 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 foreach (['logs', 'sessions', 'twigcache'] as $tempFolder) {
     if (!\is_writable(\sprintf('%s/temp/%s', \dirname(__DIR__), $tempFolder))) {
-        die(\sprintf('The folder temp/%s must be writable', $tempFolder));
+        exit(\sprintf('The folder temp/%s must be writable', $tempFolder));
     }
 }
 
@@ -36,8 +36,8 @@ $app = getAppInstance();
 $container = $app->getContainer();
 
 // If no dump function has been globally declared at this point
-// we fill the gap with an empty one to avoid errors 
-if (!function_exists('dump')) {
+// we fill the gap with an empty one to avoid errors
+if (!\function_exists('dump')) {
     function dump(...$args): void
     {
         // do nothing
@@ -125,13 +125,13 @@ $app->get('/redirect[/{subject}]', function (
     array $args
 ) {
     $subject = (isset($args['subject'])) ? $args['subject'] : 'root';
-    $destinationurl = str_replace($this->subFolder . '/', '', $this->getDestinationWithLastTab($subject));
+    $destinationurl = \str_replace($this->subFolder . '/', '', $this->getDestinationWithLastTab($subject));
     $cleanDestination = ($this->subFolder . '/' . $destinationurl);
 
     return $response->withStatus(302)->withHeader('Location', $cleanDestination);
 });
 
-ini_set('display_errors', 'on');
+\ini_set('display_errors', 'on');
 $app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
@@ -145,7 +145,6 @@ $app->get('/{subject:servers|intro|browser}[/{server_id}]', function (
     return $controller->render();
 });
 
-
 $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
@@ -154,6 +153,7 @@ $app->map(['GET', 'POST'], '/src/views/{subject}', function (
     $subject = $args['subject'];
     $nextPath = $this->subFolder . '/' . $subject;
     $query_string = $request->getUri()->getQuery();
+
     return $response->withStatus(307)->withHeader('Location', $nextPath . ($query_string ? '?' . $query_string : ''));
 });
 
@@ -166,6 +166,7 @@ $app->map(['GET', 'POST'], '/{subject:\w+}[/{server_id}]', function (
     $subject = $args['subject'] ?? 'intro';
     $server_id = $args['server_id'] ?? $request->getQueryParam('server');
     $_server_info = $this->misc->getServerInfo();
+
     if (!isset($_server_info['username'])) {
         $subject = 'login';
     }
@@ -177,6 +178,7 @@ $app->map(['GET', 'POST'], '/{subject:\w+}[/{server_id}]', function (
     $this->view->offsetSet('includeJsTree', true);
     $className = $this->view->getControllerClassName($subject);
     $controller = new $className($this);
+
     return $controller->render();
 });
 
@@ -189,15 +191,16 @@ $app->get('/', function (
     $query_string = $request->getUri()->getQuery();
     $className = $this->view->getControllerClassName($subject);
     $controller = new $className($this);
+
     return $controller->render();
 });
 
-$app->get('[/{path:.*}]', function (
+$app->get('[/{path:.*}]',   function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
     array $args
 ) {
-    return $response->write(sprintf("We couldn't find a route matching %s", $args['path'] ? $args['path'] : 'index'));
+    return $response->write(\sprintf("We couldn't find a route matching %s", $args['path'] ?: 'index'));
 });
 
 // Run app

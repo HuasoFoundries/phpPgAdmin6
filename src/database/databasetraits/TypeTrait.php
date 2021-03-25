@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use ADORecordSet;
 
 /**
  * Common trait for types manipulation.
@@ -75,7 +73,7 @@ trait TypeTrait
      *
      * @param string $typname The name of the view to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getType($typname)
     {
@@ -94,7 +92,7 @@ trait TypeTrait
      * @param bool $tabletypes If true, will include table types
      * @param bool $domains    If true, will include domains
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTypes($all = false, $tabletypes = false, $domains = false)
     {
@@ -239,7 +237,9 @@ trait TypeTrait
      * @param array  $values     An array of values
      * @param string $typcomment Type comment
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -2|-1|0|1
      */
     public function createEnumType($name, $values, $typcomment)
     {
@@ -295,7 +295,7 @@ trait TypeTrait
      *
      * @param string $name
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getEnumValues($name)
     {
@@ -322,7 +322,9 @@ trait TypeTrait
      * @param array  $colcomment An array of comments
      * @param string $typcomment Type comment
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createCompositeType($name, $fields, $field, $type, $array, $length, $colcomment, $typcomment)
     {
@@ -447,7 +449,7 @@ trait TypeTrait
     /**
      * Returns a list of all casts in the database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getCasts()
     {
@@ -492,7 +494,7 @@ trait TypeTrait
     /**
      * Returns a list of all conversions in the database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getConversions()
     {

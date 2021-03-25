@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait to retrieve stats on database objects.
@@ -18,7 +16,7 @@ trait StatsTrait
      *
      * @param string $database The database to fetch stats for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getStatsDatabase($database)
     {
@@ -37,7 +35,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch stats for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getStatsTableTuples($table)
     {
@@ -60,7 +58,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch stats for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getStatsTableIO($table)
     {
@@ -83,7 +81,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch index stats for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getStatsIndexTuples($table)
     {
@@ -106,7 +104,7 @@ trait StatsTrait
      *
      * @param string $table The table to fetch index stats for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getStatsIndexIO($table)
     {

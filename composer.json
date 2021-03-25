@@ -20,6 +20,7 @@
     "ext-pgsql": "*",
     "ext-xml": "*",
     "adodb/adodb-php": "^5.20",
+    "illuminate/support": "^8.34",
     "slim/flash": "^0.4.0",
     "slim/slim": "^3.6",
     "slim/twig-view": "~2.5.1",
@@ -61,9 +62,8 @@
     },
     "files": [
       "src/lib.inc.php",
-      "vendor/adodb/adodb-php/drivers/adodb-postgres9.inc.php",
-      "vendor/adodb/adodb-php/drivers/adodb-pdo.inc.php",
-      "vendor/adodb/adodb-php/drivers/adodb-pdo_pgsql.inc.php"
+      "vendor/illuminate/support/helpers.php",
+      "vendor/adodb/adodb-php/drivers/adodb-postgres9.inc.php"
     ]
   },
   "autoload-dev": {

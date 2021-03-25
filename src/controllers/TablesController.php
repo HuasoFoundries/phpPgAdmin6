@@ -1,16 +1,16 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\AdminTrait;
 use PHPPgAdmin\Traits\InsertEditRowTrait;
 use PHPPgAdmin\XHtml\HTMLController;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -147,7 +147,7 @@ class TablesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -159,13 +159,15 @@ class TablesController extends BaseController
 
         $columns = $this->_getColumns();
 
-        if(!boolval($this->conf['display_sizes']['tables']??false)) {
+        if (!(bool) ($this->conf['display_sizes']['tables'] ?? false)) {
             unset($columns['table_size']);
         }
 
         $actions = $this->_getActions();
 
-        echo $this->printTable($tables, $columns, $actions, $this->table_place, $this->lang['strnotables']);
+        if (self::isRecordset($tables)) {
+            echo $this->printTable($tables, $columns, $actions, $this->table_place, $this->lang['strnotables']);
+        }
         $attr = [
             'href' => [
                 'url' => 'tables',
@@ -293,7 +295,7 @@ class TablesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -865,7 +867,7 @@ class TablesController extends BaseController
      * @param mixed $confirm
      * @param mixed $msg
      *
-     * @return null|string
+     * @return null|Response
      */
     public function doSelectRows($confirm, $msg = '')
     {
@@ -1036,7 +1038,7 @@ class TablesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function formInsertRow($msg = ''): void
+    public function formInsertRow($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1512,9 +1514,9 @@ class TablesController extends BaseController
     }
 
     /**
-     * @return (mixed|string|string[])[][]
+     * @return (\PHPPgAdmin\Decorators\FieldDecorator|mixed|string|string[])[][]
      *
-     * @psalm-return array{table: array{title: mixed, field: mixed, url: string, vars: array{table: string}}, owner: array{title: mixed, field: mixed}, tablespace: array{title: mixed, field: mixed}, tuples: array{title: mixed, field: mixed, type: string}, table_size: array{title: mixed, field: mixed}, actions: array{title: mixed}, comment: array{title: mixed, field: mixed}}
+     * @psalm-return array{table: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator, url: string, vars: array{table: string}}, owner: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator}, tablespace: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator}, tuples: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator, type: string}, table_size: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator}, actions: array{title: mixed}, comment: array{title: mixed, field: \PHPPgAdmin\Decorators\FieldDecorator}}
      */
     private function _getColumns()
     {
@@ -1556,9 +1558,9 @@ class TablesController extends BaseController
     }
 
     /**
-     * @return ((((mixed|string)[]|string)[]|string)[]|mixed|string)[][]
+     * @return ((((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|string)[]|string)[]|mixed|string)[][]
      *
-     * @psalm-return array{multiactions: array{keycols: array{table: string}, url: string, default: string}, browse: array{content: mixed, attr: array{href: array{url: string, urlvars: array{subject: string, return: string, table: mixed}}}}, select: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, insert: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, empty: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, alter: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, drop: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, vacuum: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, analyze: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}, reindex: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: mixed}}}}}
+     * @psalm-return array{multiactions: array{keycols: array{table: string}, url: string, default: string}, browse: array{content: mixed, attr: array{href: array{url: string, urlvars: array{subject: string, return: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, select: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, insert: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, empty: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, alter: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, drop: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, vacuum: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, analyze: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}, reindex: array{multiaction: string, content: mixed, attr: array{href: array{url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}}}}}
      */
     private function _getActions()
     {

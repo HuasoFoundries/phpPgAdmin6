@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for roles and users manipulation.
@@ -18,7 +16,7 @@ trait RoleTrait
      *
      * @param string $rolename (optional) The role name to exclude from the select
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getRoles($rolename = '')
     {
@@ -56,7 +54,7 @@ trait RoleTrait
      *
      * @param string $rolename The name of the role to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getRole($rolename)
     {
@@ -88,7 +86,7 @@ trait RoleTrait
     /**
      * Returns all users in the database cluster.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getUsers()
     {
@@ -110,7 +108,7 @@ trait RoleTrait
      *
      * @param string $username The username of the user to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getUser($username)
     {
@@ -258,7 +256,9 @@ trait RoleTrait
      * @param string $original_admins       Original roles that are admin members of the role, comma separated
      * @param string $newrolename           The new name of the role
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -3|-2|-1|0|1
      */
     public function setRenameRole(
         $rolename,
@@ -363,7 +363,7 @@ trait RoleTrait
      * @param string $original_members      Original roles that are members of the role, comma separated
      * @param string $original_admins       Original roles that are admin members of the role, comma separated
      *
-     * @return int 0 if operation was successful
+     * @return int
      *
      * @psalm-return -1|0
      */
@@ -566,7 +566,9 @@ trait RoleTrait
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire.
      * @param string $newname    The new name of the user
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -3|-2|-1|0|1
      */
     public function setRenameUser($username, $password, $createdb, $createuser, $expiry, $newname)
     {
@@ -736,7 +738,7 @@ trait RoleTrait
      *
      * @param string $rolename The role name
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getMemberOf($rolename)
     {
@@ -764,7 +766,7 @@ trait RoleTrait
      * @param string $rolename The role name
      * @param string $admin    (optional) Find only admin members
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getMembers($rolename, $admin = 'f')
     {
@@ -811,7 +813,7 @@ trait RoleTrait
      *
      * @param string $groname The name of the group
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getGroup($groname)
     {
@@ -831,7 +833,7 @@ trait RoleTrait
     /**
      * Returns all groups in the database cluser.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getGroups()
     {

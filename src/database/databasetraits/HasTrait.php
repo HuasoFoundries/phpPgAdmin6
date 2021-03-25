@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -656,7 +656,7 @@ trait HasTrait
     /**
      * Determines if it has alter database.
      *
-     * @return bool true if has alter database, False otherwise
+     * @return true true if has alter database, False otherwise
      */
     public function hasAlterDatabase()
     {

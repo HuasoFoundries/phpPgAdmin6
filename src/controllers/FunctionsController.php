@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use ADORecordSet;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -21,6 +21,8 @@ class FunctionsController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -67,8 +69,8 @@ class FunctionsController extends BaseController
 
                 break;
             case 'edit':
-                $this->view->offsetSet('codemirror',true);
- 
+                $this->view->offsetSet('codemirror', true);
+
                 $this->doEdit();
 
                 break;
@@ -105,7 +107,7 @@ class FunctionsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -119,8 +121,8 @@ class FunctionsController extends BaseController
             'function' => [
                 'title' => $this->lang['strfunction'],
                 'field' => Decorator::field('proproto'),
-                'url'=>containerInstance()->getDestinationWithLastTab('function'),
-               
+                'url' => containerInstance()->getDestinationWithLastTab('function'),
+
                 'vars' => ['function' => 'proproto', 'function_oid' => 'prooid'],
             ],
             'returns' => [
@@ -143,7 +145,7 @@ class FunctionsController extends BaseController
                 'field' => Decorator::field('procomment'),
             ],
         ];
-         $actions = [
+        $actions = [
             'multiactions' => [
                 'keycols' => ['function' => 'proproto', 'function_oid' => 'prooid'],
                 'url' => 'functions',
@@ -190,7 +192,9 @@ class FunctionsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($funcs, $columns, $actions, $this->table_place, $this->lang['strnofunctions']);
+        if (self::isRecordset($funcs)) {
+            echo $this->printTable($funcs, $columns, $actions, $this->table_place, $this->lang['strnofunctions']);
+        }
 
         $this->_printNavLinks('functions-functions');
     }
@@ -224,7 +228,7 @@ class FunctionsController extends BaseController
                 ]
             ),
         ];
- 
+
         return $this->printTree($funcs, $attrs, 'functions');
     }
 
@@ -287,7 +291,7 @@ class FunctionsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doEdit($msg = ''): void
+    public function doEdit($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -538,8 +542,6 @@ class FunctionsController extends BaseController
      *
      * @param string $fname        The function name
      * @param int    $function_oid The function oid
-     *
-     * @return string the navlinks to print at the bottom
      */
     public function showDefinition($fname, $function_oid)
     {
@@ -834,6 +836,7 @@ class FunctionsController extends BaseController
         } elseif (\is_array($_POST['function_oid'])) {
             $msg = '';
             $status = $data->beginTransaction();
+
             if (0 === $status) {
                 foreach ($_POST['function_oid'] as $k => $s) {
                     $status = $data->dropFunction($s, isset($_POST['cascade']));
@@ -857,6 +860,7 @@ class FunctionsController extends BaseController
                     }
                 }
             }
+
             if (0 === $data->endTransaction()) {
                 // Everything went fine, back to the Default page....
                 $this->view->setReloadBrowser(true);

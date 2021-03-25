@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use ADORecordSet;
 
 /**
  * Common trait for full text search manipulation.
@@ -21,11 +19,13 @@ trait FtsTrait
      * @param array|string $template The existing FTS configuration to be used as template for the new one
      * @param string       $comment  If omitted, defaults to nothing
      *
-     * @return int 0 success
+     * @return int
      *
      * @internal param string $locale Locale of the FTS configuration
      * @internal param string $withmap Should we copy whole map of existing FTS configuration to the new one
      * @internal param string $makeDefault Should this configuration be the default for locale given
+     *
+     * @psalm-return -1|0|1
      */
     public function createFtsConfiguration($cfgname, $parser = '', $template = '', $comment = '')
     {
@@ -104,7 +104,7 @@ trait FtsTrait
      *
      * @param bool $all if false, returns schema qualified FTS confs
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsConfigurations($all = true)
     {
@@ -142,7 +142,7 @@ trait FtsTrait
      *
      * @param string $ftscfg Name of the FTS configuration
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsConfigurationMap($ftscfg)
     {
@@ -189,7 +189,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Parsers from the current schema
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsParsers($all = true)
     {
@@ -222,7 +222,7 @@ trait FtsTrait
      *
      * @param bool $all if false, return only Dics from the current schema
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsDictionaries($all = true)
     {
@@ -252,7 +252,7 @@ trait FtsTrait
     /**
      * Returns all FTS dictionary templates available.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsDictionaryTemplates()
     {
@@ -341,7 +341,9 @@ trait FtsTrait
      * @param string $comment A comment on for the conf
      * @param string $name    The new conf name
      *
-     * @return int 0 on success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function updateFtsConfiguration($cfgname, $comment, $name)
     {
@@ -398,7 +400,9 @@ trait FtsTrait
      * @param string $option     Usually, it stores various options required for the dictionary
      * @param string $comment    If omitted, defaults to nothing
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createFtsDictionary(
         $dictname,
@@ -517,7 +521,9 @@ trait FtsTrait
      * @param string $comment  The comment
      * @param string $name     The new dico's name
      *
-     * @return int 0 on success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function updateFtsDictionary($dictname, $comment, $name)
     {
@@ -567,7 +573,7 @@ trait FtsTrait
      *
      * @param string $ftsdict The name of the FTS dictionary
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsDictionaryByName($ftsdict)
     {
@@ -662,7 +668,7 @@ trait FtsTrait
      * @param string $ftscfg  The name of the FTS configuration
      * @param string $mapping The name of the mapping
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsMappingByName($ftscfg, $mapping)
     {
@@ -714,7 +720,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The config's name that use the parser
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsMappings($ftscfg)
     {
@@ -735,7 +741,7 @@ trait FtsTrait
      *
      * @param string $ftscfg The name of the FTS configuration
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFtsConfigurationByName($ftscfg)
     {

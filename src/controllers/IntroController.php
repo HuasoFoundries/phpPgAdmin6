@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -15,6 +15,8 @@ class IntroController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return \Slim\Http\Response
      */
     public function render()
     {
@@ -34,7 +36,7 @@ class IntroController extends BaseController
     public function doDefault()
     {
         $intro_html = $this->printHeader('Intro', $this->scripts, false);
-        $intro_html .= $this->printBody(false,'flexbox_body',false,true);
+        $intro_html .= $this->printBody(false, 'flexbox_body', false, true);
 
         $intro_html .= $this->printTrail('root', false);
 

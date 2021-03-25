@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -18,7 +18,7 @@ class GroupsController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader();
         $this->printBody();
@@ -91,7 +91,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -131,7 +131,9 @@ class GroupsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($groups, $columns, $actions, 'groups-properties', $this->lang['strnogroups']);
+        if (self::isRecordset($groups)) {
+            echo $this->printTable($groups, $columns, $actions, 'groups-properties', $this->lang['strnogroups']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -217,7 +219,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -257,7 +259,9 @@ class GroupsController extends BaseController
                 ],
             ];
 
-            echo $this->printTable($groupdata, $columns, $actions, 'groups-members', $this->lang['strnousers']);
+            if (self::isRecordset($groupdata)) {
+                echo $this->printTable($groupdata, $columns, $actions, 'groups-members', $this->lang['strnousers']);
+            }
         }
 
         // Display form for adding a user to the group
@@ -346,7 +350,7 @@ class GroupsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         $this->coalesceArr($_POST, 'name', '');

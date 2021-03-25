@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for trigger and rules manipulation.
@@ -19,7 +17,7 @@ trait TriggerTrait
      * @param string $table   The name of a table whose triggers to retrieve
      * @param string $trigger The name of the trigger to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTrigger($table, $trigger)
     {
@@ -156,6 +154,7 @@ trait TriggerTrait
 
     // Rule functions
     // Operator Class functions
+
     /**
      * Edits a rule on a table OR view.
      *
@@ -167,7 +166,7 @@ trait TriggerTrait
      * @param string $type    NOTHING for a do nothing rule, SOMETHING to use given action
      * @param string $action  The action to take
      *
-     * @return int|ADORecordSet 0 if operation was successful
+     * @return int|string 0 if operation was successful
      */
     public function setRule($name, $event, $table, $where, $instead, $type, $action)
     {

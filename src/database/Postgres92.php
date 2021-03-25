@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\Help\PostgresDoc92;
 
 /**
@@ -32,7 +31,7 @@ class Postgres92 extends Postgres93
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function getProcesses($database = null)
     {
@@ -61,7 +60,7 @@ class Postgres92 extends Postgres93
      *
      * @param bool $all Include all tablespaces (necessary when moving objects back to the default space)
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function getTablespaces($all = false)
     {
@@ -87,7 +86,7 @@ class Postgres92 extends Postgres93
      *
      * @param string $spcname
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function getTablespace($spcname)
     {

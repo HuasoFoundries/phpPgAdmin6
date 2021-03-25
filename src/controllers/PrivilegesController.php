@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -18,7 +18,7 @@ class PrivilegesController extends BaseController
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader();
         $this->printBody();
@@ -51,7 +51,7 @@ class PrivilegesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
         $subject = $_REQUEST['subject'];
@@ -84,7 +84,7 @@ class PrivilegesController extends BaseController
             return;
         }
 
-        $object = isset($_REQUEST[$subject . '_oid']) ? $_REQUEST[$subject . '_oid'] : $_REQUEST[$subject];
+        $object = $_REQUEST[$subject . '_oid'] ?? $_REQUEST[$subject];
 
         // Get the privileges on the object, given its type
         if ('column' === $subject) {
@@ -484,7 +484,7 @@ class PrivilegesController extends BaseController
             $object = $_REQUEST[$_REQUEST['subject']];
         }
 
-        $table = isset($_REQUEST['table']) ? $_REQUEST['table'] : null;
+        $table = $_REQUEST['table'] ?? null;
 
         $status = $data->setPrivileges(
             ('grant' === $mode) ? 'GRANT' : 'REVOKE',

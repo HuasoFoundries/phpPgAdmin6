@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -16,6 +16,8 @@ class RulesController extends BaseController
 {
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -67,7 +69,7 @@ class RulesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -112,7 +114,9 @@ class RulesController extends BaseController
             ],
         ];
 
-        echo $this->printTable($rules, $columns, $actions, 'rules-rules', $this->lang['strnorules']);
+        if (self::isRecordset($rules)) {
+            echo $this->printTable($rules, $columns, $actions, 'rules-rules', $this->lang['strnorules']);
+        }
 
         $this->printNavLinks(['create' => [
             'attr' => [
@@ -189,6 +193,7 @@ class RulesController extends BaseController
                 $this->lang['strevent']
             ) . \PHP_EOL;
             echo '<td class="data1"><select name="event">' . \PHP_EOL;
+
             foreach ($data->rule_events as $v) {
                 echo \sprintf(
                     '<option value="%s"',

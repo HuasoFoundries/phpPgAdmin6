@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\Help\PostgresDoc96;
 
 /**
@@ -34,7 +33,7 @@ class Postgres96 extends Postgres
      *
      * @param null|string $database (optional) Find only connections to specified database
      *
-     * @return \RecordSet|int|string A recordset
+     * @return \ADORecordSet|bool|int|string A recordset
      */
     public function getProcesses($database = null)
     {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -80,6 +80,8 @@ class XHtmlSimpleElement
 
     /**
      * Returns xhtml code.
+     *
+     * @return string
      */
     public function fetch()
     {

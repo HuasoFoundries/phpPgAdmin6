@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -17,17 +17,18 @@ class InfoController extends BaseController
      * @var array<string, bool>|mixed
      */
     public $shownull;
+
     public $controller_title = 'strtables';
 
     /**
      * Default method to render the controller according to the action parameter.
      */
-    public function render(): void
+    public function render()
     {
         $this->printHeader($this->headerTitle('', '', $_REQUEST['table'] . ' - ' . $this->lang['strinfo']));
         $this->printBody();
         $this->doDefault();
- 
+
         $this->printFooter();
     }
 
@@ -36,7 +37,7 @@ class InfoController extends BaseController
      *
      * @param string $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -101,6 +102,9 @@ class InfoController extends BaseController
         }
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $children
+     */
     private function _printChildren($children): void
     {
         echo \sprintf(
@@ -137,9 +141,14 @@ class InfoController extends BaseController
             ],
         ];
 
-        echo $this->printTable($children, $columns, $actions, 'info-children', $this->lang['strnodata']);
+        if (self::isRecordset($children)) {
+            echo $this->printTable($children, $columns, $actions, 'info-children', $this->lang['strnodata']);
+        }
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $tablestatstups
+     */
     private function _printTablestatstups($tablestatstups): void
     {
         echo \sprintf(
@@ -215,6 +224,9 @@ class InfoController extends BaseController
         echo '</table>' . \PHP_EOL;
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $tablestatsio
+     */
     private function _printTablestatsio($tablestatsio): void
     {
         echo \sprintf(
@@ -355,6 +367,9 @@ class InfoController extends BaseController
         echo '</table>' . \PHP_EOL;
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $indexstatstups
+     */
     private function _printIndexstatstups($indexstatstups): void
     {
         echo \sprintf(
@@ -401,6 +416,9 @@ class InfoController extends BaseController
         echo '</table>' . \PHP_EOL;
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $indexstatsio
+     */
     private function _printIndexstatsio($indexstatsio): void
     {
         echo \sprintf(
@@ -455,6 +473,9 @@ class InfoController extends BaseController
         echo '</table>' . \PHP_EOL;
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $parents
+     */
     private function _printParents($parents): void
     {
         echo \sprintf(
@@ -491,9 +512,14 @@ class InfoController extends BaseController
             ],
         ];
 
-        echo $this->printTable($parents, $columns, $actions, 'info-parents', $this->lang['strnodata']);
+        if (self::isRecordset($parents)) {
+            echo $this->printTable($parents, $columns, $actions, 'info-parents', $this->lang['strnodata']);
+        }
     }
 
+    /**
+     * @param int|\PHPPgAdmin\ADORecordSet|string $referrers
+     */
     private function _printReferring($referrers): void
     {
         echo \sprintf(
@@ -538,6 +564,8 @@ class InfoController extends BaseController
             ],
         ];
 
-        echo $this->printTable($referrers, $columns, $actions, 'info-referrers', $this->lang['strnodata']);
+        if (self::isRecordset($referrers)) {
+            echo $this->printTable($referrers, $columns, $actions, 'info-referrers', $this->lang['strnodata']);
+        }
     }
 }

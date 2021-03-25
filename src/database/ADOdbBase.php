@@ -1,14 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
 use ADODB_postgres9;
 use Exception;
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Database\Traits\DatabaseTrait;
 use PHPPgAdmin\Database\Traits\HasTrait;
@@ -83,7 +82,7 @@ class ADOdbBase
      * @param string $table The table to get attributes for
      * @param array  $atts  An array of attribute numbers
      *
-     * @return array|int An array mapping attnum to attname or error code - -1 $atts must be an array - -2 wrong number of attributes found
+     * @return array|int
      *
      * @psalm-return -2|-1|array
      */
@@ -187,7 +186,7 @@ class ADOdbBase
                     '"%s".',
                     $f_schema
                 );
-            // no break
+                // no break
             case 'DATABASE':
             case 'ROLE':
             case 'SCHEMA':
@@ -296,7 +295,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL query to execute
      *
-     * @return \the|int|string A recordset or an error code
+     * @return int|string A recordset or an error code
      */
     public function execute($sql)
     {
@@ -324,7 +323,7 @@ class ADOdbBase
      *
      * @param string $sql The SQL statement to be executed
      *
-     * @return int|\RecordSet|string A recordset or an error number
+     * @return \ADORecordSet|bool|int|string A recordset or an error number
      */
     public function selectSet($sql)
     {
@@ -336,17 +335,11 @@ class ADOdbBase
         }
     }
 
-    /**
-     * @return \the
-     */
     public function ErrorNo(): int
     {
         return $this->conn->ErrorNo();
     }
 
-    /**
-     * @return \the
-     */
     public function ErrorMsg(): string
     {
         return $this->conn->ErrorMsg();
@@ -386,9 +379,9 @@ class ADOdbBase
      * @param array  $conditions (array) A map of field names to conditions
      * @param string $schema     (optional) The table's schema
      *
-     * @return \the|int 0 success
+     * @return int
      *
-     * @psalm-return -2|-1|\the
+     * @psalm-return -2|-1|0
      */
     public function delete($table, $conditions, $schema = '')
     {
@@ -411,7 +404,7 @@ class ADOdbBase
             $this->clean($key);
             $this->clean($value);
 
-            if ($sql !== '') {
+            if ('' !== $sql) {
                 $sql .= \sprintf(
                     ' AND "%s"=\'%s\'',
                     $key,
@@ -493,9 +486,9 @@ class ADOdbBase
      * @param string $table The table to insert into
      * @param array  $vars  (array) A mapping of the field names to the values to be inserted
      *
-     * @return \the|int 0 success
+     * @return int
      *
-     * @psalm-return -2|-1|\the
+     * @psalm-return -2|-1|0
      */
     public function insert($table, $vars)
     {
@@ -510,7 +503,7 @@ class ADOdbBase
                 $this->clean($key);
                 $this->clean($value);
 
-                if ($fields !== '') {
+                if ('' !== $fields) {
                     $fields .= \sprintf(
                         ', "%s"',
                         $key
@@ -523,7 +516,7 @@ class ADOdbBase
                     );
                 }
 
-                if ($values !== '') {
+                if ('' !== $values) {
                     $values .= \sprintf(
                         ', \'%s\'',
                         $value
@@ -561,9 +554,9 @@ class ADOdbBase
      * @param array  $where (array) A mapping of field names to values for the where clause
      * @param array  $nulls (array, optional) An array of fields to be set null
      *
-     * @return \the|int 0 success
+     * @return int
      *
-     * @psalm-return -3|-2|-1|\the
+     * @psalm-return -3|-2|-1|0
      */
     public function update($table, $vars, $where, $nulls = [])
     {
@@ -579,7 +572,7 @@ class ADOdbBase
             $this->fieldClean($key);
             $this->clean($value);
 
-            if ($setClause !== '') {
+            if ('' !== $setClause) {
                 $setClause .= \sprintf(
                     ', "%s"=\'%s\'',
                     $key,
@@ -600,7 +593,7 @@ class ADOdbBase
         foreach ($nulls as $key => $value) {
             $this->fieldClean($value);
 
-            if ($setClause !== '') {
+            if ('' !== $setClause) {
                 $setClause .= \sprintf(
                     ', "%s"=NULL',
                     $value
@@ -620,7 +613,7 @@ class ADOdbBase
             $this->fieldClean($key);
             $this->clean($value);
 
-            if ($whereClause !== '') {
+            if ('' !== $whereClause) {
                 $whereClause .= \sprintf(
                     ' AND "%s"=\'%s\'',
                     $key,

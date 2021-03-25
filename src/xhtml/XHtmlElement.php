@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\XHtml;
@@ -31,12 +31,10 @@ class XHtmlElement extends XHtmlSimpleElement
 
     /**
      * Adds an xhtml child to element.
-     *
-     * @param XHtmlOption $object
      */
     public function add(XHtmlOption &$object): void
     {
-        \array_push($this->_siblings, $object);
+        $this->_siblings[] = $object;
     }
 
     /**
@@ -51,6 +49,9 @@ class XHtmlElement extends XHtmlSimpleElement
         }
     }
 
+    /**
+     * @return string
+     */
     public function fetch()
     {
         return $this->_html();

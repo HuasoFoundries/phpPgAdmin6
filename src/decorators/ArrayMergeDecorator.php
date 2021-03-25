@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,12 +9,15 @@ namespace PHPPgAdmin\Decorators;
 class ArrayMergeDecorator extends Decorator
 {
     public $m;
+
     public function __construct($arrays)
     {
         $this->m = $arrays;
     }
 
     /**
+     * @param mixed $fields
+     *
      * @return array
      */
     public function value($fields)

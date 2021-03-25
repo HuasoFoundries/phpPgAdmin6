@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -19,6 +19,13 @@ use PHPPgAdmin\Decorators\Decorator;
  */
 trait MiscTrait
 {
+    /**
+     * @psalm-return array{params?: array{subject: string, server?: mixed, action?: string, rolename?: mixed, database?: mixed, schema?: mixed, table?: mixed, view?: mixed, matview?: mixed, ftscfg?: mixed, function?: mixed, function_oid?: mixed, aggrname?: mixed, aggrtype?: mixed, column?: mixed}, url: string}|false
+     *
+     * @param mixed $subject
+     *
+     * @return ((mixed|string)[]|string)[]|false
+     */
     public function getSubjectParams($subject)
     {
         $vars = [];
@@ -166,7 +173,7 @@ trait MiscTrait
         }
 
         if (containerInstance()->subFolder . '/redirect' === $vars['url'] && isset($vars['params']['subject'])) {
-            $vars['url'] = \containerInstance()->getDestinationWithLastTab( $vars['params']['subject']);
+            $vars['url'] = \containerInstance()->getDestinationWithLastTab($vars['params']['subject']);
             unset($vars['params']['subject']);
         }
 
@@ -192,6 +199,15 @@ trait MiscTrait
         return $str;
     }
 
+    /**
+     * @psalm-return array{0: mixed|string, 1: null|string, 2: mixed|string}
+     *
+     * @param mixed $type
+     * @param mixed $str
+     * @param mixed $params
+     *
+     * @return (mixed|null|string)[]
+     */
     public function printBoolean($type, &$str, $params)
     {
         $lang = $this->lang;
@@ -381,7 +397,9 @@ trait MiscTrait
      *
      * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array The tabs for root view
+     * @return (mixed|string)[][] The tabs for root view
+     *
+     * @psalm-return array{intro: array{title: mixed, url: string, icon: string}, servers: array{title: mixed, url: string, icon: string}}
      */
     public function getTabsRoot($data)
     {
@@ -406,7 +424,9 @@ trait MiscTrait
      *
      * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array The tabs for server view
+     * @return (bool|mixed|string|string[])[][] The tabs for server view
+     *
+     * @psalm-return array{databases: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, users: array{title: mixed, url: string, urlvars: array{subject: string}, hide: false, help: string, icon: string}, groups?: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, roles?: array{title: mixed, url: string, urlvars: array{subject: string}, hide: false, help: string, icon: string}, account: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, help: string, icon: string}, tablespaces: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, export: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, icon: string}}
      */
     public function getTabsServer($data)
     {
@@ -492,7 +512,9 @@ trait MiscTrait
      *
      * @param \PHPPgAdmin\Database\ADOdbBase $data The database accesor instance
      *
-     * @return array The tabs for database view
+     * @return ((int|string)[]|bool|mixed|string)[][] The tabs for database view
+     *
+     * @psalm-return array{schemas: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, sql: array{title: mixed, url: string, urlvars: array{subject: string, action: string, new: int}, help: string, tree: false, icon: string}, find: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, tree: false, icon: string}, variables: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, help: string, tree: false, icon: string}, processes: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, help: string, tree: false, icon: string}, locks: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, help: string, tree: false, icon: string}, admin: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, tree: false, icon: string}, privileges: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, tree: false, icon: string}, languages: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, casts: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, export: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, tree: false, icon: string}}
      */
     public function getTabsDatabase($data)
     {
@@ -589,6 +611,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{tables: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, views: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, matviews: array{title: string, url: string, urlvars: array{subject: string}, help: string, icon: string}, sequences: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, functions: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, fulltext?: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, tree: true, icon: string}, domains: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, icon: string}, aggregates: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, types: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, operators: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, opclasses: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, conversions: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, icon: string}, privileges: array{title: mixed, url: string, urlvars: array{subject: string}, help: string, tree: false, icon: string}, export: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, tree: false, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return (bool|mixed|string|string[])[][]
+     */
     public function getTabsSchema($data)
     {
         $lang = $this->lang;
@@ -709,6 +738,13 @@ trait MiscTrait
         return $tabs;
     }
 
+    /**
+     * @psalm-return array{columns: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string, branch: true}, browse: array{title: mixed, icon: string, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, return: string, branch: true}, select: array{title: mixed, icon: string, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, help: string}, insert: array{title: mixed, url: string, urlvars: array{action: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string}, indexes: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, constraints: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, triggers: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, rules: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, admin: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}, info: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string}, privileges: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string}, import: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string, hide: false}, export: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string, hide: false}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|bool|mixed|string)[][]
+     */
     public function getTabsTable($data)
     {
         $lang = $this->lang;
@@ -814,6 +850,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{columns: array{title: mixed, url: string, urlvars: array{subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string, branch: true}, browse: array{title: mixed, icon: string, url: string, urlvars: array{action: string, return: string, subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator}, branch: true}, select: array{title: mixed, icon: string, url: string, urlvars: array{action: string, view: \PHPPgAdmin\Decorators\FieldDecorator}, help: string}, definition: array{title: mixed, url: string, urlvars: array{subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}, rules: array{title: mixed, url: string, urlvars: array{subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, privileges: array{title: mixed, url: string, urlvars: array{subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string}, export: array{title: mixed, url: string, urlvars: array{subject: string, view: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string, hide: false}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|bool|mixed|string)[][]
+     */
     public function getTabsView($data)
     {
         $lang = $this->lang;
@@ -876,6 +919,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{columns: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string, branch: true}, browse: array{title: mixed, icon: string, url: string, urlvars: array{action: string, return: string, subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, branch: true}, select: array{title: mixed, icon: string, url: string, urlvars: array{action: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, help: string}, definition: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}, indexes: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, rules: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string, branch: true}, privileges: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string}, export: array{title: mixed, url: string, urlvars: array{subject: string, matview: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string, hide: false}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|bool|mixed|string)[][]
+     */
     public function getTabsMatview($data)
     {
         $lang = $this->lang;
@@ -955,6 +1005,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{definition: array{title: mixed, url: string, urlvars: array{subject: string, function: \PHPPgAdmin\Decorators\FieldDecorator, function_oid: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}, privileges: array{title: mixed, url: string, urlvars: array{subject: string, function: \PHPPgAdmin\Decorators\FieldDecorator, function_oid: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string}, show: array{title: string, url: string, urlvars: array{subject: string, function: \PHPPgAdmin\Decorators\FieldDecorator, function_oid: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|mixed|string)[][]
+     */
     public function getTabsFunction($data)
     {
         $lang = $this->lang;
@@ -995,6 +1052,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{definition: array{title: mixed, url: string, urlvars: array{subject: string, aggrname: \PHPPgAdmin\Decorators\FieldDecorator, aggrtype: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|mixed|string)[][]
+     */
     public function getTabsAggregate($data)
     {
         $lang = $this->lang;
@@ -1014,6 +1078,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{definition: array{title: mixed, url: string, urlvars: array{subject: string, rolename: \PHPPgAdmin\Decorators\FieldDecorator, action: string}, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|mixed|string)[][]
+     */
     public function getTabsRole($data)
     {
         $lang = $this->lang;
@@ -1032,6 +1103,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{sql: array{title: mixed, url: string, urlvars: array{action: string, subject: string}, help: string, icon: string}, find: array{title: mixed, url: string, urlvars: array{action: string, subject: string}, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return (mixed|string|string[])[][]
+     */
     public function getTabsPopup($data)
     {
         $lang = $this->lang;
@@ -1053,6 +1131,13 @@ trait MiscTrait
         ];
     }
 
+    /**
+     * @psalm-return array{properties: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, view: \PHPPgAdmin\Decorators\FieldDecorator, column: \PHPPgAdmin\Decorators\FieldDecorator}, icon: string}, privileges: array{title: mixed, url: string, urlvars: array{subject: string, table: \PHPPgAdmin\Decorators\FieldDecorator, view: \PHPPgAdmin\Decorators\FieldDecorator, column: \PHPPgAdmin\Decorators\FieldDecorator}, help: string, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return ((\PHPPgAdmin\Decorators\FieldDecorator|string)[]|mixed|string)[][]
+     */
     public function getTabsColumn($data)
     {
         $lang = $this->lang;
@@ -1093,6 +1178,13 @@ trait MiscTrait
         return $tabs;
     }
 
+    /**
+     * @psalm-return array{ftsconfigs: array{title: mixed, url: string, urlvars: array{subject: string}, hide: bool, help: string, tree: true, icon: string}, ftsdicts: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, help: string, tree: true, icon: string}, ftsparsers: array{title: mixed, url: string, urlvars: array{subject: string, action: string}, hide: bool, help: string, tree: true, icon: string}}
+     *
+     * @param mixed $data
+     *
+     * @return (bool|mixed|string|string[])[][]
+     */
     public function getTabsFulltext($data)
     {
         $lang = $this->lang;

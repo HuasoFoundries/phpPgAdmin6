@@ -1,12 +1,11 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database;
 
-use PHPPgAdmin\ADORecordSet;
 use PHPPgAdmin\Help\PostgresDoc10;
 
 /**
@@ -35,7 +34,7 @@ class Postgres10 extends Postgres96
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \RecordSet|int|string All tables, sorted alphabetically
+     * @return \ADORecordSet|bool|int|string All tables, sorted alphabetically
      */
     public function getTables()
     {

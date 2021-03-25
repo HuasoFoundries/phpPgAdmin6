@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -16,7 +16,7 @@ trait ViewTrait
     /**
      * Returns a list of all views in the database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getViews()
     {
@@ -36,7 +36,7 @@ trait ViewTrait
     /**
      * Returns a list of all materialized views in the database.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getMaterializedViews()
     {
@@ -61,7 +61,7 @@ trait ViewTrait
      * @param string $comment
      * @param bool   $materialized tells if it's a materialized view or not
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function setView($viewname, $definition, $comment, $materialized = false)
     {
@@ -77,7 +77,9 @@ trait ViewTrait
      * @param string $comment
      * @param bool   $materialized tells if it's a materialized view
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createView($viewname, $definition, $replace, $comment, $materialized = false)
     {
@@ -165,7 +167,7 @@ trait ViewTrait
      *
      * @param string $view The name of the view or materialized to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getView($view)
     {
@@ -324,7 +326,7 @@ trait ViewTrait
      * @param string       $schema  Schema name
      * @param string       $comment The comment on the view
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -6|-5|-4|-3|0
      */

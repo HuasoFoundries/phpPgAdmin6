@@ -1,14 +1,14 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
 use PHPPgAdmin\Traits\ViewsMatviewsTrait;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -112,7 +112,7 @@ class MaterializedviewsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -127,7 +127,7 @@ class MaterializedviewsController extends BaseController
                 'title' => 'M ' . $this->lang['strview'],
                 'field' => Decorator::field('relname'),
                 'url' => \containerInstance()->getDestinationWithLastTab('matview'),
-                  
+
                 'vars' => [$this->keystring => 'relname'],
             ],
             'owner' => [
@@ -209,7 +209,9 @@ class MaterializedviewsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($matviews, $columns, $actions, $this->table_place, $this->lang['strnoviews']);
+        if (self::isRecordset($matviews)) {
+            echo $this->printTable($matviews, $columns, $actions, $this->table_place, $this->lang['strnoviews']);
+        }
 
         $navlinks = [
             'create' => [
@@ -321,6 +323,7 @@ class MaterializedviewsController extends BaseController
         } elseif (\is_array($_POST['view'])) {
             $msg = '';
             $status = $data->beginTransaction();
+
             if (0 === $status) {
                 foreach ($_POST['view'] as $s) {
                     $status = $data->dropView($s, isset($_POST['cascade']));
@@ -344,6 +347,7 @@ class MaterializedviewsController extends BaseController
                     }
                 }
             }
+
             if (0 === $data->endTransaction()) {
                 // Everything went fine, back to the Default page....
                 $this->view->setReloadBrowser(true);
@@ -391,7 +395,7 @@ class MaterializedviewsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doWizardCreate($msg = ''): void
+    public function doWizardCreate($msg = '')
     {
         $this->printTrail('schema');
         $this->printTitle($this->lang['strcreatematviewwiz'], 'pg.matview.create');
@@ -405,14 +409,14 @@ class MaterializedviewsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
         $this->coalesceArr($_REQUEST, 'formView', '');
 
         if (!isset($_REQUEST['formDefinition'])) {
-            $_REQUEST['formDefinition'] = isset($_SESSION['sqlquery']) ? $_SESSION['sqlquery'] : 'SELECT ';
+            $_REQUEST['formDefinition'] = $_SESSION['sqlquery'] ?? 'SELECT ';
         }
         $this->coalesceArr($_REQUEST, 'formComment', '');
 

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -20,6 +20,8 @@ class AggregatesController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -91,7 +93,7 @@ class AggregatesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $this->printTrail('schema');
         $this->printTabs('schema', 'aggregates');
@@ -162,7 +164,9 @@ class AggregatesController extends BaseController
             unset($actions['alter']);
         }
 
-        echo $this->printTable($aggregates, $columns, $actions, $this->table_place, $this->lang['strnoaggregates']);
+        if (self::isRecordset($aggregates)) {
+            echo $this->printTable($aggregates, $columns, $actions, $this->table_place, $this->lang['strnoaggregates']);
+        }
 
         $navlinks = [
             'create' => [
@@ -259,7 +263,7 @@ class AggregatesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doCreate($msg = ''): void
+    public function doCreate($msg = '')
     {
         $this->data = $this->misc->getDatabaseAccessor();
 
@@ -418,7 +422,7 @@ class AggregatesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doAlter($msg = ''): void
+    public function doAlter($msg = '')
     {
         $this->data = $this->misc->getDatabaseAccessor();
 
@@ -542,7 +546,7 @@ class AggregatesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $this->data = $this->misc->getDatabaseAccessor();
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -46,8 +46,8 @@ class ViewpropertiesController extends BaseController
 
                 break;
             case 'edit':
-                $this->view->offsetSet('codemirror',true);
- 
+                $this->view->offsetSet('codemirror', true);
+
                 $this->doEdit();
 
                 break;
@@ -126,7 +126,7 @@ class ViewpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doEdit($msg = ''): void
+    public function doEdit($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -135,9 +135,9 @@ class ViewpropertiesController extends BaseController
         $this->printMsg($msg);
 
         $viewdata = $data->getView($_REQUEST[$this->subject]);
-        $this->view->offsetSet('codemirror',true);
+        $this->view->offsetSet('codemirror', true);
 
-        $this->printHeader($this->headerTitle(), null, true  );
+        $this->printHeader($this->headerTitle(), null, true);
 
         if (0 < $viewdata->RecordCount()) {
             if (!isset($_POST['formDefinition'])) {
@@ -206,7 +206,7 @@ class ViewpropertiesController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

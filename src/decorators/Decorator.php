@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -11,8 +11,9 @@ use PHPPgAdmin\Traits\HelperTrait;
 
 class Decorator
 {
-    public $val;
     use HelperTrait;
+
+    public $val;
 
     public $container;
 
@@ -27,9 +28,7 @@ class Decorator
     }
 
     /**
-     * @param null|string $esc
-     * @param scalar      $var
-     * @param array       $fields
+     * @param scalar $var
      */
     public static function get_sanitized_value(&$var, array &$fields, ?string $esc = null)
     {
@@ -60,19 +59,17 @@ class Decorator
     }
 
     /**
-     * @param Closure                 $callback
      * @param ((mixed|string)[]|null) $params
      *
      * @return CallbackDecorator
      */
     public static function callback(Closure $callback, ?array $params = null)
     {
-        return new  CallbackDecorator($callback, $params);
+        return new CallbackDecorator($callback, $params);
     }
 
     /**
      * @param scalar $var
-     * @param array  $fields
      */
     public static function value_url(&$var, array &$fields)
     {
@@ -88,9 +85,6 @@ class Decorator
     }
 
     /**
-     * @param array  $params
-     * @param string $str
-     *
      * @return ReplaceDecorator
      */
     public static function replace(string $str, array $params)
@@ -99,9 +93,6 @@ class Decorator
     }
 
     /**
-     * @param null|array $default
-     * @param string     $fieldName
-     *
      * @return FieldDecorator
      */
     public static function field(string $fieldName, ?array $default = null)
@@ -110,8 +101,7 @@ class Decorator
     }
 
     /**
-     * @param null|array $vars
-     * @param mixed      $base
+     * @param mixed $base
      *
      * @return BranchUrlDecorator
      */
@@ -122,7 +112,7 @@ class Decorator
         // at value evaluation time.
         if (2 < \func_num_args()) {
             $urlvalue = \func_get_args();
-            \array_shift($urlvalue );
+            \array_shift($urlvalue);
 
             return new BranchUrlDecorator($base, new ArrayMergeDecorator($urlvalue));
         }
@@ -131,8 +121,7 @@ class Decorator
     }
 
     /**
-     * @param null|array $vars
-     * @param mixed      $base
+     * @param mixed $base
      *
      * @return ActionUrlDecorator
      */
@@ -152,8 +141,7 @@ class Decorator
     }
 
     /**
-     * @param null|array $vars
-     * @param mixed      $base
+     * @param mixed $base
      *
      * @return RedirectUrlDecorator
      */
@@ -173,8 +161,7 @@ class Decorator
     }
 
     /**
-     * @param null|array $vars
-     * @param mixed      $base
+     * @param mixed $base
      *
      * @return UrlDecorator
      */
@@ -186,15 +173,18 @@ class Decorator
 
         if (2 < \func_num_args()) {
             $urlvalue = \func_get_args();
-            $base = \array_shift($urlvalue );
+            $base = \array_shift($urlvalue);
 
-            return new UrlDecorator($base, new ArrayMergeDecorator($urlvalue ));
+            return new UrlDecorator($base, new ArrayMergeDecorator($urlvalue));
         }
 
         return new UrlDecorator($base, $vars);
     }
 
     /**
+     * @param FieldDecorator    $value
+     * @param null|UrlDecorator $full
+     *
      * @return IfEmptyDecorator
      */
     public static function ifempty($value, string $empty, $full = null)

@@ -1,13 +1,13 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
 
-use Slim\Http\Response;
 use PHPPgAdmin\Decorators\Decorator;
+use Slim\Http\Response;
 
 /**
  * Base controller class.
@@ -18,6 +18,8 @@ class OperatorsController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|Response|string
      */
     public function render()
     {
@@ -106,7 +108,7 @@ class OperatorsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doDefault($msg = ''): void
+    public function doDefault($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -166,7 +168,9 @@ class OperatorsController extends BaseController
             ],
         ];
 
-        echo $this->printTable($operators, $columns, $actions, 'operators-operators', $this->lang['strnooperators']);
+        if (self::isRecordset($operators)) {
+            echo $this->printTable($operators, $columns, $actions, 'operators-operators', $this->lang['strnooperators']);
+        }
 
         //        TODO operators action=create $this->lang['strcreateoperator']
     }
@@ -176,7 +180,7 @@ class OperatorsController extends BaseController
      *
      * @param mixed $msg
      */
-    public function doProperties($msg = ''): void
+    public function doProperties($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Help;
@@ -180,6 +180,9 @@ class PostgresDoc
         ];
     }
 
+    /**
+     * @return string
+     */
     public function getHelpBase()
     {
         return \sprintf(\str_replace('http://', 'https://', $this->conf['help_base']), (string) ($this->major_version));
@@ -188,24 +191,20 @@ class PostgresDoc
     /**
      * Undocumented function.
      *
-     * @param null|string $topic
-     *
      * @return null|string|string[]
      */
     public function getHelpTopics(?string $topic = null)
     {
-        return  $topic ? $this->help_topics[$topic] ?? null : $this->help_topics;
+        return $topic ? $this->help_topics[$topic] ?? null : $this->help_topics;
     }
 
     /**
      * Undocumented function.
      *
-     * @param string $topic
-     *
      * @return null|string|string[]
      */
     public function getHelpTopic(string $topic)
     {
-        return  $this->help_topics[$topic] ?? null;
+        return $this->help_topics[$topic] ?? null;
     }
 }

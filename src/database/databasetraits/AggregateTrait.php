@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for aggregates manipulation.
@@ -25,7 +23,9 @@ trait AggregateTrait
      * @param string $sortop   The sort operator for the aggregate
      * @param string $comment  Aggregate comment
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createAggregate($name, $basetype, $sfunc, $stype, $ffunc, $initcond, $sortop, $comment)
     {
@@ -130,7 +130,7 @@ trait AggregateTrait
      * @param string $name     The name of the aggregate
      * @param string $basetype The input data type of the aggregate
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getAggregate($name, $basetype)
     {
@@ -163,7 +163,7 @@ trait AggregateTrait
     /**
      * Gets all aggregates.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getAggregates()
     {
@@ -195,7 +195,9 @@ trait AggregateTrait
      * @param string $newaggrschema  The new schema where the aggregate will belong to
      * @param string $newaggrcomment The new comment for the aggregate
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-2|-1|0|1
      */
     public function alterAggregate(
         $aggrname,

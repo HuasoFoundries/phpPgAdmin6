@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for full text search manipulation.
@@ -19,7 +17,7 @@ trait FunctionTrait
      * @param bool  $all  If true, will find all available functions, if false just those in search path
      * @param mixed $type If truthy, will return functions of type trigger
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFunctions($all = false, $type = null)
     {
@@ -73,7 +71,7 @@ trait FunctionTrait
     /**
      * Returns a list of all functions that can be used in triggers.
      *
-     * @return int|ADORecordSet Functions that can be used in a trigger
+     * @return \ADORecordSet|bool|int|string Functions that can be used in a trigger
      */
     public function getTriggerFunctions()
     {
@@ -85,7 +83,7 @@ trait FunctionTrait
      *
      * @param array $f The array of data for the function
      *
-     * @return int|string[] An array containing the properties, or -1 in case of error
+     * @return int|string[]
      *
      * @psalm-return int|non-empty-list<string>
      */
@@ -136,7 +134,7 @@ trait FunctionTrait
      * @param int    $rows
      * @param string $comment    The comment on the function
      *
-     * @return bool|int 0 success
+     * @return int 0 success
      */
     public function setFunction(
         $funcname,
@@ -261,7 +259,9 @@ trait FunctionTrait
      * @param bool   $replace    (optional) True if OR REPLACE, false for
      *                           normal
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -4|-3|-1|0|1
      */
     public function createFunction($funcname, $args, $returns, $definition, $language, $flags, $setof, $cost, $rows, $comment, $replace = false)
     {
@@ -412,7 +412,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      *
      * @internal param string The $func name of the function to retrieve
      */
@@ -454,7 +454,7 @@ trait FunctionTrait
      *
      * @param int $function_oid
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getFunctionDef($function_oid)
     {

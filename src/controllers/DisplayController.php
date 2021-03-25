@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Controller;
@@ -9,7 +9,6 @@ namespace PHPPgAdmin\Controller;
 use ADOFieldObject;
 use ADORecordSet;
 use Exception;
-use Kint\Kint;
 use PHPPgAdmin\ADOdbException;
 use PHPPgAdmin\Traits\InsertEditRowTrait;
 
@@ -22,6 +21,8 @@ class DisplayController extends BaseController
 
     /**
      * Default method to render the controller according to the action parameter.
+     *
+     * @return null|\Slim\Http\Response
      */
     public function render()
     {
@@ -39,18 +40,16 @@ class DisplayController extends BaseController
         $scripts .= "var Display = {\n";
         $scripts .= "errmsg: '" . \str_replace("'", "\\'", $this->lang['strconnectionfail']) . "'\n";
         $scripts .= "};\n";
-        $this->scripts =$scripts. '</script>' . \PHP_EOL;
+        $this->scripts = $scripts . '</script>' . \PHP_EOL;
 
         $footer_template = 'footer.twig';
         $header_template = 'header.twig';
-$browseResult=[];
+        $browseResult = [];
         \ob_start();
 
         switch ($this->action) {
             case 'editrow':
-                               $this->view->offsetSet('codemirror',true);
-
-                
+                $this->view->offsetSet('codemirror', true);
 
                 if (isset($_POST['save'])) {
                     $this->doEditRow();
@@ -60,14 +59,12 @@ $browseResult=[];
 
                 break;
             case 'confeditrow':
-               // d($_REQUEST);
+                // d($_REQUEST);
                 $this->formEditRow();
 
                 break;
             case 'delrow':
-                               $this->view->offsetSet('codemirror',true);
-
-                
+                $this->view->offsetSet('codemirror', true);
 
                 if (isset($_POST['yes'])) {
                     $this->doDelRow(false);
@@ -82,21 +79,19 @@ $browseResult=[];
                 break;
 
             default:
-            $this->view->offsetSet('datatables',true);
-                            $this->view->offsetSet('codemirror',true);
-   
-            
-                $jsonResult=$this->doBrowse();
+                $this->view->offsetSet('datatables', true);
+                $this->view->offsetSet('codemirror', true);
+
+                $jsonResult = $this->doBrowse();
 
                 break;
         }
         $output = \ob_get_clean();
-        $json=boolval($this->getRequestParam('json',null));
-        //ddd($this->getAllParams());
-if($json) {
-    return responseInstance()->withJson( $jsonResult);
+        $json = (bool) ($this->getRequestParam('json', null));
 
- }
+        if ($json) {
+            return responseInstance()->withJson($jsonResult);
+        }
         $subject = $this->coalesceArr($_REQUEST, 'subject', 'table')['subject'];
 
         $object = null;
@@ -114,7 +109,7 @@ if($json) {
         } else {
             $title = $this->headerTitle('strqueryresults');
         }
-$this->view->offsetSet('serverSide',1);
+        $this->view->offsetSet('serverSide', 1);
         $this->printHeader($title, $this->scripts, true, $header_template);
 
         $this->printBody();
@@ -128,6 +123,10 @@ $this->view->offsetSet('serverSide',1);
      * Displays requested data.
      *
      * @param mixed $msg
+     *
+     * @return (array[]|int)[]|null
+     *
+     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|null
      */
     public function doBrowse($msg = '')
     {
@@ -172,14 +171,15 @@ $this->view->offsetSet('serverSide',1);
             $_REQUEST['return'] = 'selectrows';
         }
 
-        $json=boolval($this->getRequestParam('json',null));
+        $json = (bool) ($this->getRequestParam('json', null));
 
         //$object = $this->setIfIsset($object, $_REQUEST[$subject]);
-        $trailsubject=$subject;
-        if($subject==='table' && !$this->getRequestParam($subject,null)) {
-            $trailsubject='database';
+        $trailsubject = $subject;
+
+        if ('table' === $subject && !$this->getRequestParam($subject, null)) {
+            $trailsubject = 'database';
         }
-        $this->printTrail($trailsubject,!$json);
+        $this->printTrail($trailsubject, !$json);
         $tabsPosition = 'browse';
 
         if ('database' === $trailsubject) {
@@ -187,12 +187,12 @@ $this->view->offsetSet('serverSide',1);
         } elseif ('column' === $trailsubject) {
             $tabsPosition = 'colproperties';
         }
-        
+
         $this->printTabs($trailsubject, $tabsPosition, !$json);
- 
+
         [$query, $title, $type] = $this->getQueryTitleAndType($data, $object);
 
-        $this->printTitle($this->lang[$title],null, !$json);
+        $this->printTitle($this->lang[$title], null, !$json);
 
         $this->printMsg($msg, !$json);
 
@@ -212,9 +212,8 @@ $this->view->offsetSet('serverSide',1);
         if (isset($search_path) && (0 !== $data->setSearchPath(\array_map('trim', \explode(',', $search_path))))) {
             return;
         }
-         
-        $paginate=$this->getRequestParam('paginate',null);
-      
+
+        $paginate = $this->getRequestParam('paginate', null);
 
         try {
             $max_pages = 0;
@@ -230,22 +229,22 @@ $this->view->offsetSet('serverSide',1);
                 $this->conf['max_rows'],
                 $max_pages
             );
-           
-           
-            if($json) {
-                $jsonResult=[];
+
+            if ($json) {
+                $jsonResult = [];
+
                 while (!$resultset->EOF) {
-                    $jsonResult[]= $this->getJsonRowCells($resultset,isset($object));
+                    $jsonResult[] = $this->getJsonRowCells($resultset, isset($object));
                     $resultset->MoveNext();
                 }
-             
-                return [
-                    'draw'=>1,
-                    'recordsTotal'=>$max_pages,
-                    'recordsFiltered'=>$max_pages,
-                    'data'=>$jsonResult];
-            }
 
+                return [
+                    'draw' => 1,
+                    'recordsTotal' => $max_pages,
+                    'recordsFiltered' => $max_pages,
+                    'data' => $jsonResult,
+                ];
+            }
         } catch (ADOdbException $e) {
             return $this->halt($e->getMessage());
         }
@@ -282,7 +281,7 @@ $this->view->offsetSet('serverSide',1);
             $this->misc->saveScriptHistory($_REQUEST['query']);
         }
 
-        $query = $query ? $query : \sprintf(
+        $query = $query ?: \sprintf(
             'SELECT * FROM %s.%s',
             $_REQUEST['schema'],
             $object
@@ -292,25 +291,24 @@ $this->view->offsetSet('serverSide',1);
 
         //die(htmlspecialchars($query));
 
-        $formHTML= '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
-        $formHTML.= $this->view->form;
+        $formHTML = '<form method="post" id="sqlform" action="' . $_SERVER['REQUEST_URI'] . '">';
+        $formHTML .= $this->view->form;
 
         if ($object) {
-            $formHTML.= '<input type="hidden" name="' . $subject . '" value="'. \htmlspecialchars($object). '" />' . \PHP_EOL;
+            $formHTML .= '<input type="hidden" name="' . $subject . '" value="' . \htmlspecialchars($object) . '" />' . \PHP_EOL;
         }
-        $search_path = \htmlspecialchars($_REQUEST['search_path']??null);
-        $formHTML.= '<input type="hidden" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
-        
-        if(isset($_REQUEST['paginate'])) {
-        $formHTML.=  '<input type="hidden" name="paginate" value="on" />';
-        }
-      //  $formHTML.=  '<input type="checkbox" name="json" />';
-        $formHTML.= '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
-        $formHTML.= \htmlspecialchars($query);
-        $formHTML.= '</textarea><br><input type="submit"/>';
-        $formHTML.= '</form>';
-echo $formHTML;
+        $search_path = \htmlspecialchars($_REQUEST['search_path'] ?? null);
+        $formHTML .= '<input type="hidden" name="search_path" id="search_path" size="45" value="' . $search_path . '" />';
 
+        if (isset($_REQUEST['paginate'])) {
+            $formHTML .= '<input type="hidden" name="paginate" value="on" />';
+        }
+        //  $formHTML.=  '<input type="checkbox" name="json" />';
+        $formHTML .= '<textarea width="90%" name="query"  id="query" rows="5" cols="100" resizable="true">';
+        $formHTML .= \htmlspecialchars($query);
+        $formHTML .= '</textarea><br><input type="submit"/>';
+        $formHTML .= '</form>';
+        echo $formHTML;
 
         $this->printResultsTable($resultset, $page, $max_pages, $_gets, $object);
         // Navigation links
@@ -360,9 +358,7 @@ echo $formHTML;
         return [$query, $title, $type];
     }
 
-
     /**
-     * @param array $_gets
      * @param mixed $resultset
      * @param mixed $page
      * @param mixed $max_pages
@@ -370,7 +366,6 @@ echo $formHTML;
      */
     public function printResultsTable($resultset, $page, $max_pages, array $_gets, $object): void
     {
- 
         if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             echo \sprintf(
                 '<p>%s</p>',
@@ -453,20 +448,22 @@ echo $formHTML;
         if (!\is_object($resultset) || 0 >= $resultset->RecordCount()) {
             return;
         }
-$dttFields=[];
+        $dttFields = [];
+
         foreach (\array_keys($resultset->fields) as $index => $key) {
             if (($key === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
             $finfo = $resultset->FetchField($index);
 
-            $dttFields[]=["data"=>$finfo->name];
+            $dttFields[] = ['data' => $finfo->name];
+
             if (false === $args) {
                 echo '<th class="data">', $this->misc->printVal($finfo->name), '</th>' . \PHP_EOL;
 
                 continue;
             }
-           
+
             $args['page'] = $_REQUEST['page'];
             $args['sortkey'] = $index + 1;
             // Sort direction opposite to current direction, unless it's currently ''
@@ -490,37 +487,37 @@ $dttFields=[];
             }
             echo '</a></th>' . \PHP_EOL;
         }
-        $this->view->offsetSet('dttFields',$dttFields);
-         \reset($resultset->fields);
+        $this->view->offsetSet('dttFields', $dttFields);
+        \reset($resultset->fields);
     }
-private function FetchField(ADORecordSet $ADORecordSet,int $index):ADOFieldObject {
-    return $ADORecordSet->FetchField($index);
-}
 
-  /**
+    /**
      * Print table rows.
      *
-     * @param ADORecordSet $resultset        The resultset
-      * @param bool         $withOid          either to display OIDs or not
+     * @param ADORecordSet $resultset The resultset
+     * @param bool         $withOid   either to display OIDs or not
      */
     public function getJsonRowCells(&$resultset, $withOid): array
     {
         $data = $this->misc->getDatabaseAccessor();
         $j = 0;
 
-        $strings=$this->getRequestParam('string',  'collapsed');
-$result=[];
+        $strings = $this->getRequestParam('string', 'collapsed');
+        $result = [];
+
         foreach ($resultset->fields as $fieldname => $fieldvalue) {
             /** @var ADOFieldObject */
-            $finfo =$this->FetchField( $resultset,$j++);
+            $finfo = $this->FetchField($resultset, $j++);
 
             if (($fieldname === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
             }
-            $result[$finfo->name ] =$fieldvalue;
+            $result[$finfo->name] = $fieldvalue;
         }
+
         return $result;
     }
+
     /**
      * Print table rows.
      *
@@ -533,11 +530,11 @@ $result=[];
         $data = $this->misc->getDatabaseAccessor();
         $j = 0;
 
-        $strings=$this->getRequestParam('string',  'collapsed');
+        $strings = $this->getRequestParam('string', 'collapsed');
 
         foreach ($resultset->fields as $fieldName => $fieldValue) {
             /** @var ADOFieldObject */
-            $finfo =$this->FetchField( $resultset,$j++);
+            $finfo = $this->FetchField($resultset, $j++);
 
             if (($fieldName === $data->id) && (!($withOid && $this->conf['show_oids']))) {
                 continue;
@@ -548,8 +545,9 @@ $result=[];
                 echo '<td>&nbsp;</td>';
             } else {
                 echo '<td style="white-space:nowrap;">';
-                if ((null !== $fieldValue)&& isset($fkey_information['byfield'][$fieldName])) {
-                $this->_printFKLinks($resultset, $fkey_information, $fieldName, $fieldValue, $printvalOpts);
+
+                if ((null !== $fieldValue) && isset($fkey_information['byfield'][$fieldName])) {
+                    $this->_printFKLinks($resultset, $fkey_information, $fieldName, $fieldValue, $printvalOpts);
                 }
                 $val = $this->misc->printVal($fieldValue, $finfo->type, $printvalOpts);
 
@@ -564,7 +562,7 @@ $result=[];
      *
      * @param string $msg message to display on top of the form or after performing edition
      */
-    public function formEditRow($msg = ''): void
+    public function formEditRow($msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -706,8 +704,7 @@ $result=[];
         }
 
         echo '<input type="hidden" name="action" value="editrow" />' . \PHP_EOL;
-        // d($_REQUEST);
-        // d($this->getAllParams());
+
         echo $this->view->form;
 
         $subject = $this->getRequestParam('subject', $_REQUEST['subject'] ?? null);
@@ -782,12 +779,10 @@ $result=[];
     }
 
     /**
-     * @param array  $_gets
-     * @param mixed  $type
-     * @param mixed  $page
-     * @param string $subject
-     * @param mixed  $object
-     * @param mixed  $resultset
+     * @param mixed $type
+     * @param mixed $page
+     * @param mixed $object
+     * @param mixed $resultset
      *
      * @return ((array|mixed|string)[][]|mixed)[][]
      *
@@ -836,7 +831,7 @@ $result=[];
                 ],
                 'content' => $this->lang['streditsql'],
             ];
-        } 
+        }
         $navlinks['collapse'] = [
             'attr' => [
                 'href' => [
@@ -945,8 +940,13 @@ $result=[];
 
         return $navlinks;
     }
+
     /**
      * Performs actual edition of row.
+     *
+     * @return (array[]|int)[]|null
+     *
+     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|null
      */
     public function doEditRow()
     {
@@ -1088,7 +1088,9 @@ $result=[];
      * Build & return the FK information data structure
      * used when deciding if a field should have a FK link or not.
      *
-     * @return array associative array describing the FK
+     * @return (array[]|string)[]
+     *
+     * @psalm-return array{byconstr: array<array-key, array{url_data: string, fkeys: array, consrc: mixed}>, byfield: array<array-key, list<mixed>>, common_url?: string}
      */
     public function &getFKInfo()
     {
@@ -1139,7 +1141,7 @@ $result=[];
 
         $ops = [];
 
-        foreach (array_keys($_REQUEST['fkey']) as $x) {
+        foreach (\array_keys($_REQUEST['fkey']) as $x) {
             $ops[$x] = '=';
         }
         $query = $data->getSelectSQL($_REQUEST['table'], [], $_REQUEST['fkey'], $ops);
@@ -1182,13 +1184,19 @@ $result=[];
     }
 
     /**
+     * @return \the
+     */
+    private function FetchField(ADORecordSet $ADORecordSet, int $index): ADOFieldObject
+    {
+        return $ADORecordSet->FetchField($index);
+    }
+
+    /**
      * @psalm-return array{0: array{actionbuttons: array{edit: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}, delete: array{content: mixed, attr: array{href: array{url: string, urlvars: array{action: mixed|string, strings: mixed, page: mixed}}}}}, place: string}, 1: array<empty, empty>|iterable}
      *
-     * @param object $resultset
-     * @param mixed  $object
-     * @param mixed  $data
-     * @param mixed  $page
-     * @param array  $_gets
+     * @param mixed $object
+     * @param mixed $data
+     * @param mixed $page
      *
      * @return (((((mixed|string)[]|string)[][]|mixed)[][]|string)[]|iterable)[]
      */
@@ -1268,6 +1276,10 @@ $result=[];
         return [$actions, $key];
     }
 
+    /**
+     * @param array|iterable                                       $key
+     * @param ((((mixed|string)[]|string)[][]|mixed)[][]|string)[] $actions
+     */
     private function _printResultsTableActionButtons(ADORecordSet $resultset, $key, $actions, bool $display_action_column, string $buttonclass): void
     {
         if (!$display_action_column) {
@@ -1325,11 +1337,9 @@ $result=[];
     }
 
     /**
-     * @param bool[]       $printvalOpts
-     * @param ADORecordSet $resultset
-     * @param array        $fkey_information
-     * @param mixed        $fieldName
-     * @param mixed        $fieldValue
+     * @param bool[] $printvalOpts
+     * @param mixed  $fieldName
+     * @param mixed  $fieldValue
      */
     private function _printFKLinks(ADORecordSet $resultset, array $fkey_information, $fieldName, $fieldValue, array &$printvalOpts): void
     {
@@ -1382,9 +1392,6 @@ $result=[];
 
     /**
      * @psalm-return array{0: int, 1: int}
-     *
-     * @param int $page
-     * @param int $pages
      *
      * @return int[]
      */

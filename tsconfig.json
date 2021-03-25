@@ -11,10 +11,30 @@
     //"emitDeclarationOnly": true,
     "noEmit": true,
 
+    "lib": [
+      "WebWorker",
+       "es6", "dom", "dom.iterable"
 
+    ],
+    "types": [
+      "jstree",
+      "jquery",
+      "datatables.net",
+      "codemirror",
+      "select2",
+      "workbox-sw"
+    ],
+    "typeRoots": ["assets/types"]
+  
 
   },
-  "include": ["assets"],
+  
   "exclude": ["node_modules"],
+  "include": [
+    "assets/*.ts",
+    "assets/js/*.js",
+    "assets/**/*.ts"
+
+  ]
  
-}
+} 

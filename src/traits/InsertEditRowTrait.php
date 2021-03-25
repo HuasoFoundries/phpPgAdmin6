@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Traits;
@@ -23,7 +23,7 @@ trait InsertEditRowTrait
      *
      * @param string $table The table to retrieve FK contraints from
      *
-     * @return array{byconstr:array, byfield:array, code:string}|bool the array of FK definition:
+     * @return (array[]|string)[]|false
      *
      * @example
      * ```
@@ -44,6 +44,8 @@ trait InsertEditRowTrait
      *     'code'     => 'HTML/js code to include in the page for auto-completion',
      * ];
      * ```
+     *
+     * @psalm-return array{byconstr: array<array-key, array{confrelid: mixed, f_table: mixed, f_schema: mixed, pattnums: list<mixed>, pattnames: list<mixed>, fattnames: list<mixed>}>, byfield: array<array-key, list<mixed>>, code: string}|false
      */
     public function getAutocompleteFKProperties($table)
     {
@@ -133,6 +135,11 @@ trait InsertEditRowTrait
         return $fksprops;
     }
 
+    /**
+     * @return (array[]|string)[]|false
+     *
+     * @psalm-return array{byconstr: array<array-key, array{confrelid: mixed, f_table: mixed, f_schema: mixed, pattnums: list<mixed>, pattnames: list<mixed>, fattnames: list<mixed>}>, byfield: array<array-key, list<mixed>>, code: string}|false
+     */
     private function _getFKProps()
     {
         if (('disable' !== $this->conf['autocomplete'])) {

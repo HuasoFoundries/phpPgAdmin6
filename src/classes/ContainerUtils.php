@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin;
@@ -19,21 +19,21 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 /**
+ * @property string $BASE_PATH
+ * @property string $database
+ * @property bool $DEBUGMODE
  * @property array $deploy_info
- * @property Messages $flash
  * @property \GuzzleHttp\Client $fcIntranetClient
+ * @property Messages $flash
+ * @property bool $IN_TEST
  * @property Misc $misc
- * @property ViewManager $view
  * @property Request $request
  * @property Response $response
- * @property string $BASE_PATH
- * @property string $THEME_PATH
- * @property string $subFolder
- * @property bool $DEBUGMODE
- * @property bool $IN_TEST
- * @property string  $server
- * @property string $database
  * @property string  $schema
+ * @property string  $server
+ * @property string $subFolder
+ * @property string $THEME_PATH
+ * @property ViewManager $view
  *
  * @method mixed get(string)
  */
@@ -110,7 +110,7 @@ class ContainerUtils extends Container implements ContainerInterface
 
         $container = self::getContainerInstance($config);
 
-        if (self::$appInstance === null) {
+        if (null === self::$appInstance) {
             self::$appInstance = new App($container);
         }
 
@@ -137,12 +137,12 @@ class ContainerUtils extends Container implements ContainerInterface
         ];
 
         self::$envConfig = \array_merge(self::$envConfig, $config);
-        if (self::$instance === null) {
+
+        if (null === self::$instance) {
             self::$instance = new static(self::$envConfig);
 
             self::$instance
                 ->withConf(self::$envConfig);
-
 
             $handlers = new ContainerHandlers(self::$instance);
             $handlers->setExtra()
@@ -171,10 +171,10 @@ class ContainerUtils extends Container implements ContainerInterface
             $destinationurl = $this->subFolder . '/intro';
         } else {
             // otherwise, you'll be redirected to the login page for that server;
-            $destinationurl = $this->subFolder . '/login' . ($query_string !== '' ? '?' . $query_string : '');
+            $destinationurl = $this->subFolder . '/login' . ('' !== $query_string ? '?' . $query_string : '');
         }
         // ddd($destinationurl);
-        return (strpos($destinationurl, '/') === 0) ? $destinationurl : '/' . $destinationurl;
+        return (\mb_strpos($destinationurl, '/') === 0) ? $destinationurl : '/' . $destinationurl;
     }
 
     /**
@@ -196,20 +196,19 @@ class ContainerUtils extends Container implements ContainerInterface
         }
     }
 
-    public function getActionUrl($subject,   bool $debug = false)
+    /**
+     * @param mixed $subject
+     *
+     * @return null|Decorators\ActionUrlDecorator
+     */
+    public function getActionUrl($subject, bool $debug = false)
     {
         $container = self::getContainerInstance();
         $_server_info = $container->misc->getServerInfo();
         $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
-        $url['urlvars'] = array_merge([], $url['urlvars'] ?? []);
-
+        $url['urlvars'] = \array_merge([], $url['urlvars'] ?? []);
 
         if (isset($_server_info['username']) && \is_array($url)) {
-
-
-
-
-
             $this->addFlash($url, 'getLastTabURL for ' . $subject);
             // Load query vars into superglobal arrays
 
@@ -227,11 +226,13 @@ class ContainerUtils extends Container implements ContainerInterface
         //kdump($url);
         return null;
     }
+
     /**
      * Gets the destination with the last active tab selected for that controller
      * Usually used after going through a redirect route.
      *
      * @param string $subject The subject, usually a view name like 'server' or 'table'
+     * @param array  $urlvars
      *
      * @return string The destination url with last tab set in the query string
      */
@@ -243,14 +244,10 @@ class ContainerUtils extends Container implements ContainerInterface
         //$this->prtrace('$_server_info', $_server_info);
         // If username isn't set in server_info, you should login
         $url = $container->misc->getLastTabURL($subject) ?? ['url' => 'alldb', 'urlvars' => ['subject' => 'server']];
-        $url['urlvars'] = array_merge($urlvars, $url['urlvars'] ?? []);
+        $url['urlvars'] = \array_merge($urlvars, $url['urlvars'] ?? []);
         $destinationurl = $this->getRedirectUrl();
+
         if (isset($_server_info['username']) && \is_array($url)) {
-
-
-
-
-
             $this->addFlash($url, 'getLastTabURL for ' . $subject);
             // Load query vars into superglobal arrays
 
@@ -264,9 +261,10 @@ class ContainerUtils extends Container implements ContainerInterface
             $_GET = \array_merge($_GET, $urlvars);
 
             $actionurl = Decorator::actionurl($url['url'], $_GET);
-            $destinationurl = str_replace($this->subFolder, '', $actionurl->value($_GET));
+            $destinationurl = \str_replace($this->subFolder, '', $actionurl->value($_GET));
         }
-        return (($container->subFolder === '' || strpos($destinationurl, $container->subFolder) === 0) ? '' : $container->subFolder) . $destinationurl;
+
+        return (('' === $container->subFolder || \mb_strpos($destinationurl, $container->subFolder) === 0) ? '' : $container->subFolder) . $destinationurl;
     }
 
     /**
@@ -274,7 +272,7 @@ class ContainerUtils extends Container implements ContainerInterface
      *
      * @param string $errormsg The error msg
      *
-     * @return Container The app container
+     * @return self The app container
      */
     public function addError(string $errormsg): Container
     {
@@ -298,9 +296,14 @@ class ContainerUtils extends Container implements ContainerInterface
         return \str_replace(['<br>', '<br/>', '<br />'], \PHP_EOL, $msg);
     }
 
+    /**
+     * @return (bool|string)[][]
+     *
+     * @psalm-return array{settings: array{displayErrorDetails: bool, determineRouteBeforeAppMiddleware: true, base_path: string, debug: bool, phpMinVer: string, addContentLengthHeader: false, appName: string}}
+     */
     public static function getDefaultConfig(bool $debug = false): array
     {
-        return  [
+        return [
             'settings' => [
                 'displayErrorDetails' => $debug,
                 'determineRouteBeforeAppMiddleware' => true,
@@ -313,8 +316,18 @@ class ContainerUtils extends Container implements ContainerInterface
         ];
     }
 
+    public function getAllRequestVars(): array
+    {
+        return \array_merge(
+            $this->request->getQueryParams() ?? [],
+            $this->request->getParsedBody() ?? []
+        );
+    }
+
     /**
      * @param array $conf
+     *
+     * @return static
      */
     private function withConf($conf): self
     {
@@ -327,7 +340,12 @@ class ContainerUtils extends Container implements ContainerInterface
         $container->THEME_PATH = $conf['theme_path'];
         $container->IN_TEST = $conf['IN_TEST'];
         $container['errors'] = [];
-        $container['conf'] = static function (Container $c) use ($conf): array {
+        $container['conf'] = /**
+         * @return (bool[]|mixed|string)[]
+         *
+         * @psalm-return array{plugins: array<empty, empty>, display_sizes: array{schemas: bool, tables: bool}, theme: mixed|string}
+         */
+        static function (Container $c) use ($conf): array {
             $display_sizes = $conf['display_sizes'];
 
             if (\is_array($display_sizes)) {

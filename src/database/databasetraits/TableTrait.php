@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
@@ -21,7 +21,7 @@ trait TableTrait
     /**
      * Return all tables in current database excluding schemas 'pg_catalog', 'information_schema' and 'pg_toast'.
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getAllTables()
     {
@@ -39,7 +39,7 @@ trait TableTrait
     /**
      * Return all tables in current database (and schema).
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTables()
     {
@@ -81,7 +81,7 @@ trait TableTrait
      *
      * @param string $table The table to find the parents for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTableParents($table)
     {
@@ -115,7 +115,7 @@ trait TableTrait
      *
      * @param string $table The table to find the children for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTableChildren($table)
     {
@@ -148,8 +148,6 @@ trait TableTrait
      *
      * @param string $table       The table to define
      * @param string $cleanprefix set to '-- ' to avoid issuing DROP statement
-     *
-     * @return null|string
      */
     public function getTableDefPrefix($table, $cleanprefix = ''): ?string
     {
@@ -264,7 +262,7 @@ trait TableTrait
      *
      * @param string $table The name of the table
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTable($table)
     {
@@ -303,7 +301,7 @@ trait TableTrait
      * @param string $table The name of the table
      * @param string $field (optional) The name of a field to return
      *
-     * @return int|\PHPPgAdmin\ADORecordSet All attributes in order
+     * @return \ADORecordSet|bool|int|string All attributes in order
      */
     public function getTableAttributes($table, $field = '')
     {
@@ -327,7 +325,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getConstraints($table)
     {
@@ -481,7 +479,7 @@ trait TableTrait
      * @param string $table  The name of a table whose indexes to retrieve
      * @param bool   $unique Only get unique/pk indexes
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getIndexes($table = '', $unique = false)
     {
@@ -512,7 +510,7 @@ trait TableTrait
      *
      * @param string $table The name of a table whose triggers to retrieve
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getTriggers($table = '')
     {
@@ -547,7 +545,7 @@ trait TableTrait
      *
      * @param string $table The table to find rules for
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function getRules($table)
     {
@@ -588,7 +586,9 @@ trait TableTrait
      * @param array  $uniquekey   An Array indicating the fields that are unique (those indexes that are set)
      * @param array  $primarykey  An Array indicating the field used for the primarykey (those indexes that are set)
      *
-     * @return int 0 success
+     * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createTable(
         $name,
@@ -818,6 +818,8 @@ trait TableTrait
      * @param string $tablespace  The tablespace name ('' means none/default)
      *
      * @return int
+     *
+     * @psalm-return -1|0|1
      */
     public function createTableLike($name, $like, $defaults = false, $constraints = false, $idx = false, $tablespace = '')
     {
@@ -928,9 +930,7 @@ trait TableTrait
      * Enables or disables the oid system column to a table a table's owner
      * /!\ this function is called from _alterTable which take care of escaping fields.
      *
-     * @param ADORecordSet $tblrs       The table RecordSet returned by getTable()
-     * @param null|string  $owner
-     * @param bool         $withoutoids
+     * @param ADORecordSet $tblrs The table RecordSet returned by getTable()
      *
      * @return array{0:int,1:string} [status:0 if successful, change_sql: changed attribute]
      */
@@ -1177,7 +1177,7 @@ trait TableTrait
      * Sets up the data object for a dump.  eg. Starts the appropriate
      * transaction, sets variables, etc.
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -1|0
      */
@@ -1227,6 +1227,8 @@ trait TableTrait
      * Ends the data object for a dump.
      *
      * @return int 0 success
+     *
+     * @psalm-return 0|1
      */
     public function endDump()
     {
@@ -1241,7 +1243,7 @@ trait TableTrait
      * @param string $relation The name of a relation
      * @param bool   $oids     true to dump also the oids
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     public function dumpRelation($relation, $oids)
     {
@@ -1511,7 +1513,7 @@ trait TableTrait
      * @param string       $tablespace  The new tablespace for the table ('' means leave as is)
      * @param bool         $withoutoids If set to TRUE, will drop oids column
      *
-     * @return int 0 success
+     * @return int
      *
      * @psalm-return -7|-6|-5|-4|-3|0
      */
@@ -1626,8 +1628,8 @@ trait TableTrait
                 $atts->fields['attname']
             );
             // Dump SERIAL and BIGSERIAL columns correctly
-            if ($this->phpBool($atts->fields['attisserial']) &&
-                ('integer' === $atts->fields['type'] || 'bigint' === $atts->fields['type'])
+            if ($this->phpBool($atts->fields['attisserial'])
+                && ('integer' === $atts->fields['type'] || 'bigint' === $atts->fields['type'])
             ) {
                 if ('integer' === $atts->fields['type']) {
                     $sql .= ' SERIAL';
@@ -1962,7 +1964,6 @@ trait TableTrait
      * @param ADORecordSet $tblfields   table fields object
      * @param string       $sql         The sql sentence generated so far
      * @param string       $cleanprefix set to '-- ' to avoid issuing DROP statement
-     * @param mixed        $fields
      *
      * @return string original $sql plus appended strings
      */
@@ -2002,7 +2003,7 @@ trait TableTrait
      * @param string $table    The name of the table
      * @param string $c_schema The name of the schema
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     private function _getTableAttributesAll($table, $c_schema)
     {
@@ -2058,7 +2059,7 @@ trait TableTrait
      * @param string $c_schema The schema of the table
      * @param string $field    (optional) The name of a field to return
      *
-     * @return \RecordSet|int|string
+     * @return \ADORecordSet|bool|int|string
      */
     private function _getTableAttribute($table, $c_schema, $field)
     {

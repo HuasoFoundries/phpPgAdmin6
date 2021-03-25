@@ -1,12 +1,10 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Database\Traits;
-
-use PHPPgAdmin\ADORecordSet;
 
 /**
  * Common trait for privileges manipulation.
@@ -21,10 +19,9 @@ trait PrivilegesTrait
      * @param string      $type   The type of the object (eg. database, schema, relation, function or language)
      * @param null|string $table  Optional, column's table if type = column
      *
-     * @return array|int Privileges array or error code
-     *                   - -1         invalid type
-     *                   - -2         object not found
-     *                   - -3         unknown privilege type
+     * @return (array|false|null|string)[][]|int Privileges array or error code - -1 invalid type - -2 object not found - -3 unknown privilege type
+     *
+     * @psalm-return int|list<array{0: string, 1: false|null|string, 2: list<mixed>, 3: false|string, 4: list<mixed>}>
      */
     public function getPrivileges($object, $type, $table = null)
     {
@@ -158,8 +155,8 @@ trait PrivilegesTrait
             return -3;
         }
 
-        if (!\is_array($usernames) || !\is_array($groupnames) ||
-            (!$public && 0 === \count($usernames) && 0 === \count($groupnames))) {
+        if (!\is_array($usernames) || !\is_array($groupnames)
+            || (!$public && 0 === \count($usernames) && 0 === \count($groupnames))) {
             return -4;
         }
 
@@ -337,7 +334,7 @@ trait PrivilegesTrait
      *
      * @param string $acl The ACL to parse (of type aclitem[])
      *
-     * @return (array|false|null|string)[][]|int Privileges array or integer with error code
+     * @return (array|false|null|string)[][]|int
      *
      * @internal bool $in_quotes toggles acl in_quotes attribute
      *

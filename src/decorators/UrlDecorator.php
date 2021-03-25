@@ -1,7 +1,7 @@
 <?php
 
 /**
- * PHPPgAdmin 6.1.3
+ * PHPPgAdmin6
  */
 
 namespace PHPPgAdmin\Decorators;
@@ -9,10 +9,12 @@ namespace PHPPgAdmin\Decorators;
 class UrlDecorator extends Decorator
 {
     public $base;
+
     /**
      * @var mixed
      */
     public $queryVars;
+
     public function __construct($base, $queryVars = null)
     {
         $this->base = $base;
@@ -23,6 +25,8 @@ class UrlDecorator extends Decorator
     }
 
     /**
+     * @param mixed $fields
+     *
      * @return string
      */
     public function value($fields)
@@ -44,7 +48,6 @@ class UrlDecorator extends Decorator
                 $sep = '&';
             }
         }
-        
 
         return \str_replace('//', '/', \containerInstance()->subFolder . '/' . $url);
     }
