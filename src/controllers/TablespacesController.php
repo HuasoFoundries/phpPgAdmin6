@@ -153,7 +153,7 @@ class TablespacesController extends BaseController
             echo $this->printTable($tablespaces, $columns, $actions, 'tablespaces-tablespaces', $this->lang['strnotablespaces']);
         }
 
-        $this->printNavLinks(['create' => [
+return  $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
                     'url' => 'tablespaces',

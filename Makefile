@@ -56,7 +56,7 @@ update_version:
 	@echo "Current version is " ${VERSION} ;\
 	echo "Next version is " $(v) ;\
 	sed -i 's/"version": "$(VERSION)"/"version": "$(v)"/g' composer.json
-	@${MAKE} composer_update --no-print-directory
+	composer update  --lock
 
 
 mocktag:

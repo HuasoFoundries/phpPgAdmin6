@@ -208,7 +208,7 @@ class DomainsController extends BaseController
                 'content' => $this->lang['strcreatedomain'],
             ],
         ];
-        $this->printNavLinks($navlinks, 'domains-domains', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'domains-domains', \get_defined_vars());
     }
 
     /**
@@ -620,7 +620,7 @@ class DomainsController extends BaseController
             ];
         }
 
-        $this->printNavLinks($navlinks, 'domains-properties', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'domains-properties', \get_defined_vars());
     }
 
     /**

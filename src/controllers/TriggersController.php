@@ -219,7 +219,7 @@ class TriggersController extends BaseController
             echo $this->printTable($triggers, $columns, $actions, 'triggers-triggers', $this->lang['strnotriggers'], $tgPre);
         }
 
-        $this->printNavLinks(['create' => [
+return  $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
                     'url' => 'triggers',

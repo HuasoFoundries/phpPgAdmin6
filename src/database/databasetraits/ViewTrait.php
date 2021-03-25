@@ -145,7 +145,7 @@ trait ViewTrait
 
         $status = $this->beginTransaction();
 
-        if (0 !== $status) {
+        if (0 !== $status || !($data instanceof ADORecordSet)) {
             $this->rollbackTransaction();
 
             return -1;

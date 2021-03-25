@@ -100,6 +100,7 @@ class InfoController extends BaseController
         if (0 < $indexstatsio->RecordCount()) {
             $this->_printIndexstatsio($indexstatsio);
         }
+        return '';
     }
 
     /**

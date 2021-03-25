@@ -50,6 +50,7 @@ class LoginController extends BaseController
     {
         if (null === \requestInstance()->getAttribute('route')) {
             echo $this->doLoginForm();
+            return '';
         } else {
             $body = \responseInstance()->getBody();
             $body->write($this->doLoginForm());

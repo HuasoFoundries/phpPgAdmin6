@@ -26,7 +26,7 @@ class HTMLNavbarController extends HTMLController
     {
         $from = $from ?: __METHOD__;
 
-        $trail_html = $this->printTopbar(false, $from);
+        $trail_html = $this->printTopbar( $from);
 
         if (\is_string($trail)) {
             $subject = $trail;
@@ -51,11 +51,7 @@ class HTMLNavbarController extends HTMLController
 
         $trail_html .= $containerInstance->view->fetch('components/trail.twig', $viewVars);
 
-        if ($do_print) {
-            echo $trail_html;
-
-            return '';
-        }
+    
 
         return $trail_html;
     }
@@ -142,11 +138,9 @@ class HTMLNavbarController extends HTMLController
             $tabs_html = $this->getContainer()->view->fetch('components/tabs.twig', $viewVars);
         }
 
-        if ($do_print) {
-            echo $tabs_html;
-        } else {
+      
             return $tabs_html;
-        }
+       
     }
 
     /**
@@ -220,12 +214,11 @@ class HTMLNavbarController extends HTMLController
     /**
      * [printTopbar description].
      *
-     * @param bool       $do_print true to print, false to return html
-     * @param null|mixed $from     which method is calling this one
+      * @param null|mixed $from     which method is calling this one
      *
      * @return string
      */
-    private function printTopbar($do_print = true, $from = null): ?string
+    private function printTopbar(  $from = null): ?string
     {
         $from = $from ?: __METHOD__;
 
@@ -351,11 +344,7 @@ class HTMLNavbarController extends HTMLController
 
         $topbar_html .= '</div></div>' . \PHP_EOL;
 
-        if ($do_print) {
-            echo $topbar_html;
-
-            return '';
-        }
+       
 
         return $topbar_html;
     }

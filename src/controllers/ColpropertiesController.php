@@ -66,7 +66,7 @@ class ColpropertiesController extends BaseController
      * @param string $msg     message to display
      * @param bool   $isTable tells if we're showing table properties
      */
-    public function doDefault($msg = '', $isTable = true): void
+    public function doDefault($msg = '', $isTable = true) 
     {
         if (!isset($_REQUEST['table']) || empty($_REQUEST['table'])) {
             $isTable = false;
@@ -89,7 +89,9 @@ class ColpropertiesController extends BaseController
         $this->printTabs('column', 'properties');
         $this->printMsg($msg);
 
-        if (!empty($_REQUEST['column'])) {
+        if (empty($_REQUEST['column'])){
+            return '';
+        } 
             // Get table
             $tdata = $data->getTable($this->tableName);
             // Get columns
@@ -222,8 +224,9 @@ class ColpropertiesController extends BaseController
                 ];
             }
 
-            $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
-        }
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+        
+
     }
 
     /**

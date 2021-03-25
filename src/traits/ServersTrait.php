@@ -96,11 +96,10 @@ trait ServersTrait
      * databases form the popups windows.
      *
      * @param string $the_action an action identifying the purpose of this snipper sql|find|history
-     * @param mixed  $do_print
      *
      * @return null|string
      */
-    public function printConnection($the_action, $do_print = true)
+    public function printConnection($the_action)
     {
         $connection_html = '<table class="printconnection" style="width: 100%"><tr><td class="popup_select1">' . \PHP_EOL;
 
@@ -175,10 +174,8 @@ trait ServersTrait
 
         $connection_html .= '</td></tr></table>' . \PHP_EOL;
 
-        if ($do_print) {
-            echo $connection_html;
-        } else {
+        
             return $connection_html;
-        }
+        
     }
 }

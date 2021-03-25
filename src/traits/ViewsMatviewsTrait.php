@@ -25,6 +25,7 @@ trait ViewsMatviewsTrait
         $items = $this->adjustTabsForTree($tabs);
         $reqvars = $this->misc->getRequestVars($this->keystring);
 
+       
         $attrs = [
             'text' => Decorator::field('title'),
             'icon' => Decorator::field('icon'),
@@ -34,7 +35,6 @@ trait ViewsMatviewsTrait
                 '',
                 Decorator::url(
                     Decorator::field('url'),
-                    Decorator::field('urlvars'),
                     $reqvars,
                     [
                         'action' => 'tree',

@@ -8,6 +8,7 @@ namespace PHPPgAdmin\Database;
 
 use ADODB_postgres9;
 use Exception;
+use PHPPgAdmin\Connection;
 use PHPPgAdmin\ContainerUtils;
 use PHPPgAdmin\Database\Traits\DatabaseTrait;
 use PHPPgAdmin\Database\Traits\HasTrait;
@@ -58,11 +59,11 @@ class ADOdbBase
     /**
      * Base constructor.
      *
-     * @param ADODB_postgres9 $conn        The connection object
+     * @param Connection $conn        The connection object
      * @param mixed           $container
      * @param mixed           $server_info
      */
-    public function __construct(&$conn, $container, $server_info)
+    public function __construct(Connection $conn, $container, $server_info)
     {
         $this->container = $container;
         $this->server_info = $server_info;
@@ -72,7 +73,8 @@ class ADOdbBase
 
         $this->prtrace('instanced connection class');
         $this->lastExecutedSql = '';
-        $this->conn = $conn;
+        $this->conn = $conn->conn;
+        $this->platform=$conn->platform;
     }
 
     /**
@@ -692,7 +694,7 @@ class ADOdbBase
     public function getPlatform()
     {
         try {
-            return $this->conn->platform;
+            return $this->platform;
         } catch (Exception $e) {
             $this->prtrace($e->getMessage());
 

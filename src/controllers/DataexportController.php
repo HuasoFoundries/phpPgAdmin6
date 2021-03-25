@@ -170,7 +170,7 @@ class DataexportController extends BaseController
         ) . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 
-        $this->printFooter();
+    return    $this->printFooter();
     }
 
     protected function mimicDumpFeature($format, string $cleanprefix, bool $oids)

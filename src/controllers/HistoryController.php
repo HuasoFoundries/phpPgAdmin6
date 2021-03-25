@@ -72,7 +72,7 @@ class HistoryController extends BaseController
         return $this->printFooter(true, 'footer_sqledit.twig');
     }
 
-    public function doDefault(): void
+    public function doDefault()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -82,7 +82,7 @@ class HistoryController extends BaseController
         echo '<body onload="window.focus();">' . \PHP_EOL;
 
         echo '<form action="history" method="post">' . \PHP_EOL;
-        $this->printConnection('history');
+       echo $this->printConnection('history');
         echo '</form><br />';
 
         if (!isset($_REQUEST['database'])) {
@@ -198,7 +198,7 @@ class HistoryController extends BaseController
             ];
         }
 
-        $this->printNavLinks($navlinks, 'history-history', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'history-history', \get_defined_vars());
     }
 
     public function doDelHistory($qid, bool $confirm): void

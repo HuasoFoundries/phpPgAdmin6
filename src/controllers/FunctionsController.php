@@ -99,7 +99,7 @@ class FunctionsController extends BaseController
         $this->printHeader($this->headerTitle(), null, true, $header_template);
         $this->printBody();
         echo $output;
-        $this->printFooter(true, $footer_template);
+       return $this->printFooter(true, $footer_template);
     }
 
     /**
@@ -196,7 +196,7 @@ class FunctionsController extends BaseController
             echo $this->printTable($funcs, $columns, $actions, $this->table_place, $this->lang['strnofunctions']);
         }
 
-        $this->_printNavLinks('functions-functions');
+      return  $this->_printNavLinks('functions-functions');
     }
 
     /**
@@ -1323,7 +1323,7 @@ class FunctionsController extends BaseController
         }
     }
 
-    private function _printNavLinks(string $place, string $func_full = ''): void
+    private function _printNavLinks(string $place, string $func_full = '')
     {
         if ('functions-properties' === $place) {
             $navlinks = [
@@ -1421,10 +1421,10 @@ class FunctionsController extends BaseController
                 ],
             ];
         } else {
-            return;
+            return '';
         }
 
-        $this->printNavLinks($navlinks, $place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $place, \get_defined_vars());
     }
 
     /**

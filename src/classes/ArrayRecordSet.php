@@ -45,7 +45,10 @@ class ArrayRecordSet implements Countable, RecordSet
             $this->EOF = true;
         }
     }
-
+public function getIterator()
+{
+    return $this->_array;
+}
     /**
      * Returns the recordCount.
      */

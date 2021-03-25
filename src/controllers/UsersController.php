@@ -176,7 +176,7 @@ class UsersController extends BaseController
             echo $this->printTable($users, $columns, $actions, 'users-users', $this->lang['strnousers']);
         }
 
-        $this->printNavLinks(['create' => [
+return  $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
                     'url' => 'users',
@@ -240,7 +240,7 @@ class UsersController extends BaseController
             ) . \PHP_EOL;
         }
 
-        $this->printNavLinks(['changepassword' => [
+return  $this->printNavLinks(['changepassword' => [
             'attr' => [
                 'href' => [
                     'url' => 'users',

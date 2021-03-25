@@ -356,7 +356,7 @@ class HTMLTableController extends HTMLController
                             if (isset($column['url'])) {
                                 $column['url'] = \str_replace(\sprintf('%s%s', $this->container->subFolder, $this->container->subFolder), $this->container->subFolder . '/', $column['url'] ?? '');
                                 $parsedurl = \parse_url($column['url']);
-                                $parsedVars = \implode('&', [$parsedurl['query'] ?? null, $this->printUrlVars($column['vars'], $tabledata->fields, false)]);
+                                $parsedVars = \implode('&', [$parsedurl['query'] ?? null, $this->printUrlVars($column['vars'], $tabledata->fields)]);
                                 $column['url'] = $parsedurl['path'] ?? '/';
                                 $tbody_html .= "<a href=\"{$column['url']}?";
                                 $tbody_html .= $parsedVars;
@@ -401,7 +401,7 @@ class HTMLTableController extends HTMLController
      *
      * @return null|string
      */
-    private function printUrlVars(&$vars, &$fields, bool $do_print = true)
+    private function printUrlVars(&$vars, &$fields )
     {
         $url_vars_html = '';
 
@@ -409,10 +409,8 @@ class HTMLTableController extends HTMLController
             $url_vars_html .= "{$var}=" . \urlencode($fields[$varfield]) . '&amp;';
         }
 
-        if ($do_print) {
-            echo $url_vars_html;
-        } else {
+      
             return $url_vars_html;
-        }
+      
     }
 }

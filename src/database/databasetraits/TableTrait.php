@@ -904,7 +904,7 @@ trait TableTrait
         $status = $this->beginTransaction();
         //dump(['beginTransaction' => $status]);
 
-        if (0 !== $status) {
+        if (0 !== $status || !($tblrs instanceof ADORecordSet)) {
             $this->rollbackTransaction();
 
             return -1;

@@ -256,7 +256,7 @@ class BaseController
     /**
      * Produce JSON data for the browser tree.
      *
-     * @param \ADORecordSet|\PHPPgAdmin\Interfaces\Recordset
+     * @param \ADORecordSet|\PHPPgAdmin\Interfaces\RecordSet $_treedata
      * @param false|string $section
      * @param bool         $print   either to return or echo the result
      *
@@ -268,7 +268,21 @@ class BaseController
     {
         $tree = $this->_getTreeController();
 
-        return $tree->printTree($_treedata, $attrs, $section, $print);
+        $parent= $tree->printTree($_treedata, $attrs, $section);
+        
+        if ($print) {
+            if (isset($_REQUEST['children'])) {
+                $children = $parent;
+                $parent = ['children' => $children];
+            }
+
+            return $this
+                ->container
+                ->response
+                ->withStatus(200)
+                ->withJson($parent);
+        }
+        return $parent;
     }
 
     /**
@@ -284,7 +298,12 @@ class BaseController
         $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
-        return $html_trail->printTrail($trail, $do_print, $from);
+        return tap( $html_trail->printTrail($trail ),function(?string $html) use ($do_print){
+            if($do_print) {
+               
+                echo $html;
+            }
+        } );
     }
 
     /**
@@ -298,7 +317,12 @@ class BaseController
         $from = __METHOD__;
         $footer_controller = $this->_getFooterController();
 
-        return $footer_controller->printNavLinks($navlinks, $place, $env, $do_print, $from);
+        return tap($footer_controller->printNavLinks($navlinks, $place, $env,  $from),function(?string $navLinksHtml) use ($do_print){
+            if($do_print) {
+             
+                echo $navLinksHtml;
+            }
+        } );
     }
 
     public function printTabs(string $tabs, string $activetab, bool $do_print = true)
@@ -306,7 +330,11 @@ class BaseController
         $from = __METHOD__;
         $html_trail = $this->_getNavbarController();
 
-        return $html_trail->printTabs($tabs, $activetab, $do_print, $from);
+        return tap($html_trail->printTabs($tabs, $activetab, false, $from),function(?string $html) use ($do_print){
+            if($do_print) {
+                echo $html;
+            }
+        } );
     }
 
     /**
@@ -323,7 +351,11 @@ class BaseController
 
         $html_trail = $this->_getNavbarController();
 
-        return $html_trail->printLink($link, $do_print, $from);
+        return  tap($html_trail->printLink($link, $do_print, $from),function(?string $html) use ($do_print){
+            if($do_print) {
+                echo $html;
+            }
+        } );
     }
 
     /**
@@ -362,9 +394,7 @@ class BaseController
 
     public function printReload($database, $do_print = true)
     {
-        $footer_controller = $this->_getFooterController();
-
-        return $footer_controller->printReload($database, $do_print);
+       return '';
     }
 
     /**
@@ -413,7 +443,7 @@ class BaseController
         $title = '' !== $title ? $title : $this->headerTitle();
         $header_controller = $this->_getHeaderController();
 
-        return $header_controller->printHeader($title, $script, $do_print, $template);
+        return  $header_controller->printHeader($title, $script, $do_print, $template);
     }
 
     /**
@@ -437,7 +467,7 @@ class BaseController
     {
         $header_controller = $this->_getHeaderController();
 
-        return $header_controller->printTitle($title, $help, $do_print);
+        return  $header_controller->printTitle($title, $help, $do_print);
     }
 
     /**

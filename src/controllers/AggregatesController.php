@@ -184,7 +184,7 @@ class AggregatesController extends BaseController
                 'content' => $this->lang['strcreateaggregate'],
             ],
         ];
-        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     /**
@@ -676,6 +676,6 @@ class AggregatesController extends BaseController
             'content' => $this->lang['strdrop'],
         ];
 
-        $this->printNavLinks($navlinks, 'aggregates-properties', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'aggregates-properties', \get_defined_vars());
     }
 }

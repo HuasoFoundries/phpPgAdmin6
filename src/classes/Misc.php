@@ -369,7 +369,7 @@ class Misc
             // Create a database wrapper class for easy manipulation of the
             // connection.
 
-            $this->_data = new $_type($_connection->conn, $this->container, $server_info);
+            $this->_data = new $_type($_connection, $this->container, $server_info);
             $this->_data->platform = $_connection->platform;
 
             //$this->_data->getHelpPages();

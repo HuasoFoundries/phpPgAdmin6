@@ -31,7 +31,7 @@ class LanguagesController extends BaseController
         $this->printBody();
         $this->doDefault();
 
-        $this->printFooter();
+        return $this->printFooter();
     }
 
     /**
@@ -70,6 +70,7 @@ class LanguagesController extends BaseController
         if (self::isRecordset($languages)) {
             echo $this->printTable($languages, $columns, $actions, 'languages-languages', $this->lang['strnolanguages']);
         }
+        return '';
     }
 
     /**

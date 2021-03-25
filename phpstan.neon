@@ -27,6 +27,7 @@ parameters:
 		- vendor/*
 		- src/classes/ADO*		
 		- src/router.php
+	reportUnmatchedIgnoredErrors: false
 
 	treatPhpDocTypesAsCertain: false
 

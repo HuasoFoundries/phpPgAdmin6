@@ -212,7 +212,7 @@ class TablesController extends BaseController
                 'content' => $this->lang['strcreatetablelike'],
             ];
         }
-        $this->printNavLinks($navlinks, 'tables-tables', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'tables-tables', \get_defined_vars());
     }
 
     public function displayJson()
@@ -1013,7 +1013,7 @@ class TablesController extends BaseController
         }
 
         if (0 === \count($_POST['show'])) {
-            $this->doSelectRows(true, $this->lang['strselectneedscol']);
+            return  $this->doSelectRows(true, $this->lang['strselectneedscol']);
         } else {
             // Generate query SQL
             $query = $data->getSelectSQL(

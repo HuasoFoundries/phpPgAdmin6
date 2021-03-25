@@ -190,7 +190,7 @@ class SchemasController extends BaseController
             echo $this->printTable($schemas, $columns, $actions, 'schemas-schemas', $this->lang['strnoschemas']);
         }
 
-        $this->printNavLinks(['create' => [
+return  $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
                     'url' => 'schemas',

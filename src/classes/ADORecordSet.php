@@ -39,7 +39,7 @@ class ADORecordSet extends ADODBRecordsetClass implements Countable, RecordSet
      *
      * @param int $fieldoffset
      *
-     * @return \the the field
+     * @return \ADOFieldObject the field
      */
     public function FetchField($fieldoffset = -1): ADOFieldObject
     {

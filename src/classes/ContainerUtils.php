@@ -23,8 +23,7 @@ use Slim\Http\Response;
  * @property string $database
  * @property bool $DEBUGMODE
  * @property array $deploy_info
- * @property \GuzzleHttp\Client $fcIntranetClient
- * @property Messages $flash
+  * @property Messages $flash
  * @property bool $IN_TEST
  * @property Misc $misc
  * @property Request $request
@@ -35,7 +34,7 @@ use Slim\Http\Response;
  * @property string $THEME_PATH
  * @property ViewManager $view
  *
- * @method mixed get(string)
+ * @method mixed get($varname='')
  */
 class ContainerUtils extends Container implements ContainerInterface
 {

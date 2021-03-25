@@ -76,9 +76,10 @@ class HTMLFooterController extends HTMLController
 
         if ($doBody) {
             echo $footer_html;
-        } else {
+            return '';
+        }  
             return $footer_html;
-        }
+         
     }
 
     /**
@@ -119,12 +120,11 @@ class HTMLFooterController extends HTMLController
      * @param array  $env      - Associative array of defined variables in the scope of the caller.
      *                         Allows to give some environnement details to plugins.
      *                         and 'browse' is the place inside that code (doBrowse).
-     * @param bool   $do_print if true, print html, if false, return html
-     * @param mixed  $from     can either be null, false or the method calling this one
+      * @param mixed  $from     can either be null, false or the method calling this one
      *
      * @return null|string
      */
-    public function printNavLinks($navlinks, $place, $env, $do_print, $from)
+    public function printNavLinks($navlinks, $place, $env,   $from)
     {
         if (null === $from || false === $from) {
             $from = __METHOD__;
@@ -138,11 +138,42 @@ class HTMLFooterController extends HTMLController
         ];
 
         if (0 < \count($navlinks)) {
-            if ($do_print) {
-                $this->printLinksList($navlinks, 'navlink', true, $from);
-            } else {
-                return $this->printLinksList($navlinks, 'navlink', false, $from);
-            }
+             
+                return $this->printLinksList($navlinks, 'navlink',  $from);
+           
         }
+        return '';
+    }
+     /**
+     * Display a list of links.
+     *
+     * @param array       $links    An associative array of links to print. See printLink function for
+     *                              the links array format.
+     * @param string      $class    an optional HTML class or list of classes seprated by a space
+     *                              WARNING: This field is NOT escaped! No user should be able to inject something here, use with care
+     * @param null|string $from     which method is calling this one
+     *
+     * @return null|string
+     */
+    protected function printLinksList($links, $class = '',  $from = null)
+    {
+        if (null === $from || false === $from) {
+            $from = __METHOD__;
+        }
+        $list_html = "<ul class=\"{$class}\">" . \PHP_EOL;
+
+        foreach ($links as $link) {
+            if ('PHPPgAdmin\Controller\BaseController::printNavLinks' === $from) {
+            }
+
+            $list_html .= "\t<li>";
+            $list_html .= \str_replace('.php', '', $this->printLink($link, false, $from));
+            $list_html .= '</li>' . \PHP_EOL;
+        }
+        $list_html .= '</ul>' . \PHP_EOL;
+
+         
+            return $list_html;
+        
     }
 }

@@ -31,7 +31,7 @@ class OpclassesController extends BaseController
         $this->printBody();
         $this->doDefault();
 
-        $this->printFooter();
+        return $this->printFooter();
     }
 
     /**
@@ -77,7 +77,7 @@ class OpclassesController extends BaseController
 
         if ($opclasses instanceof \PHPPgAdmin\Interfaces\RecordSet) {
             echo $this->printTable($opclasses, $columns, $actions, 'opclasses-opclasses', $this->lang['strnoopclasses']);
-        }
+        }return '';
     }
 
     /**

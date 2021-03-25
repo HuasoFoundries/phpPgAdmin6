@@ -204,18 +204,6 @@ class TreeController extends BaseController
         }
         //ddd($parent);
 
-        if ($print) {
-            if (isset($_REQUEST['children'])) {
-                $children = $parent;
-                $parent = ['children' => $children];
-            }
-
-            return $this
-                ->container
-                ->response
-                ->withStatus(200)
-                ->withJson($parent);
-        }
 
         return $parent;
     }

@@ -243,7 +243,7 @@ class ViewsController extends BaseController
                 'content' => $this->lang['strcreateviewwiz'],
             ],
         ];
-        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     /**
@@ -267,7 +267,7 @@ class ViewsController extends BaseController
             'action' => Decorator::redirecturl('redirect', $reqvars, [$this->keystring => Decorator::field('relname')]),
             'branch' => Decorator::url('views', $reqvars, ['action' => 'subtree', $this->keystring => Decorator::field('relname')]),
         ];
-
+        kdump($attrs);
         return $this->printTree($views, $attrs, 'views');
     }
 

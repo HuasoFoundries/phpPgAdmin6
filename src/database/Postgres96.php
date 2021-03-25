@@ -79,7 +79,7 @@ class Postgres96 extends Postgres
      * @param string $username   The username of the user to create
      * @param string $password   A password for the user
      * @param bool   $createdb   boolean Whether or not the user can create databases
-     * @param bool   $createrole boolean Whether or not the user can create other users
+     * @param bool   $createuser boolean Whether or not the user can create other users
      * @param string $expiry     string Format 'YYYY-MM-DD HH:MM:SS'.  '' means never expire
      * @param array  $groups     The groups to create the user in
      *
@@ -87,7 +87,7 @@ class Postgres96 extends Postgres
      *
      * @internal param $group (array) The groups to create the user in
      */
-    public function createUser($username, $password, $createdb, $createrole, $expiry, $groups)
+    public function createUser($username, $password, $createdb, $createuser, $expiry, $groups)
     {
         $enc = $this->_encryptPassword($username, $password);
         $this->fieldClean($username);
@@ -108,7 +108,7 @@ class Postgres96 extends Postgres
         }
 
         $sql .= $createdb ? ' CREATEDB' : ' NOCREATEDB';
-        $sql .= $createrole ? ' CREATEROLE' : ' NOCREATEROLE';
+        $sql .= $createuser ? ' CREATEROLE' : ' NOCREATEROLE';
 
         if (\is_array($groups) && 0 < \count($groups)) {
             $sql .= ' IN GROUP "' . \implode('", "', $groups) . '"';

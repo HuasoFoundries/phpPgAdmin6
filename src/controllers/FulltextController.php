@@ -216,7 +216,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-fulltext', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'fulltext-fulltext', \get_defined_vars());
     }
 
     /**
@@ -310,7 +310,7 @@ class FulltextController extends BaseController
         return $this->printTree($items, $attrs, \mb_strtolower($what));
     }
 
-    public function doDropConfig(bool $confirm): void
+    public function doDropConfig(bool $confirm) 
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -354,7 +354,7 @@ class FulltextController extends BaseController
         }
     }
 
-    public function doDropDict(bool $confirm): void
+    public function doDropDict(bool $confirm) 
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -645,7 +645,7 @@ class FulltextController extends BaseController
     /**
      * Save the form submission containing changes to a FTS configuration.
      */
-    public function doSaveAlterConfig(): void
+    public function doSaveAlterConfig()
     {
         $data = $this->misc->getDatabaseAccessor();
         $status = $data->updateFtsConfiguration($_POST['ftscfg'], $_POST['formComment'], $_POST['formName']);
@@ -779,7 +779,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-viewdicts', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'fulltext-viewdicts', \get_defined_vars());
     }
 
     /**
@@ -788,7 +788,7 @@ class FulltextController extends BaseController
      * @param mixed $ftscfg
      * @param mixed $msg
      */
-    public function doViewConfig($ftscfg, $msg = ''): void
+    public function doViewConfig($ftscfg, $msg = '')
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -880,7 +880,7 @@ class FulltextController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'fulltext-viewconfig', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'fulltext-viewconfig', \get_defined_vars());
     }
 
     /**
@@ -1041,7 +1041,7 @@ class FulltextController extends BaseController
     /**
      * Actually creates the new FTS dictionary in the database.
      */
-    public function doSaveCreateDict(): void
+    public function doSaveCreateDict()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1152,7 +1152,7 @@ class FulltextController extends BaseController
     /**
      * Save the form submission containing changes to a FTS dictionary.
      */
-    public function doSaveAlterDict(): void
+    public function doSaveAlterDict()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1170,7 +1170,7 @@ class FulltextController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDropMapping($confirm): void
+    public function doDropMapping($confirm)
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1348,7 +1348,7 @@ class FulltextController extends BaseController
     /**
      * Save the form submission containing changes to a FTS mapping.
      */
-    public function doSaveAlterMapping(): void
+    public function doSaveAlterMapping()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1470,7 +1470,7 @@ class FulltextController extends BaseController
     /**
      * Save the form submission containing parameters of a new FTS mapping.
      */
-    public function doSaveAddMapping(): void
+    public function doSaveAddMapping()
     {
         $data = $this->misc->getDatabaseAccessor();
 

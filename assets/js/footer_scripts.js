@@ -86,7 +86,7 @@ $.ready
           stateObj.redirect_to
         );
       }
-      return { jqFn: jQuery.fn, hljsFn: globalThis.hljs };
+      return { jqFn: jQuery.fn, hljsFn: globalThis.hljs||{highlightBlock:null} };
    
   })
   .then(({ jqFn, hljsFn }) => {

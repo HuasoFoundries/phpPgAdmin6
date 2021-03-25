@@ -46,7 +46,7 @@ class DisplayController extends BaseController
         $header_template = 'header.twig';
         $browseResult = [];
         \ob_start();
-
+$jsonResult=[];
         switch ($this->action) {
             case 'editrow':
                 $this->view->offsetSet('codemirror', true);
@@ -116,7 +116,7 @@ class DisplayController extends BaseController
 
         echo $output;
 
-        $this->printFooter(true, $footer_template);
+     return   $this->printFooter(true, $footer_template);
     }
 
     /**
@@ -124,9 +124,9 @@ class DisplayController extends BaseController
      *
      * @param mixed $msg
      *
-     * @return (array[]|int)[]|null
+     * @return (array[]|int)[]|string|null
      *
-     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|null
+     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|string|null
      */
     public function doBrowse($msg = '')
     {
@@ -314,7 +314,7 @@ class DisplayController extends BaseController
         // Navigation links
 
         $navlinks = $this->getBrowseNavLinks($type, $_gets, $page, $subject, $object, $resultset);
-        $this->printNavLinks($navlinks, 'display-browse', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'display-browse', \get_defined_vars());
     }
 
     /**
@@ -944,9 +944,9 @@ class DisplayController extends BaseController
     /**
      * Performs actual edition of row.
      *
-     * @return (array[]|int)[]|null
+     * @return (array[]|int)[]|string|null
      *
-     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|null
+     * @psalm-return array{draw: int, recordsTotal: int, recordsFiltered: int, data: list<array>}|string|null
      */
     public function doEditRow()
     {
@@ -983,7 +983,7 @@ class DisplayController extends BaseController
      *
      * @param mixed $confirm
      */
-    public function doDelRow($confirm): void
+    public function doDelRow($confirm) 
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -1184,7 +1184,7 @@ class DisplayController extends BaseController
     }
 
     /**
-     * @return \the
+     * @return \ADOFieldObject
      */
     private function FetchField(ADORecordSet $ADORecordSet, int $index): ADOFieldObject
     {

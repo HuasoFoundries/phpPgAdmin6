@@ -135,7 +135,7 @@ class GroupsController extends BaseController
             echo $this->printTable($groups, $columns, $actions, 'groups-properties', $this->lang['strnogroups']);
         }
 
-        $this->printNavLinks(['create' => [
+return  $this->printNavLinks(['create' => [
             'attr' => [
                 'href' => [
                     'url' => 'groups',
@@ -290,7 +290,7 @@ class GroupsController extends BaseController
         echo '<input type="hidden" name="action" value="add_member" />' . \PHP_EOL;
         echo '</form>' . \PHP_EOL;
 
-        $this->printNavLinks(['showall' => [
+return  $this->printNavLinks(['showall' => [
             'attr' => [
                 'href' => [
                     'url' => 'groups',

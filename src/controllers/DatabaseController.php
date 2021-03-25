@@ -142,7 +142,7 @@ class DatabaseController extends BaseController
 
         echo $output;
 
-        $this->printFooter(true, $footer_template);
+        return  $this->printFooter(true, $footer_template);
     }
 
     /**

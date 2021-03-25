@@ -200,7 +200,7 @@ $app->get('[/{path:.*}]',   function (
     \Slim\Http\Response $response,
     array $args
 ) {
-    return $response->write(\sprintf("We couldn't find a route matching %s", $args['path'] ?: 'index'));
+    return $this->response->write(\sprintf("We couldn't find a route matching %s", $args['path'] ?: 'index'));
 });
 
 // Run app

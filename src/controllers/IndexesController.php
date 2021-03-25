@@ -93,7 +93,7 @@ class IndexesController extends BaseController
         return $this->printFooter();
     }
 
-    public function doDefault(string $msg = ''): void
+    public function doDefault(string $msg = '') 
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -202,7 +202,7 @@ class IndexesController extends BaseController
             echo $this->printTable($indexes, $columns, $actions, 'indexes-indexes', $this->lang['strnoindexes'], $indPre);
         }
 
-        $this->printNavLinks([
+return  $this->printNavLinks([
             'create' => [
                 'attr' => [
                     'href' => [

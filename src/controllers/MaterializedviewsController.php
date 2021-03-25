@@ -243,7 +243,7 @@ class MaterializedviewsController extends BaseController
                 'content' => $this->lang['strcreatematviewwiz'],
             ],
         ];
-        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     /**

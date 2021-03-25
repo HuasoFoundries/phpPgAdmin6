@@ -212,7 +212,8 @@ class RolesController extends BaseController
                 'content' => $this->lang['strcreaterole'],
             ],
         ];
-        $this->printNavLinks($navlinks, 'roles-roles', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'roles-roles', \get_defined_vars());
+        return '';
     }
 
     /**
@@ -868,7 +869,7 @@ class RolesController extends BaseController
             ],
         ];
 
-        $this->printNavLinks($navlinks, 'roles-properties', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'roles-properties', \get_defined_vars());
     }
 
     /**
@@ -948,7 +949,7 @@ class RolesController extends BaseController
             ) . \PHP_EOL;
         }
 
-        $this->printNavLinks(['changepassword' => [
+return  $this->printNavLinks(['changepassword' => [
             'attr' => [
                 'href' => [
                     'url' => 'roles',

@@ -6,6 +6,7 @@
 
 namespace PHPPgAdmin\Database;
 
+use PHPPgAdmin\Connection;
 use PHPPgAdmin\Database\Traits\AggregateTrait;
 use PHPPgAdmin\Database\Traits\DatabaseTrait;
 use PHPPgAdmin\Database\Traits\DomainTrait;
@@ -74,10 +75,11 @@ class Postgres extends ADOdbBase
 
     protected $server_info;
 
-    public function __construct(&$conn, $container, $server_info)
+    public function __construct(Connection $connection, $container, $server_info)
     {
         //$this->prtrace('major_version :' . $this->major_version);
-        $this->conn = $conn;
+        $this->conn = $connection->conn;
+        $this->platform=$connection->platform;
         $this->container = $container;
 
         $this->lang = $container->get('lang');

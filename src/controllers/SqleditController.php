@@ -79,7 +79,7 @@ class SqleditController extends BaseController
 
         $default_html .= '<form action="' . \containerInstance()->subFolder . '/sql" method="post" enctype="multipart/form-data" class="sqlform" id="sqlform" target="detail">';
         $default_html .= \PHP_EOL;
-        $default_html .= $this->printConnection('sql', false);
+        $default_html .= $this->printConnection('sql');
 
         $default_html .= \PHP_EOL;
 
@@ -155,7 +155,7 @@ class SqleditController extends BaseController
         $default_html = $this->printTabs('popup', 'find', false);
 
         $default_html .= '<form action="database" method="post" target="detail">' . \PHP_EOL;
-        $default_html .= $this->printConnection('find', false);
+        $default_html .= $this->printConnection('find');
         $default_html .= '<p><input class="focusme" name="term" id="term" value="' . \htmlspecialchars($_REQUEST['term']) . \sprintf(
             '" size="32" maxlength="%s" />',
             $data->_maxNameLen

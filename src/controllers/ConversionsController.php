@@ -78,6 +78,7 @@ class ConversionsController extends BaseController
         if (self::isRecordset($conversions)) {
             echo $this->printTable($conversions, $columns, $actions, 'conversions-conversions', $this->lang['strnoconversions']);
         }
+        return '';
     }
 
     /**

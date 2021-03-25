@@ -95,7 +95,7 @@ class SqlController extends BaseController
             $rs = $this->doDefault();
 
             //  echo $body.$trail.$title;
-            $this->doFooter(true, 'footer_sqledit.twig', $rs);
+          return   $this->doFooter(true, 'footer_sqledit.twig', $rs);
         } catch (Exception $e) {
             exit($e->getMessage());
         }
@@ -125,13 +125,13 @@ class SqlController extends BaseController
         $data = $this->misc->getDatabaseAccessor();
         $_connection = $this->misc->getConnection();
         $lang = $this->lang;
-        $json = [];
+      
         /**
          * This is a callback function to display the result of each separate query.
          *
          * @param ADORecordSet $rs The recordset returned by the script execetor
          */
-        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection, &$json): void {
+        $sqlCallback = static function ($query, $rs, $lineno) use ($data, $misc, $lang, $_connection ): void {
             // Check if $rs is false, if so then there was a fatal error
             if (false === $rs) {
                 echo \htmlspecialchars($_FILES['script']['name']), ':', $lineno, ': ', \nl2br(\htmlspecialchars($_connection->getLastError())), '<br/>' . \PHP_EOL;
@@ -389,7 +389,7 @@ class SqlController extends BaseController
             ];
         }
 
-        $this->printNavLinks($navlinks, 'sql-form', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'sql-form', \get_defined_vars());
 
         return $this->printFooter($doBody, $template);
     }

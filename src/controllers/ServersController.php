@@ -73,6 +73,7 @@ class ServersController extends BaseController
         //  ddd($server_html);
         if (null === $route) {
             echo $server_html;
+            return '';
         } else {
             $body = $theResponse->getBody();
             $body->write($server_html);
@@ -171,6 +172,7 @@ class ServersController extends BaseController
         }
         $thetable = $this->printTable($servers, $columns, $actions, $this->table_place, $this->lang['strnoobjects'], $svPre);
         echo $thetable;
+        return '';
     }
 
     /**

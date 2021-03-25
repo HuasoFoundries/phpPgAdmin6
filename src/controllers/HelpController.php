@@ -31,7 +31,7 @@ class HelpController extends BaseController
         }
     }
 
-    public function doDefault(): void
+    public function doDefault()
     {
         $data = $this->misc->getDatabaseAccessor();
 
@@ -41,7 +41,7 @@ class HelpController extends BaseController
             if (\is_array($url)) {
                 $this->doChoosePage($url);
 
-                return;
+                return '';
             }
 
             if ($url) {
@@ -50,11 +50,11 @@ class HelpController extends BaseController
                     $url
                 ));
 
-                return;
+                return '';
             }
         }
 
-        $this->doBrowse($this->lang['strinvalidhelppage']);
+        return $this->doBrowse($this->lang['strinvalidhelppage']);
     }
 
     public function doBrowse($msg = '')
@@ -95,10 +95,10 @@ class HelpController extends BaseController
 
         echo '</dl>' . \PHP_EOL;
 
-        $this->printFooter();
+       return $this->printFooter();
     }
 
-    public function doChoosePage(array $urls): void
+    public function doChoosePage(array $urls) 
     {
         $this->printHeader();
         $this->printBody();
@@ -116,6 +116,6 @@ class HelpController extends BaseController
         }
         echo '</ul>' . \PHP_EOL;
 
-        $this->printFooter();
+      return  $this->printFooter();
     }
 }

@@ -66,7 +66,7 @@ class OperatorsController extends BaseController
                 break;
         }
 
-        $this->printFooter();
+        return $this->printFooter();
     }
 
     /**
@@ -171,7 +171,7 @@ class OperatorsController extends BaseController
         if (self::isRecordset($operators)) {
             echo $this->printTable($operators, $columns, $actions, 'operators-operators', $this->lang['strnooperators']);
         }
-
+        return '';
         //        TODO operators action=create $this->lang['strcreateoperator']
     }
 
@@ -270,7 +270,7 @@ class OperatorsController extends BaseController
             }
             echo '</table>' . \PHP_EOL;
 
-            $this->printNavLinks(
+return  $this->printNavLinks(
                 [
                     'showall' => [
                         'attr' => [

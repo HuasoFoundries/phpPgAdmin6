@@ -7,8 +7,9 @@
 namespace PHPPgAdmin\Interfaces;
 
 use ADOFieldObject;
+use IteratorAggregate;
 
-interface RecordSet
+interface RecordSet extends IteratorAggregate
 {
     /**
      * Returns the recordCount.

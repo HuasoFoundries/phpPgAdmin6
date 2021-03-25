@@ -238,7 +238,7 @@ class AlldbController extends BaseController
                 'content' => $this->lang['strcreatedatabase'],
             ],
         ];
-        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     /**

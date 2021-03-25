@@ -208,7 +208,7 @@ class TypesController extends BaseController
 
         //if (!$data->hasEnumTypes()) {            unset($navlinks['enum']);        }
 
-        $this->printNavLinks($navlinks, 'types-types', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'types-types', \get_defined_vars());
     }
 
     /**
@@ -350,7 +350,7 @@ class TypesController extends BaseController
                     echo '</table>' . \PHP_EOL;
             }
 
-            $this->printNavLinks(['showall' => [
+return  $this->printNavLinks(['showall' => [
                 'attr' => [
                     'href' => [
                         'url' => 'types',

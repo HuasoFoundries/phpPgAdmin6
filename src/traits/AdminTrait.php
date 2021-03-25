@@ -7,6 +7,7 @@
 namespace PHPPgAdmin\Traits;
 
 use IteratorAggregate;
+use PHPPgAdmin\ArrayRecordSet;
 use PHPPgAdmin\Decorators\Decorator;
 
 /**
@@ -787,8 +788,9 @@ trait AdminTrait
         echo '</tr>' . \PHP_EOL;
         echo '</table>' . \PHP_EOL;
 
-        // Autovacuum
+        if($data) {
         $this->_printAutoVacuumConf($data, $type);
+        }
     }
 
     /**
@@ -933,8 +935,9 @@ trait AdminTrait
         return [$recluster_help, $reclusterconf];
     }
 
-    private function _printAutoVacuumConf($data, $type): void
+    private function _printAutoVacuumConf(\PHPPgAdmin\Database\Postgres $data, $type): void
     {
+        
         if (!$data->hasAutovacuum()) {
             return;
         }
@@ -1053,15 +1056,15 @@ trait AdminTrait
 
         if ('table' === $type) {
             unset(
-                $actions['edit']['vars']['schema'],
-                $actions['delete']['vars']['schema'],
+                $actions['edit']['attr']['href']['urlvars']['schema'], //$actions['edit']['vars']['schema'],
+                $actions['delete']['attr']['href']['urlvars']['schema'], //$actions['delete']['vars']['schema'],
                 $columns['namespace'],
                 $columns['relname']
             );
         }
-
+ if($autovac instanceof ArrayRecordSet) {
         echo $this->printTable($autovac, $columns, $actions, 'admin-admin', $this->lang['strnovacuumconf']);
-
+ }
         if (('table' === $type) && (0 === $autovac->RecordCount())) {
             echo '<br />';
 

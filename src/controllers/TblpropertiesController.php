@@ -237,7 +237,7 @@ class TblpropertiesController extends BaseController
                 'content' => $this->lang['stralter'],
             ],
         ];
-        $this->printNavLinks($navlinks, 'tblproperties-tblproperties', \get_defined_vars());
+return  $this->printNavLinks($navlinks, 'tblproperties-tblproperties', \get_defined_vars());
     }
 
     /**

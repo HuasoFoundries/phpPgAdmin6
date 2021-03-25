@@ -81,7 +81,7 @@ class PrivilegesController extends BaseController
         if (!isset($data->privlist[$subject])) {
             $this->container->halt('No privileges defined for subject ' . $subject);
 
-            return;
+            return '';
         }
 
         $object = $_REQUEST[$subject . '_oid'] ?? $_REQUEST[$subject];
@@ -182,10 +182,10 @@ class PrivilegesController extends BaseController
                 $this->lang['strnoprivileges']
             ) . \PHP_EOL;
         }
-        $this->printGrantLinks();
+       return $this->printGrantLinks();
     }
 
-    public function printGrantLinks(): void
+    public function printGrantLinks() 
     {
         $data = $this->misc->getDatabaseAccessor();
         $subject = $_REQUEST['subject'];
@@ -313,7 +313,7 @@ class PrivilegesController extends BaseController
             }
         }
 
-        $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
+return  $this->printNavLinks($navlinks, $this->table_place, \get_defined_vars());
     }
 
     /**

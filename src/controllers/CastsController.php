@@ -93,6 +93,7 @@ class CastsController extends BaseController
         if (self::isRecordset($casts)) {
             echo $this->printTable($casts, $columns, $actions, 'casts-casts', $this->lang['strnocasts']);
         }
+        return '';
     }
 
     /**
