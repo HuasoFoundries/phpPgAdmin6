@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6e02c8707ebddfbb84409255720e26ca",
+    "content-hash": "3daa269e4813e8e1da9d6862e71cb348",
     "packages": [
         {
             "name": "adodb/adodb-php",
@@ -3669,16 +3669,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.12.81",
+            "version": "0.12.84",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8"
+                "reference": "9c43f15da8798c8f30a4b099e6a94530a558cfd5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
-                "reference": "0dd5b0ebeff568f7000022ea5f04aa86ad3124b8",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/9c43f15da8798c8f30a4b099e6a94530a558cfd5",
+                "reference": "9c43f15da8798c8f30a4b099e6a94530a558cfd5",
                 "shasum": ""
             },
             "require": {
@@ -3709,7 +3709,7 @@
             "description": "PHPStan - PHP Static Analysis Tool",
             "support": {
                 "issues": "https://github.com/phpstan/phpstan/issues",
-                "source": "https://github.com/phpstan/phpstan/tree/0.12.81"
+                "source": "https://github.com/phpstan/phpstan/tree/0.12.84"
             },
             "funding": [
                 {
@@ -3725,7 +3725,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2021-03-08T22:03:02+00:00"
+            "time": "2021-04-19T17:10:54+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -4250,35 +4250,49 @@
         },
         {
             "name": "rector/rector-prefixed",
-            "version": "0.9.31",
+            "version": "0.10.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rectorphp/rector-prefixed.git",
-                "reference": "cff116f7c19bf898c2d76751c8f01debb3c9c13f"
+                "reference": "b52a938d682300a5c27c624d78f6c34d4ccf466d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/cff116f7c19bf898c2d76751c8f01debb3c9c13f",
-                "reference": "cff116f7c19bf898c2d76751c8f01debb3c9c13f",
+                "url": "https://api.github.com/repos/rectorphp/rector-prefixed/zipball/b52a938d682300a5c27c624d78f6c34d4ccf466d",
+                "reference": "b52a938d682300a5c27c624d78f6c34d4ccf466d",
                 "shasum": ""
             },
             "require": {
-                "php": "^7.3|^8.0",
-                "phpstan/phpstan": "^0.12.64"
+                "php": "^7.1|^8.0",
+                "phpstan/phpstan": "^0.12.83"
+            },
+            "conflict": {
+                "phpstan/phpdoc-parser": "<=0.5.3",
+                "phpstan/phpstan": "<=0.12.82"
             },
             "bin": [
                 "bin/rector"
             ],
             "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "0.10-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ]
+            },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
-            "description": "Prefixed scoped version of rector/rector package",
+            "description": "Prefixed and PHP 7.0 downgraded version of rector/rector",
             "support": {
-                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.9.31"
+                "source": "https://github.com/rectorphp/rector-prefixed/tree/0.10.11"
             },
-            "time": "2021-02-22T12:37:56+00:00"
+            "time": "2021-04-24T12:44:58+00:00"
         },
         {
             "name": "sebastian/cli-parser",
