@@ -7,7 +7,7 @@
         <ignoreFiles>
             <directory name="vendor" />
             <directory name="temp" />
-            <directory name="src/translations" />
+            <directory name="src/Translations" />
         </ignoreFiles>
     </projectFiles>
 

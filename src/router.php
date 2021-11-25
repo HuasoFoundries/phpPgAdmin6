@@ -18,17 +18,29 @@ require_once \dirname(__DIR__) . '/vendor/autoload.php';
 // Enforce PHP environment
 \ini_set('arg_separator.output', '&amp;');
 \defined('ADODB_ERROR_HANDLER_TYPE') || \define('ADODB_ERROR_HANDLER_TYPE', \E_USER_ERROR);
-\defined('ADODB_ERROR_HANDLER') || \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\ADOdbException::adodb_throw');
+\defined('ADODB_ERROR_HANDLER') || \define('ADODB_ERROR_HANDLER', '\PHPPgAdmin\Core\ADOdbException::adodb_throw');
 
 $shouldSetSession = (\defined('PHP_SESSION_ACTIVE') ? \PHP_SESSION_ACTIVE !== \session_status() : !\session_id())
     && !\headers_sent()
     && !\ini_get('session.auto_start');
 
 if ($shouldSetSession && \PHP_SAPI !== 'cli') {
+    \define('SESSION_SAVE_PATH', \implode(\DIRECTORY_SEPARATOR, [BASE_PATH, 'temp/sessions']));
+    \defined('IN_TEST') || \define('IN_TEST', false);
+
+    if (
+        !IN_TEST && \defined('SESSION_SAVE_PATH')
+        && (\is_dir(SESSION_SAVE_PATH)
+            || \mkdir(SESSION_SAVE_PATH, 0777, true))
+    ) {
+        \session_save_path(SESSION_SAVE_PATH);
+    }
+
     \session_set_cookie_params(0, '/', $_SERVER['HTTP_HOST'], isset($_SERVER['HTTPS']));
     \session_name('PPA_ID');
     \session_start();
 }
+
 
 \defined('ADODB_ASSOC_CASE') || \define('ADODB_ASSOC_CASE', ADODB_ASSOC_CASE_NATIVE);
 
@@ -195,7 +207,7 @@ $app->get('/', function (
     return $controller->render();
 });
 
-$app->get('[/{path:.*}]',   function (
+$app->get('[/{path:.*}]', function (
     \Slim\Http\Request $request,
     \Slim\Http\Response $response,
     array $args

@@ -72,8 +72,7 @@ $('#lazy').on('state_ready.jstree', function (e, data) {
   });
 });
 $('#lazy').on('loaded.jstree', function (e, data) {
-  console.log('loaded');
-  $('#lazy').data('jstree').show_dots();
+  data.instance.show_dots();
 });
 $('#lazy').on('click', '.jstree-anchor', function () {
   console.log(this);

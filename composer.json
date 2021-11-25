@@ -48,17 +48,7 @@
   },
   "autoload": {
     "psr-4": {
-      "PHPPgAdmin\\": "src/classes",
-      "PHPPgAdmin\\Controller\\": "src/controllers",
-      "PHPPgAdmin\\Middleware\\": "src/middleware",
-      "PHPPgAdmin\\Database\\": "src/database",
-      "PHPPgAdmin\\XHtml\\": "src/xhtml",
-      "PHPPgAdmin\\Decorators\\": "src/decorators",
-      "PHPPgAdmin\\Traits\\": "src/traits",
-      "PHPPgAdmin\\Database\\Traits\\": "src/database/databasetraits",
-      "PHPPgAdmin\\Help\\": "src/help",
-      "PHPPgAdmin\\Translations\\": "src/translations",
-      "PHPPgAdmin\\Interfaces\\": "src/interfaces"
+      "PHPPgAdmin\\": "src"
     },
     "files": [
       "src/lib.inc.php",

@@ -4,7 +4,7 @@
  * PHPPgAdmin6
  */
 
-use PHPPgAdmin\ContainerUtils;
+use PHPPgAdmin\Core\ContainerUtils;
 use Slim\App;
 use Slim\Http\Request;
 use Slim\Http\Response;

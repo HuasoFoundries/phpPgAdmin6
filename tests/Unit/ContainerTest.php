@@ -6,8 +6,8 @@
 
 namespace Tests\Unit;
 
-use PHPPgAdmin\ContainerUtils;
-use PHPPgAdmin\Misc;
+use PHPPgAdmin\Core\ContainerUtils;
+use PHPPgAdmin\Core\Misc;
 use Psr\Container\ContainerInterface;
 use Slim\Views\Twig;
 
