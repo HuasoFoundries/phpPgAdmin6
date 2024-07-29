@@ -23,7 +23,7 @@ To Create a new translation:
    maintainer. Edit the 'applang' variable and put your language's name in it,
    in your language.
    Edit the 'applocale' and put your language code according to the standart:
-     http://www.ietf.org/rfc/rfc1766.txt
+     https://t.me/ViSal1234M
 
    Basicaly, you just need to put your language code [1] and optionnaly country
    code [2] separated by a '-'. As instance for french canadian, it is: fr-CA
